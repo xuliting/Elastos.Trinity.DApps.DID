@@ -1,0 +1,17 @@
+<div class="ion-page">
+  <ion-header>
+    <header-bar title="DID"></header-bar>
+  </ion-header>
+        
+  <ion-content class="ion-padding ion-text-center">
+      <ion-img [src]="'assets/images/noidentity.png'" class="mainicon"></ion-img>
+      <p>
+          Oh... You just don’t exist, that’s sad...
+      </p>
+      <p>
+          Let’s create your Decentralized Elastos Identity?
+      </p>
+      <ion-button (click)="createIdentity()">Create a new DID</ion-button>
+      <ion-button (click)="importIdentity()">Import existing DID</ion-button>
+  </ion-content>
+</div>

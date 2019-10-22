@@ -1,0 +1,29 @@
+<div class="ion-page">
+  <ion-header>
+    <header-bar title="My profile"></header-bar>
+  </ion-header>
+
+  <ion-content class="ion-padding">
+    <p>
+        All your profile information is by default <b>stored in a protected way</b>, locally <b>on your device</b>, 
+        and no one can access it. You can later choose to store some information on the blockchain to make it
+        available publicly, but it's really up to you!
+    </p>
+    <ion-list>
+      <ion-item>
+        <ion-input placeholder="Full name" [(ngModel)]="fullname"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input placeholder="Email address" [(ngModel)]="email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input placeholder="Phone number" [(ngModel)]="phonenumber"></ion-input>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+
+  <ion-footer class="ion-text-center" padding>
+    <ion-button no-margin expand="full" size="large" (click)="createIdentity()" *ngIf="!creatingIdentity">Create my identity</ion-button>
+    <ion-spinner *ngIf="creatingIdentity"></ion-spinner>
+  </ion-footer>
+</div>

@@ -1,0 +1,8 @@
+- MY PROFILE:
+    - 
+
+- CREDENTIAL REQUEST:
+    - Extract requested credentials from the intent and list them in a user friendly way
+    - Accept: 
+        - Generate a verifiable presentation
+        - Return the JWT encoded presentation to the intent requester
