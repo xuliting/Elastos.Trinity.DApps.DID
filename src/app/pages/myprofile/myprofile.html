@@ -1,0 +1,49 @@
+<div class="ion-page">
+  <ion-header>
+    <header-bar title="My profile" [showMenu]="true" (onMenu)="menuClicked($event)"></header-bar>
+  </ion-header>
+
+  <ion-content class="ion-padding">
+    <ion-list>
+      <ion-item class="ion-text-center">
+        <ion-grid class="ion-margin">
+          <ion-row>
+            <ion-col>
+              <ion-img [src]="'/assets/images/defaultuser.png'" class="profilepicture"></ion-img>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div class="name">User name</div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div class="did">did:ela:ed86a42f0pmZxsza...</div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+      <ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col class="item-label">Email address</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="item-value">contact@elastos.org</ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+      <ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col class="item-label">Phone number</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="item-value">+86 134 1234 5678</ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</div>

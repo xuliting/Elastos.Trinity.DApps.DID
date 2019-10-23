@@ -13,7 +13,10 @@ import { ComponentsModule } from './components/components.module';
 
 import { NoIdentityPage } from './pages/noidentity/noidentity';
 import { EditProfilePage } from './pages/editprofile/editprofile';
+import { MyProfilePage, MyProfilePageMenu } from './pages/myprofile/myprofile';
 import { SetPasswordPage } from './pages/setpassword/setpassword';
+import { BackupDIDPage } from './pages/backupdid/backupdid';
+import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 
 @NgModule({
@@ -21,8 +24,14 @@ import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/cre
     MyApp,
     NoIdentityPage,
     EditProfilePage,
+    MyProfilePage,
     SetPasswordPage,
-    CredentialAccessRequestPage
+    BackupDIDPage,
+    VerifyMnemonicsPage,
+    CredentialAccessRequestPage,
+
+    // Menus
+    MyProfilePageMenu
   ],
   imports: [
     CommonModule,
@@ -34,7 +43,10 @@ import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/cre
   ],
   bootstrap: [MyApp],
   entryComponents: [
-    MyApp
+    MyApp,
+
+    // Menus
+    MyProfilePageMenu
   ],
   providers: [
     StatusBar,

@@ -1,0 +1,22 @@
+<div class="ion-page">
+  <ion-header>
+    <header-bar title="Verify mnemonics"></header-bar>
+  </ion-header>
+
+  <ion-content class="ion-padding" text-center>
+    <ion-img [src]="'/assets/images/mnemonics.png'" class="mainicon"></ion-img>
+    <h1>Please type your mnemonic words</h1>
+    <p>
+      This verification is needed to make sure that your correctly saved your mnemonics.
+    </p>
+    <div class="mnemonics-box">
+    </div>
+  </ion-content>
+
+  <ion-footer class="ion-text-center ion-padding">
+    <ion-buttons>
+      <ion-button no-margin size="large" (click)="backPressed()" style="width:50%">Back</ion-button>
+      <ion-button no-margin size="large" (click)="nextClicked()" style="width:50%" [disabled]="!allWordsMatch()">Create my DID</ion-button>
+    </ion-buttons>
+  </ion-footer>
+</div>

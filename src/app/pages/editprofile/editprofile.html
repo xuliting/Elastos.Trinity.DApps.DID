@@ -1,6 +1,6 @@
 <div class="ion-page">
   <ion-header>
-    <header-bar title="My profile"></header-bar>
+    <header-bar title="Edit profile"></header-bar>
   </ion-header>
 
   <ion-content class="ion-padding">
@@ -22,7 +22,7 @@
     </ion-list>
   </ion-content>
 
-  <ion-footer class="ion-text-center" padding>
+  <ion-footer class="ion-text-center ion-padding">
     <ion-button no-margin expand="full" size="large" (click)="createIdentity()" *ngIf="!creatingIdentity">Create my identity</ion-button>
     <ion-spinner *ngIf="creatingIdentity"></ion-spinner>
   </ion-footer>

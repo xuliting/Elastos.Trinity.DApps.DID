@@ -1,0 +1,34 @@
+<div class="ion-page">
+  <ion-header>
+    <header-bar title="Backup DID"></header-bar>
+  </ion-header>
+
+  <ion-content class="ion-padding" text-center>
+    <ion-img [src]="'/assets/images/mnemonics.png'" class="mainicon"></ion-img>
+    <h1>Write down the mnemonics</h1>
+    <div class="mnemonics-box">
+      <span class="word">roger</span>
+      <span class="word">tiger</span>
+      <span class="word">meant</span>
+      <span class="word">course</span>
+      <span class="word">car</span>
+      <span class="word">dog</span>
+      <span class="word">entry</span>
+      <span class="word">simple</span>
+      <span class="word">legit</span>
+      <span class="word">desire</span>
+      <span class="word">welcome</span>
+      <span class="word">final</span>
+      <span class="word">dozen</span>
+      <span class="word">play</span>
+      <span class="word">near</span>
+    </div>
+    <p margin>
+      <ion-icon name="alert"></ion-icon> Don't forget your mnemonic words. They will be needed in case you loose your identity in order to re-create it.
+    </p>
+  </ion-content>
+
+  <ion-footer class="ion-text-center ion-padding">
+    <ion-button no-margin expand="full" size="large" (click)="nextClicked()">Next</ion-button>
+  </ion-footer>
+</div>

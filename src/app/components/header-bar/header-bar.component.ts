@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UXService } from '../../services/ux.service';
 
 @Component({
@@ -12,6 +12,8 @@ export class HeaderBarComponent implements OnInit {
     @Input('title') title: string = "";
     @Input('showMinimize') showMinimize: boolean = true;
     @Input('showClose') showClose: boolean = true;
+    @Input('showMenu') showMenu: boolean = false;
+    @Output('onMenu') onMenu = new EventEmitter();
 
     constructor(public uxService: UXService) { }
 
@@ -23,5 +25,9 @@ export class HeaderBarComponent implements OnInit {
 
     close() {
         this.uxService.close()
+    }
+
+    menu(event) {
+        this.onMenu.emit(event);
     }
 }
