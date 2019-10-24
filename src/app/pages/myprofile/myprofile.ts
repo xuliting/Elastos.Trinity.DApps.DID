@@ -29,6 +29,11 @@ export class MyProfilePageMenu {
   constructor(public navCtrl: NavController, public popoverController: PopoverController) {
   }
 
+  didSettings() {
+    this.closePopup();
+    this.navCtrl.navigateForward("/didsettings");
+  }
+  
   showCredentials() {
     // TODO
     this.closePopup();

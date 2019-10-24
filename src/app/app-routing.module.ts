@@ -7,16 +7,18 @@ import { MyProfilePage } from './pages/myprofile/myprofile';
 import { SetPasswordPage } from './pages/setpassword/setpassword';
 import { BackupDIDPage } from './pages/backupdid/backupdid';
 import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
+import { DIDSettingsPage } from './pages/didsettings/didsettings';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'myprofile', pathMatch: 'full' },
+  { path: '', redirectTo: 'didsettings', pathMatch: 'full' },
   { path: 'noidentity', component: NoIdentityPage },
   { path: 'createidentity', component: EditProfilePage }, // TODO: edit profile page, with special params
   { path: 'editprofile', component: EditProfilePage },
   { path: 'myprofile', component: MyProfilePage },
   { path: 'setpassword', component: SetPasswordPage },
   { path: 'backupdid', component: BackupDIDPage },
+  { path: 'didsettings', component: DIDSettingsPage },
   { path: 'verifymnemonics', component: VerifyMnemonicsPage },
   { path: 'credaccessrequest', component: CredentialAccessRequestPage },
 ];
