@@ -1,0 +1,23 @@
+<div class="ion-page">
+  <ion-header>
+    <header-bar title="Import DID"></header-bar>
+  </ion-header>
+
+  <ion-content class="ion-padding" text-center>
+    <p margin text-left>
+      Please input the 12 mnemonic words you've previously saved in order to restore your identity.
+    </p>
+    <div class="mnemonics-box">
+      <span class="word" *ngFor="let word of mnemonicWords">{{word}}</span>
+    </div>
+    <ion-item>
+      <ion-input #addMnemonicWordInput placeholder="Next mnemonic word" [(ngModel)]="mnemonicWord"></ion-input>
+      <ion-button (click)="appendMnemonicWord()">Add</ion-button>
+    </ion-item>
+    {{mnemonicWords}}
+  </ion-content>
+
+  <ion-footer class="ion-text-center ion-padding">
+    <ion-button no-margin expand="full" (click)="nextClicked()">Import</ion-button>
+  </ion-footer>
+</div>

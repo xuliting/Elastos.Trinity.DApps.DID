@@ -17,6 +17,7 @@ import { EditProfilePage } from './pages/editprofile/editprofile';
 import { MyProfilePage, MyProfilePageMenu } from './pages/myprofile/myprofile';
 import { SetPasswordPage } from './pages/setpassword/setpassword';
 import { BackupDIDPage } from './pages/backupdid/backupdid';
+import { ImportDIDPage } from './pages/importdid/importdid';
 import { DIDSettingsPage } from './pages/didsettings/didsettings';
 import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
@@ -29,6 +30,7 @@ import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/cre
     MyProfilePage,
     SetPasswordPage,
     BackupDIDPage,
+    ImportDIDPage,
     DIDSettingsPage,
     VerifyMnemonicsPage,
     CredentialAccessRequestPage,
