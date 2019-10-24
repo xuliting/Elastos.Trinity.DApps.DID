@@ -3,7 +3,7 @@ import { Platform, AlertController, ToastController } from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavController } from '@ionic/angular';
 
-declare let appManager: any;
+declare let appService: any;
 let selfDIDService: DIDService = null;
 
 @Injectable({
@@ -24,7 +24,7 @@ export class DIDService {
         // Load app manager only on real device, not in desktop browser - beware: ionic 4 bug with "desktop" or "android"/"ios"
         if (this.platform.platforms().indexOf("cordova") >= 0) {
             console.log("Listening to intent events")
-            appManager.setIntentListener(
+            appService.setIntentListener(
                 this.onReceiveIntent
             );
         }
@@ -45,7 +45,10 @@ export class DIDService {
             case "credaccess":
                 console.log("Received credential access intent request");
 
-                selfDIDService.navController.navigateRoot("/appinstall");
+                selfDIDService.navController.navigateRoot("/credaccessrequest", {queryParams: {
+                    intentId: ret.intentId,
+                    appName: ret.params.appName
+                }});
                 break;
         }
     }
@@ -54,8 +57,7 @@ export class DIDService {
      * Close this application.
      */
     close() {
-        console.log("CLOSING")
-        appManager.close("org.elastos.trinity.dapp.installer");
+        appService.close();
     }
 
     /**

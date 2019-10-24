@@ -32,10 +32,11 @@
     "SplashScreen",
     "NetworkStatus"
   ],
-  "urls": [
-    "http://www.baidu.com/*",
-    "https://www.google.com",
-    "http://192.168.31.103:21636/*"
+  "urls": [],
+  "intent_filters": [
+    {
+      "action": "credaccess"
+    }
   ],
   "background_color": "#4e8ef7",
   "theme_display": "show",

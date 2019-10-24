@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
+
+declare let appService: any;
 
 @Component({
   selector: 'page-credentialaccessrequest',
@@ -7,14 +10,22 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['credentialaccessrequest.scss']
 })
 export class CredentialAccessRequestPage {
-  constructor(public navCtrl: NavController) {
+  public requestingAppName: string = "";
+  private intentId: Number;
+
+  constructor(public navCtrl: NavController, private actRoute: ActivatedRoute, private router: Router) {
+    this.actRoute.queryParams.subscribe(params => {
+      this.requestingAppName = params.appName;
+      this.intentId = params.intentId;
+    });
   }
 
   acceptRequest() {
-
+    appService.sendIntentResponse("credaccess", "success", this.intentId)
+    appService.close();
   }
 
   rejectRequest() {
-    
+    appService.close();
   }
 }
