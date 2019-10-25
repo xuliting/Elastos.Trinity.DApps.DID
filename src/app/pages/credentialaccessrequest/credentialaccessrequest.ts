@@ -21,7 +21,8 @@ export class CredentialAccessRequestPage {
   }
 
   acceptRequest() {
-    appService.sendIntentResponse("credaccess", "success", this.intentId)
+    console.log("Sending credaccess intent response for intent id "+this.intentId)
+    appService.sendIntentResponse("credaccess", {result:"success"}, this.intentId)
     appService.close();
   }
 
