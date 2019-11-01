@@ -5,7 +5,7 @@
 
   <ion-content class="ion-padding">
     <p>
-        All your profile information is by default <b>stored in a protected way</b>, locally <b>on your device</b>, 
+        All your profile information is by default <b>stored in a protected way</b>, locally <b>on your device</b>,
         and no one can access it. You can later choose to store some information on the blockchain to make it
         available publicly, but it's really up to you!
     </p>
@@ -19,11 +19,24 @@
       <ion-item>
         <ion-input placeholder="Phone number" [(ngModel)]="phonenumber"></ion-input>
       </ion-item>
+      <ion-item detail [routerLink]="['/area']" routerDirection="forward">
+        <ion-label>Country/Region</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>Gender</ion-label>
+        <ion-select [(ngModel)]="gender" placeholder="Select One" interface="popover">
+          <ion-select-option value="female">Female</ion-select-option>
+          <ion-select-option value="male">Male</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>Birthday</ion-label>
+        <ion-datetime picker-format="YYYY/M/D" [(ngModel)]="birthday" placeholder="Select Date"></ion-datetime>
+        </ion-item>
     </ion-list>
   </ion-content>
 
   <ion-footer class="ion-text-center ion-padding">
-    <ion-button no-margin expand="full" size="large" (click)="createIdentity()" *ngIf="!creatingIdentity">Create my identity</ion-button>
-    <ion-spinner *ngIf="creatingIdentity"></ion-spinner>
+    <ion-button expand="full" size="large" (click)="next()">Next</ion-button>
   </ion-footer>
 </div>

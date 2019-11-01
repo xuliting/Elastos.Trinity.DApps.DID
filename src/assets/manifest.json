@@ -28,7 +28,9 @@
   },
   "default_locale": "en",
   "plugins": [
+    "Clipboard",
     "Device",
+    "DIDPlugin",
     "SplashScreen",
     "NetworkStatus"
   ],

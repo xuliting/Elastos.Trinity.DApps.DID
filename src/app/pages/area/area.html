@@ -1,0 +1,16 @@
+<div class="ion-page">
+  <ion-header>
+    <header-bar title="Country/Region"></header-bar>
+  </ion-header>
+
+  <ion-content class="ion-padding">
+    <ion-list>
+      <ion-radio-group [(ngModel)]="areaItem">
+        <ion-item *ngFor="let item of areaList">
+          <ion-label>{{ item.en + "/" + item.zh }}</ion-label>
+          <ion-radio slot="end" value="{{ item.en }}"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+  </ion-content>
+</div>

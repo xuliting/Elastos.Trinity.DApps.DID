@@ -1,0 +1,16 @@
+
+<div class="view">
+  <ion-button fill="clear" (click)="close()">
+      <ion-icon slot="icon-only" name="close"></ion-icon>
+  </ion-button>
+  <div>
+    <ion-item>
+      <ion-input slot="start" type="password" placeholder="{{ 'text-passworld-input' | translate }}"
+          [(ngModel)]="password"></ion-input>
+    </ion-item>
+
+    <div style="text-align: center">
+        <ion-button class="confirm" (click)="check()">{{ 'confirm' | translate }}</ion-button>
+    </div>
+  </div>
+</div>

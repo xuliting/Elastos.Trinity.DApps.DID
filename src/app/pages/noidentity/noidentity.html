@@ -2,7 +2,7 @@
   <ion-header>
     <header-bar title="DID"></header-bar>
   </ion-header>
-        
+
   <ion-content class="ion-padding ion-text-center">
       <ion-img [src]="'assets/images/noidentity.png'" class="mainicon"></ion-img>
       <p>
@@ -11,7 +11,13 @@
       <p>
           Let’s create your Decentralized Elastos Identity?
       </p>
-      <ion-button (click)="createIdentity()">Create a new DID</ion-button>
-      <ion-button (click)="importIdentity()">Import existing DID</ion-button>
+      <ion-list>
+        <ion-item>
+          <ion-button class="confirm" (click)="createIdentity()">{{ 'createDID' | translate }}</ion-button>
+        </ion-item>
+        <ion-item>
+          <ion-button class="confirm" (click)="importIdentity()">{{ 'importDID' | translate }}</ion-button>
+        </ion-item>
+      </ion-list>
   </ion-content>
 </div>

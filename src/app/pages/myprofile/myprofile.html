@@ -14,12 +14,12 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <div class="name">User name</div>
+              <div class="name">{{Config.profile.fullname}}</div>
             </ion-col>
           </ion-row>
-          <ion-row>
+          <ion-row *ngIf="didString!=''">
             <ion-col>
-              <div class="did">did:ela:ed86a42f0pmZxsza...</div>
+              <div class="did">{{ didString }}</div>
               <ion-img [src]="'/assets/images/qrcodesmall.png'" class="qrcode"></ion-img>
             </ion-col>
           </ion-row>
@@ -31,7 +31,7 @@
             <ion-col class="item-label">Email address</ion-col>
           </ion-row>
           <ion-row>
-            <ion-col class="item-value">contact@elastos.org</ion-col>
+            <ion-col class="item-value">{{Config.profile.email}}</ion-col>
           </ion-row>
         </ion-grid>
       </ion-item>
@@ -41,7 +41,37 @@
             <ion-col class="item-label">Phone number</ion-col>
           </ion-row>
           <ion-row>
-            <ion-col class="item-value">+86 134 1234 5678</ion-col>
+            <ion-col class="item-value">{{Config.profile.phonenumber}}</ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+      <ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col class="item-label">Country/Region</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="item-value">{{Config.profile.area}}</ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+      <ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col class="item-label">Gender</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="item-value">{{Config.profile.gender}}</ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+      <ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col class="item-label">Birthday</ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="item-value">{{Config.profile.birthday}}</ion-col>
           </ion-row>
         </ion-grid>
       </ion-item>
@@ -50,7 +80,11 @@
     <div class="bottom-drawer-translucent-background" *ngIf="bottomDrawerState == 1" (click)="hideBottomDrawer()"></div>
   </ion-content>
 
-  <ion-bottom-drawer [(state)]="bottomDrawerState" [dockedHeight]="330" [disableDrag]="true">
+  <ion-footer class="ion-text-center ion-padding">
+    <ion-button expand="full" size="large" (click)="next()">Next</ion-button>
+  </ion-footer>
+
+  <ion-bottom-drawer *ngIf="didString!=''" [(state)]="bottomDrawerState" [dockedHeight]="330" [disableDrag]="true">
     <div class="drawer-content ion-padding">
       <ion-grid>
         <ion-row>
@@ -58,9 +92,9 @@
             <ion-img [src]="'/assets/images/bottomarrow.png'" class="bottom-close-arrow"></ion-img>
           </ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-img [src]="'/assets/images/qrcodesmall.png'" class="bottom-qr-code"></ion-img>
+        <ion-row >
+          <ion-col class="ion-text-center">
+            <qrcode [qrdata]="didString" [size]="150"></qrcode>
           </ion-col>
         </ion-row>
         <ion-row>

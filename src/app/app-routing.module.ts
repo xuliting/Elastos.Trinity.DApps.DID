@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
+import { AreaPage } from './pages/area/area';
 import { NoIdentityPage } from './pages/noidentity/noidentity';
 import { EditProfilePage } from './pages/editprofile/editprofile';
 import { MyProfilePage } from './pages/myprofile/myprofile';
@@ -12,7 +13,8 @@ import { DIDSettingsPage } from './pages/didsettings/didsettings';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'didsettings', pathMatch: 'full' },
+  { path: '', redirectTo: 'noidentity', pathMatch: 'full' },
+  { path: 'area', component: AreaPage },
   { path: 'noidentity', component: NoIdentityPage },
   { path: 'createidentity', component: EditProfilePage }, // TODO: edit profile page, with special params
   { path: 'editprofile', component: EditProfilePage },

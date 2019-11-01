@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, PopoverController} from '@ionic/angular';
 import { DrawerState } from 'ion-bottom-drawer';
+import { Config } from '../../services/config';
+import { Native } from '../../services/native';
 import { DIDService } from '../../services/did.service';
 
 @Component({
@@ -33,7 +35,7 @@ export class MyProfilePageMenu {
     this.closePopup();
     this.navCtrl.navigateForward("/didsettings");
   }
-  
+
   showCredentials() {
     // TODO
     this.closePopup();
@@ -62,11 +64,15 @@ export class MyProfilePageMenu {
 export class MyProfilePage {
   public creatingIdentity: boolean = false;
   public bottomDrawerState: DrawerState = DrawerState.Bottom;
-  public didString: string = "did:ela:azeeza786zea67zaek221fxi9"
+  // public didString: string = "did:ela:azeeza786zea67zaek221fxi9";
+  public didString: string = "";
+  Config = Config;
 
-  constructor(public navCtrl: NavController, 
-    public popoverController: PopoverController, 
+  constructor(public navCtrl: NavController,
+    public popoverController: PopoverController,
+    private native: Native,
     private didService: DIDService) {
+    this.didString = didService.getCurrentDIDString();
   }
 
   async menuClicked(event) {
@@ -89,7 +95,11 @@ export class MyProfilePage {
   }
 
   copyDIDToClipboard() {
-    // TODO - copy to clipboard
-    // TODO - Show a toast message "Copied to clipboard!"
+    this.native.copyClipboard(this.didString);
+    this.native.toast_trans('copy-ok');
+  }
+
+  next() {
+    this.native.go("/backupdid");
   }
 }

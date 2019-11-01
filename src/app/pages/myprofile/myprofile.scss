@@ -43,10 +43,6 @@ page-myprofile {
     height:15px;
 }
 
-.bottom-qr-code {
-    height:170px;
-}
-
 .bottom-did-string {
     background: #EEE;
     color:#444;
@@ -55,4 +51,8 @@ page-myprofile {
     text-align: center;
     width:80vw;
     margin: 0 auto;
+}
+
+qrcode {
+    display:inline-block;
 }

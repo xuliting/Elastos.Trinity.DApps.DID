@@ -1,28 +1,71 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NavController } from '@ionic/angular';
 
 import { DIDService } from '../../services/did.service';
+import { Native } from '../../services/native';
+import { Util } from '../../services/util';
 
 @Component({
-  selector: 'page-verifymnemonics',
-  templateUrl: 'verifymnemonics.html',
-  styleUrls: ['verifymnemonics.scss']
+    selector: 'page-verifymnemonics',
+    templateUrl: 'verifymnemonics.html',
+    styleUrls: ['verifymnemonics.scss']
 })
-export class VerifyMnemonicsPage {    
-  constructor(public navCtrl: NavController, private didService: DIDService) {
-  }
+export class VerifyMnemonicsPage {
+    mnemonicList: Array<any> = [];
+    selectList: Array<any> = [];
+    mnemonicStr: string;
 
-  backPressed() {
-    this.navCtrl.navigateBack("/backupdid");
-  }
+    constructor(public route: ActivatedRoute, public navCtrl: NavController,
+            public zone: NgZone, private didService: DIDService, private native: Native) {
+        this.init();
+    }
 
-  nextClicked() {
-  }
+    init() {
+        this.route.queryParams.subscribe((data) => {
+            this.mnemonicStr = this.native.clone(data["mnemonicStr"]);
+            this.mnemonicList = JSON.parse(data["mnemonicList"]);
+            this.mnemonicList = this.mnemonicList.sort(function () { return 0.5 - Math.random() });
+        });
+    }
 
-  /**
-   * True when words provided by user are all right.
-   */
-  allWordsMatch() {
-    return true; // TMP
-  }
+    public addButton(index: number, item: any): void {
+        var newWord = {
+            text: item.text,
+            prevIndex: index
+        };
+        this.zone.run(() => {
+            this.selectList.push(newWord);
+            this.mnemonicList[index].selected = true;
+        });
+    }
+
+    public removeButton(index: number, item: any): void {
+        this.zone.run(() => {
+            this.selectList.splice(index, 1);
+            this.mnemonicList[item.prevIndex].selected = false;
+        });
+    }
+
+    backPressed() {
+        this.navCtrl.navigateBack("/backupdid");
+    }
+
+    nextClicked() {
+        //create did & credential
+    }
+
+    allWordsMatch() {
+        let selectComplete = this.selectList.length === this.mnemonicList.length ? true : false;
+        if (selectComplete) {
+            let mn = "";
+            for (let i = 0; i < this.selectList.length; i++) {
+                mn += this.selectList[i].text;
+            }
+            if (!Util.isNull(mn) && mn == this.mnemonicStr.replace(/\s+/g, "")) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

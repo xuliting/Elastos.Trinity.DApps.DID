@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController } from '@ionic/angular';
+
+import { Native } from '../../services/native';
 
 @Component({
   selector: 'page-noidentity',
@@ -7,14 +8,14 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['noidentity.scss']
 })
 export class NoIdentityPage {
-  constructor(public navCtrl: NavController) {
+  constructor(private native: Native) {
   }
 
   createIdentity() {
-    this.navCtrl.navigateForward('/createidentity')
+    this.native.go('/setpassword');
   }
 
   importIdentity() {
-    this.navCtrl.navigateForward('/xxx')
+    this.native.go("/importdid");
   }
 }

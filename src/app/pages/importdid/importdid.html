@@ -14,10 +14,22 @@
       <ion-input #addMnemonicWordInput placeholder="Next mnemonic word" [(ngModel)]="mnemonicWord"></ion-input>
       <ion-button (click)="appendMnemonicWord()">Add</ion-button>
     </ion-item>
-    {{mnemonicWords}}
+
+    <ion-item>
+      <ion-label stacked>{{ 'unlock-paypassword-title' | translate }}</ion-label>
+      <ion-note slot="end">{{ 'text-pwd-validator' | translate }}</ion-note>
+    </ion-item>
+    <ion-item>
+      <ion-input type="password" placeholder="{{ 'import-password1-placeholder' | translate }}"
+          [(ngModel)]="mnemonicObj.password"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-input type="password" placeholder="{{ 'import-password2-placeholder' | translate }}"
+          [(ngModel)]="mnemonicObj.rePassword"></ion-input>
+    </ion-item>
   </ion-content>
 
   <ion-footer class="ion-text-center ion-padding">
-    <ion-button no-margin expand="full" (click)="nextClicked()">Import</ion-button>
+    <ion-button no-margin expand="full" (click)="doImport()">Import</ion-button>
   </ion-footer>
 </div>

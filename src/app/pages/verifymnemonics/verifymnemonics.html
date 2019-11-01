@@ -10,13 +10,26 @@
       This verification is needed to make sure that your correctly saved your mnemonics.
     </p>
     <div class="mnemonics-box">
+      <div class="phrase">
+        <ion-button outline *ngFor="let item of selectList; let i = index"
+            (click)="removeButton(i,item)">{{item.text}}</ion-button>
+      </div>
+    </div>
+
+    <div class="bottom-phrase">
+      <div class="words">
+        <ion-button outline *ngFor="let item of mnemonicList; let i = index"
+            (click)="addButton(i, item)" [disabled]="item.selected">
+            {{item.text}}
+        </ion-button>
+      </div>
     </div>
   </ion-content>
 
   <ion-footer class="ion-text-center ion-padding">
     <ion-buttons>
-      <ion-button no-margin size="large" (click)="backPressed()" style="width:50%">Back</ion-button>
-      <ion-button no-margin size="large" (click)="nextClicked()" style="width:50%" [disabled]="!allWordsMatch()">Create my DID</ion-button>
+      <ion-button class="ion-no-margin" size="large" (click)="backPressed()" style="width:50%">Back</ion-button>
+      <ion-button class="ion-no-margin" size="large" (click)="nextClicked()" style="width:50%" [disabled]="!allWordsMatch()">Create my DID</ion-button>
     </ion-buttons>
   </ion-footer>
 </div>
