@@ -1,12 +1,8 @@
 <ion-toolbar>
     <ion-title>{{title | translate }}</ion-title>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref=""></ion-back-button>
+        <ion-back-button ></ion-back-button>
     </ion-buttons>
-<!--     <ion-buttons slot="start">
-        <ion-back-button text="" [icon]="back_touched ? 'back-light' : 'back-dark'" (click)="back_touched=true;">
-        </ion-back-button>
-    </ion-buttons> -->
     <ion-buttons slot="end">
         <ion-button fill="clear" (click)="menu($event)" *ngIf="showMenu">
             <ion-icon name="more"></ion-icon>

@@ -1,22 +1,20 @@
-<div class="ion-page">
-  <ion-header>
-    <header-bar title="Backup DID"></header-bar>
-  </ion-header>
+<ion-header>
+  <header-bar title="Backup DID"></header-bar>
+</ion-header>
 
-  <ion-content class="ion-padding" text-center>
-    <ion-img [src]="'/assets/images/mnemonics.png'" class="mainicon"></ion-img>
-    <h1>Write down the mnemonics</h1>
-    <div class="mnemonics-box">
-      <span outline *ngFor="let item of mnemonicList; let i = index">
-          {{item.text}}
-      </span>
-    </div>
-    <p margin>
-      <ion-icon name="alert"></ion-icon> Don't forget your mnemonic words. They will be needed in case you loose your identity in order to re-create it.
-    </p>
-  </ion-content>
+<ion-content class="ion-padding" text-center>
+  <ion-img [src]="'/assets/images/mnemonics.png'" class="mainicon"></ion-img>
+  <h1>Write down the mnemonics</h1>
+  <div class="mnemonics-box">
+    <span outline *ngFor="let item of mnemonicList; let i = index">
+        {{item.text}}
+    </span>
+  </div>
+  <p margin>
+    <ion-icon name="alert"></ion-icon> Don't forget your mnemonic words. They will be needed in case you loose your identity in order to re-create it.
+  </p>
+</ion-content>
 
-  <ion-footer class="ion-text-center ion-padding">
-    <ion-button no-margin expand="full" size="large" (click)="nextClicked()">Next</ion-button>
-  </ion-footer>
-</div>
+<ion-footer class="ion-text-center ion-padding">
+  <ion-button no-margin expand="full" size="large" (click)="nextClicked()">Next</ion-button>
+</ion-footer>
