@@ -26,8 +26,5 @@
 </ion-content>
 
 <ion-footer class="ion-text-center ion-padding">
-  <ion-buttons>
-    <ion-button class="ion-no-margin" size="large" (click)="backPressed()" style="width:50%">Back</ion-button>
-    <ion-button class="ion-no-margin" size="large" (click)="nextClicked()" style="width:50%" [disabled]="!allWordsMatch()">Create my DID</ion-button>
-  </ion-buttons>
+    <ion-button class="confirm" expand="full" size="large" (click)="nextClicked()" [disabled]="!allWordsMatch()">Create my DID</ion-button>
 </ion-footer>

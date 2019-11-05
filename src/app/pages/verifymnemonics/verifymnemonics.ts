@@ -1,8 +1,9 @@
 import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
 
+import { Config } from '../../services/config';
 import { DIDService } from '../../services/did.service';
+import { LocalStorage } from '../../services/localstorage';
 import { Native } from '../../services/native';
 import { Util } from '../../services/util';
 
@@ -15,9 +16,10 @@ export class VerifyMnemonicsPage {
     mnemonicList: Array<any> = [];
     selectList: Array<any> = [];
     mnemonicStr: string;
+    password:string = "";
 
-    constructor(public route: ActivatedRoute, public navCtrl: NavController,
-            public zone: NgZone, private didService: DIDService, private native: Native) {
+    constructor(public route: ActivatedRoute, public zone: NgZone,
+            private didService: DIDService, private localStorage: LocalStorage, private native: Native) {
         this.init();
     }
 
@@ -26,6 +28,9 @@ export class VerifyMnemonicsPage {
             this.mnemonicStr = this.native.clone(data["mnemonicStr"]);
             this.mnemonicList = JSON.parse(data["mnemonicList"]);
             this.mnemonicList = this.mnemonicList.sort(function () { return 0.5 - Math.random() });
+        });
+        this.localStorage.getPassword().then( (ret)=> {
+            this.password = ret;
         });
     }
 
@@ -47,15 +52,43 @@ export class VerifyMnemonicsPage {
         });
     }
 
-    backPressed() {
-        this.navCtrl.navigateBack("/backupdid");
-    }
-
     nextClicked() {
         //create did & credential
+        this.createDidAndCredential();
+
+    }
+
+    async createDidAndCredential() {
+        console.log("createDidAndCredential");
+        let didString = "";
+        this.didService.initPrivateIdentity(this.mnemonicStr, this.password, true);
+        await this.didService.createDid(this.password, "").then ( (ret)=> {
+            didString = ret.DidString;
+        });
+        let types = new Array();
+        // types[0] = "BasicProfileCredential";
+        types[0] = "SelfProclaimedCredential";
+
+        let props = {
+            fullname: Config.profile.fullname,
+            email: Config.profile.email,
+            phonenumber: Config.profile.phonenumber,
+            gender: Config.profile.gender,
+            area: Config.profile.area
+        }
+
+        let credential = null;
+        await this.didService.createCredential(didString, "cred-1", types, 15, props, this.password).then ( (ret)=> {
+            credential = ret;
+        });
+        await this.didService.storeCredential(credential.objId);
+        await this.didService.addCredential(credential.objId);
+
+        this.native.go("/myprofile");
     }
 
     allWordsMatch() {
+        // return true;//TODO
         let selectComplete = this.selectList.length === this.mnemonicList.length ? true : false;
         if (selectComplete) {
             let mn = "";

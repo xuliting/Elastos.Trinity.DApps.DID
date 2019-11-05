@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouteReuseStrategy } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, IonicRouteStrategy, Platform } from '@ionic/angular';
+import { IonicStorageModule } from "@ionic/storage";
 import { AppRoutingModule } from './app-routing.module';
 import { Clipboard } from '@ionic-native/clipboard/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -30,7 +31,9 @@ import { DIDSettingsPage } from './pages/didsettings/didsettings';
 import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 
-import { SecurityCheckComponent } from './components/securitycheck/securitycheck.component'
+import { SecurityCheckComponent } from './components/securitycheck/securitycheck.component';
+
+import {LocalStorage } from './services/localstorage';
 
 /** 通过类引用方式解析国家化文件 */
 export class CustomTranslateLoader implements TranslateLoader {
@@ -80,6 +83,11 @@ export function TranslateLoaderFactory() {
     IonBottomDrawerModule,
     IonicModule.forRoot(),
     QRCodeModule,
+    IonicStorageModule,
+    IonicStorageModule.forRoot({
+            name: '__diddb',
+            driverOrder: ['localstorage', 'indexeddb', 'sqlite', 'websql']
+        }),
     TranslateModule.forRoot({
         loader: {
             provide: TranslateLoader,
@@ -97,6 +105,7 @@ export function TranslateLoaderFactory() {
   ],
   providers: [
     Clipboard,
+    LocalStorage,
     StatusBar,
     SplashScreen,
     Platform,

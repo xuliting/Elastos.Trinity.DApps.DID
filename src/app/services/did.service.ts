@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { AlertController, NavController, Platform, ToastController } from '@ionic/angular';
 import { DomSanitizer } from '@angular/platform-browser';
 
+import { LocalStorage } from "./localstorage";
 import { Native } from "./native";
 
 declare let appService: any;
@@ -13,13 +14,14 @@ let selfDIDService: DIDService = null;
 })
 export class DIDService {
     selfDidStore: any;
-    selfDidDucument: any;
-    curDIDString: string = "";
+    selfDidDocument: any;
+    curDidString: string = "";
 
     constructor(
         private platform: Platform,
         public zone: NgZone,
         public toastCtrl: ToastController,
+        private localStorage: LocalStorage,
         private native: Native,
         private navController: NavController) {
             selfDIDService = this;
@@ -29,24 +31,33 @@ export class DIDService {
         console.log("DID Service is initializing...");
 
         // Load app manager only on real device, not in desktop browser - beware: ionic 4 bug with "desktop" or "android"/"ios"
-        if (this.platform.platforms().indexOf("cordova") >= 0) {
-            this.initDidStore().then((ret) => {
-                console.log("initDidStore().then " + ret.objId);
-                this.selfDidStore = ret;
-                this.hasPrivateIdentity().then((ret) => {
-                    console.log("hasPrivateIdentity:" + ret);
-                    if (ret == "true") {
-                        this.showDID();
-                    }
-                    else {
-                        this.handleEmptyDID();
-                    }
-                })
-            })
-        }
-        else {
+        // if (this.platform.platforms().indexOf("cordova") >= 0) {
+        //     this.localStorage.getPassword().then( (ret)=> {
+        //         if (null == ret) {
+        //             this.handleEmptyDID();
+        //         }
+        //         else {
+        //             this.initDidStore(ret).then ( (ret)=> {
+        //                 this.hasPrivateIdentity().then((ret) => {
+        //                     console.log("hasPrivateIdentity:" + ret);
+        //                     if (ret == "true") {
+        //                         this.showDID();
+        //                     }
+        //                     else {
+        //                         //go editprofile?
+        //                         this.handleEmptyDID();
+        //                     }
+        //                 })
+        //             })
+        //             .catch( (error)=> {
+        //                 console.log("initDidStore error:" + error.message);
+        //             })
+        //         }
+        //     })
+        // }
+        // else {
             this.handleEmptyDID();
-        }
+        // }
     }
 
     showDID() {
@@ -58,9 +69,19 @@ export class DIDService {
         // this.native.setRootRouter('/backupdid');
     }
 
-    getCurrentDIDString() {
-        return this.curDIDString;
+    getCurrentDidString() {
+        console.log("didservice  this.curDidString:" + this.curDidString);
+        return this.curDidString;
     }
+
+    // updateDidString() {
+    //     this.getDidDocumentSubject().then( (ret)=> {
+    //         ret.toString(
+    //             (ret)=>{this.curDidString = ret;},
+    //             (error) => {console.log("Did toString error:" + error.message)}
+    //         )
+    //     });
+    // }
 
     /**
      * Creates a new local user identity.
@@ -72,10 +93,12 @@ export class DIDService {
     }
 
     //
-    initDidStore(): Promise<any> {
+    initDidStore(password): Promise<any> {
         return new Promise((resolve, reject)=>{
             DIDPlugin.initDidStore(
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
+                (ret) => {this.selfDidStore = ret;resolve(ret);},
+                (err) => {reject(err)},
+                password
             );
         });
     }
@@ -133,7 +156,13 @@ export class DIDService {
     createDid(passparase, hint = ""): Promise<any> {
         return new Promise((resolve, reject)=>{
             this.selfDidStore.newDid(
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
+                (ret) => {
+                    this.selfDidDocument = ret;
+                    this.curDidString = ret.DidString;
+                    console.log("createDid this.curDidString:" + this.curDidString);
+                    resolve(ret)
+                },
+                (err) => {reject(err)},
                 passparase, hint
             );
         });
@@ -220,18 +249,18 @@ export class DIDService {
         });
     }
 
-    loadCredentials(didString, credId): Promise<any> {
+    loadCredential(didString, credId): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.selfDidStore.loadCredentials(
+            this.selfDidStore.loadCredential(
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
                 didString, credId
             );
         });
     }
 
-    storeCredentials(credentialId): Promise<any> {
+    storeCredential(credentialId): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.selfDidStore.storeCredentials(
+            this.selfDidStore.storeCredential(
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
                 credentialId
             );
@@ -239,6 +268,25 @@ export class DIDService {
     }
 
     //DIDDocument
+    getDidDocumentSubject() : Promise<any> {
+        return new Promise((resolve, reject)=>{
+            this.selfDidDocument.getSubject(
+                (ret) => {resolve(ret)}, (err) => {reject(err)},
+            );
+        });
+
+    }
+
+    //Did
+    addCredential(credentialObjId): Promise<any> {
+        return new Promise((resolve, reject)=>{
+            this.selfDidDocument.addCredential(
+                (ret) => {resolve(ret)}, (err) => {reject(err)},
+                credentialObjId
+            );
+        });
+
+    }
 
     //Credential
 

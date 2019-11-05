@@ -4,6 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { TranslateService } from '@ngx-translate/core';
 import { DIDService } from './services/did.service';
+import { LocalStorage } from './services/localstorage';
 import { UXService } from './services/ux.service';
 
 @Component({
@@ -16,6 +17,7 @@ export class MyApp {
     splashScreen: SplashScreen,
     translate: TranslateService,
     didService: DIDService,
+    localStorage: LocalStorage,
     appService: UXService) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, PopoverController} from '@ionic/angular';
 import { DrawerState } from 'ion-bottom-drawer';
+
 import { Config } from '../../services/config';
 import { Native } from '../../services/native';
 import { DIDService } from '../../services/did.service';
@@ -69,10 +70,13 @@ export class MyProfilePage {
   Config = Config;
 
   constructor(public navCtrl: NavController,
-    public popoverController: PopoverController,
-    private native: Native,
-    private didService: DIDService) {
-    this.didString = didService.getCurrentDIDString();
+      public popoverController: PopoverController,
+      private native: Native,
+      private didService: DIDService) {
+  }
+
+  ionViewDidEnter() {
+    this.didString = this.didService.getCurrentDidString();
   }
 
   async menuClicked(event) {
