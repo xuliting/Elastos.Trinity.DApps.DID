@@ -11,6 +11,8 @@ import { ImportDIDPage } from './pages/importdid/importdid';
 import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
 import { DIDSettingsPage } from './pages/didsettings/didsettings';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
+import { CredentialListPage } from './pages/credential/list/credentiallist';
+import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
 
 const routes: Routes = [
   { path: '', redirectTo: 'noidentity', pathMatch: 'full' },
@@ -25,6 +27,8 @@ const routes: Routes = [
   { path: 'didsettings', component: DIDSettingsPage },
   { path: 'verifymnemonics', component: VerifyMnemonicsPage },
   { path: 'credaccessrequest', component: CredentialAccessRequestPage },
+  { path: 'credentiallist', component: CredentialListPage },
+  { path: 'credentialcreate', component: CredentialCreatePage },
 ];
 
 @NgModule({

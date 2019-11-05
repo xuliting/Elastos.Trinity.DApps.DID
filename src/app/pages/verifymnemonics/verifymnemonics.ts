@@ -1,7 +1,7 @@
 import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Config } from '../../services/config';
+// import { Config } from '../../services/config';
 import { DIDService } from '../../services/did.service';
 import { LocalStorage } from '../../services/localstorage';
 import { Native } from '../../services/native';
@@ -65,30 +65,30 @@ export class VerifyMnemonicsPage {
         await this.didService.createDid(this.password, "").then ( (ret)=> {
             didString = ret.DidString;
         });
-        let types = new Array();
-        // types[0] = "BasicProfileCredential";
-        types[0] = "SelfProclaimedCredential";
+        // let types = new Array();
+        // // types[0] = "BasicProfileCredential";
+        // types[0] = "SelfProclaimedCredential";
 
-        let props = {
-            fullname: Config.profile.fullname,
-            email: Config.profile.email,
-            phonenumber: Config.profile.phonenumber,
-            gender: Config.profile.gender,
-            area: Config.profile.area
-        }
+        // let props = {
+        //     fullname: Config.profile.fullname,
+        //     email: Config.profile.email,
+        //     phonenumber: Config.profile.phonenumber,
+        //     gender: Config.profile.gender,
+        //     area: Config.profile.area
+        // }
 
-        let credential = null;
-        await this.didService.createCredential(didString, "cred-1", types, 15, props, this.password).then ( (ret)=> {
-            credential = ret;
-        });
-        await this.didService.storeCredential(credential.objId);
-        await this.didService.addCredential(credential.objId);
+        // let credential = null;
+        // await this.didService.createCredential(didString, "cred-1", types, 15, props, this.password).then ( (ret)=> {
+        //     credential = ret;
+        // });
+        // await this.didService.storeCredential(credential.objId);
+        // await this.didService.addCredential(credential.objId);
 
         this.native.go("/myprofile");
     }
 
     allWordsMatch() {
-        // return true;//TODO
+        return true;//TODO
         let selectComplete = this.selectList.length === this.mnemonicList.length ? true : false;
         if (selectComplete) {
             let mn = "";

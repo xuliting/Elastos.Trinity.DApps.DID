@@ -30,6 +30,8 @@ import { ImportDIDPage } from './pages/importdid/importdid';
 import { DIDSettingsPage } from './pages/didsettings/didsettings';
 import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
+import { CredentialListPage } from './pages/credential/list/credentiallist';
+import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
 
 import { SecurityCheckComponent } from './components/securitycheck/securitycheck.component';
 
@@ -70,6 +72,8 @@ export function TranslateLoaderFactory() {
     DIDSettingsPage,
     VerifyMnemonicsPage,
     CredentialAccessRequestPage,
+    CredentialListPage,
+    CredentialCreatePage,
 
     // Menus
     MyProfilePageMenu

@@ -9,6 +9,7 @@ export class LocalStorage {
     }
 
     public add(key: string, value: any): any {
+        console.log("LocalStorage::add");
         return this.get(key).then((val) => {
             let id = value['id'];
             if (val === null) {

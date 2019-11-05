@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, PopoverController} from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+import { PopoverController} from '@ionic/angular';
 import { DrawerState } from 'ion-bottom-drawer';
 
-import { Config } from '../../services/config';
+import { LocalStorage } from '../../services/localstorage';
 import { Native } from '../../services/native';
 import { DIDService } from '../../services/did.service';
 
@@ -29,22 +30,24 @@ import { DIDService } from '../../services/did.service';
   `
 })
 export class MyProfilePageMenu {
-  constructor(public navCtrl: NavController, public popoverController: PopoverController) {
-  }
+  constructor(public popoverController: PopoverController,
+              private native: Native)
+  {}
 
   didSettings() {
     this.closePopup();
-    this.navCtrl.navigateForward("/didsettings");
+    this.native.go("/didsettings");
   }
 
   showCredentials() {
     // TODO
     this.closePopup();
+    this.native.go("/credentiallist");
   }
 
   editProfile() {
     this.closePopup();
-    this.navCtrl.navigateForward("/editprofile")
+    this.native.go("/editprofile", {id: "only-profile"})
   }
 
   configureVisibility() {
@@ -66,13 +69,28 @@ export class MyProfilePage {
   public creatingIdentity: boolean = false;
   public bottomDrawerState: DrawerState = DrawerState.Bottom;
   // public didString: string = "did:ela:azeeza786zea67zaek221fxi9";
-  public didString: string = "";
-  Config = Config;
+  public didString: String = "";
+  public profile: any = {};
+  params: any = {};
 
-  constructor(public navCtrl: NavController,
-      public popoverController: PopoverController,
-      private native: Native,
-      private didService: DIDService) {
+  constructor(public route: ActivatedRoute,
+              public popoverController: PopoverController,
+              private localStorage: LocalStorage,
+              private native: Native,
+              private didService: DIDService) {
+    this.route.queryParams.subscribe((data) => {
+        this.params = data || {};
+    });
+    this.init();
+  }
+
+  init() {
+    this.localStorage.get('profile').then((val) => {
+      if (val) {
+        let id = this.params["id"];
+        this.profile = JSON.parse(val)[id];
+      }
+    });
   }
 
   ionViewDidEnter() {

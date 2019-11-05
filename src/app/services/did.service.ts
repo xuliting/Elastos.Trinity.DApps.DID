@@ -31,57 +31,62 @@ export class DIDService {
         console.log("DID Service is initializing...");
 
         // Load app manager only on real device, not in desktop browser - beware: ionic 4 bug with "desktop" or "android"/"ios"
-        // if (this.platform.platforms().indexOf("cordova") >= 0) {
-        //     this.localStorage.getPassword().then( (ret)=> {
-        //         if (null == ret) {
-        //             this.handleEmptyDID();
-        //         }
-        //         else {
-        //             this.initDidStore(ret).then ( (ret)=> {
-        //                 this.hasPrivateIdentity().then((ret) => {
-        //                     console.log("hasPrivateIdentity:" + ret);
-        //                     if (ret == "true") {
-        //                         this.showDID();
-        //                     }
-        //                     else {
-        //                         //go editprofile?
-        //                         this.handleEmptyDID();
-        //                     }
-        //                 })
-        //             })
-        //             .catch( (error)=> {
-        //                 console.log("initDidStore error:" + error.message);
-        //             })
-        //         }
-        //     })
-        // }
-        // else {
+        if (this.platform.platforms().indexOf("cordova") >= 0) {
+            this.localStorage.getPassword().then( (ret)=> {
+                if (null == ret) {
+                    this.handleEmptyDID();
+                }
+                else {
+                    this.initDidStore(ret).then ( (ret)=> {
+                        this.hasPrivateIdentity().then((ret) => {
+                            console.log("hasPrivateIdentity:" + ret);
+                            if (ret == "true") {
+                                this.showDID();
+                            }
+                            else {
+                                //go editprofile?
+                                this.handleEmptyDID();
+                            }
+                        })
+                    })
+                    .catch( (error)=> {
+                        console.log("initDidStore error:" + error.message);
+                    })
+                }
+            })
+        }
+        else {
             this.handleEmptyDID();
-        // }
+        }
     }
 
     showDID() {
-        this.native.setRootRouter('/didsettings');
+        this.listDids(DIDPlugin.DIDStoreFilter.DID_ALL).then( (ret)=> {
+            console.log("listDids count: " + ret.items.length + "<br>" + JSON.stringify(ret.items));
+
+            this.curDidString = ret.items[0]['did'];
+            this.loadDid(this.curDidString).then( (ret)=> {
+                this.selfDidDocument = ret;
+            })
+
+            // this.native.setRootRouter('/didsettings');
+            this.native.setRootRouter('/myprofile', {id:"only-profile"});
+        });
     }
 
     handleEmptyDID() {
-        this.native.setRootRouter('/noidentity');
-        // this.native.setRootRouter('/backupdid');
+        // this.native.setRootRouter('/noidentity');
+        this.native.setRootRouter('/credentiallist');
+        // this.native.setRootRouter('/myprofile', {id:"only-profile"});
     }
 
     getCurrentDidString() {
+        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+            return "did:ela:azeeza786zea67zaek221fxi9";
+        }
         console.log("didservice  this.curDidString:" + this.curDidString);
         return this.curDidString;
     }
-
-    // updateDidString() {
-    //     this.getDidDocumentSubject().then( (ret)=> {
-    //         ret.toString(
-    //             (ret)=>{this.curDidString = ret;},
-    //             (error) => {console.log("Did toString error:" + error.message)}
-    //         )
-    //     });
-    // }
 
     /**
      * Creates a new local user identity.
@@ -94,6 +99,12 @@ export class DIDService {
 
     //
     initDidStore(password): Promise<any> {
+        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+            return new Promise((resolve, reject)=>{
+               resolve()
+            });
+        }
+
         return new Promise((resolve, reject)=>{
             DIDPlugin.initDidStore(
                 (ret) => {this.selfDidStore = ret;resolve(ret);},
