@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { Events, NavController } from '@ionic/angular';
 
 import { DIDService } from '../../services/did.service';
 import { LocalStorage } from '../../services/localstorage';
@@ -14,7 +14,7 @@ import { Util } from '../../services/util';
 })
 export class EditProfilePage {
   profile = {};
-  public id:String = "";
+  public id:String = "only-profile";
   public fullname: String = "";
   public email: String = "";
   public phonenumber: String = "";
@@ -23,10 +23,9 @@ export class EditProfilePage {
   public area: String = "";
   isEdit: boolean = false;
 
-  constructor(public navCtrl: NavController, public route: ActivatedRoute,
+  constructor(public zone: NgZone, public events: Events, public navCtrl: NavController, public route: ActivatedRoute,
               private localStorage: LocalStorage, private didService: DIDService, private native: Native) {
     this.route.queryParams.subscribe((data) => {
-      console.log("editprofile constructor");
       if (!Util.isEmptyObject(data)) {
         this.localStorage.get('profile').then((val) => {
           if (val) {
@@ -42,17 +41,17 @@ export class EditProfilePage {
           }
         });
       }
-      else {
-        // this.id = Util.uuid();
-        this.id = "only-profile";//
-        this.fullname = "";
-        this.email = "";
-        this.phonenumber = "";
-        this.gender = "";
-        this.birthday = "";
-        this.area = "";
-      }
     });
+  }
+
+  selectArea() {
+    this.events.subscribe('selectarea', (params) => {
+      this.zone.run(() => {
+        this.area = params.en;//TODO
+      });
+      this.events.unsubscribe('selectarea');
+    });
+    this.native.go("/area");
   }
 
   next() {

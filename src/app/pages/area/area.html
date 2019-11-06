@@ -5,7 +5,7 @@
 <ion-content class="ion-padding">
   <ion-list>
     <ion-radio-group [(ngModel)]="areaItem">
-      <ion-item *ngFor="let item of areaList">
+      <ion-item *ngFor="let item of areaList" (click)="selectItem(item)">
         <ion-label>{{ item.en + "/" + item.zh }}</ion-label>
         <ion-radio slot="end" value="{{ item.en }}"></ion-radio>
       </ion-item>

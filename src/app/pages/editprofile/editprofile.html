@@ -18,8 +18,10 @@
     <ion-item>
       <ion-input placeholder="Phone number" [(ngModel)]="phonenumber"></ion-input>
     </ion-item>
-    <ion-item detail [routerLink]="['/area']" routerDirection="forward">
-      <ion-label>Country/Region</ion-label>
+    <ion-item (click)="selectArea()">
+      <ion-label *ngIf='area==""'>Country/Region</ion-label>
+      <ion-label >{{ area }}</ion-label>
+      <ion-icon slot="end" name="arrow-dropright"></ion-icon>
     </ion-item>
     <ion-item>
       <ion-label>Gender</ion-label>

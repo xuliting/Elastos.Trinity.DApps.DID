@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { Events, NavController } from '@ionic/angular';
 
+import { Native } from '../../services/native';
 import { area } from '../../../assets/area/area.js';
 
 @Component({
@@ -12,11 +13,12 @@ export class AreaPage {
   areaList: any;
   areaItem: any = null;
 
-  constructor(public navCtrl: NavController) {
+  constructor(public events: Events, public navCtrl: NavController, private native: Native) {
     this.areaList = area;
   }
 
-  isSelect() {
-    return this.areaItem != null;
+  selectItem(item) {
+    this.events.publish('selectarea', item);
+    this.native.pop();
   }
 }
