@@ -37,17 +37,16 @@ export class DIDService {
                     this.handleEmptyDID();
                 }
                 else {
-                    this.initDidStore(ret).then ( (ret)=> {
-                        this.hasPrivateIdentity().then((ret) => {
-                            console.log("hasPrivateIdentity:" + ret);
-                            if (ret == "true") {
-                                this.showDID();
-                            }
-                            else {
-                                //go editprofile?
-                                this.handleEmptyDID();
-                            }
-                        })
+                    this.initDidStore(ret)
+                    .then (()=>{return this.hasPrivateIdentity()})
+                    .then((ret) => {
+                        console.log("hasPrivateIdentity:" + ret);
+                        if (ret == "true") {
+                            this.showDID();
+                        }
+                        else {
+                            this.handleEmptyDID();
+                        }
                     })
                     .catch( (error)=> {
                         console.log("initDidStore error:" + error.message);
@@ -77,6 +76,7 @@ export class DIDService {
     handleEmptyDID() {
         // this.native.setRootRouter('/noidentity');
         this.native.setRootRouter('/credentiallist');
+        // this.native.setRootRouter('/editprofile');
         // this.native.setRootRouter('/myprofile', {id:"only-profile"});
     }
 
@@ -252,6 +252,16 @@ export class DIDService {
     }
 
     listCredentials(didString): Promise<any> {
+        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+            return new Promise((resolve, reject)=>{
+                let did = [{'didurl':'did:ela:azeeza786zea67zaek221fxi9'}]
+                let ret = {
+                    items:did,
+                }
+               resolve(ret)
+            });
+        }
+
         return new Promise((resolve, reject)=>{
             this.selfDidStore.listCredentials(
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
@@ -260,11 +270,23 @@ export class DIDService {
         });
     }
 
-    loadCredential(didString, credId): Promise<any> {
+    loadCredential(didString, didUrlString): Promise<any> {
+        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+            return new Promise((resolve, reject)=>{
+                let ret = {"objId":191979659,"clazz":5,
+                        "info":{"id":191979659,"fragment":"trinity","type":"[SelfProclaimedCredential]",
+                            "issuance":"Thu Nov 07 12:00:00 GMT+08:00 2019",
+                            "expiration":"Tue Nov 07 12:00:00 GMT+08:00 2034",
+                            "props":{"email":"","fullname":"trinity","phonenumber":"","remark":"remarkddd","url":"url"}
+                            }}
+               resolve(ret)
+            });
+        }
+
         return new Promise((resolve, reject)=>{
             this.selfDidStore.loadCredential(
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                didString, credId
+                didString, didUrlString
             );
         });
     }
@@ -296,7 +318,6 @@ export class DIDService {
                 credentialObjId
             );
         });
-
     }
 
     //Credential

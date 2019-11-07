@@ -14,6 +14,8 @@ export class CredentialCreatePage {
   password: String = "";
   didString: String = "";
   title: String = "";
+  url: String = "";
+  remark: String = "";
   profile:any = {};
 
   constructor(public route:ActivatedRoute,
@@ -42,6 +44,8 @@ export class CredentialCreatePage {
         fullname: this.profile.fullname,
         email: this.profile.email,
         phonenumber: this.profile.phonenumber,
+        url: this.url,
+        remark: this.remark,
     }
 
     let credential = null;
@@ -55,6 +59,9 @@ export class CredentialCreatePage {
   add() {
     this.createCredential();
     this.native.pop();
-    // this.native.go('/credentialcreate');
+  }
+
+  backup() {
+
   }
 }
