@@ -41,9 +41,10 @@ export class CredentialCreatePage {
     types[0] = "SelfProclaimedCredential";
 
     let props = {
-        fullname: this.profile.fullname,
-        email: this.profile.email,
-        phonenumber: this.profile.phonenumber,
+        // fullname: this.profile.fullname,
+        // email: this.profile.email,
+        // phonenumber: this.profile.phonenumber,
+        title: this.title,
         url: this.url,
         remark: this.remark,
     }

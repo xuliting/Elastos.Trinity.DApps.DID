@@ -21,7 +21,6 @@ export class CredentialListPage {
   async init() {
     this.didString = this.didService.getCurrentDidString();
     await this.getCredentialList();
-    console.log("end init");
   }
 
   async getCredentialList() {
@@ -29,7 +28,6 @@ export class CredentialListPage {
       this.credentials = ret.items;
       this.hasCredential = ret.items.length > 0 ? true : false;
       this.loadAllCredential();
-      console.log("credential count:" + ret.items.length+ "<br>" + JSON.stringify(ret.items));
     });
   }
 
@@ -37,7 +35,6 @@ export class CredentialListPage {
     for (let entry of this.credentials) {
       this.loadCredential(this.didString, entry);
     }
-    console.log("loadAllCredential end")
   }
 
   loadCredential(didString, entry) {
@@ -47,12 +44,13 @@ export class CredentialListPage {
         type: ret['info']['type'],
         issuance: ret['info']['issuance'],
         expiration: ret['info']['expiration'],
+        title: ret['info']['title'],
         url: ret['info']['props']['url'],
-        remark: ret['info']['props']['remark']
+        remark: ret['info']['props']['remark'],
       }
       entry['info'] = info;
+      entry['isChecked'] = false;
     });
-    console.log("loadCredential end")
   }
 
   createCredential() {
@@ -61,5 +59,15 @@ export class CredentialListPage {
 
   backupCredential() {
 
+  }
+
+  deleteCredential() {
+    this.credentials.forEach((credential,index,array)=>{
+      if (credential.isChecked === true) {
+        this.didService.deleteCredential(this.didString, credential['didurl']).then( (ret)=> {
+          this.credentials.splice(index, 1);
+        })
+      }
+    });
   }
 }
