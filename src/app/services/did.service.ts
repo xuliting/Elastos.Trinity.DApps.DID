@@ -243,6 +243,7 @@ export class DIDService {
     }
 
     deleteCredential(didString, didUrlString): Promise<any> {
+        console.log("deleteCredential:" + didUrlString);
         return new Promise((resolve, reject)=>{
             this.selfDidStore.deleteCredential(
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
@@ -321,6 +322,20 @@ export class DIDService {
     }
 
     //Credential
+    backupCredential(credential): Promise<any> {
+        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+            return new Promise((resolve, reject)=>{
+                let ret = "{\"id\":\"did:elastos:ikoWcH4HJYGsHFzYH3VEVL7iMeL6NGm8VF#test\",\"type\":[\"SelfProclaimedCredential\"],\"issuanceDate\":\"2019-11-11T08:00:00Z\",\"expirationDate\":\"2034-11-11T08:00:00Z\",\"credentialSubject\":{\"id\":\"did:elastos:ikoWcH4HJYGsHFzYH3VEVL7iMeL6NGm8VF\",\"remark\":\"ttttttttt\",\"title\":\"test\",\"url\":\"tst\"},\"proof\":{\"verificationMethod\":\"#primary\",\"signature\":\"foJZLqID4C27eDheK/VDYjaGlxgTzy88s+o95GL4KwFbxLYechjOQ/JjMv7UFTYByOg84dECezeqjR7pjHeu1g==\"}}"
+                resolve(ret)
+            });
+        }
+
+        return new Promise((resolve, reject)=>{
+            credential.toString(
+                (ret) => {resolve(ret)}, (err) => {reject(err)},
+            );
+        });
+    }
 
     // Fun(ret, okFun = null) {
     //     if (okFun != null) {

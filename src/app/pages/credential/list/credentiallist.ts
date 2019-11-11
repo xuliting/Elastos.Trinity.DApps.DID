@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { DIDService } from '../../../services/did.service';
 import { Native } from '../../../services/native';
+import { PopupProvider } from '../../../services/popup';
 
 @Component({
   selector: 'page-credentiallist',
@@ -13,8 +14,10 @@ export class CredentialListPage {
   hasCredential: boolean = false;
   didString: String = "";
   public credentials: any = {};
+  public isEdit = false;
 
-  constructor(public route:ActivatedRoute, private didService: DIDService, private native: Native) {
+  constructor(public route:ActivatedRoute, private didService: DIDService,
+      private native: Native, private popupProvider: PopupProvider) {
     this.init();
   }
 
@@ -44,12 +47,13 @@ export class CredentialListPage {
         type: ret['info']['type'],
         issuance: ret['info']['issuance'],
         expiration: ret['info']['expiration'],
-        title: ret['info']['title'],
+        title: ret['info']['props']['title'],
         url: ret['info']['props']['url'],
         remark: ret['info']['props']['remark'],
       }
       entry['info'] = info;
       entry['isChecked'] = false;
+      entry['object'] = ret;
     });
   }
 
@@ -57,17 +61,45 @@ export class CredentialListPage {
     this.native.go('/credentialcreate');
   }
 
-  backupCredential() {
+  backupCredential(credential) {
+    if (this.isEdit) return;
 
+    this.didService.backupCredential(credential).then( (ret)=> {
+      this.native.go('/credentialbackup', {content: ret});
+    })
+  }
+
+  getSelectedCount() {
+    let count = 0;
+    for (let i = 0; i < this.credentials.length; i++) {
+      if (this.credentials[i].isChecked === true) {
+        count++;
+      }
+    }
+    return count;
   }
 
   deleteCredential() {
-    this.credentials.forEach((credential,index,array)=>{
-      if (credential.isChecked === true) {
-        this.didService.deleteCredential(this.didString, credential['didurl']).then( (ret)=> {
-          this.credentials.splice(index, 1);
-        })
+    let selectedCount = this.getSelectedCount();
+    if (selectedCount == 0) {
+      //TODO
+      return;
+    }
+
+    this.popupProvider.ionicConfirm("Delete", "Delete Credential?", "Yes", "NO").then((data) => {
+      if (data) {
+          this.credentials.forEach((credential,index,array)=>{
+          if (credential.isChecked === true) {
+            this.didService.deleteCredential(this.didString, credential['didurl']).then( (ret)=> {
+              this.credentials.splice(index, 1);
+            })
+          }
+        });
       }
     });
+  }
+
+  editCredential() {
+    this.isEdit = true;
   }
 }

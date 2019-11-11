@@ -32,10 +32,12 @@ import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 import { CredentialListPage } from './pages/credential/list/credentiallist';
 import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
+import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
 
 import { SecurityCheckComponent } from './components/securitycheck/securitycheck.component';
 
-import {LocalStorage } from './services/localstorage';
+import { LocalStorage } from './services/localstorage';
+import { PopupProvider } from './services/popup';
 
 /** 通过类引用方式解析国家化文件 */
 export class CustomTranslateLoader implements TranslateLoader {
@@ -74,6 +76,7 @@ export function TranslateLoaderFactory() {
     CredentialAccessRequestPage,
     CredentialListPage,
     CredentialCreatePage,
+    CredentialBackupPage,
 
     // Menus
     MyProfilePageMenu
@@ -110,6 +113,7 @@ export function TranslateLoaderFactory() {
   providers: [
     Clipboard,
     LocalStorage,
+    PopupProvider,
     StatusBar,
     SplashScreen,
     Platform,

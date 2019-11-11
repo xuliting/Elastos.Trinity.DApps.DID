@@ -13,6 +13,7 @@ import { DIDSettingsPage } from './pages/didsettings/didsettings';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 import { CredentialListPage } from './pages/credential/list/credentiallist';
 import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
+import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
 
 const routes: Routes = [
   { path: '', redirectTo: 'noidentity', pathMatch: 'full' },
@@ -29,6 +30,7 @@ const routes: Routes = [
   { path: 'credaccessrequest', component: CredentialAccessRequestPage },
   { path: 'credentiallist', component: CredentialListPage },
   { path: 'credentialcreate', component: CredentialCreatePage },
+  { path: 'credentialbackup', component: CredentialBackupPage },
 ];
 
 @NgModule({
