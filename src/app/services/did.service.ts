@@ -75,9 +75,9 @@ export class DIDService {
 
     handleEmptyDID() {
         // this.native.setRootRouter('/noidentity');
-        this.native.setRootRouter('/credentiallist');
+        // this.native.setRootRouter('/credentiallist');
         // this.native.setRootRouter('/editprofile');
-        // this.native.setRootRouter('/myprofile', {id:"only-profile"});
+        this.native.setRootRouter('/myprofile', {id:"only-profile"});
     }
 
     getCurrentDidString() {

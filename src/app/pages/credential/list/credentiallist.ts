@@ -102,4 +102,14 @@ export class CredentialListPage {
   editCredential() {
     this.isEdit = true;
   }
+
+  CanDeactivate() {
+    if (this.isEdit) {
+      this.isEdit = false;
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
 }

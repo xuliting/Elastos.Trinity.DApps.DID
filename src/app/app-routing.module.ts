@@ -12,6 +12,7 @@ import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
 import { DIDSettingsPage } from './pages/didsettings/didsettings';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 import { CredentialListPage } from './pages/credential/list/credentiallist';
+import { CanDeactivateList } from './pages/credential/list/candeactivate.service';
 import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
 import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
 
@@ -28,7 +29,7 @@ const routes: Routes = [
   { path: 'didsettings', component: DIDSettingsPage },
   { path: 'verifymnemonics', component: VerifyMnemonicsPage },
   { path: 'credaccessrequest', component: CredentialAccessRequestPage },
-  { path: 'credentiallist', component: CredentialListPage },
+  { path: 'credentiallist', component: CredentialListPage, canDeactivate: [CanDeactivateList] },
   { path: 'credentialcreate', component: CredentialCreatePage },
   { path: 'credentialbackup', component: CredentialBackupPage },
 ];

@@ -31,6 +31,7 @@ import { DIDSettingsPage } from './pages/didsettings/didsettings';
 import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 import { CredentialListPage } from './pages/credential/list/credentiallist';
+import { CanDeactivateList } from './pages/credential/list/candeactivate.service';
 import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
 import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
 
@@ -114,6 +115,7 @@ export function TranslateLoaderFactory() {
     Clipboard,
     LocalStorage,
     PopupProvider,
+    CanDeactivateList,
     StatusBar,
     SplashScreen,
     Platform,
