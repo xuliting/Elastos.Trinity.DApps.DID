@@ -4,7 +4,7 @@ import { Platform } from '@ionic/angular';
 
 import { Native } from './native';
 
-declare let appService: any;
+declare let appManager: any;
 let selfUxService: UXService = null;
 
 enum MessageType {
@@ -29,9 +29,9 @@ export class UXService {
     }
 
     init() {
-        console.log("appService init");
+        console.log("appManager init");
         if (this.platform.platforms().indexOf("cordova") >= 0) {
-            appService.setListener(this.onReceive);
+            appManager.setListener(this.onReceive);
             this.getLanguage();
         }
     }
@@ -44,15 +44,15 @@ export class UXService {
      * Close this application.
      */
     close() {
-        appService.close();
+        appManager.close();
     }
 
     minimize() {
-        appService.launcher();
+        appManager.launcher();
     }
 
     getLanguage() {
-        appService.getLocale(
+        appManager.getLocale(
             ret => {
                 console.log("UXService::getLanguage" + ret);
                 selfUxService.setCurLang(ret.currentLang);
@@ -75,7 +75,7 @@ export class UXService {
     setIntentListener() {
         if (!this.isReceiveIntentReady) {
             this.isReceiveIntentReady = true;
-            appService.setIntentListener(this.onReceiveIntent);
+            appManager.setIntentListener(this.onReceiveIntent);
         }
     }
 
@@ -113,6 +113,6 @@ export class UXService {
     }
 
     sendIntentResponse(action, result, intentId) {
-        appService.sendIntentResponse(action, result, intentId);
+        appManager.sendIntentResponse(action, result, intentId);
     }
 }

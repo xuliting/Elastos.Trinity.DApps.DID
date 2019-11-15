@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 
-declare let appService: any;
+declare let appManger: any;
 
 @Component({
   selector: 'page-credentialaccessrequest',
@@ -22,11 +22,11 @@ export class CredentialAccessRequestPage {
 
   acceptRequest() {
     console.log("Sending credaccess intent response for intent id "+this.intentId)
-    appService.sendIntentResponse("credaccess", {result:"success"}, this.intentId)
-    appService.close();
+    appManger.sendIntentResponse("credaccess", {result:"success"}, this.intentId)
+    appManger.close();
   }
 
   rejectRequest() {
-    appService.close();
+    appManger.close();
   }
 }

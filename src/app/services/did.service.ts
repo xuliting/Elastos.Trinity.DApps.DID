@@ -5,7 +5,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { LocalStorage } from "./localstorage";
 import { Native } from "./native";
 
-declare let appService: any;
 declare let DIDPlugin: any;
 let selfDIDService: DIDService = null;
 

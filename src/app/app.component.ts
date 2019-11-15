@@ -18,14 +18,14 @@ export class MyApp {
     translate: TranslateService,
     didService: DIDService,
     localStorage: LocalStorage,
-    appService: UXService) {
+    uxService: UXService) {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
 
-      appService.init();
+      uxService.init();
       didService.init();
     });
   }

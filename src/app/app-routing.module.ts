@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'noidentity', pathMatch: 'full' },
   { path: 'area', component: AreaPage },
   { path: 'noidentity', component: NoIdentityPage },
-  { path: 'createidentity', component: EditProfilePage }, // TODO: edit profile page, with special params
+  { path: 'createidentity', component: EditProfilePage },
   { path: 'editprofile', component: EditProfilePage },
   { path: 'myprofile', component: MyProfilePage },
   { path: 'setpassword', component: SetPasswordPage },
