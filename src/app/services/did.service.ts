@@ -6,7 +6,6 @@ import { LocalStorage } from "./localstorage";
 import { Native } from "./native";
 
 declare let DIDPlugin: any;
-let selfDIDService: DIDService = null;
 
 @Injectable({
     providedIn: 'root'
@@ -23,65 +22,11 @@ export class DIDService {
         private localStorage: LocalStorage,
         private native: Native,
         private navController: NavController) {
-            selfDIDService = this;
-    }
-
-    init() {
-        console.log("DID Service is initializing...");
-
-        // Load app manager only on real device, not in desktop browser - beware: ionic 4 bug with "desktop" or "android"/"ios"
-        if (this.platform.platforms().indexOf("cordova") >= 0) {
-            this.localStorage.getPassword().then( (ret)=> {
-                if (null == ret) {
-                    this.handleEmptyDID();
-                }
-                else {
-                    this.initDidStore(ret)
-                    .then (()=>{return this.hasPrivateIdentity()})
-                    .then((ret) => {
-                        console.log("hasPrivateIdentity:" + ret);
-                        if (ret == "true") {
-                            this.showDID();
-                        }
-                        else {
-                            this.handleEmptyDID();
-                        }
-                    })
-                    .catch( (error)=> {
-                        console.log("initDidStore error:" + error.message);
-                    })
-                }
-            })
-        }
-        else {
-            this.handleEmptyDID();
-        }
-    }
-
-    showDID() {
-        this.listDids(DIDPlugin.DIDStoreFilter.DID_ALL).then( (ret)=> {
-            console.log("listDids count: " + ret.items.length + "<br>" + JSON.stringify(ret.items));
-
-            this.curDidString = ret.items[0]['did'];
-            this.loadDid(this.curDidString).then( (ret)=> {
-                this.selfDidDocument = ret;
-            })
-
-            // this.native.setRootRouter('/didsettings');
-            this.native.setRootRouter('/myprofile', {id:"only-profile"});
-        });
-    }
-
-    handleEmptyDID() {
-        // this.native.setRootRouter('/noidentity');
-        // this.native.setRootRouter('/credentiallist');
-        // this.native.setRootRouter('/editprofile');
-        this.native.setRootRouter('/myprofile', {id:"only-profile"});
     }
 
     getCurrentDidString() {
         if (this.platform.platforms().indexOf("cordova") < 0) {//for test
-            return "did:ela:azeeza786zea67zaek221fxi9";
+            return "did:elastos:azeeza786zea67zaek221fxi9";
         }
         console.log("didservice  this.curDidString:" + this.curDidString);
         return this.curDidString;
@@ -97,7 +42,7 @@ export class DIDService {
     }
 
     //
-    initDidStore(password): Promise<any> {
+    initDidStore(location, password): Promise<any> {
         if (this.platform.platforms().indexOf("cordova") < 0) {//for test
             return new Promise((resolve, reject)=>{
                resolve()
@@ -108,6 +53,7 @@ export class DIDService {
             DIDPlugin.initDidStore(
                 (ret) => {this.selfDidStore = ret;resolve(ret);},
                 (err) => {reject(err)},
+                location,
                 password
             );
         });
@@ -138,6 +84,12 @@ export class DIDService {
 
     //DIDStore
     initPrivateIdentity(mnemonic, password, force): Promise<any> {
+        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+            return new Promise((resolve, reject)=>{
+               resolve("true")
+            });
+        }
+
         return new Promise((resolve, reject)=>{
             this.selfDidStore.initPrivateIdentity(
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
@@ -147,6 +99,12 @@ export class DIDService {
     }
 
     hasPrivateIdentity(): Promise<any> {
+        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+            return new Promise((resolve, reject)=>{
+               resolve("true")
+            });
+        }
+
         return new Promise((resolve, reject)=>{
             this.selfDidStore.hasPrivateIdentity(
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
@@ -164,11 +122,20 @@ export class DIDService {
     }
 
     createDid(passparase, hint = ""): Promise<any> {
+        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+            return new Promise((resolve, reject)=>{
+               let ret = {
+                   did: "did:elastos:azeeza786zea67zaek221fxi9",
+               }
+               resolve(ret);
+            });
+        }
+
         return new Promise((resolve, reject)=>{
             this.selfDidStore.newDid(
                 (ret) => {
                     this.selfDidDocument = ret;
-                    this.curDidString = ret.DidString;
+                    this.curDidString = ret.did;
                     console.log("createDid this.curDidString:" + this.curDidString);
                     resolve(ret)
                 },
@@ -178,19 +145,44 @@ export class DIDService {
         });
     }
 
-    listDids(filter): Promise<any> {
+    listDids(): Promise<any> {
+        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+            return new Promise((resolve, reject)=>{
+               let ret = {
+                   items: [
+                   { did: "did:elastos:azeeza786zea67zaek221fxi9"},
+                   ],
+               }
+               resolve(ret);
+            });
+        }
+
         return new Promise((resolve, reject)=>{
             this.selfDidStore.listDids(
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                filter
+                DIDPlugin.DIDStoreFilter.DID_ALL
             );
         });
     }
 
     loadDid(didString): Promise<any> {
+        console.log("loadDid:" + didString);
+        this.curDidString = didString;
+
+        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+            return new Promise((resolve, reject)=>{
+               let ret = { did: "did:elastos:azeeza786zea67zaek221fxi9"};
+               resolve(ret);
+            });
+        }
+
         return new Promise((resolve, reject)=>{
             this.selfDidStore.loadDid(
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
+                (ret) => {
+                    this.selfDidDocument = ret;
+                    resolve(ret)
+                },
+                (err) => {reject(err)},
                 didString
             );
         });
@@ -243,6 +235,12 @@ export class DIDService {
 
     deleteCredential(didString, didUrlString): Promise<any> {
         console.log("deleteCredential:" + didUrlString);
+        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+            return new Promise((resolve, reject)=>{
+               resolve()
+            });
+        }
+
         return new Promise((resolve, reject)=>{
             this.selfDidStore.deleteCredential(
                 (ret) => {resolve(ret)}, (err) => {reject(err)},

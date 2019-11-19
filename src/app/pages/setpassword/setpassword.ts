@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 
-import { DIDService } from '../../services/did.service';
-import { LocalStorage } from '../../services/localstorage';
+import { Config } from '../../services/config';
 import { Native } from '../../services/native';
 
 @Component({
@@ -15,8 +14,6 @@ export class SetPasswordPage {
   public passwordConfirmation: string = "";
 
   constructor(public navCtrl: NavController,
-      private didService: DIDService,
-      private localStorage: LocalStorage,
       private native: Native) {
   }
 
@@ -31,8 +28,7 @@ export class SetPasswordPage {
 
   confirmPassword() {
     //TODO
-    this.localStorage.setPassword(this.password);
-    this.didService.initDidStore(this.password);
-    this.native.go('/editprofile');
+    Config.didStoreManager.addDidStore(this.password);
+    this.native.go('/editprofile', {create: true});
   }
 }

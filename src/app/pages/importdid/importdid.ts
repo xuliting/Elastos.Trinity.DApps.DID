@@ -34,7 +34,7 @@ export class ImportDIDPage {
   doImport() {
     if(this.checkParms()){
       //TODO import
-      this.native.go("/myprofile", {});
+      this.native.go("/myprofile");
     }
   }
 

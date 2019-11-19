@@ -3,7 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { PopoverController} from '@ionic/angular';
 import { DrawerState } from 'ion-bottom-drawer';
 
-import { LocalStorage } from '../../services/localstorage';
+
+import { Config } from '../../services/config';
+import { Profile } from '../../services/profile.model';
 import { Native } from '../../services/native';
 import { DIDService } from '../../services/did.service';
 
@@ -47,7 +49,7 @@ export class MyProfilePageMenu {
 
   editProfile() {
     this.closePopup();
-    this.native.go("/editprofile", {id: "only-profile"})
+    this.native.go("/editprofile", {create: false})
   }
 
   configureVisibility() {
@@ -68,29 +70,34 @@ export class MyProfilePageMenu {
 export class MyProfilePage {
   public creatingIdentity: boolean = false;
   public bottomDrawerState: DrawerState = DrawerState.Bottom;
-  // public didString: string = "did:ela:azeeza786zea67zaek221fxi9";
   public didString: String = "";
-  public profile: any = {};
-  params: any = {};
+  public profile: Profile = {
+    name:"",
+    birthday:"",
+    gender:"",
+    area:"",
+    email:"",
+    IM:"",
+    phone:"",
+    ELAAddress:"",
+  };
+
+  public createDid = false;
 
   constructor(public route: ActivatedRoute,
               public popoverController: PopoverController,
-              private localStorage: LocalStorage,
               private native: Native,
               private didService: DIDService) {
     this.route.queryParams.subscribe((data) => {
-        this.params = data || {};
+        if (data['create'] == 'true') this.createDid = true;
+        else this.createDid = false;
     });
     this.init();
   }
 
   init() {
-    this.localStorage.get('profile').then((val) => {
-      if (val) {
-        let id = this.params["id"];
-        this.profile = JSON.parse(val)[id];
-      }
-    });
+    this.profile = Config.didStoreManager.getProfile();
+    console.log("MyProfilePage :" + JSON.stringify(this.profile));
   }
 
   ionViewDidEnter() {

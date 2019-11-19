@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { DIDService } from '../../../services/did.service';
-import { LocalStorage } from '../../../services/localstorage';
+import { Config } from '../../../services/config';
 import { Native } from '../../../services/native';
 
 @Component({
@@ -11,34 +10,20 @@ import { Native } from '../../../services/native';
   styleUrls: ['credentialcreate.scss']
 })
 export class CredentialCreatePage {
-  password: String = "";
-  didString: String = "";
   title: String = "";
   url: String = "";
   remark: String = "";
   profile:any = {};
 
-  constructor(public route:ActivatedRoute,
-              private didService: DIDService, private localStorage: LocalStorage, private native: Native) {
+  constructor(public route:ActivatedRoute, private native: Native) {
     this.init();
   }
 
   init() {
-    this.didString = this.didService.getCurrentDidString();
-    this.localStorage.getPassword().then( (ret)=> {
-      this.password = ret;
-    });
-    this.localStorage.get('profile').then((val) => {
-      if (val) {
-        this.profile = JSON.parse(val)['only-profile'];
-      }
-    });
+    this.profile = Config.didStoreManager.getProfile();
   }
 
   async createCredential() {
-    let types = new Array();
-    // types[0] = "BasicProfileCredential";
-    types[0] = "SelfProclaimedCredential";
 
     let props = {
         // fullname: this.profile.fullname,
@@ -49,20 +34,11 @@ export class CredentialCreatePage {
         remark: this.remark,
     }
 
-    let credential = null;
-    await this.didService.createCredential(this.didString, this.title, types, 15, props, this.password).then ( (ret)=> {
-        credential = ret;
-    });
-    await this.didService.storeCredential(credential.objId);
-    await this.didService.addCredential(credential.objId);
+    await Config.didStoreManager.addCredential(this.title, props);
   }
 
   add() {
     this.createCredential();
     this.native.pop();
-  }
-
-  backup() {
-
   }
 }

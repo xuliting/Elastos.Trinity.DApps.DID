@@ -13,7 +13,7 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <div class="name">{{profile.fullname}}</div>
+            <div class="name">{{profile.name}}</div>
           </ion-col>
         </ion-row>
         <ion-row *ngIf="didString!=''">
@@ -40,7 +40,7 @@
           <ion-col class="item-label">Phone number</ion-col>
         </ion-row>
         <ion-row>
-          <ion-col class="item-value">{{profile.phonenumber}}</ion-col>
+          <ion-col class="item-value">{{profile.phone}}</ion-col>
         </ion-row>
       </ion-grid>
     </ion-item>
@@ -79,7 +79,7 @@
   <div class="bottom-drawer-translucent-background" *ngIf="bottomDrawerState == 1" (click)="hideBottomDrawer()"></div>
 </ion-content>
 
-<ion-footer class="ion-text-center ion-padding">
+<ion-footer *ngIf="createDid" class="ion-text-center ion-padding">
   <ion-button expand="full" size="large" (click)="next()">Next</ion-button>
 </ion-footer>
 

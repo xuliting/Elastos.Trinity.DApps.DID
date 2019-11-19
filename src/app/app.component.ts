@@ -1,10 +1,14 @@
-import { Component } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { Component, NgZone } from '@angular/core';
+import { Events, Platform } from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { TranslateService } from '@ngx-translate/core';
+
+import { Config } from './services/config';
 import { DIDService } from './services/did.service';
 import { LocalStorage } from './services/localstorage';
+import { Native } from './services/native';
+import { DidStoreManager } from './services/didStoreManager';
 import { UXService } from './services/ux.service';
 
 @Component({
@@ -12,21 +16,29 @@ import { UXService } from './services/ux.service';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  constructor(platform: Platform,
-    statusBar: StatusBar,
-    splashScreen: SplashScreen,
-    translate: TranslateService,
-    didService: DIDService,
-    localStorage: LocalStorage,
-    uxService: UXService) {
-    platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      statusBar.styleDefault();
-      splashScreen.hide();
+  constructor(
+    public event: Events,
+    public platform: Platform,
+    public zone: NgZone,
+    public statusBar: StatusBar,
+    public splashScreen: SplashScreen,
+    public translate: TranslateService,
+    private didService: DIDService,
+    private localStorage: LocalStorage,
+    private native: Native,
+    private uxService: UXService
+  ) {
+    this.initializeApp();
+  }
 
-      uxService.init();
-      didService.init();
+  initializeApp() {
+    this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
+
+      this.uxService.init();
+      // this.didService.init();
+      Config.didStoreManager = new DidStoreManager(this.event, this.zone, this.platform, this.localStorage, this.didService, this.native);
     });
   }
 }

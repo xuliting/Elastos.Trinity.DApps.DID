@@ -34,6 +34,8 @@ export class LocalStorage {
     public getVal(key, func) {
         this.storage.get(key).then((val) => {
             if (typeof(val) == "string") {
+                console.log("key:" + key);
+                console.log("val:" + val);
                 val = JSON.parse(val);
             }
             func(val);
@@ -48,9 +50,14 @@ export class LocalStorage {
         return this.storage.clear();
     }
 
+    public getWalletLanguage(func): any {
+        let key = "Did-language";
+        this.getVal(key, func);
+    }
+
     public setPassword(value: any): any {
         let key = "Did-password";
-        return this.storage.set(key, value);
+        return this.storage.set(key, JSON.stringify(value));
     }
 
     public getPassword(): Promise<any> {
@@ -60,7 +67,7 @@ export class LocalStorage {
 
     public setMnemonic(value: any): any {
         let key = "Did-mnemonic";
-        return this.storage.set(key, value);
+        return this.storage.set(key, JSON.stringify(value));
     }
 
     public getMnemonic(func): any {
@@ -71,7 +78,7 @@ export class LocalStorage {
     public setCurrentDid(value: any): any {
         // TODO
         let key = "Did-string";
-        return this.storage.set(key, value);
+        return this.storage.set(key, JSON.stringify(value));
     }
 
     public getCurrentDid(func): any {
@@ -80,10 +87,28 @@ export class LocalStorage {
         this.getVal(key, func);
     }
 
-    public getWalletLanguage(func): any {
-        let key = "Did-language";
+    public setDidStoreInfos(obj) {
+        let key = "didstores";
+        this.storage.set(key, JSON.stringify(obj));
+    }
+
+    public getDidStoreInfos(func) {
+        let key = "didstores";
         this.getVal(key, func);
     }
+
+    public saveCurrentDidStoreId(value: any): any {
+        // TODO
+        let key = "cur-didstoreId";
+        return this.storage.set(key, JSON.stringify(value));
+    }
+
+    public getCurrentDidStoreId(func): any {
+        // TODO
+        let key = "cur-didstoreId";
+        this.getVal(key, func);
+    }
+
 }
 
 

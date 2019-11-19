@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Events } from '@ionic/angular';
 
+import { Config } from '../../../services/config';
 import { DIDService } from '../../../services/did.service';
 import { Native } from '../../../services/native';
 import { PopupProvider } from '../../../services/popup';
@@ -11,50 +13,34 @@ import { PopupProvider } from '../../../services/popup';
   styleUrls: ['credentiallist.scss']
 })
 export class CredentialListPage {
-  hasCredential: boolean = false;
   didString: String = "";
   public credentials: any = {};
+  public hasCredential: boolean = false;
   public isEdit = false;
 
-  constructor(public route:ActivatedRoute, private didService: DIDService,
+  constructor(public event: Events, public route:ActivatedRoute, public zone: NgZone,
+      private didService: DIDService,
       private native: Native, private popupProvider: PopupProvider) {
     this.init();
   }
 
-  async init() {
-    this.didString = this.didService.getCurrentDidString();
-    await this.getCredentialList();
-  }
-
-  async getCredentialList() {
-    await this.didService.listCredentials(this.didString).then( (ret)=> {
-      this.credentials = ret.items;
-      this.hasCredential = ret.items.length > 0 ? true : false;
-      this.loadAllCredential();
+  ngOnInit() {
+    this.event.subscribe('did:credentialadded', msg => {
+      this.zone.run(() => {
+        this.credentials = Config.didStoreManager.getCredentialList();
+        this.hasCredential = this.credentials.length > 0 ? true : false;
+      });
     });
   }
 
-  loadAllCredential() {
-    for (let entry of this.credentials) {
-      this.loadCredential(this.didString, entry);
-    }
+  ngOnDestroy() {
+    this.event.unsubscribe('did:credentialadded');
   }
 
-  loadCredential(didString, entry) {
-    this.didService.loadCredential(didString, entry['didurl']).then( (ret)=> {
-      let info = {
-        fragment: ret['info']['fragment'],
-        type: ret['info']['type'],
-        issuance: ret['info']['issuance'],
-        expiration: ret['info']['expiration'],
-        title: ret['info']['props']['title'],
-        url: ret['info']['props']['url'],
-        remark: ret['info']['props']['remark'],
-      }
-      entry['info'] = info;
-      entry['isChecked'] = false;
-      entry['object'] = ret;
-    });
+  init() {
+    this.didString = Config.didStoreManager.getcurDidId();
+    this.credentials = Config.didStoreManager.getCredentialList();
+    this.hasCredential = this.credentials.length > 0 ? true : false;
   }
 
   createCredential() {
@@ -92,6 +78,8 @@ export class CredentialListPage {
           if (credential.isChecked === true) {
             this.didService.deleteCredential(this.didString, credential['didurl']).then( (ret)=> {
               this.credentials.splice(index, 1);
+              this.hasCredential = this.credentials.length > 0 ? true : false;
+              if (!this.hasCredential) this.isEdit = false;
             })
           }
         });
