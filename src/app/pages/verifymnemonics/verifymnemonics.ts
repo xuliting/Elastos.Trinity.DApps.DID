@@ -15,7 +15,9 @@ export class VerifyMnemonicsPage {
     selectList: Array<any> = [];
     mnemonicStr: string;
 
-    constructor(public route: ActivatedRoute, public zone: NgZone, private native: Native) {
+    constructor(public route: ActivatedRoute,
+                public zone: NgZone,
+                private native: Native) {
         this.init();
     }
 
@@ -55,7 +57,7 @@ export class VerifyMnemonicsPage {
     }
 
     allWordsMatch() {
-        return true;//for test
+        return true;// for test
         let selectComplete = this.selectList.length === this.mnemonicList.length ? true : false;
         if (selectComplete) {
             let mn = "";

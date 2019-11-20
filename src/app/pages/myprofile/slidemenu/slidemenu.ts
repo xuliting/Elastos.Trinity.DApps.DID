@@ -20,11 +20,11 @@ export class SlideMenuPage {
   }
 
   addDidStore() {
-
+    this.native.go("/noidentity", {isfirst: false});
   }
 
   switchDidStore(didStoreId) {
-    console.log("switchDidStore:" + didStoreId.key);
+    Config.didStoreManager.setcurDidStoreId(didStoreId.key, true);
   }
 
   didSettings() {
@@ -32,7 +32,6 @@ export class SlideMenuPage {
   }
 
   showCredentials() {
-    // TODO
     this.native.go("/credentiallist");
   }
 

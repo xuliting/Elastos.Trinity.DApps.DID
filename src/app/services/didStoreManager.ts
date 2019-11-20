@@ -10,13 +10,12 @@ import { Native } from "./native";
 import { Util } from "./util";
 
 export class DidStoreManager {
-
   public subWallet = {};
   public name: string = '';
 
   public masterDidStore: any = {};
   public curDidStoreId: string = "-1";
-  public curDidId: string = "-1";
+  public curDidId: string = "";
   public curDidStore: any = {};
   public didInfos: any = {};
   public didList: any = {};
@@ -48,20 +47,31 @@ export class DidStoreManager {
         this.handleNull();
       }
       else {
-        this.curDidStoreId = id;
         this.localStorage.getDidStoreInfos((info)=> {
           console.log("DidStoreManager getDidStoreInfos:" + JSON.stringify(info));
           this.masterDidStore = info;
-          this.curDidStore = info[id];
-          if ((null == this.curDidStore) || (Util.isNull(this.curDidStore.password))) {
+          if (null == info[id]) {
             this.handleNull();
           }
           else {
-            this.loadDidStore(this.curDidStore.id, this.curDidStore.password);
+            this.setcurDidStoreId(id, false);
           }
         })
       }
     })
+  }
+
+  public setcurDidStoreId(id, doSwitch) {
+    if (id != this.curDidStoreId) {
+      this.curDidStoreId = id;
+      this.curDidStore = this.masterDidStore[id];
+      this.loadDidStore(this.curDidStore.id, this.curDidStore.password);
+      console.log("doSwitch:" +doSwitch);
+      if (doSwitch) {
+        this.localStorage.saveCurrentDidStoreId(this.curDidStoreId);
+        this.event.publish('did:didstorechanged');
+      }
+    }
   }
 
   loadDidStore(didStoreId, password) {
@@ -103,25 +113,22 @@ export class DidStoreManager {
   }
 
   public addDidStore(password) {
-    this.curDidStoreId = Config.uuid(6, 16);
-    this.curDidStore['id'] = this.curDidStoreId;
-    this.curDidStore['password'] = password;
-    this.didService.initDidStore(this.curDidStoreId, password);
-    this.masterDidStore[this.curDidStoreId] = this.curDidStore;
+    let didStoreId = Config.uuid(6, 16);
+    let didStore = {
+      id:didStoreId,
+      password:password
+    }
+    this.didService.initDidStore(didStoreId, password).then(()=> {
+      this.masterDidStore[didStoreId] = didStore;
+      this.curDidStoreId = didStoreId;
+      this.curDidStore = didStore;
+      //
+    })
   }
 
   public saveInfos() {
     this.localStorage.setDidStoreInfos(this.masterDidStore);
     this.localStorage.saveCurrentDidStoreId(this.curDidStoreId);
-  }
-
-  public setcurDidStoreId(id) {
-    if (id != this.curDidStoreId) {
-      this.localStorage.saveCurrentDidStoreId({ masterId: id }).then((data) => {
-        this.curDidStoreId = id;
-        Config.curDidStore = this.masterDidStore[id];
-      });
-    }
   }
 
   public getAllDidStore() {
@@ -148,9 +155,9 @@ export class DidStoreManager {
         return this.didService.createDid(this.curDidStore['password'], "");
       })
       .then ((ret)=> {
-        this.curDidId = ret.DidString;
+        this.curDidId = ret.did;
         this.curDidStore['did'] = this.curDidId;
-        console.log("didStoreManager addDid: " + JSON.stringify(this.curDidStore));
+        console.log("didStoreManager addDid: " + JSON.stringify(ret));
         this.saveInfos();
       });
   }

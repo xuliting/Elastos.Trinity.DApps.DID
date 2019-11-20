@@ -25,7 +25,7 @@ export class CredentialListPage {
   }
 
   ngOnInit() {
-    this.event.subscribe('did:credentialadded', msg => {
+    this.event.subscribe('did:credentialadded', ()=> {
       this.zone.run(() => {
         this.credentials = Config.didStoreManager.getCredentialList();
         this.hasCredential = this.credentials.length > 0 ? true : false;

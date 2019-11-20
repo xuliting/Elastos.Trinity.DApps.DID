@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MenuController, PopoverController} from '@ionic/angular';
+import { Events } from '@ionic/angular';
 import { DrawerState } from 'ion-bottom-drawer';
 
 import { Config } from '../../services/config';
@@ -30,9 +30,9 @@ export class MyProfilePage {
 
   public createDid = false;
 
-  constructor(public route: ActivatedRoute,
-              public popoverController: PopoverController,
-              public menu: MenuController,
+  constructor(public event: Events,
+              public route:ActivatedRoute,
+              public zone: NgZone,
               private native: Native) {
     this.route.queryParams.subscribe((data) => {
         if (data['create'] == 'true') this.createDid = true;
@@ -41,13 +41,26 @@ export class MyProfilePage {
     this.init();
   }
 
-  init() {
-    this.profile = Config.didStoreManager.getProfile();
-    console.log("MyProfilePage :" + JSON.stringify(this.profile));
+  ngOnInit() {
+    this.event.subscribe('did:didstorechanged', ()=> {
+      this.zone.run(() => {
+        this.init();
+      });
+    });
+  }
+
+  ngOnDestroy() {
+    this.event.unsubscribe('did:didstorechanged');
   }
 
   ionViewDidEnter() {
     this.didString = Config.didStoreManager.getcurDidId();
+    console.log("MyProfilePage ionViewDidEnter did: " + this.didString);
+  }
+
+  init() {
+    this.profile = Config.didStoreManager.getProfile();
+    console.log("MyProfilePage :" + JSON.stringify(this.profile));
   }
 
   /**

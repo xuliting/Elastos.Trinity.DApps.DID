@@ -13,9 +13,7 @@ export class SetPasswordPage {
   public password: string = "";
   public passwordConfirmation: string = "";
 
-  constructor(public navCtrl: NavController,
-      private native: Native) {
-  }
+  constructor(public navCtrl: NavController, private native: Native) {}
 
   passwordsMatch() {
     // TODO: more check such as password size and special characters.

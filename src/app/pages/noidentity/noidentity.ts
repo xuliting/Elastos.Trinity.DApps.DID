@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { Native } from '../../services/native';
+import { Util } from '../../services/util';
 
 @Component({
   selector: 'page-noidentity',
@@ -8,7 +10,12 @@ import { Native } from '../../services/native';
   styleUrls: ['noidentity.scss']
 })
 export class NoIdentityPage {
-  constructor(private native: Native) {
+  public isfirst: boolean = true;
+
+  constructor(public route:ActivatedRoute, private native: Native) {
+    this.route.queryParams.subscribe((data) => {
+        if (!Util.isEmptyObject(data)) this.isfirst = false;
+    });
   }
 
   createIdentity() {

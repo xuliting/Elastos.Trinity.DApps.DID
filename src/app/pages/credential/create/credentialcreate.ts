@@ -24,11 +24,13 @@ export class CredentialCreatePage {
   }
 
   async createCredential() {
-
     let props = {
-        // fullname: this.profile.fullname,
-        // email: this.profile.email,
-        // phonenumber: this.profile.phonenumber,
+        name: this.profile.name,
+        email: this.profile.email,
+        phone: this.profile.phone,
+        gender: this.profile.gender,
+        birthday: this.profile.birthday,
+        area: this.profile.area,
         title: this.title,
         url: this.url,
         remark: this.remark,
