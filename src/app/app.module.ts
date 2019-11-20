@@ -23,7 +23,8 @@ import { ComponentsModule } from './components/components.module';
 import { AreaPage } from './pages/area/area';
 import { NoIdentityPage } from './pages/noidentity/noidentity';
 import { EditProfilePage } from './pages/editprofile/editprofile';
-import { MyProfilePage, MyProfilePageMenu } from './pages/myprofile/myprofile';
+import { MyProfilePage } from './pages/myprofile/myprofile';
+import { SlideMenuPage } from './pages/myprofile/slidemenu/slidemenu';
 import { SetPasswordPage } from './pages/setpassword/setpassword';
 import { BackupDIDPage } from './pages/backupdid/backupdid';
 import { ImportDIDPage } from './pages/importdid/importdid';
@@ -66,21 +67,20 @@ export function TranslateLoaderFactory() {
   declarations: [
     MyApp,
     AreaPage,
-    NoIdentityPage,
-    EditProfilePage,
-    MyProfilePage,
-    SetPasswordPage,
     BackupDIDPage,
-    ImportDIDPage,
-    DIDSettingsPage,
-    VerifyMnemonicsPage,
     CredentialAccessRequestPage,
     CredentialListPage,
     CredentialCreatePage,
     CredentialBackupPage,
+    DIDSettingsPage,
+    EditProfilePage,
+    ImportDIDPage,
+    MyProfilePage,
+    NoIdentityPage,
+    SetPasswordPage,
+    SlideMenuPage,
+    VerifyMnemonicsPage,
 
-    // Menus
-    MyProfilePageMenu
   ],
   imports: [
     CommonModule,
@@ -108,8 +108,6 @@ export function TranslateLoaderFactory() {
     MyApp,
     SecurityCheckComponent,
 
-    // Menus
-    MyProfilePageMenu
   ],
   providers: [
     Clipboard,

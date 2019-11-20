@@ -3,10 +3,13 @@
     <ion-buttons slot="start">
         <ion-back-button ></ion-back-button>
     </ion-buttons>
+    <ion-buttons slot="start" *ngIf="showMenu">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
     <ion-buttons slot="end">
-        <ion-button fill="clear" (click)="menu($event)" *ngIf="showMenu">
+<!--         <ion-button fill="clear" (click)="menu($event)" *ngIf="showMenu">
             <ion-icon name="more"></ion-icon>
-        </ion-button>
+        </ion-button> -->
         <ion-button fill="clear" (click)="minimize()" *ngIf="showMinimize">
             <ion-icon slot="icon-only" name="apps" ></ion-icon>
         </ion-button>

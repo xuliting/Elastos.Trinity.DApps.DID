@@ -124,6 +124,10 @@ export class DidStoreManager {
     }
   }
 
+  public getAllDidStore() {
+    return this.masterDidStore;
+  }
+
   public getcurDidStoreId() {
     return this.curDidStoreId;
   }
@@ -149,6 +153,10 @@ export class DidStoreManager {
         console.log("didStoreManager addDid: " + JSON.stringify(this.curDidStore));
         this.saveInfos();
       });
+  }
+
+  public deleteDid() {
+
   }
 
   public async addCredential(title, props) {

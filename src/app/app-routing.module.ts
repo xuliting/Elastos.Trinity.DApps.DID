@@ -5,6 +5,7 @@ import { AreaPage } from './pages/area/area';
 import { NoIdentityPage } from './pages/noidentity/noidentity';
 import { EditProfilePage } from './pages/editprofile/editprofile';
 import { MyProfilePage } from './pages/myprofile/myprofile';
+import { SlideMenuPage } from './pages/myprofile/slidemenu/slidemenu';
 import { SetPasswordPage } from './pages/setpassword/setpassword';
 import { BackupDIDPage } from './pages/backupdid/backupdid';
 import { ImportDIDPage } from './pages/importdid/importdid';
@@ -22,7 +23,14 @@ const routes: Routes = [
   { path: 'noidentity', component: NoIdentityPage },
   { path: 'createidentity', component: EditProfilePage },
   { path: 'editprofile', component: EditProfilePage },
-  { path: 'myprofile', component: MyProfilePage },
+  {
+    path: '',
+    component: SlideMenuPage,
+    children: [
+      { path: 'myprofile', component: MyProfilePage },
+    ],
+  },
+  // { path: 'myprofile', component: MyProfilePage },
   { path: 'setpassword', component: SetPasswordPage },
   { path: 'importdid', component: ImportDIDPage },
   { path: 'backupdid', component: BackupDIDPage },

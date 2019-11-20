@@ -1,0 +1,52 @@
+<ion-split-pane>
+  <ion-menu>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>DID List</ion-title>
+        <ion-buttons slot="end">
+          <ion-button fill="clear" (click)="addDidStore()">
+            <ion-icon slot="icon-only" name="add"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+        <ion-list>
+          <ion-item *ngFor="let item of didStoreList  | keyvalue" (click)="switchDidStore(item)">
+            <ion-label>
+              <h2>{{item.value.profile.name}}</h2>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+    </ion-content>
+
+    <ion-footer>
+      <ion-list>
+          <ion-item (click)="didSettings()" class="ion-activatable">
+            DID Settings
+            <ion-ripple-effect></ion-ripple-effect>
+          </ion-item>
+          <ion-item (click)="showCredentials()" class="ion-activatable">
+            Credentials list
+            <ion-ripple-effect></ion-ripple-effect>
+          </ion-item>
+          <ion-item (click)="editProfile()" class="ion-activatable">
+            Edit profile
+            <ion-ripple-effect></ion-ripple-effect>
+          </ion-item>
+          <ion-item (click)="configureVisibility()" class="ion-activatable">
+            Configure visibility
+            <ion-ripple-effect></ion-ripple-effect>
+          </ion-item>
+        </ion-list>
+    </ion-footer>
+  </ion-menu>
+
+  <ion-router-outlet id="content" main></ion-router-outlet>
+</ion-split-pane>
+
+
+
+
+

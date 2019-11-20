@@ -9,7 +9,6 @@ export class LocalStorage {
     }
 
     public add(key: string, value: any): any {
-        console.log("LocalStorage::add");
         return this.get(key).then((val) => {
             let id = value['id'];
             if (val === null) {
@@ -34,8 +33,6 @@ export class LocalStorage {
     public getVal(key, func) {
         this.storage.get(key).then((val) => {
             if (typeof(val) == "string") {
-                console.log("key:" + key);
-                console.log("val:" + val);
                 val = JSON.parse(val);
             }
             func(val);
