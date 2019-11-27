@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Events, NavController } from '@ionic/angular';
+import { Events } from '@ionic/angular';
 
 import { Native } from '../../services/native';
 import { area } from '../../../assets/area/area.js';
@@ -13,7 +13,7 @@ export class AreaPage {
   areaList: any;
   areaItem: any = null;
 
-  constructor(public events: Events, public navCtrl: NavController, private native: Native) {
+  constructor(public events: Events, private native: Native) {
     this.areaList = area;
   }
 

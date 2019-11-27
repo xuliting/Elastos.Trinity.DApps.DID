@@ -8,7 +8,6 @@ import { TranslateService } from '@ngx-translate/core';
 import * as _ from 'lodash';
 
 
-
 @Injectable({
     providedIn: 'root'
 })
@@ -22,7 +21,6 @@ export class Native {
       private loadingCtrl: LoadingController,
       private navCtrl: NavController,
       private router: Router) {
-
   }
 
   public log(message: any, type: string): void {

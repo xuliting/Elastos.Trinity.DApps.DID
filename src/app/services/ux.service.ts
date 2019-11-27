@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Platform } from '@ionic/angular';
-
 import { Native } from './native';
 
-declare let appManager: any;
+declare let appManager: AppManagerPlugin.AppManager;
 let selfUxService: UXService = null;
 
 enum MessageType {
@@ -29,15 +28,11 @@ export class UXService {
     }
 
     init() {
-        console.log("appManager init");
+        console.log("UXService init");
         if (this.platform.platforms().indexOf("cordova") >= 0) {
             appManager.setListener(this.onReceive);
             this.getLanguage();
         }
-    }
-
-    print_err(err) {
-        console.log("ElastosJS  Error: " + err);
     }
 
     /**
@@ -53,11 +48,9 @@ export class UXService {
 
     getLanguage() {
         appManager.getLocale(
-            ret => {
-                console.log("UXService::getLanguage" + ret);
-                selfUxService.setCurLang(ret.currentLang);
-            },
-            err => selfUxService.print_err(err)
+            (currentLang, systemLang) => {
+                selfUxService.setCurLang(currentLang);
+            }
         );
     }
 
@@ -113,6 +106,6 @@ export class UXService {
     }
 
     sendIntentResponse(action, result, intentId) {
-        appManager.sendIntentResponse(action, result, intentId);
+        appManager.sendIntentResponse(action, result, intentId, null);
     }
 }

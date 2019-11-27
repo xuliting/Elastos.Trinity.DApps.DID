@@ -1,11 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
-import { AlertController, NavController, Platform, ToastController } from '@ionic/angular';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Platform, ToastController } from '@ionic/angular';
 
-import { LocalStorage } from "./localstorage";
-import { Native } from "./native";
-
-declare let DIDPlugin: any;
+declare let didManager: DIDPlugin.DIDManager;
 
 @Injectable({
     providedIn: 'root'
@@ -18,10 +14,7 @@ export class DIDService {
     constructor(
         private platform: Platform,
         public zone: NgZone,
-        public toastCtrl: ToastController,
-        private localStorage: LocalStorage,
-        private native: Native,
-        private navController: NavController) {
+        public toastCtrl: ToastController) {
     }
 
     getCurrentDidString() {
@@ -50,11 +43,10 @@ export class DIDService {
         }
 
         return new Promise((resolve, reject)=>{
-            DIDPlugin.initDidStore(
+            didManager.initDidStore(
+                location, password,
                 (ret) => {this.selfDidStore = ret;resolve(ret);},
                 (err) => {reject(err)},
-                location,
-                password
             );
         });
     }
@@ -62,9 +54,9 @@ export class DIDService {
     generateMnemonic(language): Promise<any> {
         return new Promise((resolve, reject)=>{
             if (this.platform.platforms().indexOf("cordova") >= 0) {
-                DIDPlugin.generateMnemonic(
+                didManager.generateMnemonic(
+                    language,
                     (ret) => {resolve(ret)}, (err) => {reject(err)},
-                    language
                 );
             }
             else {//for test
@@ -75,9 +67,9 @@ export class DIDService {
 
     isMnemonicValid(language, mnemonic): Promise<any> {
         return new Promise((resolve, reject)=>{
-            DIDPlugin.isMnemonicValid(
+            didManager.isMnemonicValid(
+                language, mnemonic,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                language, mnemonic
             );
         });
     }
@@ -92,8 +84,8 @@ export class DIDService {
 
         return new Promise((resolve, reject)=>{
             this.selfDidStore.initPrivateIdentity(
+                mnemonic, password, password, force,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                mnemonic, password, password, force
             );
         });
     }
@@ -115,8 +107,8 @@ export class DIDService {
     deleteDid(didString): Promise<any> {
         return new Promise((resolve, reject)=>{
             this.selfDidStore.deleteDid(
+                didString,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                didString
             );
         });
     }
@@ -133,6 +125,7 @@ export class DIDService {
 
         return new Promise((resolve, reject)=>{
             this.selfDidStore.newDid(
+                passparase, hint,
                 (ret) => {
                     this.selfDidDocument = ret;
                     this.curDidString = ret.did;
@@ -140,7 +133,6 @@ export class DIDService {
                     resolve(ret)
                 },
                 (err) => {reject(err)},
-                passparase, hint
             );
         });
     }
@@ -156,11 +148,11 @@ export class DIDService {
                resolve(ret);
             });
         }
-
+        console.log("listDids");
         return new Promise((resolve, reject)=>{
             this.selfDidStore.listDids(
+                DIDPlugin.DIDStoreFilter.DID_ALL,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                DIDPlugin.DIDStoreFilter.DID_ALL
             );
         });
     }
@@ -178,12 +170,12 @@ export class DIDService {
 
         return new Promise((resolve, reject)=>{
             this.selfDidStore.loadDid(
+                didString,
                 (ret) => {
                     this.selfDidDocument = ret;
                     resolve(ret)
                 },
                 (err) => {reject(err)},
-                didString
             );
         });
     }
@@ -191,8 +183,8 @@ export class DIDService {
     publishDid(didDocumentId, didUrlString, storepass): Promise<any> {
         return new Promise((resolve, reject)=>{
             this.selfDidStore.publishDid(
+                didDocumentId, didUrlString, storepass,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                didDocumentId, didUrlString, storepass
             );
         });
     }
@@ -200,8 +192,8 @@ export class DIDService {
     resolveDid(didString): Promise<any> {
         return new Promise((resolve, reject)=>{
             this.selfDidStore.resolveDid(
+                didString,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                didString
             );
         });
     }
@@ -209,8 +201,8 @@ export class DIDService {
     storeDid(didDocumentId, hint): Promise<any> {
         return new Promise((resolve, reject)=>{
             this.selfDidStore.storeDid(
+                didDocumentId, hint,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                didDocumentId, hint
             );
         });
     }
@@ -218,8 +210,8 @@ export class DIDService {
     updateDid(didDocumentId, didUrlString, storepass): Promise<any> {
         return new Promise((resolve, reject)=>{
             this.selfDidStore.updateDid(
+                didDocumentId, didUrlString, storepass,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                didDocumentId, didUrlString, storepass
             );
         });
     }
@@ -227,8 +219,8 @@ export class DIDService {
     createCredential(didString, credentialId, type, expirationDate, properties, passphrase): Promise<any> {
         return new Promise((resolve, reject)=>{
             this.selfDidStore.createCredential(
+                didString, credentialId, type, expirationDate, properties, passphrase,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                didString, credentialId, type, expirationDate, properties, passphrase
             );
         });
     }
@@ -243,8 +235,8 @@ export class DIDService {
 
         return new Promise((resolve, reject)=>{
             this.selfDidStore.deleteCredential(
+                didString, didUrlString,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                didString, didUrlString
             );
         });
     }
@@ -262,8 +254,8 @@ export class DIDService {
 
         return new Promise((resolve, reject)=>{
             this.selfDidStore.listCredentials(
+                didString,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                didString
             );
         });
     }
@@ -283,8 +275,8 @@ export class DIDService {
 
         return new Promise((resolve, reject)=>{
             this.selfDidStore.loadCredential(
+                didString, didUrlString,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                didString, didUrlString
             );
         });
     }
@@ -292,8 +284,8 @@ export class DIDService {
     storeCredential(credentialId): Promise<any> {
         return new Promise((resolve, reject)=>{
             this.selfDidStore.storeCredential(
+                credentialId,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                credentialId
             );
         });
     }
@@ -312,8 +304,8 @@ export class DIDService {
     addCredential(credentialObjId): Promise<any> {
         return new Promise((resolve, reject)=>{
             this.selfDidDocument.addCredential(
+                credentialObjId,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
-                credentialObjId
             );
         });
     }
