@@ -3,6 +3,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { Platform } from '@ionic/angular';
 import { Native } from './native';
 
+import { Config } from './config';
+import { Util } from './util';
+
 declare let appManager: AppManagerPlugin.AppManager;
 let selfUxService: UXService = null;
 
@@ -90,22 +93,46 @@ export class UXService {
         }
     }
 
-    onReceiveIntent(ret) {
-        console.log("Intent received", ret);
+    onReceiveIntent(intent) {
+        console.log("Intent received", intent);
 
-        switch (ret.action) {
+        switch (intent.action) {
             case "credaccess":
                 console.log("Received credential access intent request");
+                if (selfUxService.checkIntentParams(intent)) {
 
-                selfUxService.native.go("/credaccessrequest", {
-                    intentId: ret.intentId,
-                    appName: ret.params.appName
-                });
+                    selfUxService.native.go("/credaccessrequest");
+                }
                 break;
         }
     }
 
     sendIntentResponse(action, result, intentId) {
         appManager.sendIntentResponse(action, result, intentId, null);
+    }
+
+    checkIntentParams(intent) {
+        console.log("checkIntentParams");
+        if (Util.isEmptyObject(intent.params) || Util.isEmptyObject(intent.params.claims)) return false;
+
+        let requestProfile = [];
+        intent.params.claims.forEach((item,index,array)=>{
+            for(var prop in item) {
+                if (item[prop] === true) {
+                    requestProfile.push(prop);
+                }
+                // TODO if item[prop] is object ?
+                // get reason
+            }
+        });
+
+        Config.requestDapp = {
+            appName: intent.from,
+            intentId: intent.intentId,
+            action: intent.action,
+            requestProfile: requestProfile,
+            // reason: ret.params.claims.reason
+        }
+        return true;
     }
 }

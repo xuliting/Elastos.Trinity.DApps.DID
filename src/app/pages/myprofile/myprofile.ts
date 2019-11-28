@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Events } from '@ionic/angular';
 import { DrawerState } from 'ion-bottom-drawer';
 
+import { UXService } from '../../services/ux.service';
 import { Config } from '../../services/config';
 import { Profile } from '../../services/profile.model';
 import { Native } from '../../services/native';
@@ -33,6 +34,7 @@ export class MyProfilePage {
   constructor(public event: Events,
               public route:ActivatedRoute,
               public zone: NgZone,
+              private appService: UXService,
               private native: Native) {
     this.route.queryParams.subscribe((data) => {
         if (data['create'] == 'true') this.createDid = true;
@@ -55,6 +57,9 @@ export class MyProfilePage {
 
   ionViewDidEnter() {
     this.didString = Config.didStoreManager.getcurDidId();
+    if (this.didString != '') {
+      this.appService.setIntentListener();
+    }
     console.log("MyProfilePage ionViewDidEnter did: " + this.didString);
   }
 

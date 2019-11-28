@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
-import { NavController } from '@ionic/angular';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, NgZone } from '@angular/core';
 
-declare let appManger: any;
+import { Config } from '../../services/config';
+import { Profile } from '../../services/profile.model';
+import { UXService } from '../../services/ux.service';
+import { PopupProvider } from '../../services/popup';
+import { Util } from '../../services/util';
 
 @Component({
   selector: 'page-credentialaccessrequest',
@@ -10,23 +12,71 @@ declare let appManger: any;
   styleUrls: ['credentialaccessrequest.scss']
 })
 export class CredentialAccessRequestPage {
-  public requestingAppName: string = "";
-  private intentId: Number;
+  requestDapp: any = null;
+  denyReason = '';
+  public profile: Profile = {
+    name:"",
+    birthday:"",
+    gender:"",
+    area:"",
+    email:"",
+    IM:"",
+    phone:"",
+    ELAAddress:"",
+  };
 
-  constructor(public navCtrl: NavController, private actRoute: ActivatedRoute, private router: Router) {
-    this.actRoute.queryParams.subscribe(params => {
-      this.requestingAppName = params.appName;
-      this.intentId = params.intentId;
+  constructor(private zone: NgZone, private popup: PopupProvider, private appServices: UXService) {
+    this.zone.run(() => {
+      this.requestDapp = Config.requestDapp;
+      this.profile = Config.didStoreManager.getProfile();
     });
   }
 
+  checkRequest() {
+    // check profile
+    let hasProfile = true;
+    Object.values(this.requestDapp.requestProfile).forEach(val => {
+      if (!this.hasProfile(val)) {
+        hasProfile = false;
+        return false;
+      }
+    })
+    return hasProfile;
+  }
+
+  hasProfile(profile) {
+    let value = "";
+    switch (profile) {
+      case 'email':
+        value = this.profile.email;
+      break;
+      case 'name':
+        value = this.profile.name;
+      break;
+      case 'phone':
+        value = this.profile.phone;
+      break;
+    }
+    if (Util.isEmptyObject(value)) {
+      this.denyReason = profile + ' is empty';
+      return false;
+    }
+    return true;
+  }
+
   acceptRequest() {
-    console.log("Sending credaccess intent response for intent id "+this.intentId)
-    appManger.sendIntentResponse("credaccess", {result:"success"}, this.intentId)
-    appManger.close();
+    if (!this.checkRequest()) {
+      console.log("acceptRequest false");
+      this.popup.ionicAlert(this.denyReason, 'text-request-fail');
+      return;
+    }
+
+    console.log("Sending credaccess intent response for intent id "+this.requestDapp.intentId)
+    this.appServices.sendIntentResponse("credaccess", {result:"success"}, this.requestDapp.intentId)
+    this.appServices.close();
   }
 
   rejectRequest() {
-    appManger.close();
+    this.appServices.close();
   }
 }

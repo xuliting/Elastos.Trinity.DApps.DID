@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class Config {
-    public static coinObj: any;
-    public static walletObj: any;
+    public static requestDapp: any;
     public static modifyId = "";
     public static initialized: boolean = false;
 
