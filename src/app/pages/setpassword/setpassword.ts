@@ -26,7 +26,7 @@ export class SetPasswordPage {
 
   confirmPassword() {
     //TODO
-    Config.didStoreManager.addDidStore(this.password);
+    Config.didStoreManager.addDidStore();
     this.native.go('/editprofile', {create: true});
   }
 }

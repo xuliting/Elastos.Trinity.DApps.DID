@@ -52,7 +52,7 @@ export class VerifyMnemonicsPage {
     }
 
     async createDid() {
-        await Config.didStoreManager.addDid(this.mnemonicStr);
+        await Config.didStoreManager.addDid(this.native.getMnemonicLang(), this.mnemonicStr);
         this.native.setRootRouter("/myprofile");
     }
 

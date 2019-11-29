@@ -34,6 +34,7 @@ export class EditProfilePage {
               public navCtrl: NavController,
               private native: Native) {
     this.route.queryParams.subscribe((data) => {
+      console.log("editprofile");
       if (data['create'] == 'false') {
         this.profile = Config.didStoreManager.getProfile();
         this.hasArea = !Util.isNull(this.profile.area);

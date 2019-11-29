@@ -1,8 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Platform, ToastController } from '@ionic/angular';
 
-declare let didManager: DIDPlugin.DIDManager;
-
+// declare let didManager: DIDPlugin.DIDManager;
+declare let didManager: any;
 @Injectable({
     providedIn: 'root'
 })
@@ -35,16 +35,15 @@ export class DIDService {
     }
 
     //
-    initDidStore(location, password): Promise<any> {
+    initDidStore(location): Promise<any> {
         if (this.platform.platforms().indexOf("cordova") < 0) {//for test
             return new Promise((resolve, reject)=>{
                resolve()
             });
         }
-
         return new Promise((resolve, reject)=>{
             didManager.initDidStore(
-                location, password,
+                location,
                 (ret) => {this.selfDidStore = ret;resolve(ret);},
                 (err) => {reject(err)},
             );
@@ -75,7 +74,7 @@ export class DIDService {
     }
 
     //DIDStore
-    initPrivateIdentity(mnemonic, password, force): Promise<any> {
+    initPrivateIdentity(language, mnemonic, password, force): Promise<any> {
         if (this.platform.platforms().indexOf("cordova") < 0) {//for test
             return new Promise((resolve, reject)=>{
                resolve("true")
@@ -84,7 +83,7 @@ export class DIDService {
 
         return new Promise((resolve, reject)=>{
             this.selfDidStore.initPrivateIdentity(
-                mnemonic, password, password, force,
+                language, mnemonic, password, password, force,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
         });

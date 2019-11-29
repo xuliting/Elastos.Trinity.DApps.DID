@@ -65,7 +65,7 @@ export class DidStoreManager {
     if (id != this.curDidStoreId) {
       this.curDidStoreId = id;
       this.curDidStore = this.masterDidStore[id];
-      this.loadDidStore(this.curDidStore.id, this.curDidStore.password);
+      this.loadDidStore(this.curDidStore.id);
       console.log("doSwitch:" +doSwitch);
       if (doSwitch) {
         this.localStorage.saveCurrentDidStoreId(this.curDidStoreId);
@@ -74,8 +74,8 @@ export class DidStoreManager {
     }
   }
 
-  loadDidStore(didStoreId, password) {
-    this.didService.initDidStore(didStoreId, password)
+  loadDidStore(didStoreId) {
+    this.didService.initDidStore(didStoreId)
       .then (()=>{return this.didService.hasPrivateIdentity()})
       .then((ret) => {
         if (ret == "true") {
@@ -112,13 +112,12 @@ export class DidStoreManager {
     return this.curDidStore['profile'];
   }
 
-  public addDidStore(password) {
+  public addDidStore() {
     let didStoreId = Config.uuid(6, 16);
     let didStore = {
-      id:didStoreId,
-      password:password
+      id:didStoreId
     }
-    this.didService.initDidStore(didStoreId, password).then(()=> {
+    this.didService.initDidStore(didStoreId).then(()=> {
       this.masterDidStore[didStoreId] = didStore;
       this.curDidStoreId = didStoreId;
       this.curDidStore = didStore;
@@ -149,8 +148,8 @@ export class DidStoreManager {
     return this.curDidId;
   }
 
-  public async addDid(mnemonic) {
-    await this.didService.initPrivateIdentity(mnemonic, this.curDidStore['password'], true)
+  public async addDid(language, mnemonic) {
+    await this.didService.initPrivateIdentity(language, mnemonic, this.curDidStore['password'], true)
       .then((ret) => {
         return this.didService.createDid(this.curDidStore['password'], "");
       })
