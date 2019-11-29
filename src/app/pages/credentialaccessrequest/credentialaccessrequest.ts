@@ -1,6 +1,7 @@
 import { Component, NgZone } from '@angular/core';
 
 import { Config } from '../../services/config';
+import { DIDService } from '../../services/did.service';
 import { Profile } from '../../services/profile.model';
 import { UXService } from '../../services/ux.service';
 import { PopupProvider } from '../../services/popup';
@@ -13,6 +14,7 @@ import { Util } from '../../services/util';
 })
 export class CredentialAccessRequestPage {
   requestDapp: any = null;
+  credentials = [];
   denyReason = '';
   public profile: Profile = {
     name:"",
@@ -25,10 +27,14 @@ export class CredentialAccessRequestPage {
     ELAAddress:"",
   };
 
-  constructor(private zone: NgZone, private popup: PopupProvider, private appServices: UXService) {
+  constructor(private zone: NgZone,
+              private didService: DIDService,
+              private popup: PopupProvider,
+              private appServices: UXService) {
     this.zone.run(() => {
       this.requestDapp = Config.requestDapp;
       this.profile = Config.didStoreManager.getProfile();
+      this.credentials = Config.didStoreManager.getCredentialList();
     });
   }
 
@@ -71,9 +77,18 @@ export class CredentialAccessRequestPage {
       return;
     }
 
-    console.log("Sending credaccess intent response for intent id "+this.requestDapp.intentId)
-    this.appServices.sendIntentResponse("credaccess", {result:"success"}, this.requestDapp.intentId)
-    this.appServices.close();
+    if (this.credentials.length === 0) {
+      this.popup.ionicAlert('text-request-no-credential', 'text-request-fail');
+      return;
+    }
+
+    //TODO select credential
+
+    this.didService.backupCredential(this.credentials[0].object).then( (credential)=> {
+      console.log("Sending credaccess intent response for intent id "+this.requestDapp.intentId)
+      this.appServices.sendIntentResponse("credaccess", {presentation:credential}, this.requestDapp.intentId)
+      this.appServices.close();
+    })
   }
 
   rejectRequest() {

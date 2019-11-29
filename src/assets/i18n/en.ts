@@ -10,7 +10,8 @@ export const en = {
     'import-password2-placeholder': 'Repeat Password',
     'text-pwd-validator': 'must be 8 or more characters',
 
-
+    'text-request-fail': 'request fail',
+    'text-request-no-credential': 'no credential',
 };
 
 

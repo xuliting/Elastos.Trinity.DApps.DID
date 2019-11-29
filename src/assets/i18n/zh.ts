@@ -10,4 +10,6 @@ export const zh = {
     'import-password2-placeholder': '请再次输入密码',
     'text-pwd-validator': 'must be 8 or more characters',
 
+    'text-request-fail': '授权失败',
+    'text-request-no-credential': '没有证书',
 };
