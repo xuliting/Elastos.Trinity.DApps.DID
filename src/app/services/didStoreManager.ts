@@ -84,8 +84,8 @@ export class DidStoreManager {
   loadDidStore(didStoreId) {
     this.didService.initDidStore(didStoreId)
       .then (()=>{return this.didService.hasPrivateIdentity()})
-      .then((ret) => {
-        if (ret == "true") {
+      .then((hasPrivId) => {
+        if (hasPrivId) {
           return this.didService.listDids();
         }
         else {
@@ -99,8 +99,8 @@ export class DidStoreManager {
       })
       .then( (ret)=> {
         this.getCurCredentialList();
-        this.native.setRootRouter('/myprofile', {create:false});
-        //this.native.setRootRouter('/devpage');
+        //this.native.setRootRouter('/myprofile', {create:false});
+        this.native.setRootRouter('/devpage');
       })
       .catch( (error)=> {
         console.log("DidStoreManager init error:" + error.message);
@@ -109,8 +109,8 @@ export class DidStoreManager {
   }
 
   handleNull() {
-    this.native.setRootRouter('/noidentity');
-    //this.native.setRootRouter('/devpage');
+    //this.native.setRootRouter('/noidentity');
+    this.native.setRootRouter('/devpage');
   }
 
   saveProfile(profile) {
@@ -155,15 +155,13 @@ export class DidStoreManager {
 
   public async addDid(language, mnemonic) {
     await this.didService.initPrivateIdentity(language, mnemonic, this.curDidStore['password'], true)
-      .then((ret) => {
-        return this.didService.createDid(this.curDidStore['password'], "");
-      })
-      .then ((ret)=> {
-        this.curDidId = ret.did;
-        this.curDidStore['did'] = this.curDidId;
-        console.log("didStoreManager addDid: " + JSON.stringify(ret));
-        this.saveInfos();
-      });
+    
+    let ret = await this.didService.createDid(this.curDidStore['password'], "");
+    
+    this.curDidId = ret.didString;
+    this.curDidStore['did'] = this.curDidId;
+    console.log("didStoreManager addDid: " + JSON.stringify(ret));
+    this.saveInfos();
   }
 
   public deleteDid() {
@@ -187,7 +185,7 @@ export class DidStoreManager {
     let credential = await this.didService.createCredential(this.curDidId, title, types, 15, props, this.curDidStore['password']);
 
     console.log("Asking DIDService to store the credential");
-    await this.didService.storeCredential(credential.objId);
+    await this.didService.storeCredential(this.curDidId, credential);
 
     console.log("Asking DIDService to add the credential");
     await this.didService.addCredential(credential.objId);

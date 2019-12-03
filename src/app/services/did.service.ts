@@ -75,62 +75,53 @@ export class DIDService {
     }
 
     //DIDStore
-    initPrivateIdentity(language, mnemonic, password, force): Promise<any> {
+    initPrivateIdentity(language, mnemonic, password, force): Promise<void> {
         if (this.platform.platforms().indexOf("cordova") < 0) {//for test
             return new Promise((resolve, reject)=>{
-               resolve("true")
+               resolve()
             });
         }
 
         return new Promise((resolve, reject)=>{
             this.selfDidStore.initPrivateIdentity(
                 language, mnemonic, password, password, force,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
+                () => {resolve()}, (err) => {reject(err)},
             );
         });
     }
 
-    hasPrivateIdentity(): Promise<any> {
+    hasPrivateIdentity(): Promise<boolean> {
         if (this.platform.platforms().indexOf("cordova") < 0) {//for test
             return new Promise((resolve, reject)=>{
-               resolve("true")
+               resolve(false)
             });
         }
 
         return new Promise((resolve, reject)=>{
             this.selfDidStore.hasPrivateIdentity(
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
+                (hasPrivId) => {resolve(hasPrivId)}, (err) => {reject(err)},
             );
         });
     }
 
-    deleteDid(didString): Promise<any> {
+    deleteDid(didString): Promise<void> {
         return new Promise((resolve, reject)=>{
             this.selfDidStore.deleteDid(
                 didString,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
+                () => {resolve()}, (err) => {reject(err)},
             );
         });
     }
 
     createDid(passparase, hint = ""): Promise<any> {
-        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
-            return new Promise((resolve, reject)=>{
-               let ret = {
-                   did: "did:elastos:azeeza786zea67zaek221fxi9",
-               }
-               resolve(ret);
-            });
-        }
-
         return new Promise((resolve, reject)=>{
             this.selfDidStore.newDid(
                 passparase, hint,
-                (ret) => {
-                    this.selfDidDocument = ret;
-                    this.curDidString = ret.did;
+                (didString, didDocument) => {
+                    this.selfDidDocument = didDocument;
+                    this.curDidString = didString;
                     console.log("createDid this.curDidString:" + this.curDidString);
-                    resolve(ret)
+                    resolve({didString:didString, didDocument:didDocument})
                 },
                 (err) => {reject(err)},
             );
@@ -169,7 +160,7 @@ export class DIDService {
         }
 
         return new Promise((resolve, reject)=>{
-            this.selfDidStore.loadDid(
+            this.selfDidStore.loadDidDocument(
                 didString,
                 (ret) => {
                     this.selfDidDocument = ret;
@@ -180,18 +171,31 @@ export class DIDService {
         });
     }
 
-    publishDid(didDocumentId, didUrlString, storepass): Promise<any> {
+    publishDid(didDocument: DIDPlugin.DIDDocument, storepass: string): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.selfDidStore.publishDid(
-                didDocumentId, didUrlString, storepass,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
+            didDocument.publish(
+                storepass,
+                () => {resolve()}, (err) => {reject(err)},
             );
+        });
+    }
+
+    /**
+     * didString to DID object.
+     */
+    _resolveDid(didString: DIDPlugin.DIDString): Promise<DIDPlugin.DID> {
+        return new Promise((resolve, reject)=>{
+            this.selfDidStore.loadDidDocument(didString, (didDocument: DIDPlugin.DIDDocument)=>{
+                didDocument.getSubject((did: DIDPlugin.DID)=>{
+                    resolve(did);
+                });
+            });
         });
     }
 
     resolveDid(didString): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.selfDidStore.resolveDid(
+            this.selfDidStore.resolveDidDocument(
                 didString,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
@@ -200,25 +204,26 @@ export class DIDService {
 
     storeDid(didDocumentId, hint): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.selfDidStore.storeDid(
+            this.selfDidStore.storeDidDocument(
                 didDocumentId, hint,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
+                () => {resolve()}, (err) => {reject(err)},
             );
         });
     }
 
-    updateDid(didDocumentId, didUrlString, storepass): Promise<any> {
+    updateDid(didDocument: DIDPlugin.DIDDocument, didUrlString, storepass): Promise<any> {
         return new Promise((resolve, reject)=>{
-            this.selfDidStore.updateDid(
-                didDocumentId, didUrlString, storepass,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
+            this.selfDidStore.updateDidDocument(
+                didDocument, storepass,
+                () => {resolve()}, (err) => {reject(err)},
             );
         });
     }
 
     createCredential(didString, credentialId, type, expirationDate, properties, passphrase): Promise<any> {
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.createCredential(
+        return new Promise(async (resolve, reject)=>{
+            let did = await this._resolveDid(didString);
+            did.issueCredential(
                 didString, credentialId, type, expirationDate, properties, passphrase,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
@@ -233,10 +238,11 @@ export class DIDService {
             });
         }
 
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.deleteCredential(
-                didString, didUrlString,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
+        return new Promise(async (resolve, reject)=>{
+            let did = await this._resolveDid(didString);
+            did.deleteCredential(
+                didUrlString,
+                () => {resolve()}, (err) => {reject(err)},
             );
         });
     }
@@ -252,9 +258,9 @@ export class DIDService {
             });
         }
 
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.listCredentials(
-                didString,
+        return new Promise(async (resolve, reject)=>{
+            let did = await this._resolveDid(didString);
+            did.listCredentials(
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
         });
@@ -273,19 +279,21 @@ export class DIDService {
             });
         }
 
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.loadCredential(
-                didString, didUrlString,
+        return new Promise(async (resolve, reject)=>{
+            let did = await this._resolveDid(didString);
+            did.loadCredential(
+                didUrlString,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
         });
     }
 
-    storeCredential(credentialId): Promise<any> {
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.storeCredential(
-                credentialId,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
+    storeCredential(didString, credential: DIDPlugin.VerifiableCredential): Promise<void> {
+        return new Promise(async (resolve, reject)=>{
+            let did = await this._resolveDid(didString);
+            did.storeCredential(
+                credential,
+                () => {resolve()}, (err) => {reject(err)},
             );
         });
     }
