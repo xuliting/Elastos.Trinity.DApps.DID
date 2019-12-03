@@ -13,7 +13,7 @@ export class DidStoreManager {
   public subWallet = {};
   public name: string = '';
 
-  public masterDidStore: DIDPlugin.DIDStore;
+  public masterDidStore: DIDPlugin.DIDStore[] = [];
   public curDidStoreId: string = "-1";
   public curDidId: string = "";
   public curDidStore: DIDPlugin.DIDStore;
@@ -99,8 +99,8 @@ export class DidStoreManager {
       })
       .then( (ret)=> {
         this.getCurCredentialList();
-        //this.native.setRootRouter('/myprofile', {create:false});
-        this.native.setRootRouter('/devpage');
+        this.native.setRootRouter('/myprofile', {create:false});
+        //this.native.setRootRouter('/devpage');
       })
       .catch( (error)=> {
         console.log("DidStoreManager init error:" + error.message);
@@ -109,11 +109,12 @@ export class DidStoreManager {
   }
 
   handleNull() {
-    //this.native.setRootRouter('/noidentity');
-    this.native.setRootRouter('/devpage');
+    this.native.setRootRouter('/noidentity');
+    //this.native.setRootRouter('/devpage');
   }
 
   saveProfile(profile) {
+    console.log(this.curDidStore);
     this.curDidStore['profile'] = profile;
   }
 
@@ -122,6 +123,8 @@ export class DidStoreManager {
   }
 
   public addDidStore() {
+    console.log("Adding a new DID Store");
+
     let didStoreId = Config.uuid(6, 16);
     this.didService.initDidStore(didStoreId).then((didStore)=> {
       this.masterDidStore[didStoreId] = didStore;

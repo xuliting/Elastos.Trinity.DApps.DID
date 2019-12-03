@@ -13,6 +13,7 @@ import { Util } from '../../services/util';
 export class ImportDIDPage {
   public mnemonicWord: string = "";
   public mnemonicWords = new Array<String>()
+  public mnemonicSentence: string = "";
   public mnemonicObj: any = { mnemonic: "", password: "", rePassword: ""};
 
   @ViewChild('addMnemonicWordInput', { static:false }) addMnemonicWordInput: IonInput;
@@ -20,28 +21,22 @@ export class ImportDIDPage {
   constructor(public navCtrl: NavController, private native: Native, private didService: DIDService) {
   }
 
-  async appendMnemonicWord() {
-    // TODO: make sure that the typed word contains no space, not empty, etc.
+  onMnemonicSentenceChanged() {
+    // Remove all values
+    this.mnemonicWords.length = 0;
 
-    this.mnemonicWords.push(this.mnemonicWord);
-    this.mnemonicWord = "";
-    console.log(this.mnemonicWords)
-
-    let input = await this.addMnemonicWordInput.getInputElement();
-    input.focus();
+    // Rebuild words based on typed sentence
+    this.mnemonicWords = this.mnemonicSentence.trim().split(" ");
   }
 
   doImport() {
-    if(this.checkParms()){
-      //TODO import
+    if(this.checkParams()){
+      // TODO import
       this.native.go("/myprofile");
     }
   }
 
-  checkParms(){
-    //TODO
-    //check menmonic
-
+  checkParams(){
     if(Util.isNull(this.mnemonicObj.password)){
       this.native.toast_trans('text-pay-password');
       return false;

@@ -6,8 +6,8 @@
   "short_name": "DID",
   "short_description": "Decentralized User Identity Management",
   "description": "Manage your decentralized identity, choose personal information to share with others, using this DID DApp.",
-  "start_url": "index.html",
-  "type": "file",
+  "start_url": "http://192.168.31.117:8100",
+  "type": "url",
   "category": "finance",
   "icons": [
     {

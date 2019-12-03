@@ -10,8 +10,7 @@
     <span class="word" *ngFor="let word of mnemonicWords">{{word}}</span>
   </div>
   <ion-item>
-    <ion-input #addMnemonicWordInput placeholder="Next mnemonic word" [(ngModel)]="mnemonicWord"></ion-input>
-    <ion-button (click)="appendMnemonicWord()">Add</ion-button>
+    <ion-input #addMnemonicWordInput placeholder="Your mnemonic sentence" [(ngModel)]="mnemonicSentence" (ionChange)="onMnemonicSentenceChanged()"></ion-input>
   </ion-item>
 
   <ion-item>

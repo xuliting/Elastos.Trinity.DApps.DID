@@ -45,7 +45,11 @@ export class DIDService {
         return new Promise((resolve, reject)=>{
             didManager.initDidStore(
                 location,
-                (ret) => {this.selfDidStore = ret;resolve(ret);},
+                (ret) => {
+                    console.log("Initialized DID Store is ",ret);
+                    this.selfDidStore = ret;
+                    resolve(ret);
+                },
                 (err) => {reject(err)},
             );
         });
