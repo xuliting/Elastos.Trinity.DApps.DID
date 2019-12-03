@@ -16,9 +16,12 @@ import { CredentialListPage } from './pages/credential/list/credentiallist';
 import { CanDeactivateList } from './pages/credential/list/candeactivate.service';
 import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
 import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
+import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequest/regappprofilerequest';
+import { DevPage } from './pages/devpage/devpage';
 
 const routes: Routes = [
   { path: '', redirectTo: 'noidentity', pathMatch: 'full' },
+  { path: 'devpage', component: DevPage },
   { path: 'area', component: AreaPage },
   { path: 'noidentity', component: NoIdentityPage },
   { path: 'createidentity', component: EditProfilePage },
@@ -40,6 +43,7 @@ const routes: Routes = [
   { path: 'credentiallist', component: CredentialListPage, canDeactivate: [CanDeactivateList] },
   { path: 'credentialcreate', component: CredentialCreatePage },
   { path: 'credentialbackup', component: CredentialBackupPage },
+  { path: 'regappprofilerequest', component: RegisterApplicationProfileRequestPage },
 ];
 
 @NgModule({

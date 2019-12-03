@@ -36,6 +36,8 @@ export class UXService {
             appManager.setListener(this.onReceive);
             this.getLanguage();
         }
+
+        this.setIntentListener();
     }
 
     /**
@@ -69,6 +71,7 @@ export class UXService {
     }
 
     setIntentListener() {
+        console.log("Setting intent listener");
         if (!this.isReceiveIntentReady) {
             this.isReceiveIntentReady = true;
             appManager.setIntentListener(this.onReceiveIntent);
@@ -100,8 +103,16 @@ export class UXService {
             case "credaccess":
                 console.log("Received credential access intent request");
                 if (selfUxService.checkIntentParams(intent)) {
-
                     selfUxService.native.go("/credaccessrequest");
+                }
+                break;
+            case "registerapplicationprofile":
+                console.log("Received register application profile intent request");
+                if (selfUxService.checkRegAppProfileIntentParams(intent)) {
+                    selfUxService.native.go("/regappprofilerequest");
+                }
+                else {
+                    console.error("Missing or wrong intent parameters for "+intent.action);
                 }
                 break;
         }
@@ -112,7 +123,7 @@ export class UXService {
     }
 
     checkIntentParams(intent) {
-        console.log("checkIntentParams");
+        console.log("Checking intent parameters");
         if (Util.isEmptyObject(intent.params) || Util.isEmptyObject(intent.params.claims)) return false;
 
         let requestProfile = [];
@@ -133,6 +144,53 @@ export class UXService {
             requestProfile: requestProfile,
             // reason: ret.params.claims.reason
         }
+        return true;
+    }
+
+    /**
+     * Checks generic parameters in the received intent, and fills our requesting DApp object info
+     * with intent info for later use.
+     */
+    checkGenericIntentParams(intent): boolean {
+        console.log("Checking generic intent parameters");
+
+        if (Util.isEmptyObject(intent.params)) {
+            console.error("Intent parameters are empty");
+            return false;
+        }
+
+        Config.requestDapp = {
+            appName: intent.from,
+            intentId: intent.intentId,
+            action: intent.action
+        }
+
+        return true;
+    }
+
+    checkRegAppProfileIntentParams(intent): boolean {
+        console.log("Checking intent parameters");
+
+        if (!this.checkGenericIntentParams(intent))
+            return false;
+
+        // Check and get specific parameters for this intent
+        if (!intent.params.identifier) {
+            console.error("Missing profile 'identifier'.");
+            return false;
+        } 
+
+        if (!intent.params.connectactiontitle) {
+            console.error("Missing profile 'connectactiontitle'.");
+            return false;
+        } 
+
+        // Config.requestDapp was already initialized earlier.
+        Config.requestDapp.identifier = intent.params.identifier;
+        Config.requestDapp.connectactiontitle = intent.params.connectactiontitle;
+        Config.requestDapp.customcredentialtypes = intent.params.customcredentialtypes;
+        Config.requestDapp.allParams = intent.params;
+
         return true;
     }
 }

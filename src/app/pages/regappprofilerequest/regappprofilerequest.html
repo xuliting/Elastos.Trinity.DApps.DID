@@ -1,0 +1,23 @@
+<ion-header>
+  <header-bar title="Application profile" [showBack]="false" [showClose]="false" [showMinimize]="false"></header-bar>
+</ion-header>
+
+<ion-content class="ion-padding ion-text-center">
+    <ion-img [src]="'assets/images/multi_profile.png'" class="mainicon"></ion-img>
+    <p>
+        <b>{{requestDapp.appName}}</b> wants to record that you are using this application. This information can be kept private only 
+        for your friends, or be visible to everyone.
+    </p>
+    <p>
+      If you save the profile only on your device, only the friends you choose will be able to see it.
+      If you choose to save it on the blockchain, everyone will be able to discover you (a very low fee applies).
+    </p>
+    <p>
+        Publish on chain <ion-toggle [(ngModel)]="shouldPublishOnSidechain"></ion-toggle>
+    </p>
+</ion-content>
+
+<ion-footer>
+    <ion-button class="ion-no-margin" style="width:50%" fill="clear" color="medium" size="large" (click)="rejectRequest()">Cancel</ion-button>
+    <ion-button class="ion-no-margin" style="width:50%" fill="clear" color="primary" size="large" (click)="acceptRequest()">Save profile</ion-button>
+</ion-footer>

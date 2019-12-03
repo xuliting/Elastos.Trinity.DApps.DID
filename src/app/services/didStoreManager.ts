@@ -13,10 +13,10 @@ export class DidStoreManager {
   public subWallet = {};
   public name: string = '';
 
-  public masterDidStore: any = {};
+  public masterDidStore: DIDPlugin.DIDStore;
   public curDidStoreId: string = "-1";
   public curDidId: string = "";
-  public curDidStore: any = {};
+  public curDidStore: DIDPlugin.DIDStore;
   public didInfos: any = {};
   public didList: any = {};
   public credentialList: any = {};
@@ -38,11 +38,14 @@ export class DidStoreManager {
       public localStorage: LocalStorage,
       public didService: DIDService,
       public native: Native) {
+    console.log("DidStoreManager created");
     this.init();
   }
 
   init() {
-    this.localStorage.getCurrentDidStoreId( (id)=> {
+    console.log("DidStoreManager init");
+    this.localStorage.getCurrentDidStoreId((id)=> {
+      console.log("Current DID Store ID:", id);
       if (null == id) {
         this.handleNull();
       }
@@ -61,11 +64,15 @@ export class DidStoreManager {
     })
   }
 
-  public setcurDidStoreId(id, doSwitch) {
+  public setcurDidStoreId(id, doSwitch = false) {
+    console.log("Setting current DID Store ID to:", id);
+
     if (id != this.curDidStoreId) {
+      console.log("DID Store ID has changed - loading the DID Store");
+
       this.curDidStoreId = id;
       this.curDidStore = this.masterDidStore[id];
-      this.loadDidStore(this.curDidStore.id);
+      this.loadDidStore(this.curDidStore.getId());
       console.log("doSwitch:" +doSwitch);
       if (doSwitch) {
         this.localStorage.saveCurrentDidStoreId(this.curDidStoreId);
@@ -93,6 +100,7 @@ export class DidStoreManager {
       .then( (ret)=> {
         this.getCurCredentialList();
         this.native.setRootRouter('/myprofile', {create:false});
+        //this.native.setRootRouter('/devpage');
       })
       .catch( (error)=> {
         console.log("DidStoreManager init error:" + error.message);
@@ -102,6 +110,7 @@ export class DidStoreManager {
 
   handleNull() {
     this.native.setRootRouter('/noidentity');
+    //this.native.setRootRouter('/devpage');
   }
 
   saveProfile(profile) {
@@ -114,14 +123,10 @@ export class DidStoreManager {
 
   public addDidStore() {
     let didStoreId = Config.uuid(6, 16);
-    let didStore = {
-      id:didStoreId
-    }
-    this.didService.initDidStore(didStoreId).then(()=> {
+    this.didService.initDidStore(didStoreId).then((didStore)=> {
       this.masterDidStore[didStoreId] = didStore;
       this.curDidStoreId = didStoreId;
       this.curDidStore = didStore;
-      //
     })
   }
 
@@ -165,26 +170,40 @@ export class DidStoreManager {
 
   }
 
-  public async addCredential(title, props) {
+  public async addCredential(title: String, props: any, userTypes?: String[]) {
     let types = new Array();
     // types[0] = "BasicProfileCredential";
     types[0] = "SelfProclaimedCredential";
 
-    let credential = null;
-    await this.didService.createCredential(this.curDidId, title, types, 15, props, this.curDidStore['password']).then ( (ret)=> {
-        credential = ret;
-    });
+    // If caller provides custom types, we add them to the list
+    // TODO: This is way too simple for now. We need to deal with types schemas in the future.
+    if (userTypes) {
+      userTypes.map((type)=>{
+        types.push(type);
+      })
+    }
+
+    console.log("Asking DIDService to create the credential");
+    let credential = await this.didService.createCredential(this.curDidId, title, types, 15, props, this.curDidStore['password']);
+
+    console.log("Asking DIDService to store the credential");
     await this.didService.storeCredential(credential.objId);
+
+    console.log("Asking DIDService to add the credential");
     await this.didService.addCredential(credential.objId);
+
+    console.log("Credential successfully added");
 
     //update credential
     await this.getCurCredentialList();
     this.event.publish('did:credentialadded');
 
+    return credential;
   }
 
   async getCurCredentialList() {
     await this.didService.listCredentials(this.curDidId).then( (ret)=> {
+      console.log("Current credentials list: ",ret.items);
       this.credentialList = ret.items;
       this.loadAllCredential();
     });

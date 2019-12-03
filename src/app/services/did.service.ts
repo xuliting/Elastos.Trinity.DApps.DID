@@ -1,20 +1,21 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Platform, ToastController } from '@ionic/angular';
 
-// declare let didManager: DIDPlugin.DIDManager;
-declare let didManager: any;
+declare let didManager: DIDPlugin.DIDManager;
+//declare let didManager: any;
 @Injectable({
     providedIn: 'root'
 })
 export class DIDService {
-    selfDidStore: any;
-    selfDidDocument: any;
+    selfDidStore: DIDPlugin.DIDStore;
+    selfDidDocument: DIDPlugin.DIDDocument;
     curDidString: string = "";
 
     constructor(
         private platform: Platform,
         public zone: NgZone,
         public toastCtrl: ToastController) {
+            console.log("DIDService created");
     }
 
     getCurrentDidString() {
@@ -35,7 +36,7 @@ export class DIDService {
     }
 
     //
-    initDidStore(location): Promise<any> {
+    initDidStore(location): Promise<DIDPlugin.DIDStore> {
         if (this.platform.platforms().indexOf("cordova") < 0) {//for test
             return new Promise((resolve, reject)=>{
                resolve()
@@ -310,7 +311,7 @@ export class DIDService {
     }
 
     //Credential
-    backupCredential(credential): Promise<any> {
+    credentialToJSON(credential: DIDPlugin.VerifiableCredential): Promise<string> {
         if (this.platform.platforms().indexOf("cordova") < 0) {//for test
             return new Promise((resolve, reject)=>{
                 let ret = "{\"id\":\"did:elastos:ikoWcH4HJYGsHFzYH3VEVL7iMeL6NGm8VF#test\",\"type\":[\"SelfProclaimedCredential\"],\"issuanceDate\":\"2019-11-11T08:00:00Z\",\"expirationDate\":\"2034-11-11T08:00:00Z\",\"credentialSubject\":{\"id\":\"did:elastos:ikoWcH4HJYGsHFzYH3VEVL7iMeL6NGm8VF\",\"remark\":\"ttttttttt\",\"title\":\"test\",\"url\":\"tst\"},\"proof\":{\"verificationMethod\":\"#primary\",\"signature\":\"foJZLqID4C27eDheK/VDYjaGlxgTzy88s+o95GL4KwFbxLYechjOQ/JjMv7UFTYByOg84dECezeqjR7pjHeu1g==\"}}"

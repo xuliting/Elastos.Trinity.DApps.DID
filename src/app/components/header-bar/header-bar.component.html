@@ -1,7 +1,7 @@
 <ion-toolbar>
     <ion-title>{{title | translate }}</ion-title>
     <ion-buttons slot="start">
-        <ion-back-button ></ion-back-button>
+        <ion-back-button *ngIf="showBack"></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="start" *ngIf="showMenu">
       <ion-menu-button></ion-menu-button>

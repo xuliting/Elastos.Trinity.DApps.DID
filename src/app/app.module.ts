@@ -20,6 +20,7 @@ import { en } from './../assets/i18n/en';
 import { MyApp } from './app.component';
 import { ComponentsModule } from './components/components.module';
 
+import { DevPage } from './pages/devpage/devpage';
 import { AreaPage } from './pages/area/area';
 import { NoIdentityPage } from './pages/noidentity/noidentity';
 import { EditProfilePage } from './pages/editprofile/editprofile';
@@ -35,6 +36,7 @@ import { CredentialListPage } from './pages/credential/list/credentiallist';
 import { CanDeactivateList } from './pages/credential/list/candeactivate.service';
 import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
 import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
+import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequest/regappprofilerequest';
 
 import { SecurityCheckComponent } from './components/securitycheck/securitycheck.component';
 
@@ -66,6 +68,7 @@ export function TranslateLoaderFactory() {
 @NgModule({
   declarations: [
     MyApp,
+    DevPage,
     AreaPage,
     BackupDIDPage,
     CredentialAccessRequestPage,
@@ -80,7 +83,7 @@ export function TranslateLoaderFactory() {
     SetPasswordPage,
     SlideMenuPage,
     VerifyMnemonicsPage,
-
+    RegisterApplicationProfileRequestPage
   ],
   imports: [
     CommonModule,

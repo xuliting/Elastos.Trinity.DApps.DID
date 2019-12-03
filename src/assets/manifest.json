@@ -22,8 +22,8 @@
     }
   ],
   "author": {
-    "name": "Benjamin Piette",
-    "email": "benjaminpiette@elastos-fusion.org",
+    "name": "Elastos Foundation",
+    "email": "contact@elastos.org",
     "website": "https://www.elastos.org"
   },
   "default_locale": "en",
@@ -38,6 +38,9 @@
   "intent_filters": [
     {
       "action": "credaccess"
+    },
+    {
+      "action": "registerapplicationprofile"
     }
   ],
   "background_color": "#4e8ef7",

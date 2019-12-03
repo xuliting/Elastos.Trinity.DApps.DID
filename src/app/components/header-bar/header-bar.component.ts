@@ -10,6 +10,7 @@ export class HeaderBarComponent implements OnInit {
     public back_touched = false;
 
     @Input('title') title: string = "";
+    @Input('showBack') showBack: boolean = true;
     @Input('showMinimize') showMinimize: boolean = true;
     @Input('showClose') showClose: boolean = true;
     @Input('showMenu') showMenu: boolean = false;

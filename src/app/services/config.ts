@@ -1,6 +1,8 @@
 
 import { Injectable } from '@angular/core';
 
+import { DidStoreManager } from './didStoreManager';
+
 @Injectable()
 export class Config {
     public static requestDapp: any;
@@ -17,9 +19,9 @@ export class Config {
         mnemonic: "",
         didList: [],
     };
-    public static didStoreManager: any = {};
+    public static didStoreManager: DidStoreManager;
 
-    public static uuid(len, radix) {
+    public static uuid(len, radix): string {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
         var uuid = [], i;
         radix = radix || chars.length;
@@ -73,7 +75,8 @@ export class Config {
     }
 
     public static getCurDid(id) {
-        return Config.didStoreManager.masterWallet[id].chainList || null;
+        return null;
+        // TMP BPI return Config.didStoreManager.masterWallet[id].chainList || null;
     }
 
     public static getDidList() {

@@ -50,7 +50,7 @@ export class CredentialListPage {
   backupCredential(credential) {
     if (this.isEdit) return;
 
-    this.didService.backupCredential(credential).then( (ret)=> {
+    this.didService.credentialToJSON(credential).then( (ret)=> {
       this.native.go('/credentialbackup', {content: ret});
     })
   }

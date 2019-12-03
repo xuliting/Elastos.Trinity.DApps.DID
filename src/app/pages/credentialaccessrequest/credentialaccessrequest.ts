@@ -84,7 +84,7 @@ export class CredentialAccessRequestPage {
 
     //TODO select credential
 
-    this.didService.backupCredential(this.credentials[0].object).then( (credential)=> {
+    this.didService.credentialToJSON(this.credentials[0].object).then( (credential)=> {
       console.log("Sending credaccess intent response for intent id "+this.requestDapp.intentId)
       this.appServices.sendIntentResponse("credaccess", {presentation:credential}, this.requestDapp.intentId)
       this.appServices.close();
