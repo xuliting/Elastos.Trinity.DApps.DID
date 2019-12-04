@@ -3,6 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Native } from '../../services/native';
 import { Util } from '../../services/util';
+import { Config } from '../../services/config';
+import { NewDID } from 'src/app/model/newdid.model';
 
 @Component({
   selector: 'page-noidentity',
@@ -19,6 +21,7 @@ export class NoIdentityPage {
   }
 
   createIdentity() {
+    Config.didBeingCreated = new NewDID();
     this.native.go('/setpassword');
   }
 

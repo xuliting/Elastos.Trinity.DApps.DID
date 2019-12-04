@@ -1,7 +1,8 @@
 
 import { Injectable } from '@angular/core';
 
-import { DidStoreManager } from './didStoreManager';
+import { DidStoreManager } from './didstoremanager';
+import { NewDID } from '../model/newdid.model';
 
 @Injectable()
 export class Config {
@@ -20,6 +21,7 @@ export class Config {
         didList: [],
     };
     public static didStoreManager: DidStoreManager;
+    public static didBeingCreated: NewDID = null;
 
     public static uuid(len, radix): string {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
@@ -59,19 +61,11 @@ export class Config {
     }
 
     public static getCurDidStoreId() {
-        return this.didStoreManager.getcurDidStoreId;
+        return this.didStoreManager.getCurDidStoreId();
     }
 
-    public static setCurDidStoreId(id) {
-        this.didStoreManager.setcurDidStoreId(id);
-    }
-
-    public static getCurDidId() {
-        return this.didStoreManager.getcurDidId();
-    }
-
-    public static setCurDidId(id) {
-        this.didStoreManager.setcurDidId(id);
+    public static async setCurDidStoreId(id) {
+        await this.didStoreManager.activateDidStore(id);
     }
 
     public static getCurDid(id) {

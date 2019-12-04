@@ -24,9 +24,12 @@ export class SetPasswordPage {
     return this.passwordsMatch();
   }
 
-  confirmPassword() {
+  async confirmPassword() {
     //TODO
-    Config.didStoreManager.addDidStore();
+
+    Config.didBeingCreated.password = this.password; // TODO: Set this only if in CREATION mode, not edition.
+
+    await Config.didStoreManager.addDidStore();
     this.native.go('/editprofile', {create: true});
   }
 }

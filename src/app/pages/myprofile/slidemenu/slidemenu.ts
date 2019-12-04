@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { Config } from '../../../services/config';
 import { Native } from '../../../services/native';
+import { DIDStoreEntry } from '../../../model/didstoreentry.model';
 
 @Component({
   selector: 'app-slidemenu',
@@ -9,22 +10,22 @@ import { Native } from '../../../services/native';
   styleUrls: ['slidemenu.scss']
 })
 export class SlideMenuPage {
-  public didStoreList: any;
+  public didStoreList: DIDStoreEntry[];
 
   constructor(private native: Native) {
     this.init();
   }
 
-  init() {
-    this.didStoreList = Config.didStoreManager.getAllDidStore();
+  async init() {
+    this.didStoreList = await Config.didStoreManager.getDidStoreEntries();
   }
 
   addDidStore() {
     this.native.go("/noidentity", {isfirst: false});
   }
 
-  switchDidStore(didStoreId) {
-    Config.didStoreManager.setcurDidStoreId(didStoreId.key, true);
+  switchDidStore(didStoreEntry: DIDStoreEntry) {
+    Config.didStoreManager.activateDidStore(didStoreEntry.storeId, true);
   }
 
   didSettings() {

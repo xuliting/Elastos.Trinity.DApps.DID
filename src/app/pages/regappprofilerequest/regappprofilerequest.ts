@@ -63,7 +63,7 @@ export class RegisterApplicationProfileRequestPage {
     });
     
     // Create and append the new ApplicationProfileCredential credential to the local store.
-    await Config.didStoreManager.addCredential(credentialTitle, props, customCredentialTypes);
+    await Config.didStoreManager.getActiveDidStore().addCredential(credentialTitle, props, customCredentialTypes);
   }
 
   async createIndependantCredentials() {
@@ -73,7 +73,7 @@ export class RegisterApplicationProfileRequestPage {
       console.log("shared claim", key, value);
 
       console.log("Creating independant credential with key "+key+" and value:", value);
-      await Config.didStoreManager.addCredential(key, {key:value});
+      await Config.didStoreManager.getActiveDidStore().addCredential(key, {key:value});
     });
   }
 

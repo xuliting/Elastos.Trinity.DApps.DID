@@ -20,7 +20,7 @@ export class CredentialCreatePage {
   }
 
   init() {
-    this.profile = Config.didStoreManager.getProfile();
+    this.profile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
   }
 
   async createCredential() {
@@ -36,7 +36,7 @@ export class CredentialCreatePage {
         remark: this.remark,
     }
 
-    await Config.didStoreManager.addCredential(this.title, props);
+    await Config.didStoreManager.getActiveDidStore().addCredential(this.title, props);
   }
 
   add() {

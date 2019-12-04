@@ -52,7 +52,10 @@ export class VerifyMnemonicsPage {
     }
 
     async createDid() {
-        await Config.didStoreManager.addDid(this.native.getMnemonicLang(), this.mnemonicStr);
+        console.log("Creating a new DID");
+        await Config.didStoreManager.getActiveDidStore().addNewDidWithProfile(Config.didBeingCreated, this.native.getMnemonicLang(), this.mnemonicStr);
+        
+        console.log("Redirecting user to his profile page");
         this.native.setRootRouter("/myprofile");
     }
 

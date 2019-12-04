@@ -5,7 +5,7 @@ import { DrawerState } from 'ion-bottom-drawer';
 
 import { UXService } from '../../services/ux.service';
 import { Config } from '../../services/config';
-import { Profile } from '../../services/profile.model';
+import { Profile } from '../../model/profile.model';
 import { Native } from '../../services/native';
 
 
@@ -37,8 +37,10 @@ export class MyProfilePage {
               private appService: UXService,
               private native: Native) {
     this.route.queryParams.subscribe((data) => {
-        if (data['create'] == 'true') this.createDid = true;
-        else this.createDid = false;
+        if (data['create'] == 'true') 
+          this.createDid = true;
+        else  
+          this.createDid = false;
     });
     this.init();
   }
@@ -56,7 +58,7 @@ export class MyProfilePage {
   }
 
   ionViewDidEnter() {
-    this.didString = Config.didStoreManager.getcurDidId();
+    this.didString = Config.didStoreManager.getActiveDidStore().getCurrentDid();
     if (this.didString != '') {
       this.appService.setIntentListener();
     }
@@ -64,8 +66,8 @@ export class MyProfilePage {
   }
 
   init() {
-    this.profile = Config.didStoreManager.getProfile();
-    console.log("MyProfilePage :" + JSON.stringify(this.profile));
+    this.profile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
+    console.log("MyProfilePage is using this profile:", this.profile);
   }
 
   /**

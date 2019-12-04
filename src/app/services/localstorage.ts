@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 
+import { DIDStoreEntry } from '../model/didstoreentry.model';
+
 @Injectable()
 export class LocalStorage {
 
@@ -30,6 +32,19 @@ export class LocalStorage {
         return this.storage.get(key);
     }
 
+    public getAsJson<T>(key) : Promise<T> {
+        return new Promise(async (resolve, reject)=>{
+            try {
+                let val = await this.storage.get(key)
+                resolve(JSON.parse(val));
+            }
+            catch (err) {
+                reject(err);
+            }
+        });
+    }
+
+    // @deprecated
     public getVal(key, func) {
         this.storage.get(key).then((val) => {
             if (typeof(val) == "string") {
@@ -84,26 +99,26 @@ export class LocalStorage {
         this.getVal(key, func);
     }
 
-    public setDidStoreInfos(obj) {
+    public saveDidStoreEntries(entries: DIDStoreEntry[]) {
+        console.log("Setting DID store entries", entries);
         let key = "didstores";
-        this.storage.set(key, JSON.stringify(obj));
+        this.storage.set(key, JSON.stringify(entries));
     }
 
-    public getDidStoreInfos(func) {
+    public getDidStoreEntries(): Promise<DIDStoreEntry[]> {
         let key = "didstores";
-        this.getVal(key, func);
+        return this.getAsJson(key);
     }
 
-    public saveCurrentDidStoreId(value: any): any {
+    public saveCurrentDidStoreId(value: string): any {
         // TODO
         let key = "cur-didstoreId";
         return this.storage.set(key, JSON.stringify(value));
     }
 
-    public getCurrentDidStoreId(func): any {
-        // TODO
+    public getCurrentDidStoreId(): Promise<string> {
         let key = "cur-didstoreId";
-        this.getVal(key, func);
+        return this.getAsJson(key);
     }
 
 }

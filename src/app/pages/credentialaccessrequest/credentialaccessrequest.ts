@@ -2,7 +2,7 @@ import { Component, NgZone } from '@angular/core';
 
 import { Config } from '../../services/config';
 import { DIDService } from '../../services/did.service';
-import { Profile } from '../../services/profile.model';
+import { Profile } from '../../model/profile.model';
 import { UXService } from '../../services/ux.service';
 import { PopupProvider } from '../../services/popup';
 import { Util } from '../../services/util';
@@ -33,8 +33,8 @@ export class CredentialAccessRequestPage {
               private appServices: UXService) {
     this.zone.run(() => {
       this.requestDapp = Config.requestDapp;
-      this.profile = Config.didStoreManager.getProfile();
-      this.credentials = Config.didStoreManager.getCredentialList();
+      this.profile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
+      this.credentials = Config.didStoreManager.getActiveDidStore().credentials;
     });
   }
 

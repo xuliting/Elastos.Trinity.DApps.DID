@@ -13,7 +13,7 @@ import { PopupProvider } from '../../../services/popup';
   styleUrls: ['credentiallist.scss']
 })
 export class CredentialListPage {
-  didString: String = "";
+  didString: DIDPlugin.DIDString = "";
   public credentials: any = {};
   public hasCredential: boolean = false;
   public isEdit = false;
@@ -27,7 +27,7 @@ export class CredentialListPage {
   ngOnInit() {
     this.event.subscribe('did:credentialadded', ()=> {
       this.zone.run(() => {
-        this.credentials = Config.didStoreManager.getCredentialList();
+        this.credentials = Config.didStoreManager.getActiveDidStore().credentials;
         this.hasCredential = this.credentials.length > 0 ? true : false;
       });
     });
@@ -38,8 +38,8 @@ export class CredentialListPage {
   }
 
   init() {
-    this.didString = Config.didStoreManager.getcurDidId();
-    this.credentials = Config.didStoreManager.getCredentialList();
+    this.didString = Config.didStoreManager.getActiveDidStore().getCurrentDid();
+    this.credentials = Config.didStoreManager.getActiveDidStore().credentials;
     this.hasCredential = this.credentials.length > 0 ? true : false;
   }
 

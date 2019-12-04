@@ -8,7 +8,7 @@ import { Config } from './services/config';
 import { DIDService } from './services/did.service';
 import { LocalStorage } from './services/localstorage';
 import { Native } from './services/native';
-import { DidStoreManager } from './services/didStoreManager';
+import { DidStoreManager } from './services/didstoremanager';
 import { UXService } from './services/ux.service';
 
 @Component({
