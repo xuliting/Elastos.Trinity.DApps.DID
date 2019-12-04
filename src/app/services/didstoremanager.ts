@@ -111,11 +111,11 @@ export class DidStoreManager {
   }
 
   public async addDidStore() {
-    console.log("Adding a new DID Store");
-
     let name = "TODO-NAME";
 
     let didStoreId = Config.uuid(6, 16);
+    
+    console.log("Adding a new DID Store with ID "+didStoreId);
     let didStore = await this.didService.initDidStore(didStoreId);
     this.masterDidStore.push(didStore);
 

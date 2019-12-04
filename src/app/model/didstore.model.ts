@@ -9,6 +9,7 @@ export class DIDStore {
     public dids: DIDPlugin.UnloadedDID[] = [];
     private unloadedCredentials: DIDPlugin.UnloadedVerifiableCredential[] = [];
     public credentials: DIDPlugin.VerifiableCredential[] = [];
+    public password: string = null; // Password provided by the user.
 
     constructor(private didService: DIDService, private events: Events) {}
 
@@ -87,6 +88,9 @@ export class DIDStore {
         // Create a private root key
         console.log("Adding DID to the store", this);
         await this.didService.initPrivateIdentity(mnemonicLang, mnemonic, newDid.password, true)
+
+        // Save password for later use
+        this.rememberPassword(newDid.password);
     
         // Create and add a DID to the DID store in physical storage.
         let createdDid = await this.didService.createDid(newDid.password, "");
@@ -122,7 +126,7 @@ export class DIDStore {
             }
         
             console.log("Asking DIDService to create the credential");
-            let credential = await this.didService.createCredential(this.getCurrentDid(), title, types, 15, props, /*this.curDidStore['password']*/ "11111111");
+            let credential = await this.didService.createCredential(this.getCurrentDid(), title, types, 15, props, this.password);
         
             console.log("Asking DIDService to store the credential");
             await this.didService.storeCredential(this.getCurrentDid(), credential);
@@ -193,5 +197,12 @@ export class DIDStore {
             let credential = await this.addCredential(key, props, ["BasicProfileCredential"]);
             this.credentials.push(credential);
         });
+    }
+
+    /**
+     * Remembers store's password temporarily in memory.
+     */
+    public rememberPassword(password: string) {
+        this.password = password;
     }
 }

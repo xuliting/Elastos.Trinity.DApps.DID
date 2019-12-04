@@ -36,7 +36,7 @@ export class DIDService {
     }
 
     //
-    initDidStore(didStoreId): Promise<DIDPlugin.DIDStore> {
+    initDidStore(didStoreId: string): Promise<DIDPlugin.DIDStore> {
         if (this.platform.platforms().indexOf("cordova") < 0) {//for test
             return new Promise((resolve, reject)=>{
                resolve()
