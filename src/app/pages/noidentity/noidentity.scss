@@ -4,7 +4,7 @@ ion-content {
 }
 
 .mainicon {
-    width:40vw;
+    width:20vh;
     margin: 0 auto;
 }
 
@@ -51,4 +51,38 @@ ion-slide {
 
 .secondary-button {
     width:70vw;
+}
+
+ion-bottom-drawer {
+    border-radius: 30px;
+
+    .container {
+        margin: 10px 30px;
+
+        .input-container {
+            background: #F1F3F7;
+            border-radius: 20px;
+            padding:2px;
+            margin-bottom:10px;
+        }
+
+        ion-input {
+            font-size:12px;
+            display:block;
+        }
+
+        .password-intro {
+            font-weight: 700;
+            text-align: center;
+            margin: 5px 40px;
+            color: var(--ion-color-primary) !important;
+            margin-bottom:20px;
+        }
+
+        .main-button {
+            width:100%;
+            display:block;
+            margin-top:40px;
+        }
+    }
 }

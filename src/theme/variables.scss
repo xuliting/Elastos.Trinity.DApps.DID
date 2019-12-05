@@ -5,7 +5,9 @@
 :root {
   --ion-default-font: "Raleway","Helvetica",sans-serif !important;
 
-  --ion-color-primary: #0093F0;
+  --test: "#FF0000";
+
+  --ion-color-primary: #6561FB;
   --ion-color-primary-rgb: 56, 128, 255;
   --ion-color-primary-contrast: #000000;
   --ion-color-primary-contrast-rgb: 255,255,255;
@@ -73,9 +75,9 @@
 }
 
 .ios { // ios
-  --ion-color-primary: linear-gradient(120deg, #181d20 0%,  #21313d 100%);
+  //--ion-color-primary: linear-gradient(120deg, #181d20 0%,  #21313d 100%);
 }
 
 .plt-android { // android
-  --ion-color-primary: linear-gradient(120deg, #181d20 0%,  #21313d 100%);
+  //--ion-color-primary: linear-gradient(120deg, #181d20 0%,  #21313d 100%);
 }

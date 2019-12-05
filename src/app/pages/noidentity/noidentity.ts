@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { DrawerState } from 'ion-bottom-drawer';
 
 import { Native } from '../../services/native';
 import { Util } from '../../services/util';
@@ -15,6 +16,9 @@ import { Styling } from '../../services/styling';
 export class NoIdentityPage {
   public isfirst: boolean = true;
   public styling = Styling;
+  public passwordSheetState = DrawerState.Bottom;
+  public passwordSheetMinHeight = 0;
+  public passwordSheetDockedHeight = 350;
 
   constructor(public route:ActivatedRoute, private native: Native) {
     this.route.queryParams.subscribe((data) => {
@@ -22,12 +26,34 @@ export class NoIdentityPage {
     });
   }
 
-  createIdentity() {
+  createIdentity(e: MouseEvent) {
+    e.stopImmediatePropagation();
+
     Config.didBeingCreated = new NewDID();
-    this.native.go('/setpassword');
+
+    this.passwordSheetState = DrawerState.Docked;
   }
 
-  importIdentity() {
+  goToEditProfile() {
+    this.native.go('/editprofile', {create:true});
+  }
+
+  importIdentity(e: MouseEvent) {
+    e.stopImmediatePropagation();
     this.native.go("/importdid");
+  }
+
+  prevSlide(e: MouseEvent, slider) {
+    e.stopImmediatePropagation();
+    slider.slidePrev();
+  }
+
+  nextSlide(e: MouseEvent, slider) {
+    e.stopImmediatePropagation();
+    slider.slideNext();
+  }
+
+  hidePasswordSheet(e: MouseEvent) {
+    this.passwordSheetState = DrawerState.Bottom;
   }
 }
