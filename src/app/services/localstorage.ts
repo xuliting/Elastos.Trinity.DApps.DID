@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 
 import { DIDStoreEntry } from '../model/didstoreentry.model';
+import { BrowserSimulation, BrowserSimulationConfig } from './browsersimulation';
 
 @Injectable()
 export class LocalStorage {
@@ -117,10 +118,19 @@ export class LocalStorage {
     }
 
     public getCurrentDidStoreId(): Promise<string> {
-        let key = "cur-didstoreId";
-        return this.getAsJson(key);
+        if (BrowserSimulation.runningInBrowser()) {
+            return new Promise((resolve)=>{
+                if (BrowserSimulationConfig.hasDIDStores())
+                    resolve("store-abcedf");
+                else
+                    resolve(null);
+            });
+        }
+        else {
+            let key = "cur-didstoreId";
+            return this.getAsJson(key);
+        }
     }
-
 }
 
 

@@ -34,6 +34,7 @@ export class EditProfilePage {
       if (data['create'] == 'false') {
         console.log("Editing an existing profile");
 
+        this.editedStore = Config.didStoreManager.getActiveDidStore();
         // Edition - We clone the received profile in case user wants to cancel editing.
         this.profile = Profile.fromProfile(Config.didStoreManager.getActiveDidStore().getBasicProfile());
         this.hasArea = !Util.isNull(this.profile.area);

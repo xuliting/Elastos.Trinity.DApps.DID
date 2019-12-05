@@ -5,6 +5,7 @@ import { Native } from './native';
 
 import { Config } from './config';
 import { Util } from './util';
+import { BrowserSimulation } from './browsersimulation';
 
 declare let appManager: AppManagerPlugin.AppManager;
 let selfUxService: UXService = null;
@@ -35,9 +36,8 @@ export class UXService {
         if (this.platform.platforms().indexOf("cordova") >= 0) {
             appManager.setListener(this.onReceive);
             this.getLanguage();
+            this.setIntentListener();
         }
-
-        this.setIntentListener();
     }
 
     /**
@@ -71,10 +71,12 @@ export class UXService {
     }
 
     setIntentListener() {
-        console.log("Setting intent listener");
-        if (!this.isReceiveIntentReady) {
-            this.isReceiveIntentReady = true;
-            appManager.setIntentListener(this.onReceiveIntent);
+        if (!BrowserSimulation.runningInBrowser()) {
+            console.log("Setting intent listener");
+            if (!this.isReceiveIntentReady) {
+                this.isReceiveIntentReady = true;
+                appManager.setIntentListener(this.onReceiveIntent);
+            }
         }
     }
 

@@ -10,6 +10,7 @@ import { DIDStoreEntry } from '../model/didstoreentry.model';
 import { DIDStore } from '../model/didstore.model';
 import { Native } from "./native";
 import { Util } from "./util";
+import { BrowserSimulation } from './browsersimulation';
 
 export class DidStoreManager {
   public subWallet = {};
@@ -36,13 +37,11 @@ export class DidStoreManager {
 
     let id = await this.localStorage.getCurrentDidStoreId();
     console.log("Current DID Store ID:", id);
-    
+
     if (null == id) {
       this.handleNull();
     }
     else {
-      console.log("Loading DID Store info.");
-
       let info = await this.localStorage.getDidStoreEntries();
       console.log("DidStoreManager getDidStoreEntries:", info);
 
@@ -95,7 +94,9 @@ export class DidStoreManager {
 
         this.event.publish('did:didstorechanged');
         
-        this.localStorage.saveCurrentDidStoreId(this.activeDidStore.pluginDidStore.getId());
+        if (!BrowserSimulation.runningInBrowser()) {
+          this.localStorage.saveCurrentDidStoreId(this.activeDidStore.pluginDidStore.getId());
+        }
 
         resolve(true);
       }
@@ -150,6 +151,9 @@ export class DidStoreManager {
 
   public async getDidStoreEntries(): Promise<DIDStoreEntry[]> {
     let entries = await this.localStorage.getDidStoreEntries();
+    if (!entries)
+      return [];
+
     return entries;
   }
 

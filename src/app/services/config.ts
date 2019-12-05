@@ -12,6 +12,7 @@ export class Config {
 
     public static curDidStoreId: string = "-1";
     public static credentialInfos: any = {};
+    public static _runningInBrowser: boolean = false;
 
     public static curDidStore: any = {
         id: "",

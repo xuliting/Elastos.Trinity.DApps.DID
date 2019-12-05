@@ -10,6 +10,7 @@ import { LocalStorage } from './services/localstorage';
 import { Native } from './services/native';
 import { DidStoreManager } from './services/didstoremanager';
 import { UXService } from './services/ux.service';
+import { BrowserSimulation } from './services/browsersimulation';
 
 @Component({
   selector: 'my-app',
@@ -30,9 +31,17 @@ export class MyApp {
   ) {
     this.initializeApp();
   }
-
+ 
   initializeApp() {
+    console.log("Initialize app");
+
+    if (this.platform.platforms().indexOf("cordova") < 0) {
+      BrowserSimulation.setRunningInBrowser();
+    }
+
     this.platform.ready().then(() => {
+      console.log("Platform is ready");
+
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
