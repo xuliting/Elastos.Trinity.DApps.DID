@@ -56,7 +56,7 @@ export class VerifyMnemonicsPage {
         await Config.didStoreManager.getActiveDidStore().addNewDidWithProfile(Config.didBeingCreated, this.native.getMnemonicLang(), this.mnemonicStr);
         
         console.log("Redirecting user to his profile page");
-        this.native.setRootRouter("/myprofile");
+        this.native.setRootRouter("/profile/myprofile");
     }
 
     allWordsMatch() {

@@ -55,10 +55,13 @@ export class DidStoreManager {
           let didStore = await this.didService.initDidStore(storeEntry.storeId);
           this.masterDidStore.push(didStore);
         });
-        let couldEnableStore = await this.activateDidStore(id, true);
+
+        let couldEnableStore = await this.activateDidStore(id);
         if (!couldEnableStore) {
           console.error("Unable to load the previously selected DID store");
         }
+        
+        this.native.setRootRouter('/profile/myprofile', {create:false});
       }
     }
   }
@@ -67,7 +70,7 @@ export class DidStoreManager {
    * Make the given DID store becoming the active one for all further operations.
    * Redirects to the right screen after activation, if a switch is required.
    */
-  public activateDidStore(id: string, doSwitch = false) {
+  public activateDidStore(id: string) {
     console.log("Activating DID store using DID store ID", id);
 
     return new Promise(async (resolve, reject)=>{
@@ -90,11 +93,7 @@ export class DidStoreManager {
 
         this.event.publish('did:didstorechanged');
         
-        if (doSwitch) {
-          this.localStorage.saveCurrentDidStoreId(this.activeDidStore.pluginDidStore.getId());
-          this.native.setRootRouter('/myprofile', {create:false});
-          //this.native.setRootRouter('/devpage');
-        }
+        this.localStorage.saveCurrentDidStoreId(this.activeDidStore.pluginDidStore.getId());
 
         resolve(true);
       }
@@ -121,7 +120,7 @@ export class DidStoreManager {
 
     await this.addDidStoreEntry(new DIDStoreEntry(didStoreId, name));
 
-    await this.activateDidStore(didStoreId, false);
+    await this.activateDidStore(didStoreId);
   }
 
   /**

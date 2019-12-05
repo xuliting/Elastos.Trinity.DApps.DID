@@ -32,7 +32,7 @@ export class ImportDIDPage {
   doImport() {
     if(this.checkParams()){
       // TODO import
-      this.native.go("/myprofile");
+      this.native.go("/profile/myprofile");
     }
   }
 

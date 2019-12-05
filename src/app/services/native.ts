@@ -64,6 +64,7 @@ export class Native {
   }
 
   public go(page: any, options: any = {}) {
+      console.log("NAV - Going to "+page);
       this.hideLoading();
       this.navCtrl.setDirection('forward');
       this.router.navigate([page], { queryParams: options });
@@ -74,6 +75,7 @@ export class Native {
   }
 
   public setRootRouter(page: any,  options: any = {}) {
+    console.log("NAV - Setting root to "+page);
       this.hideLoading();
       this.navCtrl.setDirection('root');
       this.router.navigate([page], { queryParams: options });

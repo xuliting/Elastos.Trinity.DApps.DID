@@ -20,14 +20,14 @@ import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequ
 import { DevPage } from './pages/devpage/devpage';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'noidentity', pathMatch: 'full' },
+  // { path: '', redirectTo: '', pathMatch: 'full' }, // No default route, services will decide this by themselves.
   { path: 'devpage', component: DevPage },
   { path: 'area', component: AreaPage },
   { path: 'noidentity', component: NoIdentityPage },
   { path: 'createidentity', component: EditProfilePage },
   { path: 'editprofile', component: EditProfilePage },
   {
-    path: '',
+    path: 'profile',
     component: SlideMenuPage,
     children: [
       { path: 'myprofile', component: MyProfilePage },

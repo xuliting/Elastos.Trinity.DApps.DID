@@ -25,7 +25,8 @@ export class SlideMenuPage {
   }
 
   switchDidStore(didStoreEntry: DIDStoreEntry) {
-    Config.didStoreManager.activateDidStore(didStoreEntry.storeId, true);
+    Config.didStoreManager.activateDidStore(didStoreEntry.storeId);
+    this.native.setRootRouter("/profile/myprofile", {create: false});
   }
 
   didSettings() {
