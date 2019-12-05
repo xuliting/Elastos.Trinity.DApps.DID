@@ -1,4 +1,6 @@
 ion-title {
+    font-weight: 700;
+    font-size: 23px;
     position: absolute;
     left: 0px !important;
     top: 0px !important;
@@ -7,4 +9,13 @@ ion-title {
     text-align: center !important;
     // margin-left: 0px !important;
     // margin-top: 0px !important;
+}
+
+ion-toolbar {   
+    --background: white !important;
+}
+
+.transparent-background {
+    --background: none !important;
+    color:white; // Light color text when using a transparent background
 }

@@ -1,21 +1,66 @@
-<ion-header>
-  <header-bar title="DID"></header-bar>
-</ion-header>
+<ion-content>
+    <header-bar title="" [transparent]="true"></header-bar>
+  
+  <div class="ion-padding ion-text-center">
+    <ion-slides
+      #slide
+      pager="true"
+      [options]="slideOpts">
+      <ion-slide class="ion-padding">
+        <div class="left-arrow invisible" (click)="prevSlide(slide)">
+          <ion-icon name="arrow-round-backward"></ion-icon>
+        </div>
+        <ion-grid>
+          <ion-img [src]="'assets/images/noidentity.png'" class="mainicon"></ion-img>
+          <p *ngIf="isfirst" class="welcome">
+            Welcome
+          </p>
+          <p class="main-text larger">
+            elastOS DID Portfolio
+          </p>
+          <p class="main-text">
+            Manage your decentralized identities and share with friends and business that only you allow.
+          </p>
+          <p class="main-text">
+            Own your identity on elastOS!
+          </p>
+        </ion-grid>
+        <div class="right-arrow" (click)="nextSlide(slide)">
+          <ion-icon name="arrow-round-forward"></ion-icon>
+        </div>
+      </ion-slide>
 
-<ion-content class="ion-padding ion-text-center">
-  <ion-img [src]="'assets/images/noidentity.png'" class="mainicon"></ion-img>
-  <p *ngIf="isfirst" >
-      Oh... You just don’t exist, that’s sad...
-  </p>
-  <p>
-      Let’s create your Decentralized Elastos Identity?
-  </p>
-  <ion-list>
-    <ion-item>
-      <ion-button class="confirm" (click)="createIdentity()">{{ 'createDID' | translate }}</ion-button>
-    </ion-item>
-    <ion-item>
-      <ion-button class="confirm" (click)="importIdentity()">{{ 'importDID' | translate }}</ion-button>
-    </ion-item>
-  </ion-list>
+      <ion-slide class="ion-padding">
+        <div class="left-arrow" (click)="prevSlide(slide)">
+          <ion-icon name="arrow-round-back"></ion-icon>
+        </div>
+        <ion-grid>
+          <ion-img [src]="'assets/images/noidentity.png'" class="mainicon"></ion-img>
+          <p *ngIf="isfirst" class="welcome">
+            First time?
+          </p>
+          <p class="main-text larger">
+            Let's create a DID Portfolio
+          </p>
+          <ion-row>
+            <did-button class="main-button" (click)="createIdentity()" 
+              [title]="'Create New DID' | translate" 
+              [bgcolor]="styling.primaryButtonColor" 
+              [bordercolor]="styling.primaryButtonColor"
+              [shadow]="true"></did-button>
+          </ion-row>
+          <ion-row>
+              <did-button class="secondary-button" (click)="importIdentity()" 
+              [title]="'Import DID' | translate" 
+              [bgcolor]="'rgba(0,0,0,0)'" 
+              [bordercolor]="'#FFFFFF'"
+              [shadow]="false"></did-button>
+          </ion-row>
+        </ion-grid>
+        <div class="right-arrow invisible" (click)="nextSlide(slide)">
+          <ion-icon name="arrow-round-forward"></ion-icon>
+        </div>
+      </ion-slide>
+    </ion-slides>
+  </div>
 </ion-content>

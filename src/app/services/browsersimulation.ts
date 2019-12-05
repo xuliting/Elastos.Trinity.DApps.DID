@@ -7,7 +7,7 @@
  */
 export class BrowserSimulationConfig {
     public static hasDIDStores() : boolean {
-        return true;
+        return false;
     }
 }
 /**

@@ -1,6 +1,6 @@
-<ion-toolbar>
+<ion-toolbar [ngClass]="{'transparent-background': transparent}">
     <ion-title>{{title | translate }}</ion-title>
-    <ion-buttons slot="start">
+    <!--<ion-buttons slot="start">
         <ion-back-button *ngIf="showBack"></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="start" *ngIf="showMenu">
@@ -13,5 +13,6 @@
         <ion-button fill="clear" (click)="close()" *ngIf="showClose">
             <ion-icon slot="icon-only" name="close"></ion-icon>
         </ion-button>
-    </ion-buttons>
+    </ion-buttons>-->
+    <header-menu-button (click)="close()"></header-menu-button>
 </ion-toolbar>

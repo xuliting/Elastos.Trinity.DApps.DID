@@ -109,8 +109,7 @@ export function TranslateLoaderFactory() {
   bootstrap: [MyApp],
   entryComponents: [
     MyApp,
-    SecurityCheckComponent,
-
+    SecurityCheckComponent
   ],
   providers: [
     Clipboard,

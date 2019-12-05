@@ -1,5 +1,54 @@
+ion-content {
+    --background: #7DB2FC;
+    --color:white;
+}
 
 .mainicon {
     width:40vw;
     margin: 0 auto;
+}
+
+.welcome {
+    font-size: 35px;
+    font-weight: 700;
+}
+
+.main-text {
+    font-size: 16px;
+    font-weight: 500;
+    padding-bottom:20px;
+}
+
+.main-text.larger {
+    font-size: 22px;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+ion-slides {
+    --bullet-background-active:white;
+}
+
+ion-slide {
+    height:80vh;
+}
+
+ion-slide {
+    .left-arrow {
+        float:left;
+    }
+    .right-arrow {
+        float:right;
+    }
+}
+
+.main-button {
+    width:70vw;
+    margin-bottom:20px;
+}
+
+.secondary-button {
+    width:70vw;
 }

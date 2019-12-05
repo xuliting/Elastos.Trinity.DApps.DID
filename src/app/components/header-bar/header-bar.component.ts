@@ -14,6 +14,7 @@ export class HeaderBarComponent implements OnInit {
     @Input('showMinimize') showMinimize: boolean = true;
     @Input('showClose') showClose: boolean = true;
     @Input('showMenu') showMenu: boolean = false;
+    @Input('transparent') transparent: boolean = false;
     // @Output('onMenu') onMenu = new EventEmitter();
 
     constructor(public uxService: UXService) { }

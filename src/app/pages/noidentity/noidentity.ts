@@ -5,6 +5,7 @@ import { Native } from '../../services/native';
 import { Util } from '../../services/util';
 import { Config } from '../../services/config';
 import { NewDID } from 'src/app/model/newdid.model';
+import { Styling } from '../../services/styling';
 
 @Component({
   selector: 'page-noidentity',
@@ -13,6 +14,7 @@ import { NewDID } from 'src/app/model/newdid.model';
 })
 export class NoIdentityPage {
   public isfirst: boolean = true;
+  public styling = Styling;
 
   constructor(public route:ActivatedRoute, private native: Native) {
     this.route.queryParams.subscribe((data) => {

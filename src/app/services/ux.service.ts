@@ -44,11 +44,13 @@ export class UXService {
      * Close this application.
      */
     close() {
-        appManager.close();
+        if (!BrowserSimulation.runningInBrowser())
+            appManager.close();
     }
 
     minimize() {
-        appManager.launcher();
+        if (!BrowserSimulation.runningInBrowser())
+            appManager.launcher();
     }
 
     getLanguage() {
