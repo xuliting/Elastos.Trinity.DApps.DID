@@ -58,7 +58,7 @@ export class DIDStore {
             return;
         }
 
-        console.log("Loading DID store credentials");
+        console.log("Loading DID store credentials for DID", this.getCurrentDid());
 
         // Get the list of unloaded credentials
         // TODO: Should load only BASIC type credentials here to get basic profile info, we don't need everything.
@@ -127,12 +127,14 @@ export class DIDStore {
         
             console.log("Asking DIDService to create the credential");
             let credential = await this.didService.createCredential(this.getCurrentDid(), title, types, 15, props, this.password);
-        
+            console.log("Created credential:",credential);
+
             console.log("Asking DIDService to store the credential");
             await this.didService.storeCredential(this.getCurrentDid(), credential);
         
-            console.log("Asking DIDService to add the credential");
-            await this.didService.addCredential(credential.getId());
+            // NO - for now we don't want to "publish" (= put in the DID document) - we just want to store it
+            //console.log("Asking DIDService to add the credential");
+            //await this.didService.addCredential(credential.getId());
         
             console.log("Credential successfully added");
         
@@ -155,7 +157,12 @@ export class DIDStore {
 
         // We normally have one credential for each profile field
         this.credentials.map((cred)=>{
-            let props = cred.getProperties();
+            console.log(cred);
+            let props = cred.getSubject();
+            if (!props) {
+                console.warn("Found an empty credential subject while trying to build profile, this should not happen...");
+                return;
+            }
 
             // TODO: Match with standard field names in DID spec.
             if (props.name)
@@ -188,15 +195,16 @@ export class DIDStore {
         // TODO: update existing credentials if we are updating. Now only handling "create".
         console.log("Writing profile fields as credentials", newProfile);
 
-        Object.keys(newProfile).map(async (key)=>{
+        for(let key in newProfile) {
             console.log("Adding credential for profile key "+key);
 
             let props = {};
             props[key] = newProfile[key];
 
             let credential = await this.addCredential(key, props, ["BasicProfileCredential"]);
+            console.log("Created credential:", credential);
             this.credentials.push(credential);
-        });
+        }
     }
 
     /**

@@ -51,17 +51,20 @@ export class DidStoreManager {
       }
       else {
         this.masterDidStore = [];
-        info.map(async (storeEntry)=>{
+        for (let i in info) {
+          let storeEntry = info[i];
           let didStore = await this.didService.initDidStore(storeEntry.storeId);
           this.masterDidStore.push(didStore);
-        });
+        }
 
         let couldEnableStore = await this.activateDidStore(id);
         if (!couldEnableStore) {
           console.error("Unable to load the previously selected DID store");
+          this.handleNull(); // TODO: go to DID list instead
         }
-        
-        this.native.setRootRouter('/profile/myprofile', {create:false});
+        else {
+          this.native.setRootRouter('/profile/myprofile', {create:false});
+        }
       }
     }
   }
@@ -83,7 +86,6 @@ export class DidStoreManager {
         let didStore = new DIDStore(this.didService, this.event);
         let couldFullyLoadDidStore = await didStore.loadFromDidStoreId(id);
         if (!couldFullyLoadDidStore) {
-          this.handleNull();
           resolve(false);
           return;
         }
@@ -99,6 +101,7 @@ export class DidStoreManager {
       }
       catch (e) {
         // Failed to load this full DID store content
+        console.error(e);
         resolve(false);
       }
     });
@@ -109,18 +112,29 @@ export class DidStoreManager {
     //this.native.setRootRouter('/devpage');
   }
 
+  /**
+   * Called at the beginning of a new DID creation process.
+   */
   public async addDidStore() {
-    let name = "TODO-NAME";
-
     let didStoreId = Config.uuid(6, 16);
     
     console.log("Adding a new DID Store with ID "+didStoreId);
     let didStore = await this.didService.initDidStore(didStoreId);
     this.masterDidStore.push(didStore);
 
-    await this.addDidStoreEntry(new DIDStoreEntry(didStoreId, name));
-
     await this.activateDidStore(didStoreId);
+  }
+
+  /**
+   * Called at the end of the DID creation process to finalize a few things.
+   */
+  public async finalizeDidCreation() {
+    let didStoreId = this.activeDidStore.pluginDidStore.getId();
+    let name = Config.didBeingCreated.profile.name;
+
+    console.log("Finalizing store creation for store ID "+didStoreId+" with name "+name);
+
+    await this.addDidStoreEntry(new DIDStoreEntry(didStoreId, name));
   }
 
   /**

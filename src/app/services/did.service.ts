@@ -228,7 +228,7 @@ export class DIDService {
             );
         });
     }
-
+ 
     createCredential(didString: DIDPlugin.DIDString, credentialId, type, expirationDate, properties, passphrase): Promise<DIDPlugin.VerifiableCredential> {
         return new Promise(async (resolve, reject)=>{
             let did = await this._resolveDid(didString);
@@ -236,7 +236,7 @@ export class DIDService {
                 didString, credentialId, type, expirationDate, properties, passphrase,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
-        });
+        }); 
     }
 
     deleteCredential(didString: DIDPlugin.DIDString, didUrlString): Promise<any> {
@@ -256,19 +256,19 @@ export class DIDService {
         });
     }
 
-    listCredentials(didString: DIDPlugin.DIDString): Promise<any> {
+    listCredentials(didString: DIDPlugin.DIDString): Promise<DIDPlugin.UnloadedVerifiableCredential[]> {
         if (this.platform.platforms().indexOf("cordova") < 0) {//for test
             return new Promise((resolve, reject)=>{
-                let did = [{'didurl':'did:ela:azeeza786zea67zaek221fxi9'}]
-                let ret = {
-                    items:did,
-                }
+                let ret = [
+                    {'credentialId':'did:ela:azeeza786zea67zaek221fxi9','hint':''}
+                ];
                resolve(ret)
             });
         }
 
         return new Promise(async (resolve, reject)=>{
             let did = await this._resolveDid(didString);
+            console.log(did);
             did.listCredentials(
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
@@ -298,11 +298,16 @@ export class DIDService {
     }
 
     storeCredential(didString: DIDPlugin.DIDString, credential: DIDPlugin.VerifiableCredential): Promise<void> {
+        console.log("DIDService - storeCredential", didString, credential);
         return new Promise(async (resolve, reject)=>{
             let did = await this._resolveDid(didString);
+            console.log("DIDService - Calling real storeCredential");
             did.storeCredential(
                 credential,
-                () => {resolve()}, (err) => {reject(err)},
+                () => {
+                    console.log("DIDService - storeCredential responded");
+                    resolve()
+                }, (err) => {reject(err)},
             );
         });
     }
@@ -325,7 +330,7 @@ export class DIDService {
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
         });
-    }
+    } 
 
     //Credential
     credentialToJSON(credential: DIDPlugin.VerifiableCredential): Promise<string> {
