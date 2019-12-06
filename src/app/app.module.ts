@@ -23,6 +23,7 @@ import { ComponentsModule } from './components/components.module';
 import { DevPage } from './pages/devpage/devpage';
 import { AreaPage } from './pages/area/area';
 import { NoIdentityPage } from './pages/noidentity/noidentity';
+import { NewPasswordSetPage } from './pages/newpasswordset/newpasswordset';
 import { EditProfilePage } from './pages/editprofile/editprofile';
 import { MyProfilePage } from './pages/myprofile/myprofile';
 import { SlideMenuPage } from './pages/myprofile/slidemenu/slidemenu';
@@ -80,6 +81,7 @@ export function TranslateLoaderFactory() {
     ImportDIDPage,
     MyProfilePage,
     NoIdentityPage,
+    NewPasswordSetPage,
     SetPasswordPage,
     SlideMenuPage,
     VerifyMnemonicsPage,

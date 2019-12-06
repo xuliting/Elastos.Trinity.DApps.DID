@@ -3,6 +3,7 @@ import { NoPreloading, PreloadAllModules, RouterModule, Routes } from '@angular/
 
 import { AreaPage } from './pages/area/area';
 import { NoIdentityPage } from './pages/noidentity/noidentity';
+import { NewPasswordSetPage } from './pages/newpasswordset/newpasswordset';
 import { EditProfilePage } from './pages/editprofile/editprofile';
 import { MyProfilePage } from './pages/myprofile/myprofile';
 import { SlideMenuPage } from './pages/myprofile/slidemenu/slidemenu';
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'devpage', component: DevPage },
   { path: 'area', component: AreaPage },
   { path: 'noidentity', component: NoIdentityPage },
+  { path: 'newpasswordset', component: NewPasswordSetPage },
   { path: 'createidentity', component: EditProfilePage },
   { path: 'editprofile', component: EditProfilePage },
   {

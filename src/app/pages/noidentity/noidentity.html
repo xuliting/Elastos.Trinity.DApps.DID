@@ -78,10 +78,14 @@
     </div>
 
     <div class="input-container">
-      <ion-input placeholder="Re-enter password" [(ngModel)]="repeatpassword" type="password"></ion-input>
+      <ion-input placeholder="Re-enter password" [(ngModel)]="passwordConfirmation" type="password"></ion-input>
     </div>
+
+    <ion-item lines="none" *ngIf="!passwordsMatch()">
+        <ion-icon name="alert" margin-end></ion-icon> <b>Passwords don't match.</b>
+    </ion-item>
  
-    <did-button class="main-button" (click)="goToEditProfile()" 
+    <did-button class="main-button" (click)="confirmPassword()" 
       [title]="'Submit' | translate" 
       [textcolor]="'#FFFFFF'"
       [bgcolor]="styling.primaryButtonColor" 

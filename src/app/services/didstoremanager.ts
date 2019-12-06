@@ -109,8 +109,9 @@ export class DidStoreManager {
   }
 
   handleNull() {
-    this.native.setRootRouter('/noidentity');
+    //this.native.setRootRouter('/noidentity');
     //this.native.setRootRouter('/devpage');
+    this.native.setRootRouter('/newpasswordset');
   }
 
   /**

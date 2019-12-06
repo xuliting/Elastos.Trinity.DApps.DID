@@ -19,6 +19,8 @@ export class NoIdentityPage {
   public passwordSheetState = DrawerState.Bottom;
   public passwordSheetMinHeight = 0;
   public passwordSheetDockedHeight = 350;
+  public password: string = "";
+  public passwordConfirmation: string = "";
 
   constructor(public route:ActivatedRoute, private native: Native) {
     this.route.queryParams.subscribe((data) => {
@@ -32,10 +34,6 @@ export class NoIdentityPage {
     Config.didBeingCreated = new NewDID();
 
     this.passwordSheetState = DrawerState.Docked;
-  }
-
-  goToEditProfile() {
-    this.native.go('/editprofile', {create:true});
   }
 
   importIdentity(e: MouseEvent) {
@@ -55,5 +53,23 @@ export class NoIdentityPage {
 
   hidePasswordSheet(e: MouseEvent) {
     this.passwordSheetState = DrawerState.Bottom;
+  }
+
+  passwordsMatch() {
+    // TODO: more check such as password size and special characters.
+    return this.password == this.passwordConfirmation;
+  }
+
+  canSave() {
+    return this.password != "" && this.passwordsMatch();
+  }
+
+  async confirmPassword() {
+    if (!this.canSave())
+      return;
+      
+    Config.didBeingCreated.password = this.password;
+
+    this.native.go('/newpasswordset');
   }
 }
