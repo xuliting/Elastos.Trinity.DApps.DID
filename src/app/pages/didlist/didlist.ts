@@ -46,7 +46,7 @@ export class DIDListPage {
     this.activeProfile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
   }
 
-  addDidStore() {
+  addDIDStore() {
     this.native.go("/noidentity", {isfirst: false});
   }
 
