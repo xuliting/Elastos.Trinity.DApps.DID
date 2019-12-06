@@ -94,9 +94,7 @@ export class DidStoreManager {
 
         this.event.publish('did:didstorechanged');
         
-        if (!BrowserSimulation.runningInBrowser()) {
-          this.localStorage.saveCurrentDidStoreId(this.activeDidStore.pluginDidStore.getId());
-        }
+        this.localStorage.saveCurrentDidStoreId(this.activeDidStore.pluginDidStore.getId());
 
         resolve(true);
       }
@@ -109,9 +107,9 @@ export class DidStoreManager {
   }
 
   handleNull() {
-    //this.native.setRootRouter('/noidentity');
+    this.native.setRootRouter('/noidentity');
     //this.native.setRootRouter('/devpage');
-    this.native.setRootRouter('/newpasswordset');
+    //this.native.setRootRouter('/editprofile');
   }
 
   /**
@@ -168,16 +166,6 @@ export class DidStoreManager {
   public getActiveDidStore() : DIDStore {
     return this.activeDidStore;
   }
-
-  /*public setcurDidId(id) {
-    if (id != this.curDidId) {
-      //TODO
-    }
-  }
-
-  public getcurDidId() {
-    return this.curDidId;
-  }*/
 }
 
 

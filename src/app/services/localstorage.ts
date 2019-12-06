@@ -118,7 +118,7 @@ export class LocalStorage {
     }
 
     public getCurrentDidStoreId(): Promise<string> {
-        if (BrowserSimulation.runningInBrowser()) {
+        /*if (BrowserSimulation.runningInBrowser()) {
             return new Promise((resolve)=>{
                 if (BrowserSimulationConfig.hasDIDStores())
                     resolve("store-abcedf");
@@ -126,10 +126,10 @@ export class LocalStorage {
                     resolve(null);
             });
         }
-        else {
+        else {*/
             let key = "cur-didstoreId";
             return this.getAsJson(key);
-        }
+        //}
     }
 }
 
