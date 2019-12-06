@@ -30,9 +30,16 @@ function randomString() {
 export class SimulatedUnloadedCredential implements DIDPlugin.UnloadedVerifiableCredential {
     credentialId: string = "unloadedcredid";    
     hint: string = "fakehint";
+
+    constructor(credentialId: string) {
+        this.credentialId = credentialId;
+    }
 }
 
 export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
+    constructor(public subject: any = {}){
+    }
+
     getId() {
         simulated("getId", "SimulatedCredential");
         return "did:elastos:"+randomString()+"#credname";
@@ -59,7 +66,7 @@ export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
     }
     getSubject() {
         simulated("getSubject", "SimulatedCredential");
-        return "did:elastos:abcdef";
+        return this.subject;
     }
     getProof() {
         simulated("getProof", "SimulatedCredential");
@@ -69,6 +76,21 @@ export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
         return new Promise((resolve, reject)=>{
             resolve("")
         })
+    }
+
+    static makeForCredentialId(credentialId: string): SimulatedCredential {
+        switch(credentialId) {
+            case "cred-name":
+                return new SimulatedCredential({
+                    name:"User_"+randomString()
+                });
+            case "cred-email":
+                return new SimulatedCredential({
+                    name:"Email_"+randomString()
+                });
+            default:
+                return new SimulatedCredential();
+        }
     }
 }
 
@@ -145,9 +167,8 @@ export class SimulatedDID implements DIDPlugin.DID {
     listCredentials(onSuccess: (credentials: DIDPlugin.UnloadedVerifiableCredential[]) => void, onError?: (err: any) => void) {
         simulated("listCredentials", "SimulatedDID");
         onSuccess([
-            new SimulatedUnloadedCredential(),
-            new SimulatedUnloadedCredential(),
-            new SimulatedUnloadedCredential()
+            new SimulatedUnloadedCredential("cred-name"),
+            new SimulatedUnloadedCredential("cred-email")
         ])
     }
     loadCredential(credentialId: string, onSuccess: (credential: DIDPlugin.VerifiableCredential) => void, onError?: (err: any) => void) {

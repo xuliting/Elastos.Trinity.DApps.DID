@@ -1,81 +1,56 @@
-<ion-header>
-  <header-bar title="My profile" [showMenu]="true" ></header-bar>
-</ion-header>
+<ion-content no-bounce>
+    <header-bar title="My profile" [transparent]="false"></header-bar>
 
-<ion-content class="ion-padding" no-bounce>
-  <ion-list>
-    <ion-item class="ion-text-center" (click)="showQRCode()">
-      <ion-grid class="ion-margin">
-        <ion-row>
-          <ion-col>
-            <ion-img [src]="'/assets/images/defaultuser.png'" class="profilepicture"></ion-img>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <div class="name">{{profile.name}}</div>
-          </ion-col>
-        </ion-row>
-        <ion-row *ngIf="didString!=''">
-          <ion-col>
-            <div class="did">{{ didString }}</div>
-            <ion-img [src]="'/assets/images/qrcodesmall.png'" class="qrcode"></ion-img>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-    <ion-item>
-      <ion-grid>
-        <ion-row>
-          <ion-col class="item-label">Email address</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col class="item-value">{{profile.email}}</ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-    <ion-item>
-      <ion-grid>
-        <ion-row>
-          <ion-col class="item-label">Phone number</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col class="item-value">{{profile.phone}}</ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-    <ion-item>
-      <ion-grid>
-        <ion-row>
-          <ion-col class="item-label">Country/Region</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col class="item-value">{{profile.area}}</ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-    <ion-item>
-      <ion-grid>
-        <ion-row>
-          <ion-col class="item-label">Gender</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col class="item-value">{{profile.gender}}</ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-    <ion-item>
-      <ion-grid>
-        <ion-row>
-          <ion-col class="item-label">Birthday</ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col class="item-value">{{profile.birthday}}</ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-item>
-  </ion-list>
+    <ion-grid class="ion-padding">
+    <div class="profile-container">
+      <div class="profile-picture">
+        <div class="no-picture">
+          Profile<br/>
+          Picture
+        </div>
+        <img src="assets/images/defaultuser.png">
+      </div>
+      <div class="profile-items">
+        <ion-list>
+          <ion-item class="ion-text-center" (click)="showQRCode()">
+            <ion-grid class="ion-margin">
+              <ion-row>
+                <ion-col>
+                  <div class="name">{{profile.name}}</div>
+                </ion-col>
+              </ion-row>
+              <ion-row *ngIf="didString!=''">
+                <ion-col>
+                  <ion-img [src]="'/assets/images/qrcodesmall.png'" class="qrcode"></ion-img>
+                  <p class="qrcode-info">Touch for QR code</p>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
 
+          <ion-grid>
+            <ion-item>
+              <ion-label class="cred-name" >Email</ion-label>
+              <ion-label class="cred-value" text-right>{{profile.email}}</ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label class="cred-name" >Phone number</ion-label>
+              <ion-label class="cred-value" text-right>{{profile.phone}}</ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label class="cred-name" >Country/Region</ion-label>
+              <ion-label class="cred-value" text-right>{{profile.area}}</ion-label>
+            </ion-item>
+            <ion-item lines="none">
+              <ion-label class="cred-name" >Birthday</ion-label>
+              <ion-label class="cred-value" text-right>{{profile.birthday}}</ion-label>
+            </ion-item>
+          </ion-grid>
+        </ion-list>
+      </div>
+    </div>
+  </ion-grid> 
+  
   <div class="bottom-drawer-translucent-background" *ngIf="bottomDrawerState == 1" (click)="hideBottomDrawer()"></div>
 </ion-content>
 

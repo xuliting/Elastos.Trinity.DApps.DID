@@ -25,6 +25,7 @@ import { AreaPage } from './pages/area/area';
 import { NoIdentityPage } from './pages/noidentity/noidentity';
 import { NewPasswordSetPage } from './pages/newpasswordset/newpasswordset';
 import { EditProfilePage } from './pages/editprofile/editprofile';
+import { HomePage } from './pages/home/home.page';
 import { MyProfilePage } from './pages/myprofile/myprofile';
 import { SlideMenuPage } from './pages/myprofile/slidemenu/slidemenu';
 import { SetPasswordPage } from './pages/setpassword/setpassword';
@@ -38,6 +39,7 @@ import { CanDeactivateList } from './pages/credential/list/candeactivate.service
 import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
 import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
 import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequest/regappprofilerequest';
+import { DIDListPage } from './pages/didlist/didlist';
 
 import { SecurityCheckComponent } from './components/securitycheck/securitycheck.component';
 
@@ -79,13 +81,15 @@ export function TranslateLoaderFactory() {
     DIDSettingsPage,
     EditProfilePage,
     ImportDIDPage,
+    HomePage,
     MyProfilePage,
     NoIdentityPage,
     NewPasswordSetPage,
     SetPasswordPage,
     SlideMenuPage,
     VerifyMnemonicsPage,
-    RegisterApplicationProfileRequestPage
+    RegisterApplicationProfileRequestPage,
+    DIDListPage
   ],
   imports: [
     CommonModule,

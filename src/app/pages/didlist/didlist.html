@@ -1,0 +1,41 @@
+<ion-content>
+  <header-bar title="DID Portfolio" [transparent]="false"></header-bar>
+  
+  <ion-grid>
+    <div class="active-did" style="color:black" *ngIf="activeProfile">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="3" align-self-center>
+            <img src="assets/images/defaultuser.png" class="icon">
+          </ion-col>
+          <ion-col size="8" align-self-center>
+            <ion-grid>
+              <ion-row>
+                <ion-col class="name">
+                  {{activeProfile.name}}
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="subtitle">
+                  DID Settings and Management
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-col>
+          <ion-col size="1" align-self-center>
+            <ion-icon name="arrow-round-forward"></ion-icon>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <ion-list>
+      <ion-item *ngFor="let item of didStoreList" (click)="switchDidStore(item)">
+        <ion-label>
+          <h2>{{item.name}}</h2>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-grid>
+
+  
+</ion-content>

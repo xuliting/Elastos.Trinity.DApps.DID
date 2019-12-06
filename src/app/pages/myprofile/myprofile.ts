@@ -18,16 +18,7 @@ export class MyProfilePage {
   public creatingIdentity: boolean = false;
   public bottomDrawerState: DrawerState = DrawerState.Bottom;
   public didString: String = "";
-  public profile: Profile = {
-    name:"",
-    birthday:"",
-    gender:"",
-    area:"",
-    email:"",
-    IM:"",
-    phone:"",
-    ELAAddress:"",
-  };
+  public profile: Profile;
 
   public createDid = false;
 
@@ -46,6 +37,7 @@ export class MyProfilePage {
   }
 
   ngOnInit() {
+    this.init();
     this.event.subscribe('did:didstorechanged', ()=> {
       this.zone.run(() => {
         this.init();
@@ -57,17 +49,17 @@ export class MyProfilePage {
     this.event.unsubscribe('did:didstorechanged');
   }
 
+  init() {
+    this.profile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
+    console.log("MyProfilePage is using this profile:", this.profile);
+  }
+
   ionViewDidEnter() {
     this.didString = Config.didStoreManager.getActiveDidStore().getCurrentDid();
     if (this.didString != '') {
       this.appService.setIntentListener();
     }
     console.log("MyProfilePage ionViewDidEnter did: " + this.didString);
-  }
-
-  init() {
-    this.profile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
-    console.log("MyProfilePage is using this profile:", this.profile);
   }
 
   /**

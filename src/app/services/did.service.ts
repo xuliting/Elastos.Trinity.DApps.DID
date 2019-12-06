@@ -273,12 +273,12 @@ export class DIDService {
     }
 
     listCredentials(didString: DIDPlugin.DIDString): Promise<DIDPlugin.UnloadedVerifiableCredential[]> {
-        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+        if (BrowserSimulation.runningInBrowser()) {//for test
             return new Promise((resolve, reject)=>{
-                let ret = [
-                    {'credentialId':'did:ela:azeeza786zea67zaek221fxi9','hint':''}
-                ];
-               resolve(ret)
+                let fakeDID = new SimulatedDID()
+                fakeDID.listCredentials((credentials)=>{
+                    resolve(credentials);
+                })
             });
         }
 
@@ -292,9 +292,9 @@ export class DIDService {
     }
 
     loadCredential(didString: DIDPlugin.DIDString, didUrlString): Promise<any> {
-        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+        if (BrowserSimulation.runningInBrowser()) {//for test
             return new Promise((resolve, reject)=>{
-                let ret = new SimulatedCredential();
+                let ret = SimulatedCredential.makeForCredentialId(didUrlString)
                 resolve(ret)
             });
         }

@@ -62,7 +62,8 @@ export class DidStoreManager {
           this.handleNull(); // TODO: go to DID list instead
         }
         else {
-          this.native.setRootRouter('/profile/myprofile', {create:false});
+          //this.native.setRootRouter('/profile/myprofile', {create:false});
+          this.native.setRootRouter('/home/myprofile', {create:false});
         }
       }
     }

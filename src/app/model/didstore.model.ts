@@ -63,7 +63,7 @@ export class DIDStore {
         // Get the list of unloaded credentials
         // TODO: Should load only BASIC type credentials here to get basic profile info, we don't need everything.
         this.unloadedCredentials = await this.didService.listCredentials(this.getCurrentDid());
-        console.log("Current credentials list: ", this.credentials);
+        console.log("Current credentials list: ", this.unloadedCredentials);
 
         this.credentials = [];
         for (let entry of this.unloadedCredentials) {
@@ -164,23 +164,25 @@ export class DIDStore {
                 return;
             }
 
+            console.log("PROP",props)
+
             // TODO: Match with standard field names in DID spec.
             if (props.name)
                 profile.name = props.name;
             if (props.birthday)
-                profile.name = props.birthday;
+                profile.birthday = props.birthday;
             if (props.area)
-                profile.name = props.area;
+                profile.area = props.area;
             if (props.email)
-                profile.name = props.email;
+                profile.email = props.email;
             if (props.IM)
-                profile.name = props.IM;
+                profile.IM = props.IM;
             if (props.gender)
-                profile.name = props.gender;
+                profile.gender = props.gender;
             if (props.phone)
-                profile.name = props.phone;
+                profile.phone = props.phone;
             if (props.ELAAddress)
-                profile.name = props.ELAAddress;
+                profile.ELAAddress = props.ELAAddress;
         })
 
         console.log("Basic profile:", profile);

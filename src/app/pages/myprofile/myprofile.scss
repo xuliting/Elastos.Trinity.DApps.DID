@@ -1,11 +1,70 @@
-page-myprofile {
-    background: #440000;
-}
+ion-content {
+    --background: url('../../../assets/images/Background_Graphics_2.svg') no-repeat center top / cover;
+    
+    ion-list {
+        --ion-background: none;
+        --ion-background-color: none;
+    }
 
-.profilepicture {
-    width:10vh;
-    height:10vh;
-    margin:0 auto;
+    .profile-container {
+        position: relative; 
+    
+        .profile-picture {
+            position: absolute;
+            background: white;
+            top:0;
+            left:0;
+            right:0;
+            z-index: 10;
+            height:35vw;
+            width:35vw;
+            margin: 0 auto;
+            margin-top: -17vw;
+            border-radius: 50%;
+            box-shadow: 3px 3px 8px rgba(100,100,100,0.1);
+            align-content: center;
+            overflow:hidden;
+    
+            .no-picture {
+                position:absolute;
+                top:0;
+                bottom:0;
+                left:0;
+                right:0;
+                color: #CACCD0;
+                font-weight: 600;
+                font-size:12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index:-1;
+            }
+        }
+    
+        .profile-items {
+            margin-top:17vw;
+            background:white;
+            border-radius: 20px;
+            margin-bottom:20px;
+            padding-top:15vw;
+    
+            ion-list {
+                --background: none !important;
+            }
+
+            .cred-name {
+                --color: #6E7379;
+                font-weight:600;
+                font-size:14px;
+            }
+
+            .cred-info {
+                --color: #959DA7;
+                font-weight:600;
+                font-size:14px;
+            }
+        }
+    }
 }
 
 .name {
@@ -19,7 +78,17 @@ page-myprofile {
 }
 
 .qrcode {
+    width:7vh;
     height:7vh;
+    padding:2vh;
+    border-radius: 50%;
+    box-shadow: 3px 3px 8px rgba(100,100,100,0.1);
+    margin: 0 auto;
+}
+
+.qrcode-info {
+    font-weight:500;
+    font-size:10px;
 }
 
 .item-label {

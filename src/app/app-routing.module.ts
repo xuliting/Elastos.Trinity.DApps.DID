@@ -5,6 +5,7 @@ import { AreaPage } from './pages/area/area';
 import { NoIdentityPage } from './pages/noidentity/noidentity';
 import { NewPasswordSetPage } from './pages/newpasswordset/newpasswordset';
 import { EditProfilePage } from './pages/editprofile/editprofile';
+import { HomePage } from './pages/home/home.page';
 import { MyProfilePage } from './pages/myprofile/myprofile';
 import { SlideMenuPage } from './pages/myprofile/slidemenu/slidemenu';
 import { SetPasswordPage } from './pages/setpassword/setpassword';
@@ -19,6 +20,7 @@ import { CredentialCreatePage } from './pages/credential/create/credentialcreate
 import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
 import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequest/regappprofilerequest';
 import { DevPage } from './pages/devpage/devpage';
+import { DIDListPage } from './pages/didlist/didlist';
 
 const routes: Routes = [
   // { path: '', redirectTo: '', pathMatch: 'full' }, // No default route, services will decide this by themselves.
@@ -35,16 +37,35 @@ const routes: Routes = [
       { path: 'myprofile', component: MyProfilePage },
     ],
   },
+  {
+    path: 'home', // Bottom Tab Navigation
+    component: HomePage,
+    children: [
+      // 1st Tab
+      {
+        path: 'myprofile', component: MyProfilePage
+      },
+      {
+        path: 'didlist', component: DIDListPage
+      },
+      {
+        path: 'credentiallist', component: CredentialListPage, canDeactivate: [CanDeactivateList]
+      },
+      {
+        path: 'didsettings', component: DIDSettingsPage
+      }
+    ]
+  },
   // { path: 'myprofile', component: MyProfilePage },
   { path: 'setpassword', component: SetPasswordPage },
   { path: 'importdid', component: ImportDIDPage },
   { path: 'backupdid', component: BackupDIDPage },
-  { path: 'didsettings', component: DIDSettingsPage },
   { path: 'verifymnemonics', component: VerifyMnemonicsPage },
-  { path: 'credaccessrequest', component: CredentialAccessRequestPage },
-  { path: 'credentiallist', component: CredentialListPage, canDeactivate: [CanDeactivateList] },
   { path: 'credentialcreate', component: CredentialCreatePage },
   { path: 'credentialbackup', component: CredentialBackupPage },
+
+  // Intents
+  { path: 'credaccessrequest', component: CredentialAccessRequestPage },
   { path: 'regappprofilerequest', component: RegisterApplicationProfileRequestPage },
 ];
 
