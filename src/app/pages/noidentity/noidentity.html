@@ -4,10 +4,9 @@
   <div class="ion-padding ion-text-center">
     <ion-slides
       #slide
-      pager="true"
-      [options]="slideOpts">
+      pager="true">
       <ion-slide class="ion-padding">
-        <div class="left-arrow invisible" (click)="prevSlide(slide)">
+        <div class="left-arrow invisible" (click)="prevSlide($event, slide)">
           <ion-icon name="arrow-round-backward"></ion-icon>
         </div>
         <ion-grid>
@@ -57,7 +56,7 @@
               [shadow]="false"></did-button>
           </ion-row>
         </ion-grid>
-        <div class="right-arrow invisible" (click)="nextSlide(slide)">
+        <div class="right-arrow invisible" (click)="nextSlide($event, slide)">
           <ion-icon name="arrow-round-forward"></ion-icon>
         </div>
       </ion-slide>

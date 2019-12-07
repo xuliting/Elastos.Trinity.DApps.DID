@@ -1,18 +1,24 @@
-<ion-header>
-  <header-bar title="DID Settings"></header-bar>
-</ion-header>
+<ion-content>
+  <header-bar title="DID Management" [transparent]="false"></header-bar>
 
-<ion-content class="ion-padding">
-  <ion-list>
-    <ion-item (click)="managePassword()">
-      <ion-label>Password management</ion-label>
-      <ion-icon name="arrow-dropright" item-right></ion-icon>
-    </ion-item>
-    <ion-item (click)="exportDID()">
-      <ion-label>Export DID</ion-label>
-      <ion-icon name="arrow-dropright" item-right></ion-icon>
-    </ion-item>
-  </ion-list>
+  <ion-grid>
+    <active-did [profile]="activeProfile" (click)="viewActiveProfile()"></active-did>
 
-  <ion-button expand="full" color="danger" class="delete-button" (click)="deleteDID()">Delete DID</ion-button>
+    <ion-item>
+      <large-menu-item title="Edit DID Profile"></large-menu-item>
+    </ion-item>
+    <ion-item>
+      <large-menu-item title="Configure Profile Visibility"></large-menu-item>
+    </ion-item>
+    <ion-item>
+      <large-menu-item title="Password management" (click)="managePassword()"></large-menu-item>
+    </ion-item>
+    <ion-item lines="none">
+      <large-menu-item title="Export DID Portfolio" (click)="exportDID()"></large-menu-item>
+    </ion-item>
+
+    <ion-item lines="none" style="margin-top:50px">
+      <large-menu-item title="Delete DID" mode="danger" (click)="deleteDID()"></large-menu-item>
+    </ion-item>
+  </ion-grid>
 </ion-content>

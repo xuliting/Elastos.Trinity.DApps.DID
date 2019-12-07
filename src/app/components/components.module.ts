@@ -7,13 +7,17 @@ import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { SecurityCheckComponent } from './securitycheck/securitycheck.component';
 import { HeaderMenuButtonComponent } from './header-menu-button/header-menu-button.component';
 import { DIDButtonComponent } from './did-button/did-button.component';
+import { ActiveDIDComponent } from './active-did/active-did.component';
+import { LargeMenuItemComponent } from './large-menu-item/large-menu-item.component';
 
 @NgModule({
   declarations: [
     HeaderBarComponent, 
     SecurityCheckComponent,
     HeaderMenuButtonComponent,
-    DIDButtonComponent
+    DIDButtonComponent,
+    ActiveDIDComponent,
+    LargeMenuItemComponent
   ],
   imports: [
     CommonModule,
@@ -25,7 +29,9 @@ import { DIDButtonComponent } from './did-button/did-button.component';
     HeaderBarComponent, 
     SecurityCheckComponent,
     HeaderMenuButtonComponent,
-    DIDButtonComponent
+    DIDButtonComponent,
+    ActiveDIDComponent,
+    LargeMenuItemComponent
   ],
   providers: [
   ],

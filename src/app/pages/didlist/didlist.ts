@@ -20,7 +20,7 @@ export class DIDListPage {
 
   constructor(private native: Native,
               public event: Events,
-              public zone: NgZone,) {
+              public zone: NgZone) {
     this.init();
   }
 
@@ -52,6 +52,10 @@ export class DIDListPage {
 
   switchDidStore(didStoreEntry: DIDStoreEntry) {
     Config.didStoreManager.activateDidStore(didStoreEntry.storeId);
+    this.native.setRootRouter("/home/myprofile", {create: false});
+  }
+
+  viewActiveProfile() {
     this.native.setRootRouter("/home/myprofile", {create: false});
   }
 }
