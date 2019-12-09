@@ -10,7 +10,7 @@
           <ion-icon name="arrow-round-backward"></ion-icon>
         </div>
         <ion-grid>
-          <ion-img [src]="'assets/images/noidentity.png'" class="mainicon"></ion-img>
+          <ion-img [src]="'assets/images/Shield_Icon_Empty_1.svg'" class="mainicon"></ion-img>
           <p *ngIf="isfirst" class="welcome">
             Welcome
           </p>
@@ -34,23 +34,23 @@
           <ion-icon name="arrow-round-back"></ion-icon>
         </div>
         <ion-grid>
-          <ion-img [src]="'assets/images/noidentity.png'" class="mainicon"></ion-img>
+          <ion-img [src]="'assets/images/Lock_Icon.svg'" class="mainicon"></ion-img>
           <p *ngIf="isfirst" class="welcome">
             First time?
           </p>
           <p class="main-text larger">
-            Let's create a DID Portfolio
+            Let's create a DID profile
           </p>
           <ion-row>
             <did-button class="main-button" (click)="createIdentity($event)" 
-              [title]="'Create New DID' | translate" 
+              [title]="'Create New DID Profile' | translate" 
               [bgcolor]="styling.primaryButtonColor" 
               [bordercolor]="styling.primaryButtonColor"
               [shadow]="true"></did-button>
           </ion-row>
           <ion-row>
               <did-button class="secondary-button" (click)="importIdentity($event)" 
-              [title]="'Import DID' | translate" 
+              [title]="'Import DID Profile' | translate" 
               [bgcolor]="'rgba(0,0,0,0)'" 
               [bordercolor]="'#FFFFFF'"
               [shadow]="false"></did-button>

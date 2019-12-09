@@ -1,5 +1,5 @@
 ion-content {
-    --background: #7DB2FC;
+    --background: url('../../../assets/images/Welcome_Screen_BG.svg') no-repeat center top / cover;
     --color:white;
 }
 
@@ -20,7 +20,7 @@ ion-content {
 }
 
 .main-text.larger {
-    font-size: 22px;
+    font-size: 20px;
 }
 
 .invisible {
