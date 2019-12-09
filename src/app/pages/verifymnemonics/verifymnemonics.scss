@@ -1,5 +1,5 @@
-ion-content {
-    --background: #FAFAFA;
+.root-container {
+    background: #FAFAFA;
 }
 
 .title {
@@ -22,11 +22,20 @@ ion-content {
         color:black;
     }
 }
+ 
+.main-button {
+    display: inline-block;
+    width:70vw;
+
+    .did-button {
+        margin: 0 auto;
+    }
+}
 
 .unselected-word {
     color:var(--ion-color-primary);
     margin-right:6px;
+    margin-bottom:6px;
     font-weight:700;
     font-size:16px;
-    word-wrap: none;
 }

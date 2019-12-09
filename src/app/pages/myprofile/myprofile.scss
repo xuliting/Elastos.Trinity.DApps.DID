@@ -1,6 +1,8 @@
-ion-content {
-    --background: url('../../../assets/images/DID_Profile_BG.svg') no-repeat center top / cover;
-    
+.root-container {
+    background: url('../../../assets/images/DID_Profile_BG.svg') no-repeat center top / cover;
+}
+
+ion-content { 
     ion-list {
         --ion-background: none;
         --ion-background-color: none;

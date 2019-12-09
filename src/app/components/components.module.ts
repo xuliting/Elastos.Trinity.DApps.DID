@@ -10,6 +10,7 @@ import { DIDButtonComponent } from './did-button/did-button.component';
 import { ActiveDIDComponent } from './active-did/active-did.component';
 import { LargeMenuItemComponent } from './large-menu-item/large-menu-item.component';
 import { VerifyMnemonicWordComponent } from './verify-mnemonic-word/verify-mnemonic-word.component';
+import { MainContentComponent } from './main-content/main-content.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { VerifyMnemonicWordComponent } from './verify-mnemonic-word/verify-mnemo
     DIDButtonComponent,
     ActiveDIDComponent,
     LargeMenuItemComponent,
-    VerifyMnemonicWordComponent
+    VerifyMnemonicWordComponent,
+    MainContentComponent
   ],
   imports: [
     CommonModule,
@@ -34,7 +36,8 @@ import { VerifyMnemonicWordComponent } from './verify-mnemonic-word/verify-mnemo
     DIDButtonComponent,
     ActiveDIDComponent,
     LargeMenuItemComponent,
-    VerifyMnemonicWordComponent
+    VerifyMnemonicWordComponent,
+    MainContentComponent
   ],
   providers: [
   ],

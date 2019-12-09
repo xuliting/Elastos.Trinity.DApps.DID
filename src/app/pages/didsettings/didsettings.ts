@@ -80,4 +80,8 @@ export class DIDSettingsPage {
   viewActiveProfile() {
     this.native.setRootRouter("/home/myprofile", {create: false});
   }
+
+  editDID() {
+    this.native.go("/editprofile", {create: false});
+  }
 }

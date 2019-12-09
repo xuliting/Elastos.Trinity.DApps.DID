@@ -1,5 +1,8 @@
+.root-container {
+    background: url('../../../assets/images/Welcome_Screen_BG.svg') no-repeat center top / cover;
+}
+
 ion-content {
-    --background: url('../../../assets/images/Welcome_Screen_BG.svg') no-repeat center top / cover;
     --color:white;
 }
 

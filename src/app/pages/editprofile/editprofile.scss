@@ -1,6 +1,9 @@
+.root-container {
+    background: rgb(145,142,255);
+    background: linear-gradient(180deg, rgba(145,142,255,1) 0%, rgba(104,100,252,1) 100%);
+}
+
 ion-content {
-    --background: rgb(145,142,255);
-    --background: linear-gradient(180deg, rgba(145,142,255,1) 0%, rgba(104,100,252,1) 100%);
     --color:white;
 }
 

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { UXService } from '../../services/ux.service';
+import { Native } from 'src/app/services/native';
 
 @Component({
     selector: 'header-bar',
@@ -17,7 +18,7 @@ export class HeaderBarComponent implements OnInit {
     @Input('transparent') transparent: boolean = false;
     // @Output('onMenu') onMenu = new EventEmitter();
 
-    constructor(public uxService: UXService) { }
+    constructor(public uxService: UXService, private native: Native) { }
 
     ngOnInit() { }
 
@@ -27,5 +28,9 @@ export class HeaderBarComponent implements OnInit {
 
     close() {
         this.uxService.close()
+    }
+
+    navBack() {
+        this.native.pop();
     }
 }

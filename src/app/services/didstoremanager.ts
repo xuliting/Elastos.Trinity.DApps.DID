@@ -56,9 +56,11 @@ export class DidStoreManager {
           this.masterDidStore.push(didStore);
         }
 
-        this.showDidStore(id);
+        await this.showDidStore(id);
       }
     }
+
+    console.log("DidStoreManager initialization completed");
   }
 
   /**
@@ -100,6 +102,7 @@ export class DidStoreManager {
   }
 
   public async showDidStore(id:string) {
+    console.log("Showing DID Store "+id);
     let couldEnableStore = await this.activateDidStore(id);
     if (!couldEnableStore) {
       console.error("Unable to load the previously selected DID store");
@@ -109,10 +112,12 @@ export class DidStoreManager {
       //this.native.setRootRouter('/home/myprofile', {create:false});
       //this.native.setRootRouter('/home/didsettings');
       //this.native.setRootRouter('/newpasswordset');
-      this.native.setRootRouter('/editprofile');
+      //this.native.setRootRouter('/noidentity');
+      //this.native.setRootRouter('/editprofile');
       /*this.native.setRootRouter('/verifymnemonics', {
         mnemonicStr:"a b c d e f g h k l m o",
       });*/
+      this.native.setRootRouter('/home/credentiallist');
     }
   }
 

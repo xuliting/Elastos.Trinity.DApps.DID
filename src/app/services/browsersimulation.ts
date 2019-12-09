@@ -46,7 +46,7 @@ export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
     }
     getFragment() {
         simulated("getFragment", "SimulatedCredential");
-        return "did:elastos:abcdef#credname";
+        return "credname";
     }
     getType() {
         simulated("getType", "SimulatedCredential");
@@ -86,7 +86,7 @@ export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
                 });
             case "cred-email":
                 return new SimulatedCredential({
-                    name:"Email_"+randomString()
+                    email:"Email_"+randomString()
                 });
             default:
                 return new SimulatedCredential();

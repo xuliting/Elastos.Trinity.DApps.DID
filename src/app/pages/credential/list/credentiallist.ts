@@ -6,6 +6,7 @@ import { Config } from '../../../services/config';
 import { DIDService } from '../../../services/did.service';
 import { Native } from '../../../services/native';
 import { PopupProvider } from '../../../services/popup';
+import { Profile } from 'src/app/model/profile.model';
 
 @Component({
   selector: 'page-credentiallist',
@@ -14,9 +15,10 @@ import { PopupProvider } from '../../../services/popup';
 })
 export class CredentialListPage {
   didString: DIDPlugin.DIDString = "";
-  public credentials: any = {};
+  public credentials: DIDPlugin.VerifiableCredential[];
   public hasCredential: boolean = false;
   public isEdit = false;
+  public profile: Profile = null;
 
   constructor(public event: Events, public route:ActivatedRoute, public zone: NgZone,
       private didService: DIDService,
@@ -38,6 +40,7 @@ export class CredentialListPage {
   }
 
   init() {
+    this.profile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
     this.didString = Config.didStoreManager.getActiveDidStore().getCurrentDid();
     this.credentials = Config.didStoreManager.getActiveDidStore().credentials;
     this.hasCredential = this.credentials.length > 0 ? true : false;
@@ -58,9 +61,9 @@ export class CredentialListPage {
   getSelectedCount() {
     let count = 0;
     for (let i = 0; i < this.credentials.length; i++) {
-      if (this.credentials[i].isChecked === true) {
+      /*if (this.credentials[i].isChecked === true) {
         count++;
-      }
+      }*/
     }
     return count;
   }
@@ -75,13 +78,13 @@ export class CredentialListPage {
     this.popupProvider.ionicConfirm("Delete", "Delete Credential?", "Yes", "NO").then((data) => {
       if (data) {
           this.credentials.forEach((credential,index,array)=>{
-          if (credential.isChecked === true) {
+          /*if (credential.isChecked === true) {
             this.didService.deleteCredential(this.didString, credential['didurl']).then( (ret)=> {
               this.credentials.splice(index, 1);
               this.hasCredential = this.credentials.length > 0 ? true : false;
               if (!this.hasCredential) this.isEdit = false;
             })
-          }
+          }*/
         });
       }
     });
@@ -99,5 +102,15 @@ export class CredentialListPage {
     else {
       return true;
     }
+  }
+
+  displayableProperties(credential: DIDPlugin.VerifiableCredential) {
+    let subject = credential.getSubject();
+    return Object.keys(subject).map((prop)=>{
+      return {
+        name: prop,
+        value: subject[prop]
+      }
+    });
   }
 }

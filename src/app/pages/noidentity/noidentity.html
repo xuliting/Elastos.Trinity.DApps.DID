@@ -1,68 +1,70 @@
-<ion-content no-bounce (click)="hidePasswordSheet($event)">
-    <header-bar title="" [transparent]="true"></header-bar>
+<div class="root-container">
+  <header-bar title="" [transparent]="true"></header-bar>
   
-  <div class="ion-padding ion-text-center">
-    <ion-slides
-      #slide
-      pager="true">
-      <ion-slide class="ion-padding">
-        <div class="left-arrow invisible" (click)="prevSlide($event, slide)">
-          <ion-icon name="arrow-round-backward"></ion-icon>
-        </div>
-        <ion-grid>
-          <ion-img [src]="'assets/images/Shield_Icon_Empty_1.svg'" class="mainicon"></ion-img>
-          <p *ngIf="isfirst" class="welcome">
-            Welcome
-          </p>
-          <p class="main-text larger">
-            elastOS DID Portfolio
-          </p>
-          <p class="main-text">
-            Manage your decentralized identities and share with friends and business that only you allow.
-          </p>
-          <p class="main-text">
-            Own your identity on elastOS!
-          </p>
-        </ion-grid>
-        <div class="right-arrow" (click)="nextSlide($event, slide)">
-          <ion-icon name="arrow-round-forward"></ion-icon>
-        </div>
-      </ion-slide>
+  <ion-content no-bounce (click)="hidePasswordSheet($event)">
+    <div class="ion-padding ion-text-center">
+      <ion-slides
+        #slide
+        pager="true">
+        <ion-slide class="ion-padding">
+          <div class="left-arrow invisible" (click)="prevSlide($event, slide)">
+            <ion-icon name="arrow-round-backward"></ion-icon>
+          </div>
+          <ion-grid>
+            <ion-img [src]="'assets/images/Shield_Icon_Empty_1.svg'" class="mainicon"></ion-img>
+            <p *ngIf="isfirst" class="welcome">
+              Welcome
+            </p>
+            <p class="main-text larger">
+              elastOS DID Portfolio
+            </p>
+            <p class="main-text">
+              Manage your decentralized identities and share with friends and business that only you allow.
+            </p>
+            <p class="main-text">
+              Own your identity on elastOS!
+            </p>
+          </ion-grid>
+          <div class="right-arrow" (click)="nextSlide($event, slide)">
+            <ion-icon name="arrow-round-forward"></ion-icon>
+          </div>
+        </ion-slide>
 
-      <ion-slide class="ion-padding">
-        <div class="left-arrow" (click)="prevSlide($event, slide)">
-          <ion-icon name="arrow-round-back"></ion-icon>
-        </div>
-        <ion-grid>
-          <ion-img [src]="'assets/images/Lock_Icon.svg'" class="mainicon"></ion-img>
-          <p *ngIf="isfirst" class="welcome">
-            First time?
-          </p>
-          <p class="main-text larger">
-            Let's create a DID profile
-          </p>
-          <ion-row>
-            <did-button class="main-button" (click)="createIdentity($event)" 
-              [title]="'Create New DID Profile' | translate" 
-              [bgcolor]="styling.primaryButtonColor" 
-              [bordercolor]="styling.primaryButtonColor"
-              [shadow]="true"></did-button>
-          </ion-row>
-          <ion-row>
-              <did-button class="secondary-button" (click)="importIdentity($event)" 
-              [title]="'Import DID Profile' | translate" 
-              [bgcolor]="'rgba(0,0,0,0)'" 
-              [bordercolor]="'#FFFFFF'"
-              [shadow]="false"></did-button>
-          </ion-row>
-        </ion-grid>
-        <div class="right-arrow invisible" (click)="nextSlide($event, slide)">
-          <ion-icon name="arrow-round-forward"></ion-icon>
-        </div>
-      </ion-slide>
-    </ion-slides>
-  </div>
-</ion-content>
+        <ion-slide class="ion-padding">
+          <div class="left-arrow" (click)="prevSlide($event, slide)">
+            <ion-icon name="arrow-round-back"></ion-icon>
+          </div>
+          <ion-grid>
+            <ion-img [src]="'assets/images/Lock_Icon.svg'" class="mainicon"></ion-img>
+            <p *ngIf="isfirst" class="welcome">
+              First time?
+            </p>
+            <p class="main-text larger">
+              Let's create a DID profile
+            </p>
+            <ion-row>
+              <did-button class="main-button" (click)="createIdentity($event)" 
+                [title]="'Create New DID Profile' | translate" 
+                [bgcolor]="styling.primaryButtonColor" 
+                [bordercolor]="styling.primaryButtonColor"
+                [shadow]="true"></did-button>
+            </ion-row>
+            <ion-row>
+                <did-button class="secondary-button" (click)="importIdentity($event)" 
+                [title]="'Import DID Profile' | translate" 
+                [bgcolor]="'rgba(0,0,0,0)'" 
+                [bordercolor]="'#FFFFFF'"
+                [shadow]="false"></did-button>
+            </ion-row>
+          </ion-grid>
+          <div class="right-arrow invisible" (click)="nextSlide($event, slide)">
+            <ion-icon name="arrow-round-forward"></ion-icon>
+          </div>
+        </ion-slide>
+      </ion-slides>
+    </div>
+  </ion-content>
+</div>
 
 <ion-bottom-drawer [(state)]="passwordSheetState" [minimumHeight]="passwordSheetMinHeight" [dockedHeight]="passwordSheetDockedHeight"
   [shouldBounce]="true" [disableDrag]="true" class="ion-padding no-background-color">
