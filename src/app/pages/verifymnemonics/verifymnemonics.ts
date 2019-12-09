@@ -5,14 +5,19 @@ import { Config } from '../../services/config';
 import { Native } from '../../services/native';
 import { Util } from '../../services/util';
 
+type MnemonicWord = {
+    text: string;
+    selected: boolean;
+}
+
 @Component({
     selector: 'page-verifymnemonics',
     templateUrl: 'verifymnemonics.html',
     styleUrls: ['verifymnemonics.scss']
 })
 export class VerifyMnemonicsPage {
-    mnemonicList: Array<any> = [];
-    selectList: Array<any> = [];
+    mnemonicList: Array<MnemonicWord> = [];
+    selectedList: Array<string> = [];
     mnemonicStr: string;
 
     constructor(public route: ActivatedRoute,
@@ -24,28 +29,24 @@ export class VerifyMnemonicsPage {
     init() {
         this.route.queryParams.subscribe((data) => {
             this.mnemonicStr = this.native.clone(data["mnemonicStr"]);
-            this.mnemonicList = JSON.parse(data["mnemonicList"]);
+            this.mnemonicList = this.mnemonicStr.split(" ").map((word)=>{
+                return {text: word, selected: false}
+            });
             this.mnemonicList = this.mnemonicList.sort(function () { return 0.5 - Math.random() });
         });
     }
 
-    public addButton(index: number, item: any): void {
-        var newWord = {
-            text: item.text,
-            prevIndex: index
-        };
-        this.zone.run(() => {
-            this.selectList.push(newWord);
-            this.mnemonicList[index].selected = true;
-        });
+    public addButton(index: number, item: MnemonicWord): void {
+        this.selectedList.push(item.text);
+        this.mnemonicList[index].selected = true;
     }
 
-    public removeButton(index: number, item: any): void {
+    /*public removeButton(index: number, item: any): void {
         this.zone.run(() => {
-            this.selectList.splice(index, 1);
+            this.selectedList.splice(index, 1);
             this.mnemonicList[item.prevIndex].selected = false;
         });
-    }
+    }*/
 
     nextClicked() {
         this.createDid();
@@ -62,11 +63,11 @@ export class VerifyMnemonicsPage {
 
     allWordsMatch() {
         return true;// for test
-        let selectComplete = this.selectList.length === this.mnemonicList.length ? true : false;
+        let selectComplete = this.selectedList.length === this.mnemonicList.length ? true : false;
         if (selectComplete) {
             let mn = "";
-            for (let i = 0; i < this.selectList.length; i++) {
-                mn += this.selectList[i].text;
+            for (let i = 0; i < this.selectedList.length; i++) {
+                mn += this.selectedList[i];
             }
             if (!Util.isNull(mn) && mn == this.mnemonicStr.replace(/\s+/g, "")) {
                 return true;

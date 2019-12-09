@@ -19,6 +19,7 @@
     }
  
     ion-ripple-effect {
-       color: var(--ripple-color);
+        --ripple-color: var(--ion-color-primary);
+        color: var(--ripple-color);
     } 
 }

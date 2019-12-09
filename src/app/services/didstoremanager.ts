@@ -62,8 +62,10 @@ export class DidStoreManager {
           this.handleNull(); // TODO: go to DID list instead
         }
         else {
-          //this.native.setRootRouter('/profile/myprofile', {create:false});
           this.native.setRootRouter('/home/myprofile', {create:false});
+          /*this.native.setRootRouter('/verifymnemonics', {
+            mnemonicStr:"a b c d e f g h k l m o",
+          });*/
         }
       }
     }

@@ -1,14 +1,32 @@
-page-verifymnemonics {
-
+ion-content {
+    --background: #FAFAFA;
 }
 
-.mainicon {
-    height: 20vh;
+.title {
+    color:var(--ion-color-primary);
+    font-weight:700;
+    font-size:18px;
 }
 
 .mnemonics-box {
-    padding: 30px;
+    background: white;
+    margin: 20px;
     border-radius: 20px;
-    border: solid 1px #CCC;
-    height:20vh;
+}
+
+.enter-mnemonic-box {
+    .title {
+        font-weight: 600;
+        font-size:12px;
+        margin-bottom:10px;
+        color:black;
+    }
+}
+
+.unselected-word {
+    color:var(--ion-color-primary);
+    margin-right:6px;
+    font-weight:700;
+    font-size:16px;
+    word-wrap: none;
 }

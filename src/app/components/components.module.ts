@@ -9,6 +9,7 @@ import { HeaderMenuButtonComponent } from './header-menu-button/header-menu-butt
 import { DIDButtonComponent } from './did-button/did-button.component';
 import { ActiveDIDComponent } from './active-did/active-did.component';
 import { LargeMenuItemComponent } from './large-menu-item/large-menu-item.component';
+import { VerifyMnemonicWordComponent } from './verify-mnemonic-word/verify-mnemonic-word.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { LargeMenuItemComponent } from './large-menu-item/large-menu-item.compon
     HeaderMenuButtonComponent,
     DIDButtonComponent,
     ActiveDIDComponent,
-    LargeMenuItemComponent
+    LargeMenuItemComponent,
+    VerifyMnemonicWordComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +33,8 @@ import { LargeMenuItemComponent } from './large-menu-item/large-menu-item.compon
     HeaderMenuButtonComponent,
     DIDButtonComponent,
     ActiveDIDComponent,
-    LargeMenuItemComponent
+    LargeMenuItemComponent,
+    VerifyMnemonicWordComponent
   ],
   providers: [
   ],

@@ -1,30 +1,39 @@
-<ion-header>
-  <header-bar title="Verify mnemonics"></header-bar>
-</ion-header>
-
-<ion-content class="ion-padding" text-center>
-  <ion-img [src]="'/assets/images/mnemonics.png'" class="mainicon"></ion-img>
-  <h1>Please type your mnemonic words</h1>
-  <p>
-    This verification is needed to make sure that your correctly saved your mnemonics.
-  </p>
+<ion-content text-center>
+  <header-bar title="" [transparent]="true"></header-bar>
+  
+  <div class="title" margin>Please select your mnemonic words. This verification is needed to make sure that your correctly saved your mnemonics.</div>
+  
   <div class="mnemonics-box">
-    <div class="phrase">
-      <ion-button outline *ngFor="let item of selectList; let i = index"
-          (click)="removeButton(i,item)">{{item.text}}</ion-button>
-    </div>
+    <ion-grid padding>
+      <ion-row *ngFor="let i of [1,3,5,7,9,11]">
+        <ion-col size="6">
+          <verify-mnemonic-word [index]="i" [word]="selectedList[i-1]"></verify-mnemonic-word>
+        </ion-col>
+        <ion-col size="6">
+          <verify-mnemonic-word [index]="i+1" [word]="selectedList[i]"></verify-mnemonic-word>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </div>
 
-  <div class="bottom-phrase">
-    <div class="words">
+  <div class="enter-mnemonic-box" margin>
+    <div class="title">Please pick words in the right order below:</div>
+    <span *ngFor="let word of mnemonicList; let i = index" (click)="addButton(i, word)">
+      <span *ngIf="!word.selected" class="unselected-word">{{word.text}}</span>
+    </span>
+    <!--<div class="words">
       <ion-button outline *ngFor="let item of mnemonicList; let i = index"
           (click)="addButton(i, item)" [disabled]="item.selected">
           {{item.text}}
       </ion-button>
-    </div>
+    </div>-->
   </div>
 </ion-content>
 
 <ion-footer class="ion-text-center ion-padding">
-    <ion-button class="confirm" expand="full" size="large" (click)="nextClicked()" [disabled]="!allWordsMatch()">Create my DID</ion-button>
+  <did-button class="main-button" (click)="nextClicked()" 
+    [title]="'Create my DID' | translate" 
+    [bgcolor]="'var(--ion-color-primary)'" 
+    [bordercolor]="'var(--ion-color-primary)'"
+    [shadow]="true" *ngIf="allWordsMatch()"></did-button>
 </ion-footer>
