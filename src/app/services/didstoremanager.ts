@@ -56,17 +56,7 @@ export class DidStoreManager {
           this.masterDidStore.push(didStore);
         }
 
-        let couldEnableStore = await this.activateDidStore(id);
-        if (!couldEnableStore) {
-          console.error("Unable to load the previously selected DID store");
-          this.handleNull(); // TODO: go to DID list instead
-        }
-        else {
-          this.native.setRootRouter('/home/myprofile', {create:false});
-          /*this.native.setRootRouter('/verifymnemonics', {
-            mnemonicStr:"a b c d e f g h k l m o",
-          });*/
-        }
+        this.showDidStore(id);
       }
     }
   }
@@ -96,7 +86,7 @@ export class DidStoreManager {
         this.activeDidStore = didStore;
 
         this.event.publish('did:didstorechanged');
-        
+
         this.localStorage.saveCurrentDidStoreId(this.activeDidStore.pluginDidStore.getId());
 
         resolve(true);
@@ -107,6 +97,20 @@ export class DidStoreManager {
         resolve(false);
       }
     });
+  }
+
+  public async showDidStore(id:string) {
+    let couldEnableStore = await this.activateDidStore(id);
+    if (!couldEnableStore) {
+      console.error("Unable to load the previously selected DID store");
+      this.handleNull(); // TODO: go to DID list instead
+    }
+    else {
+      this.native.setRootRouter('/home/myprofile', {create:false});
+      /*this.native.setRootRouter('/verifymnemonics', {
+        mnemonicStr:"a b c d e f g h k l m o",
+      });*/
+    }
   }
 
   handleNull() {
@@ -120,7 +124,7 @@ export class DidStoreManager {
    */
   public async addDidStore() {
     let didStoreId = Config.uuid(6, 16);
-    
+
     console.log("Adding a new DID Store with ID "+didStoreId);
     let didStore = await this.didService.initDidStore(didStoreId);
     this.masterDidStore.push(didStore);
@@ -168,6 +172,29 @@ export class DidStoreManager {
 
   public getActiveDidStore() : DIDStore {
     return this.activeDidStore;
+  }
+
+  public async deleteDidStore(didStore: DIDStore) {
+    //TODO remove DidStore from DIDPlugin?
+
+    //remove DidStoreEntrie
+    let entries = await this.localStorage.getDidStoreEntries();
+    let storeId = didStore.pluginDidStore.getId();
+    for (let i = 0; i < entries.length; i++) {
+        if (entries[i].storeId === storeId) {
+            entries.splice(i, 1);
+            break;
+       }
+    }
+    this.localStorage.saveDidStoreEntries(entries);
+
+    //switch DidStore or handleNull
+    if (entries.length > 0) {
+      this.showDidStore(entries[0].storeId);
+    } else {
+      this.localStorage.saveCurrentDidStoreId('');
+      this.handleNull();
+    }
   }
 }
 

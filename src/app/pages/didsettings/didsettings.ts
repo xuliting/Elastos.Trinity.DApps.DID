@@ -1,10 +1,11 @@
 import { Component, NgZone } from '@angular/core';
 import { Events, ModalController, NavController } from '@ionic/angular';
-import { DIDService } from '../../services/did.service';
-import { SecurityCheckComponent } from '../../components/securitycheck/securitycheck.component';
+import { SecurityCheckComponent } from 'src/app/components/securitycheck/securitycheck.component';
 import { Profile } from 'src/app/model/profile.model';
+import { DIDService } from 'src/app/services/did.service';
 import { Config } from 'src/app/services/config';
 import { Native } from 'src/app/services/native';
+import { PopupProvider } from 'src/app/services/popup';
 
 @Component({
   selector: 'page-didsettings',
@@ -13,12 +14,13 @@ import { Native } from 'src/app/services/native';
 })
 export class DIDSettingsPage {
   public activeProfile: Profile = null;
-  
+
   constructor(
         private native: Native,
-        public navCtrl: NavController, 
-        public modalCtrl: ModalController, 
+        public navCtrl: NavController,
+        public modalCtrl: ModalController,
         private didService: DIDService,
+        private popupProvider: PopupProvider,
         public event: Events,
         public zone: NgZone) {
   }
@@ -54,7 +56,12 @@ export class DIDSettingsPage {
   }
 
   deleteDID() {
-    // TODO
+    this.popupProvider.ionicConfirm("Delete", "Delete DID?", "Yes", "NO").then(async (data) => {
+      if (data) {
+        let activeDidStore = Config.didStoreManager.getActiveDidStore();
+        await Config.didStoreManager.deleteDidStore(activeDidStore);
+      }
+    });
   }
 
   async openPayModal() {

@@ -63,11 +63,6 @@ export class LocalStorage {
         return this.storage.clear();
     }
 
-    public getWalletLanguage(func): any {
-        let key = "Did-language";
-        this.getVal(key, func);
-    }
-
     public setPassword(value: any): any {
         let key = "Did-password";
         return this.storage.set(key, JSON.stringify(value));
