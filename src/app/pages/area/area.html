@@ -1,14 +1,16 @@
-<ion-header>
-  <header-bar title="Country/Region"></header-bar>
-</ion-header>
+<div class="root-container">
+  <header-bar title="Country" [showBack]="true"></header-bar>
 
-<ion-content class="ion-padding">
-  <ion-list>
-    <ion-radio-group [(ngModel)]="areaItem">
-      <ion-item *ngFor="let item of areaList" (click)="selectItem(item)">
-        <ion-label>{{ item.en + "/" + item.zh }}</ion-label>
-        <ion-radio slot="end" value="{{ item.en }}"></ion-radio>
-      </ion-item>
-    </ion-radio-group>
-  </ion-list>
-</ion-content>
+  <ion-content class="ion-padding">
+    <ion-list>
+      <ion-radio-group [(ngModel)]="areaItem">
+        <ion-virtual-scroll [items]="areaList"  approxItemHeight="60px">
+          <ion-item *virtualItem="let item" (click)="selectItem(item)">
+            <ion-label>{{ item.en }}</ion-label>
+            <ion-radio slot="end" value="{{ item.en }}"></ion-radio>
+          </ion-item>
+        </ion-virtual-scroll>
+      </ion-radio-group>
+    </ion-list>
+  </ion-content>
+</div>
