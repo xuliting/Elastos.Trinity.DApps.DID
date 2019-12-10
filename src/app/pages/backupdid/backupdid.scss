@@ -1,17 +1,66 @@
-page-backupdid {
-
+.root-container {
+    background: rgb(101,97,251);
+    background: linear-gradient(0deg, rgba(101,97,251,1) 0%, rgba(150,147,255,1) 100%);
 }
 
-.mainicon {
-    height: 20vh;
+ion-content {
+    --color:white;
+}
+
+
+.title {
+    font-weight:800;
+    font-size:22px;
+    margin:6vw
+}
+
+.info {
+    margin:5vw 10vw;
 }
 
 .mnemonics-box {
-    padding: 30px;
+    background: white;
+    margin: 20px;
     border-radius: 20px;
-    border: solid 1px #CCC;
+
+    .mnemonic {
+        overflow:hidden;
+        background:#F4F4F4;
+        width:100%;
+        display:block;
+    
+        font-weight:600;
+        font-size:14px;
+        border-radius: 10px;
+        text-align:left;
+        margin-left:5px;
+        margin-right:5px;
+        margin-top:4px;
+        margin-bottom:4px;
+    
+        .index {
+            float:left;
+            padding-left:10px;
+            color: #BABABA;
+            padding-top:3px;
+            padding-bottom:3px;
+        }
+    
+        .word {
+            display:block;
+            color:#6E7379;
+            text-align: center;
+            padding-top:3px;
+            padding-bottom:3px;
+        }
+    }
 }
 
-.mnemonics-box .word {
-    margin-right: 20px;
+.secondary-button {
+    display: inline-block;
+    width:70vw;
+
+    .did-button {
+        margin: 0 auto;
+    }
 }

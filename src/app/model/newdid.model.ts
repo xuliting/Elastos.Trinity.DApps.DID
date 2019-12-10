@@ -7,4 +7,5 @@ import { Profile } from './profile.model';
 export class NewDID {
     public password: string = null;
     public profile: Profile = null;
+    public mnemonic: string = null;
 }

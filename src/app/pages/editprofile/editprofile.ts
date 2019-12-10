@@ -93,7 +93,7 @@ export class EditProfilePage {
       }
       else { // If creation mode, go to backup did flow.
         Config.didBeingCreated.profile = this.profile; // Save filled profile for later.
-        this.native.go("/backupdid");
+        this.native.go("/backupdid", {create: true});
       }
     }
   }
