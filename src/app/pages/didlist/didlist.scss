@@ -2,6 +2,13 @@
     background: #FAFAFA;
 }
 
-ion-content {
-    --color:white;
+active-did {
+    display:block;
+    margin-top: 20px;
+}
+
+.main-button {
+    width: 70vw;
+    margin: 10px auto;
+    display:inline-block;
 }

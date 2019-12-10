@@ -2,20 +2,32 @@
   <header-bar title="DID Portfolio" [transparent]="false"></header-bar>
 
   <ion-content>
-    <ion-grid>
-      <active-did [profile]="activeProfile" (click)="viewActiveProfile()"></active-did>
-
+    <ion-grid class="ion-no-padding">
       <ion-row>
-        <did-button class="secondary-button" (click)="addDIDStore()" 
-          [title]="'TMP Add DID'" ></did-button>
+        <ion-col class="ion-no-padding">
+          <active-did [profile]="activeProfile" (click)="viewActiveProfile()"></active-did>
+        </ion-col>
       </ion-row>
-
-      <ion-item *ngFor="let item of didStoreList" (click)="switchDidStore(item)">
-        <ion-label>
-          <h2>{{item.name}}</h2>
-        </ion-label>
-      </ion-item>
+      <ion-row>
+        <ion-col class="ion-text-center">
+          <did-button class="main-button" (click)="addDIDStore()" 
+            [title]="'Add New DID Profile' | translate" 
+            [textcolor]="'#FFFFFF'"
+            [bgcolor]="'var(--ion-color-primary)'" 
+            [bordercolor]="'var(--ion-color-primary)'"
+            [shadow]="true"></did-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col>
+          <ion-item *ngFor="let item of didStoreList" (click)="switchDidStore(item)" class="ion-activatable">
+            <ion-label>
+              <h2>{{item.name}}</h2>
+            </ion-label>
+            <ion-ripple-effect></ion-ripple-effect>
+          </ion-item>
+        </ion-col>
+      </ion-row>
     </ion-grid>
-    
   </ion-content>
 </div>

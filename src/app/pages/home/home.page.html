@@ -1,23 +1,27 @@
 <ion-tabs>
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="myprofile">
+    <ion-tab-button tab="myprofile" class="ion-activatable">
+      <ion-icon [src]="'/assets/images/Profile_Inactive_Icon.svg'"></ion-icon>
       <ion-label>Profile</ion-label>
-      <ion-icon name="appstore"></ion-icon>
+      <ion-ripple-effect></ion-ripple-effect>
     </ion-tab-button>
 
-    <ion-tab-button tab="didlist">
+    <ion-tab-button tab="didlist" class="ion-activatable">
+      <ion-icon [src]="'/assets/images/List_Inactive_Icon.svg'"></ion-icon>
       <ion-label>Portfolio</ion-label>
-      <ion-icon name="albums" ios="ios-albums"></ion-icon>
+      <ion-ripple-effect></ion-ripple-effect>
     </ion-tab-button>
 
-    <ion-tab-button tab="credentiallist">
-        <ion-label>Credentials</ion-label>
-        <ion-icon name="albums" ios="ios-albums"></ion-icon>
-      </ion-tab-button>
+    <ion-tab-button tab="credentiallist" class="ion-activatable">
+      <ion-icon [src]="'/assets/images/Credentials_Inactive_Icon.svg'"></ion-icon>
+      <ion-label>Credentials</ion-label>
+      <ion-ripple-effect></ion-ripple-effect>
+    </ion-tab-button>
 
-      <ion-tab-button tab="didsettings">
-          <ion-label>Settings</ion-label>
-          <ion-icon name="albums" ios="ios-albums"></ion-icon>
-        </ion-tab-button>
+    <ion-tab-button tab="didsettings" class="ion-activatable">
+      <ion-icon [src]="'/assets/images/Setting_Inactive_Icon.svg'"></ion-icon>
+      <ion-label>Settings</ion-label>
+      <ion-ripple-effect></ion-ripple-effect>
+    </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs> 

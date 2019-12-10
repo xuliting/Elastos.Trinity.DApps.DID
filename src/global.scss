@@ -74,3 +74,17 @@ ion-content {
     left:0;
     right:0;
 }
+
+ion-ripple-effect {
+    --ripple-color: var(--ion-color-primary);
+    color: var(--ripple-color);
+} 
+
+ion-item {
+    --background-activated:none;
+}
+
+ion-toolbar {
+    --padding-start:0;
+    --padding-end:0;
+}

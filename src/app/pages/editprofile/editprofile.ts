@@ -8,6 +8,7 @@ import { Native } from '../../services/native';
 import { Util } from '../../services/util';
 import { DIDStore } from 'src/app/model/didstore.model';
 import { DIDService } from 'src/app/services/did.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'page-editprofile',
@@ -18,6 +19,7 @@ export class EditProfilePage {
   public birthday: String = "";
   public isEdit: boolean = false;
   public hasArea:boolean = false;
+  private paramsSubscription: Subscription;
 
   public editedStore: DIDStore;
   public profile: Profile;
@@ -28,7 +30,7 @@ export class EditProfilePage {
               public navCtrl: NavController,
               private didService: DIDService,
               private native: Native) {
-    this.route.queryParams.subscribe((data) => {
+    this.paramsSubscription = this.route.queryParams.subscribe((data) => {
       console.log("Entering EditProfile page");
 
       if (data['create'] == 'false') {
@@ -47,6 +49,10 @@ export class EditProfilePage {
         this.editedStore = new DIDStore(this.didService, this.events);
         this.profile = new Profile();
       }
+
+      // Unsubscribe to not receive params again when coming back from the "country selection" screen
+      // otherwise we would loose our UI state (text inputs).
+      this.paramsSubscription.unsubscribe();
     });
   }
 

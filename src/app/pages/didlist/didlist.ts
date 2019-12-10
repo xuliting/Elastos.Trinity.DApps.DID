@@ -28,6 +28,7 @@ export class DIDListPage {
     this.init();
     this.event.subscribe('did:didstorechanged', ()=> {
       this.zone.run(() => {
+        this.refreshStoreList();
         this.refreshActiveProfile();
       });
     });
@@ -38,12 +39,17 @@ export class DIDListPage {
   }
 
   async init() {
-    this.didStoreList = await Config.didStoreManager.getDidStoreEntries();
+    this.refreshStoreList();
     this.refreshActiveProfile();
+  }
+
+  async refreshStoreList() {
+    this.didStoreList = await Config.didStoreManager.getDidStoreEntries();
   }
 
   refreshActiveProfile() {
     this.activeProfile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
+    console.log("DID list: refreshed active profile", this.activeProfile);
   }
 
   addDIDStore() {

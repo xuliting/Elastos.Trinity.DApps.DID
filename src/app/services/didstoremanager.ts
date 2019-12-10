@@ -150,6 +150,8 @@ export class DidStoreManager {
     console.log("Finalizing store creation for store ID "+didStoreId+" with name "+name);
 
     await this.addDidStoreEntry(new DIDStoreEntry(didStoreId, name));
+
+    this.event.publish('did:didstorechanged');
   }
 
   /**

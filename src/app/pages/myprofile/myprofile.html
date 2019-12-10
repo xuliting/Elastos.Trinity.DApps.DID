@@ -32,19 +32,19 @@
             <ion-grid>
               <ion-item>
                 <ion-label class="cred-name" >Email</ion-label>
-                <ion-label class="cred-value" text-right>{{profile.email}}</ion-label>
+                <ion-label class="cred-value" text-right>{{profile.email || 'Not set'}}</ion-label>
               </ion-item>
               <ion-item>
                 <ion-label class="cred-name" >Phone number</ion-label>
-                <ion-label class="cred-value" text-right>{{profile.phone}}</ion-label>
+                <ion-label class="cred-value" text-right>{{profile.phone || 'Not set'}}</ion-label>
               </ion-item>
               <ion-item>
                 <ion-label class="cred-name" >Country/Region</ion-label>
-                <ion-label class="cred-value" text-right>{{profile.area}}</ion-label>
+                <ion-label class="cred-value" text-right>{{profile.area || 'Not set'}}</ion-label>
               </ion-item>
               <ion-item lines="none">
                 <ion-label class="cred-name" >Birthday</ion-label>
-                <ion-label class="cred-value" text-right>{{profile.birthday}}</ion-label>
+                <ion-label class="cred-value" text-right>{{profile.birthday || 'Not set'}}</ion-label>
               </ion-item>
             </ion-grid>
           </ion-list>
