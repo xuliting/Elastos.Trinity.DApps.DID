@@ -24,22 +24,22 @@
       </ion-row>
       <div class="profile-container">
         <div class="profile-picture">
-          <div class="no-picture">
+          <div class="no-picture" *ngIf="false">
             Profile<br/>
             Picture
           </div>
-          <img src="assets/images/qrcodesmall.png">
+          <img src="assets/images/defaultuser.png">
         </div>
         <div class="profile-items">
           <ion-list>
             <ion-item>
-              <ion-label>Name</ion-label> <ion-input placeholder="Enter here" [(ngModel)]="profile.name" text-right></ion-input>
+              <ion-label>Name</ion-label> <ion-input #nameInput placeholder="Enter here" [(ngModel)]="profile.name" text-right (keyup)="maybeMoveFocus(emailInput, $event)"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Email</ion-label> <ion-input placeholder="Enter here" [(ngModel)]="profile.email" type="email" pattern="email" text-right></ion-input>
+              <ion-label>Email</ion-label> <ion-input #emailInput placeholder="Enter here" [(ngModel)]="profile.email" type="email" pattern="email" text-right (keyup)="maybeMoveFocus(telInput, $event)"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Phone Number</ion-label> <ion-input placeholder="Select One" [(ngModel)]="profile.phone" type="tel" text-right></ion-input>
+              <ion-label>Phone Number</ion-label> <ion-input #telInput placeholder="Select One" [(ngModel)]="profile.phone" type="tel" text-right (keyup)="maybeClearFocus(telInput, $event)"></ion-input>
             </ion-item>
             <ion-item (click)="selectArea()">
               <ion-label *ngIf='!hasArea'>Country/Region</ion-label>

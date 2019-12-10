@@ -1,6 +1,6 @@
 <div class="root-container">
   <header-bar title="" [transparent]="true"></header-bar>
-  
+
   <ion-content no-bounce (click)="hidePasswordSheet($event)">
     <div class="ion-padding ion-text-center">
       <ion-slides
@@ -43,7 +43,7 @@
               Let's create a DID profile
             </p>
             <ion-row>
-              <did-button class="main-button" (click)="createIdentity($event)" 
+              <did-button class="main-button" (click)="setDelayedFocus(pwd);createIdentity($event)" 
                 [title]="'Create New DID Profile' | translate" 
                 [bgcolor]="styling.primaryButtonColor" 
                 [bordercolor]="styling.primaryButtonColor"
@@ -75,11 +75,11 @@
     </p>
 
     <div class="input-container">
-      <ion-input placeholder="Set password" [(ngModel)]="password" type="password"></ion-input>
+      <ion-input placeholder="Set password" #pwd [(ngModel)]="password" type="password" (keyup)="moveFocus(rptpwd, $event)"></ion-input>
     </div>
 
     <div class="input-container">
-      <ion-input placeholder="Re-enter password" [(ngModel)]="passwordConfirmation" type="password"></ion-input>
+      <ion-input placeholder="Re-enter password" #rptpwd [(ngModel)]="passwordConfirmation" type="password" (keyup)="confirmPassword()"></ion-input>
     </div>
 
     <ion-item lines="none" *ngIf="!passwordsMatch()">

@@ -1,6 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Events, NavController } from '@ionic/angular';
+import { Events, NavController, IonInput } from '@ionic/angular';
 
 import { Config } from '../../services/config';
 import { Profile } from '../../model/profile.model';
@@ -58,6 +58,23 @@ export class EditProfilePage {
       this.events.unsubscribe('selectarea');
     });
     this.native.go("/area");
+  }
+
+  /**
+   * Move text input focus to the given item
+   */
+  maybeMoveFocus(element: IonInput, event: KeyboardEvent) {
+    if (event.keyCode == 13) {  // Return
+      element.setFocus();
+    }
+  }
+
+  maybeClearFocus(element: IonInput, event: KeyboardEvent) {
+    if (event.keyCode == 13) {  // Return
+      element.getInputElement().then((el: HTMLInputElement)=>{
+        el.blur();
+      });
+    }
   }
 
   async next() {

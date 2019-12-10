@@ -98,7 +98,11 @@ export function TranslateLoaderFactory() {
     ComponentsModule,
     FormsModule,
     IonBottomDrawerModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({
+      mode: 'ios',
+      scrollAssist: false,
+      scrollPadding: false
+    }),
     QRCodeModule,
     IonicStorageModule,
     IonicStorageModule.forRoot({

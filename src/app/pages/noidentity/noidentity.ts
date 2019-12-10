@@ -60,6 +60,21 @@ export class NoIdentityPage {
     return this.password == this.passwordConfirmation;
   }
 
+  setDelayedFocus(element) {
+    setTimeout(()=>{
+      element.setFocus();
+    }, 1000);
+  }
+
+  /**
+   * Move text input focus to the given item
+   */
+  moveFocus(element, event: KeyboardEvent) {
+    if (event.keyCode == 13) {  // Return
+      element.setFocus();
+    }
+  }
+
   canSave() {
     return this.password != "" && this.passwordsMatch();
   }
@@ -67,7 +82,7 @@ export class NoIdentityPage {
   async confirmPassword() {
     if (!this.canSave())
       return;
-      
+
     Config.didBeingCreated.password = this.password;
 
     this.native.go('/newpasswordset');
