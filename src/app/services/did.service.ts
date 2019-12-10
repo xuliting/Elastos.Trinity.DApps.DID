@@ -1,7 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Platform, ToastController } from '@ionic/angular';
 
-import { Config } from '../services/config';
 import { SimulatedDID, SimulatedDIDStore, BrowserSimulation, SimulatedCredential } from '../services/browsersimulation';
 
 declare let didManager: DIDPlugin.DIDManager;
@@ -54,6 +53,21 @@ export class DIDService {
                     resolve(ret);
                 },
                 (err) => {reject(err)},
+            );
+        });
+    }
+
+    deleteDidStore(didStoreId: string): Promise<any> {
+        console.log("deleteDidStore:",didStoreId);
+        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+            return new Promise((resolve, reject)=>{
+               resolve();
+            });
+        }
+        return new Promise((resolve, reject)=>{
+            didManager.deleteDidStore(
+                didStoreId,
+                () => {resolve()}, (err) => {reject(err)},
             );
         });
     }
@@ -244,7 +258,7 @@ export class DIDService {
             );
         });
     }
- 
+
     createCredential(didString: DIDPlugin.DIDString, credentialId, type, expirationDate, properties, passphrase): Promise<DIDPlugin.VerifiableCredential> {
         return new Promise(async (resolve, reject)=>{
             let did = await this._resolveDid(didString);
@@ -252,7 +266,7 @@ export class DIDService {
                 didString, credentialId, type, expirationDate, properties, passphrase,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
-        }); 
+        });
     }
 
     deleteCredential(didString: DIDPlugin.DIDString, didUrlString): Promise<any> {
@@ -330,7 +344,6 @@ export class DIDService {
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
         });
-
     }
 
     //Did
@@ -341,7 +354,7 @@ export class DIDService {
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
         });
-    } 
+    }
 
     //Credential
     credentialToJSON(credential: DIDPlugin.VerifiableCredential): Promise<string> {
@@ -354,17 +367,4 @@ export class DIDService {
 
         return credential.toString();
     }
-
-    // Fun(ret, okFun = null) {
-    //     if (okFun != null) {
-    //         return okFun(ret);
-    //     }
-    // }
-
-    // errorFun(err, errorFun = null) {
-    //     this.native.info("errorFun:" + err);
-    //     if (errorFun != null) {
-    //         return errorFun(err);
-    //     }
-    // }
 }
