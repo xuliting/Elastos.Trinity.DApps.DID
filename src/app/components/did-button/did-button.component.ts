@@ -8,6 +8,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 export class DIDButtonComponent implements OnInit {
     @Input('title') title: string = "Button";
     @Input('textcolor') textcolor: string = "#FFFFFF";
+    @Input('textsize') textsize: string = "12px";
     @Input('bgcolor') bgcolor: string = "#444444";
     @Input('bordercolor') bordercolor: string = "#444444";
     @Input('shadow') shadow: boolean = true;

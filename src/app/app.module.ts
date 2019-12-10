@@ -45,6 +45,7 @@ import { SecurityCheckComponent } from './components/securitycheck/securitycheck
 
 import { LocalStorage } from './services/localstorage';
 import { PopupProvider } from './services/popup';
+import { ChooseDIDPage } from './pages/choosedid/choosedid';
 
 /** 通过类引用方式解析国家化文件 */
 export class CustomTranslateLoader implements TranslateLoader {
@@ -89,7 +90,8 @@ export function TranslateLoaderFactory() {
     SlideMenuPage,
     VerifyMnemonicsPage,
     RegisterApplicationProfileRequestPage,
-    DIDListPage
+    DIDListPage,
+    ChooseDIDPage
   ],
   imports: [
     CommonModule,

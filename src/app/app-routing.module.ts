@@ -21,6 +21,7 @@ import { CredentialBackupPage } from './pages/credential/backup/credentialbackup
 import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequest/regappprofilerequest';
 import { DevPage } from './pages/devpage/devpage';
 import { DIDListPage } from './pages/didlist/didlist';
+import { ChooseDIDPage } from './pages/choosedid/choosedid';
 
 const routes: Routes = [
   // { path: '', redirectTo: '', pathMatch: 'full' }, // No default route, services will decide this by themselves.
@@ -63,6 +64,7 @@ const routes: Routes = [
   { path: 'verifymnemonics', component: VerifyMnemonicsPage },
   { path: 'credentialcreate', component: CredentialCreatePage },
   { path: 'credentialbackup', component: CredentialBackupPage },
+  { path: 'choosedid', component: ChooseDIDPage },
 
   // Intents
   { path: 'credaccessrequest', component: CredentialAccessRequestPage },

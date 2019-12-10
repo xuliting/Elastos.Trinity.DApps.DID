@@ -1,0 +1,24 @@
+<div class="root-container">
+  <header-bar title="Choose DID Profile" [transparent]="false"></header-bar>
+
+  <ion-content>
+    <div class="title">
+        Please select the DID Profile you <br/>want to use for this action
+    </div>
+    <ion-grid class="ion-no-padding">
+      <ion-row>
+        <ion-col class="ion-text-center">
+          
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item *ngFor="let item of didStoreList" (click)="selectDidStore(item)" class="ion-activatable">
+            <ion-label class="did-item">{{item.name}}</ion-label>
+            <ion-ripple-effect></ion-ripple-effect>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+</div>

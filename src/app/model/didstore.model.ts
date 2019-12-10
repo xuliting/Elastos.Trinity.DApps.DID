@@ -148,6 +148,11 @@ export class DIDStore {
         });
     }
 
+    async deleteCredential(title: String) {
+        console.log("Asking DIDService to delete the credential "+title);
+        await this.didService.deleteCredential(this.getCurrentDid(), title);
+    }
+
     /**
      * Based on some predefined basic credentials (name, email...) we build a Profile structure
      * to ease profile editing on UI.
@@ -194,7 +199,6 @@ export class DIDStore {
      * into its respective credential
      */
     async writeProfile(newProfile: Profile) {
-        // TODO: update existing credentials if we are updating. Now only handling "create".
         console.log("Writing profile fields as credentials", newProfile);
 
         for(let key in newProfile) {
@@ -202,6 +206,9 @@ export class DIDStore {
 
             let props = {};
             props[key] = newProfile[key];
+
+            // Update use case: if this credential already exist, we delete it first before re-creating it.
+            await this.deleteCredential(key);
 
             let credential = await this.addCredential(key, props, ["BasicProfileCredential"]);
             console.log("Created credential:", credential);

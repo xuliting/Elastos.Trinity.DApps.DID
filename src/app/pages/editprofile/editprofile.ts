@@ -89,7 +89,8 @@ export class EditProfilePage {
 
       if (this.isEdit) { // If edition mode, go back to my profile after editing.
         await this.editedStore.writeProfile(this.profile); // Update profile/credentials
-        this.native.go("/profile/myprofile", {create: !this.isEdit});
+        //this.native.go("/home/myprofile", {create: !this.isEdit});
+        this.navCtrl.pop();
       }
       else { // If creation mode, go to backup did flow.
         Config.didBeingCreated.profile = this.profile; // Save filled profile for later.

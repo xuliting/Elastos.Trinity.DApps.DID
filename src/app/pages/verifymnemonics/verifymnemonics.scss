@@ -1,11 +1,16 @@
 .root-container {
-    background: #FAFAFA;
+    background: rgb(101,97,251);
+    background: linear-gradient(0deg, rgba(101,97,251,1) 0%, rgba(150,147,255,1) 100%);
+}
+
+ion-content {
+    --color:white;
 }
 
 .title {
-    color:var(--ion-color-primary);
     font-weight:700;
     font-size:18px;
+    margin:30px;
 }
 
 .mnemonics-box {
@@ -33,9 +38,13 @@
 }
 
 .unselected-word {
-    color:var(--ion-color-primary);
+    display:block;
+    background:#6561FB;
+    padding:4px;
+    border-radius: 10px;
+    color:white;
     margin-right:6px;
     margin-bottom:6px;
-    font-weight:700;
-    font-size:16px;
+    font-weight:500;
+    font-size:14px;
 }
