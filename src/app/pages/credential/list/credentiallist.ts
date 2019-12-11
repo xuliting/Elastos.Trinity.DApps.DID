@@ -29,14 +29,20 @@ export class CredentialListPage {
   ngOnInit() {
     this.event.subscribe('did:credentialadded', ()=> {
       this.zone.run(() => {
-        this.credentials = Config.didStoreManager.getActiveDidStore().credentials;
-        this.hasCredential = this.credentials.length > 0 ? true : false;
+        this.init();
+      });
+    });
+
+    this.event.subscribe('did:didstorechanged', ()=> {
+      this.zone.run(() => {
+        this.init();
       });
     });
   }
 
   ngOnDestroy() {
     this.event.unsubscribe('did:credentialadded');
+    this.event.unsubscribe('did:didstorechanged');
   }
 
   init() {

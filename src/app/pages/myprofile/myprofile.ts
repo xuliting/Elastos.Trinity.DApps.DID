@@ -28,16 +28,15 @@ export class MyProfilePage {
               private appService: UXService,
               private native: Native) {
     this.route.queryParams.subscribe((data) => {
-        if (data['create'] == 'true') 
+        if (data['create'] == 'true')
           this.createDid = true;
-        else  
+        else
           this.createDid = false;
     });
     this.init();
   }
 
   ngOnInit() {
-    this.init();
     this.event.subscribe('did:didstorechanged', ()=> {
       this.zone.run(() => {
         this.init();
