@@ -16,7 +16,6 @@ export class DidStoreManager {
   public subWallet = {};
   public name: string = '';
 
-  public masterDidStore: DIDPlugin.DIDStore[] = [];
   public activeDidStore: DIDStore;
 
   public didInfos: any = {};
@@ -29,10 +28,9 @@ export class DidStoreManager {
       public didService: DIDService,
       public native: Native) {
     console.log("DidStoreManager created");
-    this.init();
   }
 
-  async init() {
+  public async displayDefaultScreen() {
     console.log("DidStoreManager init");
 
     let id = await this.localStorage.getCurrentDidStoreId();
@@ -49,18 +47,19 @@ export class DidStoreManager {
         this.handleNull();
       }
       else {
-        this.masterDidStore = [];
-        for (let i in info) {
-          let storeEntry = info[i];
-          let didStore = await this.didService.initDidStore(storeEntry.storeId);
-          this.masterDidStore.push(didStore);
-        }
-
         await this.showDidStore(id);
       }
     }
 
     console.log("DidStoreManager initialization completed");
+  }
+
+  /**
+   * Activate the DID store saved from a previous session.
+   */
+  public async activateSavedDidStore() {
+    let id = await this.localStorage.getCurrentDidStoreId();
+    await this.activateDidStore(id);
   }
 
   /**
@@ -138,9 +137,7 @@ export class DidStoreManager {
     let didStoreId = Config.uuid(6, 16);
 
     console.log("Adding a new DID Store with ID "+didStoreId);
-    let didStore = await this.didService.initDidStore(didStoreId);
-    this.masterDidStore.push(didStore);
-
+    await this.didService.initDidStore(didStoreId);
     await this.activateDidStore(didStoreId);
   }
 

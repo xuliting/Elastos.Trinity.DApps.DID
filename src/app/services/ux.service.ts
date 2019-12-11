@@ -6,6 +6,8 @@ import { Native } from './native';
 import { Config } from './config';
 import { Util } from './util';
 import { BrowserSimulation } from './browsersimulation';
+import { DidStoreManager } from './didstoremanager';
+import { AuthService } from './auth.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
 let selfUxService: UXService = null;
@@ -26,8 +28,12 @@ enum MessageType {
 })
 export class UXService {
     private isReceiveIntentReady = false;
+    private appIsLaunchingFromIntent = false; // Is the app starting because of an intent request?
 
-    constructor(public translate: TranslateService, private platform: Platform, private native: Native) {
+    constructor(public translate: TranslateService, 
+        private platform: Platform, 
+        private native: Native,
+        private authService: AuthService) {
         selfUxService = this;
     }
 
@@ -38,6 +44,30 @@ export class UXService {
             this.getLanguage();
             this.setIntentListener();
         }
+
+        this.computeAndShowEntryScreen();
+    }
+
+    /**
+     * This method defines which screen has to be displayed when the app start. This can be the default 
+     * no identity or current identity main screen, (defined by the didstoremanager), but the app is maybe
+     * starting because we are receiving an intent.
+     * 
+     * This method must be called only during the initial app start.
+     */
+    computeAndShowEntryScreen() {
+        // DIRTY - but no choice for now because of the asynchronous design of the intent API.
+        // Wait for a while and check later if an intent ahs been received asynchronously. Then we can
+        // decide where to go.
+        setTimeout(()=>{
+            if (this.appIsLaunchingFromIntent) {
+                // Do nothing, the intent listener will show the appropriate screen.
+            }
+            else {
+                // No intent was received at boot. So we go through the regular screens.
+                Config.didStoreManager.displayDefaultScreen();
+            }
+        }, 500);
     }
 
     /**
@@ -77,7 +107,9 @@ export class UXService {
             console.log("Setting intent listener");
             if (!this.isReceiveIntentReady) {
                 this.isReceiveIntentReady = true;
-                appManager.setIntentListener(this.onReceiveIntent);
+                appManager.setIntentListener((intent: any)=>{
+                    this.onReceiveIntent(intent);
+                });
             }
         }
     }
@@ -107,13 +139,23 @@ export class UXService {
             case "credaccess":
                 console.log("Received credential access intent request");
                 if (selfUxService.checkIntentParams(intent)) {
-                    selfUxService.native.go("/credaccessrequest");
+                    this.appIsLaunchingFromIntent = true;
+
+                    this.authService.chooseIdentity({
+                        redirectPath: "/credaccessrequest"
+                    });
+                    //selfUxService.native.go("/credaccessrequest");
                 }
                 break;
             case "registerapplicationprofile":
                 console.log("Received register application profile intent request");
                 if (selfUxService.checkRegAppProfileIntentParams(intent)) {
-                    selfUxService.native.go("/regappprofilerequest");
+                    this.appIsLaunchingFromIntent = true;
+
+                    this.authService.chooseIdentity({
+                        redirectPath: "/regappprofilerequest"
+                    });
+                    //selfUxService.native.go("/regappprofilerequest");
                 }
                 else {
                     console.error("Missing or wrong intent parameters for "+intent.action);

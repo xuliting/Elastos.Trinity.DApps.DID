@@ -2,6 +2,10 @@
 import { Injectable } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { SecurityCheckComponent } from '../components/securitycheck/securitycheck.component';
+import { Config } from './config';
+import { UXService } from './ux.service';
+import { Native } from './native';
+import { CreatePasswordComponent } from '../components/createpassword/createpassword.component';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +16,7 @@ export class AuthService {
     private savedPassword: string = null; // Latest password input by user
     private savedPasswordRelatedDIDStoreId: string = null; // Store ID for which the user password was provided.
 
-    constructor(public modalCtrl: ModalController) {
+    constructor(public modalCtrl: ModalController, private native: Native) {
         AuthService.instance = this;
     }
 
@@ -62,12 +66,68 @@ export class AuthService {
             modal.onDidDismiss().then((params) => {
                 if (params.data && params.data.password)
                     this.saveCurrentUserPassword(forDidStore, params.data.password);
-                    
+
                 resolve();
             });
             modal.present();
         })
     }
+
+    public promptNewPassword(): Promise<string> {
+        console.log("Asking for new user password ");
+
+        return new Promise(async (resolve, reject)=>{
+            const modal = await this.modalCtrl.create({
+                component: CreatePasswordComponent,
+                componentProps: {
+                },
+                cssClass:"create-password-modal"
+            });
+            modal.onDidDismiss().then((params) => {
+                if (!params.data)
+                    resolve(null);
+                else
+                    resolve(params.data.password);
+            });
+            modal.present();
+        })
+    }
+
+    /**
+     * This method lets user choose a DID before going to another screen.
+     * If there is only one identity, it will be selected and activated by default.
+     * If multiple identities, it goes to the ID chooser screen first before redirecting to the originally
+     * requested screen.
+     */
+    public async chooseIdentity(opts: ChooseIdentityOptions) {
+        console.log("ChooseIdentity: checking");
+
+        let didStoreEntries = await Config.didStoreManager.getDidStoreEntries();
+
+        if (!didStoreEntries || didStoreEntries.length == 0) {
+            console.log("ChooseIdentity: no DID exists, redirecting to ID creation");
+
+            // No identity? Ask user to create one.
+            Config.didStoreManager.displayDefaultScreen();
+
+            // TODO: REDIRECT TO THE INTENT AFTER ID CREATION
+        }
+        else if (didStoreEntries.length == 1) {
+            console.log("ChooseIdentity: only one DID exists, redirecting to the target screen directly");
+
+            // Only one identity? Then use this one directly.
+            await Config.didStoreManager.activateSavedDidStore();
+            this.native.go(opts.redirectPath);
+        }
+        else {
+            console.log("ChooseIdentity: multiple DID exist, redirecting to the DID chooser screen");
+
+            // Multiple DIDs: go to DID chooser screen
+            this.native.go("/choosedid", opts);
+        }
+    }
 }
 
-
+export type ChooseIdentityOptions = {
+    redirectPath: string;
+}

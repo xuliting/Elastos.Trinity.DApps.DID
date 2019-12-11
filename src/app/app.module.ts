@@ -42,6 +42,7 @@ import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequ
 import { DIDListPage } from './pages/didlist/didlist';
 
 import { SecurityCheckComponent } from './components/securitycheck/securitycheck.component';
+import { CreatePasswordComponent } from './components/createpassword/createpassword.component';
 
 import { LocalStorage } from './services/localstorage';
 import { PopupProvider } from './services/popup';
@@ -121,7 +122,8 @@ export function TranslateLoaderFactory() {
   bootstrap: [MyApp],
   entryComponents: [
     MyApp,
-    SecurityCheckComponent
+    SecurityCheckComponent,
+    CreatePasswordComponent
   ],
   providers: [
     Clipboard,

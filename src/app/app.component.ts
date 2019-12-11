@@ -46,9 +46,11 @@ export class MyApp {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
-      this.uxService.init();
       // this.didService.init();
       Config.didStoreManager = new DidStoreManager(this.event, this.zone, this.platform, this.localStorage, this.didService, this.native);
+
+      // Call this after the DID store manager is initialized
+      this.uxService.init();
     });
   }
 }

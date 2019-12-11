@@ -98,3 +98,13 @@ ion-toolbar {
         border-top-right-radius: 30px;    
     }
 }
+
+.create-password-modal {
+    --height:300px;
+    align-items:flex-end;
+
+    .modal-wrapper {
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;    
+    }
+}

@@ -1,13 +1,13 @@
 <div class="root-container">
   <header-bar title="" [transparent]="true"></header-bar>
 
-  <ion-content no-bounce (click)="hidePasswordSheet($event)">
+  <ion-content>
     <div class="ion-padding ion-text-center">
       <ion-slides
         #slide
         pager="true">
         <ion-slide class="ion-padding">
-          <div class="left-arrow invisible" (click)="prevSlide($event, slide)">
+          <div class="left-arrow invisible" (click)="prevSlide(slide)">
             <ion-icon name="arrow-round-backward"></ion-icon>
           </div>
           <ion-grid>
@@ -25,13 +25,13 @@
               Own your identity on elastOS!
             </p>
           </ion-grid>
-          <div class="right-arrow" (click)="nextSlide($event, slide)">
+          <div class="right-arrow" (click)="nextSlide(slide)">
             <ion-icon name="arrow-round-forward"></ion-icon>
           </div>
         </ion-slide>
 
         <ion-slide class="ion-padding">
-          <div class="left-arrow" (click)="prevSlide($event, slide)">
+          <div class="left-arrow" (click)="prevSlide(slide)">
             <ion-icon name="arrow-round-back"></ion-icon>
           </div>
           <ion-grid>
@@ -43,21 +43,21 @@
               Let's create a DID profile
             </p>
             <ion-row>
-              <did-button class="main-button" (click)="setDelayedFocus(pwd);createIdentity($event)" 
+              <did-button class="main-button" (click)="createIdentity()" 
                 [title]="'Create New DID Profile' | translate" 
                 [bgcolor]="styling.primaryButtonColor" 
                 [bordercolor]="styling.primaryButtonColor"
                 [shadow]="true"></did-button>
             </ion-row>
             <ion-row>
-                <did-button class="secondary-button" (click)="importIdentity($event)" 
+                <did-button class="secondary-button" (click)="importIdentity()" 
                 [title]="'Import DID Profile' | translate" 
                 [bgcolor]="'rgba(0,0,0,0)'" 
                 [bordercolor]="'#FFFFFF'"
                 [shadow]="false"></did-button>
             </ion-row>
           </ion-grid>
-          <div class="right-arrow invisible" (click)="nextSlide($event, slide)">
+          <div class="right-arrow invisible" (click)="nextSlide(slide)">
             <ion-icon name="arrow-round-forward"></ion-icon>
           </div>
         </ion-slide>
@@ -65,32 +65,3 @@
     </div>
   </ion-content>
 </div>
-
-<ion-bottom-drawer [(state)]="passwordSheetState" [minimumHeight]="passwordSheetMinHeight" [dockedHeight]="passwordSheetDockedHeight"
-  [shouldBounce]="true" [disableDrag]="true" class="ion-padding no-background-color">
-
-  <div class="container">
-    <p class="password-intro">
-      Let's get started with setting a password.
-    </p>
-
-    <div class="input-container">
-      <ion-input placeholder="Set password" #pwd [(ngModel)]="password" type="password" (keyup)="moveFocus(rptpwd, $event)"></ion-input>
-    </div>
-
-    <div class="input-container">
-      <ion-input placeholder="Re-enter password" #rptpwd [(ngModel)]="passwordConfirmation" type="password" (keyup)="confirmPassword()"></ion-input>
-    </div>
-
-    <ion-item lines="none" *ngIf="!passwordsMatch()">
-        <ion-icon name="alert" margin-end></ion-icon> <b>Passwords don't match.</b>
-    </ion-item>
- 
-    <did-button class="main-button" (click)="confirmPassword()" 
-      [title]="'Submit' | translate" 
-      [textcolor]="'#FFFFFF'"
-      [bgcolor]="styling.primaryButtonColor" 
-      [bordercolor]="styling.primaryButtonColor"
-      [shadow]="true"></did-button>
-  </div>
-</ion-bottom-drawer>

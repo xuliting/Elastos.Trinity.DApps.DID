@@ -7,6 +7,8 @@ import { Util } from '../../services/util';
 import { Config } from '../../services/config';
 import { NewDID } from 'src/app/model/newdid.model';
 import { Styling } from '../../services/styling';
+import { ModalController } from '@ionic/angular';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'page-noidentity',
@@ -22,69 +24,35 @@ export class NoIdentityPage {
   public password: string = "";
   public passwordConfirmation: string = "";
 
-  constructor(public route:ActivatedRoute, private native: Native) {
+  constructor(public route:ActivatedRoute, private native: Native, private authService: AuthService) {
     this.route.queryParams.subscribe((data) => {
         if (!Util.isEmptyObject(data)) this.isfirst = false;
     });
   }
 
-  createIdentity(e: MouseEvent) {
-    e.stopImmediatePropagation();
-
+  async createIdentity() {
     Config.didBeingCreated = new NewDID();
 
-    this.passwordSheetState = DrawerState.Docked;
-  }
-
-  importIdentity(e: MouseEvent) {
-    e.stopImmediatePropagation();
-    this.native.go("/importdid");
-  }
-
-  prevSlide(e: MouseEvent, slider) {
-    e.stopImmediatePropagation();
-    slider.slidePrev();
-  }
-
-  nextSlide(e: MouseEvent, slider) {
-    e.stopImmediatePropagation();
-    slider.slideNext();
-  }
-
-  hidePasswordSheet(e: MouseEvent) {
-    this.passwordSheetState = DrawerState.Bottom;
-  }
-
-  passwordsMatch() {
-    // TODO: more check such as password size and special characters.
-    return this.password == this.passwordConfirmation;
-  }
-
-  setDelayedFocus(element) {
-    setTimeout(()=>{
-      element.setFocus();
-    }, 1000);
-  }
-
-  /**
-   * Move text input focus to the given item
-   */
-  moveFocus(element, event: KeyboardEvent) {
-    if (event.keyCode == 13) {  // Return
-      element.setFocus();
+    this.password = await this.authService.promptNewPassword();
+    if (this.password != null) {
+      Config.didBeingCreated.password = this.password;
+      this.native.go('/newpasswordset');
     }
   }
 
-  canSave() {
-    return this.password != "" && this.passwordsMatch();
+  importIdentity() {
+    this.native.go("/importdid");
+  }
+
+  prevSlide(slider) {
+    slider.slidePrev();
+  }
+
+  nextSlide(slider) {
+    slider.slideNext();
   }
 
   async confirmPassword() {
-    if (!this.canSave())
-      return;
-
-    Config.didBeingCreated.password = this.password;
-
-    this.native.go('/newpasswordset');
+    
   }
 }

@@ -11,6 +11,7 @@ import { ActiveDIDComponent } from './active-did/active-did.component';
 import { LargeMenuItemComponent } from './large-menu-item/large-menu-item.component';
 import { VerifyMnemonicWordComponent } from './verify-mnemonic-word/verify-mnemonic-word.component';
 import { MainContentComponent } from './main-content/main-content.component';
+import { CreatePasswordComponent } from './createpassword/createpassword.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { MainContentComponent } from './main-content/main-content.component';
     ActiveDIDComponent,
     LargeMenuItemComponent,
     VerifyMnemonicWordComponent,
-    MainContentComponent
+    MainContentComponent,
+    CreatePasswordComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +39,8 @@ import { MainContentComponent } from './main-content/main-content.component';
     ActiveDIDComponent,
     LargeMenuItemComponent,
     VerifyMnemonicWordComponent,
-    MainContentComponent
+    MainContentComponent,
+    CreatePasswordComponent
   ],
   providers: [
   ],

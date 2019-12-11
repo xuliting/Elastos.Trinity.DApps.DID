@@ -29,8 +29,8 @@ export class ChooseDIDPage {
     this.didStoreList = await Config.didStoreManager.getDidStoreEntries();
   }
 
-  selectDidStore(didStoreEntry: DIDStoreEntry) {
-    Config.didStoreManager.activateDidStore(didStoreEntry.storeId);
-    this.native.setRootRouter("/home/myprofile", {create: false}); // TODO
+  async selectDidStore(didStoreEntry: DIDStoreEntry) {
+    await Config.didStoreManager.activateDidStore(didStoreEntry.storeId);
+    this.native.setRootRouter("TODO FROM OPTS", {create: false}); // TODO
   }
 }
