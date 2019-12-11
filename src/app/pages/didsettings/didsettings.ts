@@ -6,6 +6,7 @@ import { DIDService } from 'src/app/services/did.service';
 import { Config } from 'src/app/services/config';
 import { Native } from 'src/app/services/native';
 import { PopupProvider } from 'src/app/services/popup';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'page-didsettings',
@@ -22,6 +23,7 @@ export class DIDSettingsPage {
         private didService: DIDService,
         private popupProvider: PopupProvider,
         public event: Events,
+        private authService: AuthService,
         public zone: NgZone) {
   }
 
@@ -48,7 +50,8 @@ export class DIDSettingsPage {
 
   managePassword() {
     // TODO
-    this.openPayModal();
+    //this.openPayModal();
+    //this.authService.promptPasswordInContext(Config.didStoreManager.getActiveDidStore().getCurrentDid()); // TMP
   }
 
   exportDID() {
@@ -76,7 +79,7 @@ export class DIDSettingsPage {
     });
     return modal.present();
   }
-
+  
   viewActiveProfile() {
     this.native.setRootRouter("/home/myprofile", {create: false});
   }

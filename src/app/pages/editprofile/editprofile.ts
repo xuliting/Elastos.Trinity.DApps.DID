@@ -9,6 +9,9 @@ import { Util } from '../../services/util';
 import { DIDStore } from 'src/app/model/didstore.model';
 import { DIDService } from 'src/app/services/did.service';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { WrongPasswordException } from 'src/app/model/exceptions/wrongpasswordexception.exception';
+import { PopupProvider } from 'src/app/services/popup';
 
 @Component({
   selector: 'page-editprofile',
@@ -29,6 +32,8 @@ export class EditProfilePage {
               public events: Events,
               public navCtrl: NavController,
               private didService: DIDService,
+              private authService: AuthService,
+              private popupProvider: PopupProvider,
               private native: Native) {
     this.paramsSubscription = this.route.queryParams.subscribe((data) => {
       console.log("Entering EditProfile page");
@@ -82,19 +87,45 @@ export class EditProfilePage {
       });
     }
   }
-
+ 
   async next() {
     if(this.checkParms()){
       this.profile.birthday = this.birthday.split("T")[0];
 
       if (this.isEdit) { // If edition mode, go back to my profile after editing.
-        await this.editedStore.writeProfile(this.profile); // Update profile/credentials
-        //this.native.go("/home/myprofile", {create: !this.isEdit});
+        await this.checkPasswordAndWriteProfile();
+
+        // Tell others that DID needs to be refreshed (profile info has changed)
+        this.events.publish('did:didstorechanged');
+        
         this.navCtrl.pop();
       }
       else { // If creation mode, go to backup did flow.
         Config.didBeingCreated.profile = this.profile; // Save filled profile for later.
         this.native.go("/backupdid", {create: true});
+      }
+    }
+  }
+
+  private async checkPasswordAndWriteProfile(forcePasswordPrompt: boolean = false) {
+    // This write operation requires password. Make sure we have this in memory, or prompt user.
+    if (forcePasswordPrompt || this.authService.needToPromptPassword(Config.didStoreManager.getCurDidStoreId())) {
+      let previousPasswordWasWrong = forcePasswordPrompt;
+      await this.authService.promptPasswordInContext(Config.didStoreManager.getCurDidStoreId(), previousPasswordWasWrong);
+      // Password will be saved by the auth service.
+    }
+
+    try {
+      await this.editedStore.writeProfile(this.profile); // Update profile/credentials
+    }
+    catch (e) {
+      console.error(e);
+      if (e instanceof WrongPasswordException) {
+        // Wrong password provided - try again.
+        this.checkPasswordAndWriteProfile(forcePasswordPrompt = true);
+      }
+      else {
+        this.popupProvider.ionicAlert("Save profile error", "Sorry, we are unable to save your edited profile.");
       }
     }
   }

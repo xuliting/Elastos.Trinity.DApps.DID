@@ -1,13 +1,48 @@
+.container {
+    margin: 10px 30px;
 
-.view {
-    width: 100%;
-    height: px2rem(670px);
-    top: 0;
-    left: 0;
-    position: absolute;
-}
+    .input-container {
+        background: #F1F3F7;
+        border-radius: 20px;
+        padding:2px;
+        padding-left:10px;
+        margin: 0 auto;
+        margin-bottom:10px;
+        width:70vw;
+    }
 
-.confirm {
-    width: 50%;
-    margin-top:80px;
+    .failed {
+        border-width: 1px;
+        border-color: #FF6464;
+        background: #FFEBEB;
+    }
+
+    .password-failed-info {
+        text-align:center;
+        color: #FF6464;
+        font-weight:700;
+        font-size:12px;
+        margin-bottom:5px;
+    }
+
+    ion-input {
+        font-size:12px;
+        display:block;
+        padding:4px !important;
+    }
+
+    .title {
+        font-weight: 800;
+        font-size:20px;
+        text-align: center;
+        margin: 40px;
+        color: var(--ion-color-primary);
+    }
+
+    .main-button {
+        width:70vw;
+        display:block;
+        margin:0 auto;
+        margin-top:40px;
+    }
 }

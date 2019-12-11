@@ -191,7 +191,7 @@ export class DidStoreManager {
   public async deleteDidStore(didStore: DIDStore) {
     this.didService.deleteDidStore(didStore.pluginDidStore.getId());
 
-    //remove DidStoreEntrie
+    // Remove store from DidStoreEntry list
     let entries = await this.localStorage.getDidStoreEntries();
     let storeId = didStore.pluginDidStore.getId();
     for (let i = 0; i < entries.length; i++) {
@@ -202,7 +202,7 @@ export class DidStoreManager {
     }
     this.localStorage.saveDidStoreEntries(entries);
 
-    //switch DidStore or handleNull
+    // Switch current store to the first one in the DID list, or go to new identity creation screen.
     if (entries.length > 0) {
       this.showDidStore(entries[0].storeId);
     } else {

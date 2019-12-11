@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ModalController, NavParams, IonInput } from '@ionic/angular';
 
 import { Native } from '../../services/native';
 
@@ -9,17 +9,31 @@ import { Native } from '../../services/native';
   styleUrls: ['./securitycheck.component.scss'],
 })
 export class SecurityCheckComponent implements OnInit {
+  @ViewChild('pwd',{static:false}) pwd: IonInput;
+
   public password: string = "";
+  public previousPasswordWasWrong: boolean = false;
 
-  constructor(public modalCtrl: ModalController, public native: Native) { }
+  constructor(public modalCtrl: ModalController, 
+              public native: Native) { 
+  }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
+
+  ionViewDidEnter() {
+    this.pwd.setFocus();
+  }
 
   close() {
     this.modalCtrl.dismiss(null);
   }
 
-  check() {
+  submit() {
+    this.modalCtrl.dismiss({
+      password: this.password
+    });
+
     // if (!this.walltype) {
     //     this.modalCtrl.dismiss(this.transfer);
     //     return;

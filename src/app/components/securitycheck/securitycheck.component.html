@@ -1,16 +1,21 @@
+<div class="container">
+  <p class="title">
+    Security check!
+  </p>
 
-<div class="view">
-  <ion-button fill="clear" (click)="close()">
-      <ion-icon slot="icon-only" name="close"></ion-icon>
-  </ion-button>
-  <div>
-    <ion-item>
-      <ion-input slot="start" type="password" placeholder="{{ 'text-passworld-input' | translate }}"
-          [(ngModel)]="password"></ion-input>
-    </ion-item>
-
-    <div style="text-align: center">
-        <ion-button class="confirm" (click)="check()">{{ 'confirm' | translate }}</ion-button>
-    </div>
+  <div class="password-failed-info" *ngIf="previousPasswordWasWrong && password == ''">Wrong password, please try again.</div>
+ 
+  <div [ngClass]="{'input-container':true, 'failed':(previousPasswordWasWrong && password == '')}">
+    <ion-input placeholder="{{ 'text-passworld-input' | translate }}" #pwd 
+              [(ngModel)]="password" 
+              type="password" ></ion-input>
   </div>
+
+  <did-button class="main-button" (click)="submit()" 
+    [title]="'Submit' | translate" 
+    [textcolor]="'#FFFFFF'"
+    textsize="16px"
+    [bgcolor]="'var(--ion-color-primary)'" 
+    [bordercolor]="'var(--ion-color-primary)'"
+    [shadow]="true"></did-button>
 </div>

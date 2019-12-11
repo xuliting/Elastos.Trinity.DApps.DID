@@ -41,6 +41,7 @@ import { MainContentComponent } from './main-content/main-content.component';
   ],
   providers: [
   ],
-  entryComponents: [],
+  entryComponents: [
+  ],
 })
 export class ComponentsModule { }

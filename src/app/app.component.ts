@@ -11,6 +11,7 @@ import { Native } from './services/native';
 import { DidStoreManager } from './services/didstoremanager';
 import { UXService } from './services/ux.service';
 import { BrowserSimulation } from './services/browsersimulation';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'my-app',

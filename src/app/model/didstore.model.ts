@@ -3,13 +3,14 @@ import { Events } from '@ionic/angular';
 import { Profile } from './profile.model';
 import { DIDService } from '../services/did.service';
 import { NewDID } from './newdid.model';
+import { AuthService } from '../services/auth.service';
+import { WrongPasswordException } from './exceptions/wrongpasswordexception.exception';
 
 export class DIDStore {
     public pluginDidStore: DIDPlugin.DIDStore = null;
     public dids: DIDPlugin.UnloadedDID[] = [];
     private unloadedCredentials: DIDPlugin.UnloadedVerifiableCredential[] = [];
     public credentials: DIDPlugin.VerifiableCredential[] = [];
-    public password: string = null; // Password provided by the user.
 
     constructor(private didService: DIDService, private events: Events) {}
 
@@ -90,7 +91,7 @@ export class DIDStore {
         await this.didService.initPrivateIdentity(mnemonicLang, mnemonic, newDid.password, true)
 
         // Save password for later use
-        this.rememberPassword(newDid.password);
+        AuthService.instance.saveCurrentUserPassword(this.pluginDidStore.getId(), newDid.password);
     
         // Create and add a DID to the DID store in physical storage.
         let createdDid = await this.didService.createDid(newDid.password, "");
@@ -125,9 +126,17 @@ export class DIDStore {
                 })
             }
         
-            console.log("Asking DIDService to create the credential");
-            let credential = await this.didService.createCredential(this.getCurrentDid(), title, types, 15, props, this.password);
-            console.log("Created credential:",credential);
+            let credential: DIDPlugin.VerifiableCredential = null;
+            try {
+                console.log("Asking DIDService to create the credential");
+                credential = await this.didService.createCredential(this.getCurrentDid(), title, types, 15, props, AuthService.instance.getCurrentUserPassword());
+                console.log("Created credential:",credential);
+            }
+            catch (e) {
+                console.error("Create credential exception - assuming wrong password", e);
+                reject(new WrongPasswordException());
+                return;
+            }
 
             console.log("Asking DIDService to store the credential");
             await this.didService.storeCredential(this.getCurrentDid(), credential);
@@ -148,9 +157,9 @@ export class DIDStore {
         });
     }
 
-    async deleteCredential(title: String) {
-        console.log("Asking DIDService to delete the credential "+title);
-        await this.didService.deleteCredential(this.getCurrentDid(), title);
+    async deleteCredential(credentialDidUrl: String) {
+        console.log("Asking DIDService to delete the credential "+credentialDidUrl);
+        await this.didService.deleteCredential(this.getCurrentDid(), credentialDidUrl);
     }
 
     /**
@@ -198,28 +207,70 @@ export class DIDStore {
      * Overwrites profile info using a new profile. Each field info is updated
      * into its respective credential
      */
-    async writeProfile(newProfile: Profile) {
-        console.log("Writing profile fields as credentials", newProfile);
+    writeProfile(newProfile: Profile): Promise<void> {
+        return new Promise(async (resolve, reject)=>{
+            console.log("Writing profile fields as credentials", newProfile);
 
-        for(let key in newProfile) {
-            console.log("Adding credential for profile key "+key);
+            for(let key of Object.keys(newProfile)) {
+                let props = {};
+                props[key] = newProfile[key];
 
-            let props = {};
-            props[key] = newProfile[key];
+                if (!this.credentialContentHasChanged(key, newProfile[key])) {
+                    console.log("NOt updating credential "+key+" as it has not changed");
+                    break;
+                }
 
-            // Update use case: if this credential already exist, we delete it first before re-creating it.
-            await this.deleteCredential(key);
+                // Update use case: if this credential already exist, we delete it first before re-creating it.
+                if (this.credentialExists(key)) {
+                    let credentialDidUrl = this.getCurrentDid() + "#" + key;
+                    await this.deleteCredential(credentialDidUrl);
+                }
 
-            let credential = await this.addCredential(key, props, ["BasicProfileCredential"]);
-            console.log("Created credential:", credential);
-            this.credentials.push(credential);
-        }
+                try {
+                    console.log("Adding credential for profile key "+key);
+                    let credential = await this.addCredential(key, props, ["BasicProfileCredential"]);
+                    console.log("Created credential:", credential);
+                    this.credentials.push(credential);
+                }
+                catch (e) {
+                    // We may have catched a wrong password exception - stop the loop here.
+                    reject(e);
+                    return;
+                }
+            }
+
+            resolve();
+        });
     }
 
     /**
-     * Remembers store's password temporarily in memory.
+     * Checks if a given credential exists in current DID
      */
-    public rememberPassword(password: string) {
-        this.password = password;
+    credentialExists(key: string): boolean {
+        return (this.credentials.find((c)=>{
+            return c.getFragment() == key;
+        }) != null);
+    }
+
+    /**
+     * Compares the given credential properties with an existing credential properties to see if 
+     * something has changed or not. This function is used to make sure we don't try to delete/re-create 
+     * an existing creedntial on profile update, in case nothing has changed (performance) 
+     */
+    credentialContentHasChanged(key: string, newProfileValue: string) {
+        let currentCredential: DIDPlugin.VerifiableCredential = this.credentials.find((c)=>{
+            return c.getFragment() == key;
+        });
+
+        if (!currentCredential) {
+            return true; // Doesn't exist? consider this has changed.
+        }
+
+        // NOTE: FLAT comparison only for now, not deep.
+        let currentProps = currentCredential.getSubject();
+        if (currentProps[key] != newProfileValue)
+            return true;
+
+        return false;
     }
 }

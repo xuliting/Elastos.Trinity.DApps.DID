@@ -88,3 +88,13 @@ ion-toolbar {
     --padding-start:0;
     --padding-end:0;
 }
+
+.security-check-modal {
+    --height:300px;
+    align-items:flex-end;
+
+    .modal-wrapper {
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;    
+    }
+}
