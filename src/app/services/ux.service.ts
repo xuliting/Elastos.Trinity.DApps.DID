@@ -65,7 +65,10 @@ export class UXService {
             }
             else {
                 // No intent was received at boot. So we go through the regular screens.
-                Config.didStoreManager.displayDefaultScreen();
+                //Config.didStoreManager.displayDefaultScreen();
+
+                //selfUxService.native.go("/importdid"); // TMP
+                selfUxService.native.go("/noidentity"); // TMP
             }
         }, 500);
     }

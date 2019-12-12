@@ -1,24 +1,48 @@
-page-importdid {
-
+.root-container {
 }
 
-.mainicon {
-    height: 20vh;
+ion-content {
+}
+
+.title {
+    font-weight: 700;
+    font-size:20px;
+    text-align: center;
+    margin: 40px;
+    color: var(--ion-color-primary) !important;
 }
 
 .mnemonics-box {
-    padding: 20px;
+    background: white;
+    margin: 20px;
     border-radius: 20px;
-    border: solid 1px #CCC;
-    text-align: left;
 }
 
-.mnemonics-box .word {
-    margin-right: 20px;
-    background: #EEE;
-    border-radius: 8px;
-    padding:4px;
-    color:#444;
-    line-height: 40px;
-    white-space: nowrap;
+.enter-mnemonic-box {
+    .title {
+        font-weight: 600;
+        font-size:12px;
+        margin-bottom:10px;
+        color:black;
+    }
+}
+ 
+.main-button {
+    display: inline-block;
+    width:80vw;
+    margin:0 auto;
+    margin-top:20px;
+
+    .did-button {
+        margin: 0 auto;
+    }
+}
+
+ion-input {
+    border: solid 3px var(--ion-color-primary) !important;
+    border-radius:20px;
+    padding: 3px 15px !important;
+    text-align:left;
+    width:80vw;
+    margin:0 auto;
 }
