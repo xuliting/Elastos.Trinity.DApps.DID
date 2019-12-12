@@ -168,7 +168,11 @@ export class SimulatedDID implements DIDPlugin.DID {
         simulated("listCredentials", "SimulatedDID");
         onSuccess([
             new SimulatedUnloadedCredential("cred-name"),
-            new SimulatedUnloadedCredential("cred-email")
+            new SimulatedUnloadedCredential("cred-email"),
+            new SimulatedUnloadedCredential("cred-nation"),
+            new SimulatedUnloadedCredential("cred-birthDate"),
+            new SimulatedUnloadedCredential("cred-gender"),
+            new SimulatedUnloadedCredential("cred-telephone")
         ])
     }
     loadCredential(credentialId: string, onSuccess: (credential: DIDPlugin.VerifiableCredential) => void, onError?: (err: any) => void) {

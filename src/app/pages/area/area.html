@@ -6,7 +6,7 @@
       <ion-radio-group [(ngModel)]="areaItem">
         <ion-virtual-scroll [items]="areaList"  approxItemHeight="60px">
           <ion-item *virtualItem="let item" (click)="selectItem(item)">
-            <ion-label>{{ item.en }}</ion-label>
+            <ion-label>{{ item.name }}</ion-label>
             <ion-radio slot="end" value="{{ item.en }}"></ion-radio>
           </ion-item>
         </ion-virtual-scroll>

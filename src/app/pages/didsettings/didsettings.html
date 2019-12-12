@@ -5,20 +5,20 @@
     <ion-grid class="ion-no-padding">
       <active-did [profile]="activeProfile" (click)="viewActiveProfile()"></active-did>
 
-      <ion-item no-margin>
+      <ion-item class="ion-no-margin">
         <large-menu-item title="Edit DID Profile" (click)="editDID()"></large-menu-item>
       </ion-item>
-      <ion-item no-margin>
+      <ion-item class="ion-no-margin">
         <large-menu-item title="Configure Profile Visibility"></large-menu-item>
       </ion-item>
-      <ion-item no-margin>
+      <ion-item class="ion-no-margin">
         <large-menu-item title="Password management" (click)="managePassword()"></large-menu-item>
       </ion-item>
-      <ion-item no-margin lines="none">
+      <ion-item class="ion-no-margin" lines="none">
         <large-menu-item title="Export DID Portfolio" (click)="exportDID()"></large-menu-item>
       </ion-item>
 
-      <ion-item no-margin lines="none" style="margin-top:50px">
+      <ion-item class="ion-no-margin" lines="none" style="margin-top:50px">
         <large-menu-item title="Delete DID" mode="danger" (click)="deleteDID()"></large-menu-item>
       </ion-item>
     </ion-grid>

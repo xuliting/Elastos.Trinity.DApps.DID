@@ -1,9 +1,9 @@
 <div class="root-container">
   <header-bar title="Verification" [transparent]="false" [showBack]="true"></header-bar>
 
-  <ion-content text-center>    
+  <ion-content class="ion-text-center">
     <div class="mnemonics-box">
-      <ion-grid padding>
+      <ion-grid class="ion-padding">
         <ion-row *ngFor="let i of [1,3,5,7,9,11]">
           <ion-col size="6">
             <verify-mnemonic-word [index]="i" [word]="selectedList[i-1]"></verify-mnemonic-word>
@@ -15,9 +15,10 @@
       </ion-grid>
     </div>
 
-    <div class="title" margin>Please select your mnemonic words. This verification is needed to make sure that your correctly saved your mnemonics.</div>
+    <div class="title">Please select your mnemonic words.</div>
+    <div class="subtitle">This verification is needed to make sure that your correctly saved your mnemonics.</div>
 
-    <div class="enter-mnemonic-box" margin>
+    <div class="enter-mnemonic-box ion-margin">
       <span *ngFor="let _word of mnemonicList; let i = index">
         <ion-row *ngIf="i%3==0">
           <ion-col size="4">

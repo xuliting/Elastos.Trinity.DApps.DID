@@ -27,13 +27,10 @@ export class CredentialCreatePage {
     let props = {
         name: this.profile.name,
         email: this.profile.email,
-        phone: this.profile.phone,
+        telephone: this.profile.telephone,
         gender: this.profile.gender,
-        birthday: this.profile.birthday,
-        area: this.profile.area,
-        title: this.title,
-        url: this.url,
-        remark: this.remark,
+        birthDate: this.profile.birthDate,
+        nation: this.profile.nation
     }
 
     await Config.didStoreManager.getActiveDidStore().addCredential(this.title, props);

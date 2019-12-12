@@ -18,13 +18,11 @@ export class CredentialAccessRequestPage {
   denyReason = '';
   public profile: Profile = {
     name:"",
-    birthday:"",
+    birthDate:"",  // RFC 3339
     gender:"",
-    area:"",
+    nation:"", // ISO ALPHA 3
     email:"",
-    IM:"",
-    phone:"",
-    ELAAddress:"",
+    telephone:""
   };
 
   constructor(private zone: NgZone,
@@ -59,8 +57,8 @@ export class CredentialAccessRequestPage {
       case 'name':
         value = this.profile.name;
       break;
-      case 'phone':
-        value = this.profile.phone;
+      case 'telephone':
+        value = this.profile.telephone;
       break;
     }
     if (Util.isEmptyObject(value)) {

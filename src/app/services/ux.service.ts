@@ -147,7 +147,6 @@ export class UXService {
                     this.authService.chooseIdentity({
                         redirectPath: "/credaccessrequest"
                     });
-                    //selfUxService.native.go("/credaccessrequest");
                 }
                 break;
             case "registerapplicationprofile":
@@ -158,7 +157,6 @@ export class UXService {
                     this.authService.chooseIdentity({
                         redirectPath: "/regappprofilerequest"
                     });
-                    //selfUxService.native.go("/regappprofilerequest");
                 }
                 else {
                     console.error("Missing or wrong intent parameters for "+intent.action);

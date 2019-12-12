@@ -7,7 +7,8 @@ import { UXService } from '../../services/ux.service';
 import { Config } from '../../services/config';
 import { Profile } from '../../model/profile.model';
 import { Native } from '../../services/native';
-
+import { area } from '../../../assets/area/area';
+import { CountryCodeInfo } from 'src/app/model/countrycodeinfo';
 
 @Component({
   selector: 'page-myprofile',
@@ -75,6 +76,25 @@ export class MyProfilePage {
   copyDIDToClipboard() {
     this.native.copyClipboard(this.didString);
     this.native.toast_trans('copy-ok');
+  }
+
+  getDisplayableNation(countryAlpha3) {
+    let countryInfo = area.find((a : CountryCodeInfo)=>{
+      return countryAlpha3 == a.alpha3;
+    })
+
+    if (!countryInfo)
+      return null;
+
+    return countryInfo.name;
+  }
+
+  getDisplayableBirthDate(birthDate) {
+    if (!birthDate)
+      return null;
+      
+    let d = new Date(birthDate);
+    return d.toLocaleDateString();
   }
 
   next() {

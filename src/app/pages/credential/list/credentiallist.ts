@@ -50,6 +50,14 @@ export class CredentialListPage {
     this.didString = Config.didStoreManager.getActiveDidStore().getCurrentDid();
     this.credentials = Config.didStoreManager.getActiveDidStore().credentials;
     this.hasCredential = this.credentials.length > 0 ? true : false;
+
+    // Sort credentials by title
+    this.credentials.sort((c1, c2)=>{
+      if (c1.getFragment() > c2.getFragment())
+        return 1;
+      else 
+        return -1;
+    });
   }
 
   createCredential() {
@@ -110,12 +118,20 @@ export class CredentialListPage {
     }
   }
 
+  getDisplayableIssuer(credential: DIDPlugin.VerifiableCredential) {
+    let issuer = credential.getIssuer();
+    if (issuer == Config.didStoreManager.getActiveDidStore().getCurrentDid())
+      return "Myself";
+    else
+      return issuer;
+  }
+
   displayableProperties(credential: DIDPlugin.VerifiableCredential) {
     let subject = credential.getSubject();
-    return Object.keys(subject).map((prop)=>{
+    return Object.keys(subject).filter(key=>key!="id").sort().map((prop)=>{
       return {
         name: prop,
-        value: subject[prop]
+        value: (subject[prop] != "" ? subject[prop] : "Not set")
       }
     });
   }

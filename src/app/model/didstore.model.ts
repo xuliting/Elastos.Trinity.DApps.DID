@@ -37,7 +37,7 @@ export class DIDStore {
         }
              
         this.dids = await this.didService.listDids();
-        console.log("this.dids", this.dids)
+        console.log("DIDs:", this.dids)
         if (this.dids.length == 0) {
             // Something went wrong earlier, no DID in the DID store...
             console.warn("No DID in the DID Store, that's a bit strange but we want to continue here.")
@@ -160,6 +160,10 @@ export class DIDStore {
     async deleteCredential(credentialDidUrl: String) {
         console.log("Asking DIDService to delete the credential "+credentialDidUrl);
         await this.didService.deleteCredential(this.getCurrentDid(), credentialDidUrl);
+ 
+        // Delete from our local model as well
+        let deletionIndex = this.credentials.findIndex((c)=>c.getId() == credentialDidUrl);
+        this.credentials.splice(deletionIndex, 1);
     }
 
     /**
@@ -171,32 +175,24 @@ export class DIDStore {
 
         // We normally have one credential for each profile field
         this.credentials.map((cred)=>{
-            console.log(cred);
             let props = cred.getSubject();
             if (!props) {
                 console.warn("Found an empty credential subject while trying to build profile, this should not happen...");
                 return;
             }
 
-            console.log("PROP",props)
-
-            // TODO: Match with standard field names in DID spec.
             if (props.name)
                 profile.name = props.name;
-            if (props.birthday)
-                profile.birthday = props.birthday;
-            if (props.area)
-                profile.area = props.area;
+            if (props.birthDate)
+                profile.birthDate = props.birthDate;
+            if (props.nation)
+                profile.nation = props.nation;
             if (props.email)
                 profile.email = props.email;
-            if (props.IM)
-                profile.IM = props.IM;
             if (props.gender)
                 profile.gender = props.gender;
-            if (props.phone)
-                profile.phone = props.phone;
-            if (props.ELAAddress)
-                profile.ELAAddress = props.ELAAddress;
+            if (props.telephone)
+                profile.telephone = props.telephone;
         })
 
         console.log("Basic profile:", profile);
@@ -216,8 +212,8 @@ export class DIDStore {
                 props[key] = newProfile[key];
 
                 if (!this.credentialContentHasChanged(key, newProfile[key])) {
-                    console.log("NOt updating credential "+key+" as it has not changed");
-                    break;
+                    console.log("Not updating credential "+key+" as it has not changed");
+                    continue; // SKip this credential, go to next one.
                 }
 
                 // Update use case: if this credential already exist, we delete it first before re-creating it.
@@ -230,7 +226,6 @@ export class DIDStore {
                     console.log("Adding credential for profile key "+key);
                     let credential = await this.addCredential(key, props, ["BasicProfileCredential"]);
                     console.log("Created credential:", credential);
-                    this.credentials.push(credential);
                 }
                 catch (e) {
                     // We may have catched a wrong password exception - stop the loop here.

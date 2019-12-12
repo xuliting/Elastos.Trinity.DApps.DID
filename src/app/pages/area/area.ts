@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Events } from '@ionic/angular';
 
 import { Native } from '../../services/native';
-import { area } from '../../../assets/area/area.js';
+import { area } from '../../../assets/area/area';
 
 @Component({
   selector: 'page-area',

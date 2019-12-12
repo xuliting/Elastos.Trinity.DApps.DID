@@ -12,6 +12,8 @@ import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { WrongPasswordException } from 'src/app/model/exceptions/wrongpasswordexception.exception';
 import { PopupProvider } from 'src/app/services/popup';
+import { CountryCodeInfo } from 'src/app/model/countrycodeinfo';
+import { area } from '../../../assets/area/area';
 
 @Component({
   selector: 'page-editprofile',
@@ -19,9 +21,8 @@ import { PopupProvider } from 'src/app/services/popup';
   styleUrls: ['editprofile.scss']
 })
 export class EditProfilePage {
-  public birthday: String = "";
+  public birthDate: string = "";
   public isEdit: boolean = false;
-  public hasArea:boolean = false;
   private paramsSubscription: Subscription;
 
   public editedStore: DIDStore;
@@ -44,7 +45,7 @@ export class EditProfilePage {
         this.editedStore = Config.didStoreManager.getActiveDidStore();
         // Edition - We clone the received profile in case user wants to cancel editing.
         this.profile = Profile.fromProfile(Config.didStoreManager.getActiveDidStore().getBasicProfile());
-        this.hasArea = !Util.isNull(this.profile.area);
+        this.birthDate = this.profile.birthDate;
         this.isEdit = true;
       }
       else {
@@ -62,13 +63,24 @@ export class EditProfilePage {
   }
 
   selectArea() {
-    this.events.subscribe('selectarea', (params) => {
+    this.events.subscribe('selectarea', (params: CountryCodeInfo) => {
       this.zone.run(() => {
-        this.profile.area = params.en;//TODO
+        this.profile.nation = params.alpha3;
       });
       this.events.unsubscribe('selectarea');
     });
     this.native.go("/area");
+  }
+
+  getDisplayableNation(countryAlpha3) {
+    let countryInfo = area.find((a : CountryCodeInfo)=>{
+      return countryAlpha3 == a.alpha3;
+    })
+
+    if (!countryInfo)
+      return null;
+
+    return countryInfo.name;
   }
 
   /**
@@ -90,7 +102,7 @@ export class EditProfilePage {
  
   async next() {
     if(this.checkParms()){
-      this.profile.birthday = this.birthday.split("T")[0];
+      this.profile.birthDate = this.birthDate; //.split("T")[0];
 
       if (this.isEdit) { // If edition mode, go back to my profile after editing.
         await this.checkPasswordAndWriteProfile();

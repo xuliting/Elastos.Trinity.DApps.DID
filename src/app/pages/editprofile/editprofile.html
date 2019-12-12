@@ -14,7 +14,7 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col align-self-center>
+        <ion-col class="ion-align-self-center">
           <did-button class="secondary-button" (click)="next()" 
             [title]="'Save profile' | translate" 
             [bgcolor]="'rgba(0,0,0,0)'" 
@@ -33,17 +33,17 @@
         <div class="profile-items">
           <ion-list>
             <ion-item>
-              <ion-label>Name</ion-label> <ion-input #nameInput placeholder="Enter here" [(ngModel)]="profile.name" text-right (keyup)="maybeMoveFocus(emailInput, $event)"></ion-input>
+              <ion-label>Name</ion-label> <ion-input #nameInput placeholder="Enter here" [(ngModel)]="profile.name" class="ion-text-right" (keyup)="maybeMoveFocus(emailInput, $event)"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Email</ion-label> <ion-input #emailInput placeholder="Enter here" [(ngModel)]="profile.email" type="email" pattern="email" text-right (keyup)="maybeMoveFocus(telInput, $event)"></ion-input>
+              <ion-label>Email</ion-label> <ion-input #emailInput placeholder="Enter here" [(ngModel)]="profile.email" type="email" pattern="email" class="ion-text-right" (keyup)="maybeMoveFocus(telInput, $event)"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Phone Number</ion-label> <ion-input #telInput placeholder="Select One" [(ngModel)]="profile.phone" type="tel" text-right (keyup)="maybeClearFocus(telInput, $event)"></ion-input>
+              <ion-label>Phone Number</ion-label> <ion-input #telInput placeholder="Select One" [(ngModel)]="profile.telephone" type="tel" class="ion-text-right" (keyup)="maybeClearFocus(telInput, $event)"></ion-input>
             </ion-item>
             <ion-item (click)="selectArea()">
-              <ion-label *ngIf='!hasArea'>Country/Region</ion-label>
-              <ion-label text-right class="input-label">{{ profile.area || 'Enter here' }}</ion-label>
+              <ion-label>Country</ion-label>
+              <ion-label class="input-label ion-text-right">{{ getDisplayableNation(profile.nation) || 'Enter here' }}</ion-label>
             </ion-item>
             <ion-item>
               <ion-label>Gender</ion-label>
@@ -54,7 +54,7 @@
             </ion-item>
             <ion-item>
               <ion-label>Date of Birth</ion-label>
-              <ion-datetime picker-format="YYYY/M/D" [(ngModel)]="birthday" placeholder="Select Date"></ion-datetime>
+              <ion-datetime picker-format="YYYY/M/D" [(ngModel)]="birthDate" placeholder="Select Date"></ion-datetime>
               </ion-item>
           </ion-list>
         </div>

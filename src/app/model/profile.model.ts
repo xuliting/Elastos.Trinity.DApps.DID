@@ -1,15 +1,14 @@
+/**
+ * Fields in this class match the Elastos DID specification naming convention for credentials.
+ */
 export class Profile {
   constructor(
-    public name: string = "",
-    public birthday: string = "",
-    public area: string = "",
-
+    public name: string = "", // Full name
+    public birthDate: string = "", // RFC 3339
+    public nation: string = "", // ISO 3166 ALPHA 3 (ex: CHN, FRA)
     public email: string = "",
     public gender: string = "",
-    public IM: string = "",
-    public phone: string = "",
-
-    public ELAAddress: string = "",
+    public telephone: string = ""
   ) { }
 
   /**
