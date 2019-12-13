@@ -59,6 +59,7 @@ export class UXService {
         // DIRTY - but no choice for now because of the asynchronous design of the intent API.
         // Wait for a while and check later if an intent ahs been received asynchronously. Then we can
         // decide where to go.
+        // TODO: Replace this with the new API: AppManager.hadPendingIntent()
         setTimeout(()=>{
             if (this.appIsLaunchingFromIntent) {
                 // Do nothing, the intent listener will show the appropriate screen.

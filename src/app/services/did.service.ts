@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { Platform, ToastController } from '@ionic/angular';
 
 import { SimulatedDID, SimulatedDIDStore, BrowserSimulation, SimulatedCredential } from '../services/browsersimulation';
+import { resolve } from 'path';
 
 declare let didManager: DIDPlugin.DIDManager;
 //declare let didManager: any;
@@ -176,29 +177,6 @@ export class DIDService {
         });
     }
 
-    loadDid(didString): Promise<any> {
-        console.log("loadDid:" + didString);
-        this.curDidString = didString;
-
-        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
-            return new Promise((resolve, reject)=>{
-               let ret = { did: "did:elastos:azeeza786zea67zaek221fxi9"};
-               resolve(ret);
-            });
-        }
-
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.loadDidDocument(
-                didString,
-                (ret) => {
-                    this.selfDidDocument = ret;
-                    resolve(ret)
-                },
-                (err) => {reject(err)},
-            );
-        });
-    }
-
     publishDid(didDocument: DIDPlugin.DIDDocument, storepass: string): Promise<any> {
         return new Promise((resolve, reject)=>{
             didDocument.publish(
@@ -217,13 +195,16 @@ export class DIDService {
         return new Promise((resolve, reject)=>{
             if (!BrowserSimulation.runningInBrowser()) {
                 this.selfDidStore.loadDidDocument(didString, (didDocument: DIDPlugin.DIDDocument)=>{
+                    //console.log(didString, didDocument);
                     didDocument.getSubject((did: DIDPlugin.DID)=>{
                         resolve(did);
                     }, (err)=>{
-                        reject(err);
+                        console.error(err);
+                        resolve(null);
                     });
                 }, (err)=>{
-                    reject(err);
+                    console.error(err);
+                    resolve(null);
                 });
             }
             else {
@@ -262,10 +243,15 @@ export class DIDService {
     createCredential(didString: DIDPlugin.DIDString, credentialId, type, expirationDate, properties, passphrase): Promise<DIDPlugin.VerifiableCredential> {
         return new Promise(async (resolve, reject)=>{
             let did = await this._resolveDid(didString);
-            did.issueCredential(
-                didString, credentialId, type, expirationDate, properties, passphrase,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
-            );
+            if (!did) {
+                reject("Unable to resolve DID");
+            }
+            else {
+                did.issueCredential(
+                    didString, credentialId, type, expirationDate, properties, passphrase,
+                    (ret) => {resolve(ret)}, (err) => {reject(err)},
+                );
+            }
         });
     }
 
@@ -279,10 +265,15 @@ export class DIDService {
 
         return new Promise(async (resolve, reject)=>{
             let did = await this._resolveDid(didString);
-            did.deleteCredential(
-                didUrlString,
-                () => {resolve()}, (err) => {reject(err)},
-            );
+            if (!did) {
+                reject("Unable to resolve DID");
+            }
+            else {
+                did.deleteCredential(
+                    didUrlString,
+                    () => {resolve()}, (err) => {reject(err)},
+                );
+            }
         });
     }
 
@@ -298,10 +289,14 @@ export class DIDService {
 
         return new Promise(async (resolve, reject)=>{
             let did = await this._resolveDid(didString);
-            console.log(did);
-            did.listCredentials(
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
-            );
+            if (!did) {
+                reject("Unable to resolve DID");
+            }
+            else {
+                did.listCredentials(
+                    (ret) => {resolve(ret)}, (err) => {reject(err)},
+                );
+            }
         });
     }
 
@@ -315,10 +310,15 @@ export class DIDService {
 
         return new Promise(async (resolve, reject)=>{
             let did = await this._resolveDid(didString);
-            did.loadCredential(
-                didUrlString,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
-            );
+            if (!did) {
+                reject("Unable to resolve DID");
+            }
+            else {
+                did.loadCredential(
+                    didUrlString,
+                    (ret) => {resolve(ret)}, (err) => {reject(err)},
+                );
+            }
         });
     }
 
@@ -326,14 +326,19 @@ export class DIDService {
         console.log("DIDService - storeCredential", didString, credential);
         return new Promise(async (resolve, reject)=>{
             let did = await this._resolveDid(didString);
-            console.log("DIDService - Calling real storeCredential");
-            did.storeCredential(
-                credential,
-                () => {
-                    console.log("DIDService - storeCredential responded");
-                    resolve()
-                }, (err) => {reject(err)},
-            );
+            if (!did) {
+                reject("Unable to resolve DID");
+            }
+            else {
+                console.log("DIDService - Calling real storeCredential");
+                did.storeCredential(
+                    credential,
+                    () => {
+                        console.log("DIDService - storeCredential responded");
+                        resolve()
+                    }, (err) => {reject(err)},
+                );
+            }
         });
     }
 
@@ -347,10 +352,11 @@ export class DIDService {
     }
 
     //Did
-    addCredential(credentialObjId): Promise<any> {
+    addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<any> {
         return new Promise((resolve, reject)=>{
             this.selfDidDocument.addCredential(
-                credentialObjId,
+                credential,
+                storePass,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
         });
@@ -366,5 +372,21 @@ export class DIDService {
         }
 
         return credential.toString();
+    }
+
+    createVerifiablePresentationFromCredentials(didString: DIDPlugin.DIDString, credentials: DIDPlugin.VerifiableCredential[], storePass: string): Promise<DIDPlugin.VerifiablePresentation> {
+        return new Promise(async (resolve, reject)=>{
+            let did = await this._resolveDid(didString);
+            if (!did) {
+                reject("Unable to resolve DID");
+            }
+            else {
+                did.createVerifiablePresentation(credentials, "no-realm", "no-nonce", storePass, (presentation: DIDPlugin.VerifiablePresentation)=>{
+                    resolve(presentation);
+                }, (err)=>{
+                    reject(err);
+                });
+            }
+        });
     }
 }

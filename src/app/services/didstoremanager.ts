@@ -11,6 +11,9 @@ import { DIDStore } from '../model/didstore.model';
 import { Native } from "./native";
 import { Util } from "./util";
 import { BrowserSimulation } from './browsersimulation';
+import { PopupProvider } from './popup';
+
+declare let didManager: DIDPlugin.DIDManager;
 
 export class DidStoreManager {
   public subWallet = {};
@@ -26,6 +29,7 @@ export class DidStoreManager {
       public platform: Platform,
       public localStorage: LocalStorage,
       public didService: DIDService,
+      private popupProvider: PopupProvider,
       public native: Native) {
     console.log("DidStoreManager created");
   }
@@ -79,6 +83,7 @@ export class DidStoreManager {
         let didStore = new DIDStore(this.didService, this.event);
         let couldFullyLoadDidStore = await didStore.loadFromDidStoreId(id);
         if (!couldFullyLoadDidStore) {
+          this.popupProvider.ionicAlert("Load DID error", "Sorry, we were unable to load your DID...");
           resolve(false);
           return;
         }

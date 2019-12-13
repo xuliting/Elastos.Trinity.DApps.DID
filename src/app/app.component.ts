@@ -12,6 +12,7 @@ import { DidStoreManager } from './services/didstoremanager';
 import { UXService } from './services/ux.service';
 import { BrowserSimulation } from './services/browsersimulation';
 import { AuthService } from './services/auth.service';
+import { PopupProvider } from './services/popup';
 
 @Component({
   selector: 'my-app',
@@ -28,6 +29,7 @@ export class MyApp {
     private didService: DIDService,
     private localStorage: LocalStorage,
     private native: Native,
+    private popupProvider: PopupProvider,
     private uxService: UXService
   ) {
     this.initializeApp();
@@ -47,7 +49,7 @@ export class MyApp {
       this.splashScreen.hide();
 
       // this.didService.init();
-      Config.didStoreManager = new DidStoreManager(this.event, this.zone, this.platform, this.localStorage, this.didService, this.native);
+      Config.didStoreManager = new DidStoreManager(this.event, this.zone, this.platform, this.localStorage, this.didService, this.popupProvider, this.native);
 
       // Call this after the DID store manager is initialized
       this.uxService.init();

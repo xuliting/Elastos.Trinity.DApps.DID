@@ -94,6 +94,33 @@ export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
     }
 }
 
+export class SimulatedVerifiablePresentation implements DIDPlugin.VerifiablePresentation {
+    credentials: DIDPlugin.VerifiableCredential[] = [];
+
+    constructor() {
+        this.credentials.push(SimulatedCredential.makeForCredentialId("cred-name"));
+        this.credentials.push(SimulatedCredential.makeForCredentialId("cred-email"));
+        this.credentials.push(SimulatedCredential.makeForCredentialId("cred-gender"));
+    }
+
+    getCredentials(): DIDPlugin.VerifiableCredential[] {
+        simulated("getCredentials", "SimulatedVerifiablePresentation");
+        return this.credentials;
+    }
+    toJson(onSuccess: (presentation: DIDPlugin.VerifiablePresentation) => void, onError?: (err: any) => void) {
+        simulated("toJson", "SimulatedVerifiablePresentation");
+        onSuccess(this);
+    }
+    isValid(onSuccess: (isValid: boolean) => void, onError?: (err: any) => void) {
+        simulated("isValid", "SimulatedVerifiablePresentation");
+        onSuccess(true);
+    }
+    isGenuine(onSuccess: (isValid: boolean) => void, onError?: (err: any) => void) {
+        simulated("isGenuine", "SimulatedVerifiablePresentation");
+        onSuccess(true);
+    }
+}
+
 export class SimulatedDIDStore implements DIDPlugin.DIDStore {
     getId(): string {
         simulated("getId", "SimulatedDIDStore");
@@ -182,6 +209,10 @@ export class SimulatedDID implements DIDPlugin.DID {
     storeCredential(credential: DIDPlugin.VerifiableCredential, onSuccess?: () => void, onError?: (err: any) => void) {
         simulated("storeCredential", "SimulatedDID");
         onSuccess();
+    }
+    createVerifiablePresentation(credentials: DIDPlugin.VerifiableCredential[], realm: string, nonce: string, storepass: string, onSuccess: (presentation: DIDPlugin.VerifiablePresentation) => void, onError?: (err: any) => void) {
+        simulated("createVerifiablePresentation", "SimulatedDID");
+        onSuccess(new SimulatedVerifiablePresentation());
     }
 }
 

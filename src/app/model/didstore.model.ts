@@ -29,21 +29,27 @@ export class DIDStore {
     async loadFromDidStoreId(didStoreId: string) : Promise<Boolean> {
         console.log("loadFromDidStoreId "+didStoreId);
             
-        this.pluginDidStore = await this.didService.initDidStore(didStoreId);
-        let hasPrivId = await this.didService.hasPrivateIdentity();
-        if (!hasPrivId) {
-            console.error("No private identity found...")
-            return false; // Unable to load store data correctly
-        }
-             
-        this.dids = await this.didService.listDids();
-        console.log("DIDs:", this.dids)
-        if (this.dids.length == 0) {
-            // Something went wrong earlier, no DID in the DID store...
-            console.warn("No DID in the DID Store, that's a bit strange but we want to continue here.")
-        } 
+        try {
+            this.pluginDidStore = await this.didService.initDidStore(didStoreId);
+            let hasPrivId = await this.didService.hasPrivateIdentity();
+            if (!hasPrivId) {
+                console.error("No private identity found...")
+                return false; // Unable to load store data correctly
+            }
+                
+            this.dids = await this.didService.listDids();
+            console.log("DIDs:", this.dids)
+            if (this.dids.length == 0) {
+                // Something went wrong earlier, no DID in the DID store...
+                console.warn("No DID in the DID Store, that's a bit strange but we want to continue here.")
+            } 
        
-        await this.loadAllCredentials();
+            await this.loadAllCredentials();
+        }
+        catch (e) {
+            console.error("Fatal error while loading from DID Store id.", e);
+            return false;
+        }
            
         return true;
     }
@@ -74,6 +80,7 @@ export class DIDStore {
 
     async loadCredential(curDidId: DIDPlugin.DIDString, entry: DIDPlugin.UnloadedVerifiableCredential) {
         let loadedCredential = await this.didService.loadCredential(curDidId, entry.credentialId);
+        console.log("Credential loaded:", loadedCredential);
         this.credentials.push(loadedCredential);
     }
 
@@ -157,13 +164,15 @@ export class DIDStore {
         });
     }
 
-    async deleteCredential(credentialDidUrl: String) {
+    async deleteCredential(credentialDidUrl: String): Promise<boolean> {
         console.log("Asking DIDService to delete the credential "+credentialDidUrl);
         await this.didService.deleteCredential(this.getCurrentDid(), credentialDidUrl);
  
         // Delete from our local model as well
         let deletionIndex = this.credentials.findIndex((c)=>c.getId() == credentialDidUrl);
         this.credentials.splice(deletionIndex, 1);
+
+        return true;
     }
 
     /**
@@ -216,13 +225,13 @@ export class DIDStore {
                     continue; // SKip this credential, go to next one.
                 }
 
-                // Update use case: if this credential already exist, we delete it first before re-creating it.
-                if (this.credentialExists(key)) {
-                    let credentialDidUrl = this.getCurrentDid() + "#" + key;
-                    await this.deleteCredential(credentialDidUrl);
-                }
-
                 try {
+                    // Update use case: if this credential already exist, we delete it first before re-creating it.
+                    if (this.credentialExists(key)) {
+                        let credentialDidUrl = this.getCurrentDid() + "#" + key;
+                        await this.deleteCredential(credentialDidUrl);
+                    }
+
                     console.log("Adding credential for profile key "+key);
                     let credential = await this.addCredential(key, props, ["BasicProfileCredential"]);
                     console.log("Created credential:", credential);
