@@ -19,7 +19,7 @@ export class BrowserSimulationConfig {
     let log = "SIMULATED - "+funcName;
     if (className)
         log += " ("+className+")";
-    
+
     console.warn(log);
 }
 
@@ -28,8 +28,8 @@ function randomString() {
 }
 
 export class SimulatedUnloadedCredential implements DIDPlugin.UnloadedVerifiableCredential {
-    credentialId: string = "unloadedcredid";    
-    hint: string = "fakehint";
+    credentialId: string = "unloadedcredid";
+    alias: string = "fakealias";
 
     constructor(credentialId: string) {
         this.credentialId = credentialId;
@@ -125,21 +125,21 @@ export class SimulatedDIDStore implements DIDPlugin.DIDStore {
     getId(): string {
         simulated("getId", "SimulatedDIDStore");
         return randomString();
-    }   
+    }
 
     initPrivateIdentity(language: DIDPlugin.MnemonicLanguage, mnemonic: string, passphrase: string, storepass: string, force: Boolean, onSuccess: () => void, onError?: (err: any) => void) {
         simulated("initPrivateIdentity", "SimulatedDIDStore");
     }
 
-    hasPrivateIdentity(onSuccess: (hasPrivateIdentity: boolean) => void, onError?: (err: any) => void) {
-        simulated("hasPrivateIdentity", "SimulatedDIDStore");
+    containsPrivateIdentity(onSuccess: (containsPrivateIdentity: boolean) => void, onError?: (err: any) => void) {
+        simulated("containsPrivateIdentity", "SimulatedDIDStore");
     }
 
     deleteDid(didString: string, onSuccess: () => void, onError?: (err: any) => void) {
         simulated("deleteDid", "SimulatedDIDStore");
     }
 
-    newDid(passphrase: string, hint: string, onSuccess: (didString: string, didDocument: DIDPlugin.DIDDocument) => void, onError?: (err: any) => void) {
+    newDid(passphrase: string, alias: string, onSuccess: (didString: string, didDocument: DIDPlugin.DIDDocument) => void, onError?: (err: any) => void) {
         simulated("newDid", "SimulatedDIDStore");
     }
 
@@ -155,7 +155,7 @@ export class SimulatedDIDStore implements DIDPlugin.DIDStore {
         simulated("resolveDidDocument", "SimulatedDIDStore");
     }
 
-    storeDidDocument(didDocument: DIDPlugin.DIDDocument, hint: string, onSuccess: () => void, onError?: (err: any) => void) {
+    storeDidDocument(didDocument: DIDPlugin.DIDDocument, alias: string, onSuccess: () => void, onError?: (err: any) => void) {
         simulated("storeDidDocument", "SimulatedDIDStore");
     }
 
@@ -218,7 +218,7 @@ export class SimulatedDID implements DIDPlugin.DID {
 
 export class BrowserSimulation {
     private static _runningInBrowser: boolean = false;
-    
+
     public static setRunningInBrowser() {
         this._runningInBrowser = true;
     }

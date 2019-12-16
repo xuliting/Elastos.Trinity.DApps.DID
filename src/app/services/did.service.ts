@@ -4,6 +4,7 @@ import { Platform, ToastController } from '@ionic/angular';
 import { SimulatedDID, SimulatedDIDStore, BrowserSimulation, SimulatedCredential } from '../services/browsersimulation';
 import { resolve } from 'path';
 
+declare let appManager: AppManagerPlugin.AppManager;
 declare let didManager: DIDPlugin.DIDManager;
 //declare let didManager: any;
 @Injectable({
@@ -19,6 +20,16 @@ export class DIDService {
         public zone: NgZone,
         public toastCtrl: ToastController) {
             console.log("DIDService created");
+    }
+
+    createIdTransactionCallback(payload: string, memo: string) {
+        let params = {
+            didrequest: payload,
+        }
+        appManager.sendIntent('didtransaction', params, (ret)=> {
+            //TODO
+            console.log('sendIntent didtransaction:', ret);
+        });
     }
 
     getCurrentDidString() {
@@ -48,6 +59,7 @@ export class DIDService {
         return new Promise((resolve, reject)=>{
             didManager.initDidStore(
                 didStoreId,
+                this.createIdTransactionCallback,
                 (ret) => {
                     console.log("Initialized DID Store is ",ret);
                     this.selfDidStore = ret;
@@ -120,7 +132,7 @@ export class DIDService {
         }
 
         return new Promise((resolve, reject)=>{
-            this.selfDidStore.hasPrivateIdentity(
+            this.selfDidStore.containsPrivateIdentity(
                 (hasPrivId) => {resolve(hasPrivId)}, (err) => {reject(err)},
             );
         });
@@ -163,7 +175,7 @@ export class DIDService {
         if (this.platform.platforms().indexOf("cordova") < 0) {//for test
             return new Promise((resolve, reject)=>{
                 let ret = [
-                   {did:"elastos:azeeza786zea67zaek221fxi9", hint:""}
+                   {did:"elastos:azeeza786zea67zaek221fxi9", alias:""}
                 ];
                resolve(ret);
             });

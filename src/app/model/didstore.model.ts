@@ -28,7 +28,7 @@ export class DIDStore {
      */
     async loadFromDidStoreId(didStoreId: string) : Promise<Boolean> {
         console.log("loadFromDidStoreId "+didStoreId);
-            
+
         try {
             this.pluginDidStore = await this.didService.initDidStore(didStoreId);
             let hasPrivId = await this.didService.hasPrivateIdentity();
@@ -36,21 +36,21 @@ export class DIDStore {
                 console.error("No private identity found...")
                 return false; // Unable to load store data correctly
             }
-                
+
             this.dids = await this.didService.listDids();
             console.log("DIDs:", this.dids)
             if (this.dids.length == 0) {
                 // Something went wrong earlier, no DID in the DID store...
                 console.warn("No DID in the DID Store, that's a bit strange but we want to continue here.")
-            } 
-       
+            }
+
             await this.loadAllCredentials();
         }
         catch (e) {
             console.error("Fatal error while loading from DID Store id.", e);
             return false;
         }
-           
+
         return true;
     }
 
@@ -85,7 +85,7 @@ export class DIDStore {
     }
 
     /**
-     * Converts the DID being created into a real DID in the DID store, with some credentials 
+     * Converts the DID being created into a real DID in the DID store, with some credentials
      * for user's default profile.
      */
     public async addNewDidWithProfile(newDid: NewDID, mnemonicLang: DIDPlugin.MnemonicLanguage, mnemonic: string) {
@@ -99,15 +99,15 @@ export class DIDStore {
 
         // Save password for later use
         AuthService.instance.saveCurrentUserPassword(this.pluginDidStore.getId(), newDid.password);
-    
+
         // Create and add a DID to the DID store in physical storage.
         let createdDid = await this.didService.createDid(newDid.password, "");
         console.log("Created DID:", createdDid);
-        
+
         // Add DID to our memory model.
         this.dids.push({
             did: createdDid.didString,
-            hint:""
+            alias:""
         });
 
         // Now create credentials for each profile entry
@@ -119,12 +119,12 @@ export class DIDStore {
     async addCredential(title: String, props: any, userTypes?: String[]): Promise<DIDPlugin.VerifiableCredential> {
         return new Promise(async (resolve, reject)=>{
             console.log("Adding credential", title, props, userTypes);
-        
+
             let types: String[] = [
                 "SelfProclaimedCredential"
             ];
             // types[0] = "BasicProfileCredential";
-        
+
             // If caller provides custom types, we add them to the list
             // TODO: This is way too simple for now. We need to deal with types schemas in the future.
             if (userTypes) {
@@ -132,7 +132,7 @@ export class DIDStore {
                     types.push(type);
                 })
             }
-        
+
             let credential: DIDPlugin.VerifiableCredential = null;
             try {
                 console.log("Asking DIDService to create the credential");
@@ -147,19 +147,19 @@ export class DIDStore {
 
             console.log("Asking DIDService to store the credential");
             await this.didService.storeCredential(this.getCurrentDid(), credential);
-        
+
             // NO - for now we don't want to "publish" (= put in the DID document) - we just want to store it
             //console.log("Asking DIDService to add the credential");
             //await this.didService.addCredential(credential.getId());
-        
+
             console.log("Credential successfully added");
-        
+
             // Add the new credential to the memory model
             this.credentials.push(credential);
-        
+
             // Notify listeners that a credential has been added
             this.events.publish('did:credentialadded');
-        
+
             resolve(credential);
         });
     }
@@ -167,7 +167,7 @@ export class DIDStore {
     async deleteCredential(credentialDidUrl: String): Promise<boolean> {
         console.log("Asking DIDService to delete the credential "+credentialDidUrl);
         await this.didService.deleteCredential(this.getCurrentDid(), credentialDidUrl);
- 
+
         // Delete from our local model as well
         let deletionIndex = this.credentials.findIndex((c)=>c.getId() == credentialDidUrl);
         this.credentials.splice(deletionIndex, 1);
@@ -257,9 +257,9 @@ export class DIDStore {
     }
 
     /**
-     * Compares the given credential properties with an existing credential properties to see if 
-     * something has changed or not. This function is used to make sure we don't try to delete/re-create 
-     * an existing creedntial on profile update, in case nothing has changed (performance) 
+     * Compares the given credential properties with an existing credential properties to see if
+     * something has changed or not. This function is used to make sure we don't try to delete/re-create
+     * an existing creedntial on profile update, in case nothing has changed (performance)
      */
     credentialContentHasChanged(key: string, newProfileValue: string) {
         let currentCredential: DIDPlugin.VerifiableCredential = this.credentials.find((c)=>{
