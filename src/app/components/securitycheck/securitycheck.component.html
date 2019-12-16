@@ -6,13 +6,13 @@
   <div class="password-failed-info" *ngIf="previousPasswordWasWrong && password == ''">Wrong password, please try again.</div>
  
   <div [ngClass]="{'input-container':true, 'failed':(previousPasswordWasWrong && password == '')}">
-    <ion-input placeholder="{{ 'text-passworld-input' | translate }}" #pwd 
+    <ion-input placeholder="{{ 'text-password-input' | translate }}" #pwd 
               [(ngModel)]="password" 
               type="password" ></ion-input>
   </div>
 
   <did-button class="main-button" (click)="submit()" 
-    [title]="'Submit' | translate" 
+    [title]="'submit' | translate" 
     [textcolor]="'#FFFFFF'"
     textsize="16px"
     [bgcolor]="'var(--ion-color-primary)'" 

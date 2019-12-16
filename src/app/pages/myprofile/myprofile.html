@@ -1,13 +1,12 @@
 <div class="root-container">
-  <header-bar title="My profile" [transparent]="false"></header-bar>
+  <header-bar title="my-profile" [transparent]="false"></header-bar>
 
   <ion-content no-bounce>
       <ion-grid class="ion-padding">
       <div class="profile-container">
         <div class="profile-picture">
           <div class="no-picture">
-            Profile<br/>
-            Picture
+            {{'no-picture-placeholder'|translate}}
           </div>
           <img src="assets/images/defaultuser.png">
         </div>
@@ -23,7 +22,7 @@
                 <ion-row *ngIf="didString!=''">
                   <ion-col>
                     <ion-img [src]="'/assets/images/QR_CODE_ICON.svg'" class="qrcode"></ion-img>
-                    <p class="qrcode-info">Touch for QR code</p>
+                    <p class="qrcode-info">{{'touch-for-qr-code'|translate}}</p>
                   </ion-col>
                 </ion-row>
               </ion-grid>
@@ -31,20 +30,20 @@
 
             <ion-grid>
               <ion-item>
-                <ion-label class="cred-name" >Email</ion-label>
-                <ion-label class="cred-value ion-text-right">{{profile.email || 'Not set'}}</ion-label>
+                <ion-label class="cred-name" >{{'email'|translate}}</ion-label>
+                <ion-label class="cred-value ion-text-right">{{profile.email || ('not-set'|translate)}}</ion-label>
               </ion-item>
               <ion-item>
-                <ion-label class="cred-name" >Phone number</ion-label>
-                <ion-label class="cred-value ion-text-right">{{profile.telephone || 'Not set'}}</ion-label>
+                <ion-label class="cred-name" >{{'phone-number'|translate}}</ion-label>
+                <ion-label class="cred-value ion-text-right">{{profile.telephone || ('not-set'|translate)}}</ion-label>
               </ion-item>
               <ion-item>
-                <ion-label class="cred-name" >Country</ion-label>
-                <ion-label class="cred-value ion-text-right">{{getDisplayableNation(profile.nation) || 'Not set'}}</ion-label>
+                <ion-label class="cred-name" >{{'country'|translate}}</ion-label>
+                <ion-label class="cred-value ion-text-right">{{getDisplayableNation(profile.nation) || ('not-set'|translate) }}</ion-label>
               </ion-item>
               <ion-item lines="none">
-                <ion-label class="cred-name" >Birth date</ion-label>
-                <ion-label class="cred-value ion-text-right">{{getDisplayableBirthDate(profile.birthDate) || 'Not set'}}</ion-label>
+                <ion-label class="cred-name" >{{'birth-date'|translate}}</ion-label>
+                <ion-label class="cred-value ion-text-right">{{getDisplayableBirthDate(profile.birthDate) || ('not-set'|translate)}}</ion-label>
               </ion-item>
             </ion-grid>
           </ion-list>
@@ -80,7 +79,7 @@
       </ion-row>
       <ion-row>
           <ion-col class="ion-text-center">
-            <ion-button size="small" (click)="copyDIDToClipboard()">Copy to clipboard</ion-button>
+            <ion-button size="small" (click)="copyDIDToClipboard()">{{'copy-to-clipboard'|translate}}</ion-button>
           </ion-col>
         </ion-row>
     </ion-grid>

@@ -28,7 +28,6 @@ import { EditProfilePage } from './pages/editprofile/editprofile';
 import { HomePage } from './pages/home/home.page';
 import { MyProfilePage } from './pages/myprofile/myprofile';
 import { SlideMenuPage } from './pages/myprofile/slidemenu/slidemenu';
-import { SetPasswordPage } from './pages/setpassword/setpassword';
 import { BackupDIDPage } from './pages/backupdid/backupdid';
 import { ImportDIDPage } from './pages/importdid/importdid';
 import { DIDSettingsPage } from './pages/didsettings/didsettings';
@@ -87,7 +86,6 @@ export function TranslateLoaderFactory() {
     MyProfilePage,
     NoIdentityPage,
     NewPasswordSetPage,
-    SetPasswordPage,
     SlideMenuPage,
     VerifyMnemonicsPage,
     RegisterApplicationProfileRequestPage,
