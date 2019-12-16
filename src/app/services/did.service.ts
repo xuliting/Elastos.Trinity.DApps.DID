@@ -401,4 +401,26 @@ export class DIDService {
             }
         });
     }
+
+    /**
+     * We maintain a list of hardcoded basic profile keys=>user friendly string, to avoid
+     * always displaying credential keys to user, and instead, show him something nicer.
+     */
+    getUserFriendlyBasicProfileKeyName(key: string) {
+        // TODO: translations
+        switch (key) {
+            case "did":
+                return "Your DID";
+            case "name":
+                return "Your name";
+            case "email":
+                return "Your email address";
+            case "birthDate":
+                return "Your birthday";
+            case "gender":
+                return "Your gender";
+            default:
+                return key; // Unhandled key return the key itself.
+        }
+    }
 }

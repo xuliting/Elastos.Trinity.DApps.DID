@@ -66,7 +66,11 @@ export class UXService {
             }
             else {
                 // No intent was received at boot. So we go through the regular screens.
-                Config.didStoreManager.displayDefaultScreen();
+                //Config.didStoreManager.displayDefaultScreen();
+                
+                this.authService.chooseIdentity({
+                    redirectPath: "/credaccessrequest"
+                });
 
                 //selfUxService.native.go("/importdid"); // TMP
                 //selfUxService.native.go("/noidentity"); // TMP
@@ -167,7 +171,11 @@ export class UXService {
     }
 
     sendIntentResponse(action, result, intentId) {
-        appManager.sendIntentResponse(action, result, intentId, null);
+        if (!BrowserSimulation.runningInBrowser()) {
+            appManager.sendIntentResponse(action, result, intentId, null);    
+        } else {
+            console.warn("Not sending intent response, we are in browser");
+        }
     }
 
     checkIntentParams(intent) {

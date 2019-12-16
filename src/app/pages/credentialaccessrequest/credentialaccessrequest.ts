@@ -8,6 +8,16 @@ import { PopupProvider } from '../../services/popup';
 import { Util } from '../../services/util';
 import { AuthService } from 'src/app/services/auth.service';
 import { WrongPasswordException } from 'src/app/model/exceptions/wrongpasswordexception.exception';
+import { BrowserSimulation } from 'src/app/services/browsersimulation';
+
+type ClaimRequest = {
+  name: string,
+  value: string,
+  credential: DIDPlugin.VerifiableCredential, // credential related to this claim request
+  canBeDelivered: boolean,  // Whether the requested claim can be delivered to caller or not. Almost similar to "credential" being null, except for "did"
+  selected: boolean,
+  reason: string // Additional usage info string provided by the caller
+}
 
 @Component({
   selector: 'page-credentialaccessrequest',
@@ -16,16 +26,12 @@ import { WrongPasswordException } from 'src/app/model/exceptions/wrongpasswordex
 })
 export class CredentialAccessRequestPage {
   requestDapp: any = null;
-  credentials: DIDPlugin.VerifiableCredential[] = [];
-  denyReason = '';
-  public profile: Profile = {
-    name:"",
-    birthDate:"",  // RFC 3339
-    gender:"",
-    nation:"", // ISO ALPHA 3
-    email:"",
-    telephone:""
-  };
+  private credentials: DIDPlugin.VerifiableCredential[] = [];
+  private denyReason = '';
+  public profile = new Profile(); // Empty profile waiting to get the real one.
+  mandatoryItems: ClaimRequest[] = [];
+  optionalItems: ClaimRequest[] = [];
+  canDeliver: boolean = true;
 
   constructor(private zone: NgZone,
               private didService: DIDService,
@@ -35,63 +41,180 @@ export class CredentialAccessRequestPage {
               private appServices: UXService) {
   }
 
-  ionViewWillEnter() {
+  ionViewWillEnter() {    
     this.zone.run(() => {
-      this.requestDapp = Config.requestDapp;
       this.profile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
       this.credentials = Config.didStoreManager.getActiveDidStore().credentials;
+
+      if (!BrowserSimulation.runningInBrowser()) {
+        this.requestDapp = Config.requestDapp;
+      }
+      else {
+        // Simulation - in browser
+        this.requestDapp = {
+          appName: "org.mycompany.myapp",
+          requestProfile: {
+            "email": true,
+            "name": false,
+            "gender": {
+              required:false
+            },
+            "birthDate":true,
+            //"inexistingField":true,
+            "otherInexistingField":false,
+            "diploma": {
+              "required": false,
+              "reason": "If provided, will be shown to end user"
+            }
+          }
+        }
+      }
+
+      this.organizeRequestedClaims();
+
+      console.log("Mandatory claims:", this.mandatoryItems)
+      console.log("Optional claims:", this.optionalItems)
     });
   }
 
-  checkRequest() {
-    // check profile
-    let hasProfile = true;
-    Object.values(this.requestDapp.requestProfile).forEach(val => {
-      if (!this.hasProfile(val)) {
-        hasProfile = false;
-        return false;
+  /**
+   * From the raw list of claims requested by the caller, we create our internal model 
+   * ready for UI.
+   */
+  organizeRequestedClaims() {
+    // Manually append the mandatory item "Your DID".
+    this.addDIDToMandatoryItems();
+
+    // Split into mandatory and optional items
+    for (let key of Object.keys(this.requestDapp.requestProfile)) {
+      let claim = this.requestDapp.requestProfile[key];
+      
+      let claimIsRequired = this.claimIsRequired(claim);
+      
+      // TODO: For now we consider that 1 claim = 1 credential = 1 info inside. In the future we may
+      // have several info inside one credential, so even if the caller requests only one field from such 
+      // credential we will have to display the WHOLE fields inside the credential on this credacess screen
+      // so that users know which infos are really going to be shared (credentials can't be split).
+
+      // Retrieve current value from active store credentials
+      let relatedCredential = this.findCredential(key);
+      if (!relatedCredential) {
+        console.warn("No credential found for requested claim:", key);
       }
-    })
-    return hasProfile;
+
+      let credentialValue: string = null;
+      if (relatedCredential)
+        credentialValue = this.getBasicProfileCredentialValue(relatedCredential)
+
+      // Don't display optional items that user doesn't have.
+      if (!relatedCredential && !claimIsRequired) 
+        continue;
+
+      let claimRequest: ClaimRequest = {
+        name: key,
+        value: credentialValue,
+        credential: relatedCredential,
+        canBeDelivered: (relatedCredential != null),
+        selected: true,
+        reason: ""
+      };
+
+      if (claimIsRequired) {
+        this.mandatoryItems.push(claimRequest);
+
+        // If at least one mandatory item is missing, we cannot complete the intent request.
+        if (relatedCredential == null) 
+          this.canDeliver = false;
+      }
+      else
+        this.optionalItems.push(claimRequest);
+    }
   }
 
-  hasProfile(profile) {
-    let value = "";
-    switch (profile) {
-      case 'email':
-        value = this.profile.email;
-      break;
-      case 'name':
-        value = this.profile.name;
-      break;
-      case 'telephone':
-        value = this.profile.telephone;
-      break;
+  addDIDToMandatoryItems() {
+    let claimRequest: ClaimRequest = {
+      name: "did",
+      value: Config.didStoreManager.getActiveDidStore().getCurrentDid(),
+      credential: null,
+      canBeDelivered: true,
+      selected: true,
+      reason: ""
+    };
+
+    this.mandatoryItems.push(claimRequest);
+  }
+
+  /**
+   * NOTE: For now we assume that the credential name (fragment) is the same as the requested claim value.
+   * But this may not be tue in the future: we would have to search inside credential properties one by one.
+   */
+  findCredential(key: string): DIDPlugin.VerifiableCredential {
+    return this.credentials.find((c)=>{
+      return c.getFragment() == key;
+    })
+  }
+
+  /**
+   * NOTE: For now we assume that the credential name (fragment) is the same as the requested claim value.
+   * But this may not be tue in the future: we would have to search inside credential properties one by one.
+   */
+  getBasicProfileCredentialValue(credential: DIDPlugin.VerifiableCredential): any {
+    return credential.getSubject()[credential.getFragment()];
+  }
+
+  /**
+   * Check if a raw claim provided by the caller is required or not. The "required" attribute
+   * can be in various locations.
+   */
+  claimIsRequired(claimValue: any): boolean {
+    if (claimValue instanceof Object) {
+      return claimValue.required || false;
     }
-    if (Util.isEmptyObject(value)) {
-      this.denyReason = profile + ' is empty';
-      return false;
+    else {
+      return claimValue; // Claim value itself is already a boolean
     }
-    return true;
+  }
+
+  claimReason(claimValue: any): string {
+    if (claimValue instanceof Object) {
+      return claimValue.reason || null;
+    }
+    
+    return null;
+  }
+
+  /**
+   * Build a list of credentials ready to be packaged into a presentation, according to selections
+   * done by user (some optional items could have been removed).
+   */
+  buildDeliverableCredentialsList() {
+    let selectedCredentials: DIDPlugin.VerifiableCredential[] = [];
+
+    // Add all mandatory credential inconditionally
+    for (let i in this.mandatoryItems) {
+      let item = this.mandatoryItems[i];
+
+      if (item.credential) // Skip DID
+        selectedCredentials.push(item.credential);
+    }
+
+    // Add selected optional credentials only
+    for (let i in this.optionalItems) {
+      let item = this.optionalItems[i];
+      if (item.selected)
+        selectedCredentials.push(item.credential);
+    }
+
+    console.log(selectedCredentials);
+
+    return selectedCredentials;
   }
 
   async acceptRequest() {
-    if (!this.checkRequest()) {
-      console.log("acceptRequest false");
-      this.popup.ionicAlert(this.denyReason, 'text-request-fail');
-      return;
-    }
-
-    if (this.credentials.length === 0) {
-      this.popup.ionicAlert('text-request-no-credential', 'text-request-fail');
-      return;
-    }
-
-    //TODO select credential
-    let selectedCredentials = this.credentials; // TMP: EVERYTHING FOR NOW
+    let selectedCredentials = this.buildDeliverableCredentialsList();
 
     // Create and send the verifiable presentation that embeds the selected credentials
-    await this.checkPasswordAndSendPresentation(selectedCredentials, false);
+    this.checkPasswordAndSendPresentation(selectedCredentials, false);
   }
 
   private async checkPasswordAndSendPresentation(selectedCredentials: DIDPlugin.VerifiableCredential[], forcePasswordPrompt: boolean = false): Promise<DIDPlugin.VerifiablePresentation> {

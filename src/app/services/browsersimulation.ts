@@ -28,29 +28,28 @@ function randomString() {
 }
 
 export class SimulatedUnloadedCredential implements DIDPlugin.UnloadedVerifiableCredential {
-    credentialId: string = "unloadedcredid";
+    hint: string = "fakehint";
     alias: string = "fakealias";
 
-    constructor(credentialId: string) {
-        this.credentialId = credentialId;
+    constructor(public credentialId: string) {
     }
 }
 
 export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
-    constructor(public subject: any = {}){
+    constructor(public credentialId: string, public basicProfileValue: string){
     }
 
     getId() {
         simulated("getId", "SimulatedCredential");
-        return "did:elastos:"+randomString()+"#credname";
+        return "did:elastos:"+randomString()+"#"+this.credentialId;
     }
     getFragment() {
         simulated("getFragment", "SimulatedCredential");
-        return "credname";
+        return this.credentialId;
     }
     getType() {
         simulated("getType", "SimulatedCredential");
-        return "FakeCredentialType";
+        return "BasicProfileCredential";
     }
     getIssuer() {
         simulated("getIssuer", "SimulatedCredential");
@@ -66,7 +65,9 @@ export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
     }
     getSubject() {
         simulated("getSubject", "SimulatedCredential");
-        return this.subject;
+        let subject = {};
+        subject[this.credentialId] = this.basicProfileValue;
+        return subject;
     }
     getProof() {
         simulated("getProof", "SimulatedCredential");
@@ -80,16 +81,12 @@ export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
 
     static makeForCredentialId(credentialId: string): SimulatedCredential {
         switch(credentialId) {
-            case "cred-name":
-                return new SimulatedCredential({
-                    name:"User_"+randomString()
-                });
-            case "cred-email":
-                return new SimulatedCredential({
-                    email:"Email_"+randomString()
-                });
+            case "name":
+                return new SimulatedCredential("name", "User_"+randomString());
+            case "email":
+                return new SimulatedCredential("email", "Email_"+randomString());
             default:
-                return new SimulatedCredential();
+                return new SimulatedCredential("nokey", "novalue");
         }
     }
 }
@@ -98,9 +95,9 @@ export class SimulatedVerifiablePresentation implements DIDPlugin.VerifiablePres
     credentials: DIDPlugin.VerifiableCredential[] = [];
 
     constructor() {
-        this.credentials.push(SimulatedCredential.makeForCredentialId("cred-name"));
-        this.credentials.push(SimulatedCredential.makeForCredentialId("cred-email"));
-        this.credentials.push(SimulatedCredential.makeForCredentialId("cred-gender"));
+        this.credentials.push(SimulatedCredential.makeForCredentialId("name"));
+        this.credentials.push(SimulatedCredential.makeForCredentialId("email"));
+        this.credentials.push(SimulatedCredential.makeForCredentialId("gender"));
     }
 
     getCredentials(): DIDPlugin.VerifiableCredential[] {
@@ -185,7 +182,7 @@ export class SimulatedDID implements DIDPlugin.DID {
     }
     issueCredential(subjectDID: string, credentialId: string, types: string[], expirationDate: Date, properties: any, passphrase: string, onSuccess: (credential: DIDPlugin.VerifiableCredential) => void, onError?: (err: any) => void) {
         simulated("issueCredential", "SimulatedDID");
-        onSuccess(new SimulatedCredential());
+        onSuccess(new SimulatedCredential(credentialId, "someproperty"));
     }
     deleteCredential(credentialId: string, onSuccess?: () => void, onError?: (err: any) => void) {
         simulated("deleteCredential", "SimulatedDID");
@@ -194,17 +191,17 @@ export class SimulatedDID implements DIDPlugin.DID {
     listCredentials(onSuccess: (credentials: DIDPlugin.UnloadedVerifiableCredential[]) => void, onError?: (err: any) => void) {
         simulated("listCredentials", "SimulatedDID");
         onSuccess([
-            new SimulatedUnloadedCredential("cred-name"),
-            new SimulatedUnloadedCredential("cred-email"),
-            new SimulatedUnloadedCredential("cred-nation"),
-            new SimulatedUnloadedCredential("cred-birthDate"),
-            new SimulatedUnloadedCredential("cred-gender"),
-            new SimulatedUnloadedCredential("cred-telephone")
+            new SimulatedUnloadedCredential("name"),
+            new SimulatedUnloadedCredential("email"),
+            new SimulatedUnloadedCredential("nation"),
+            new SimulatedUnloadedCredential("birthDate"),
+            new SimulatedUnloadedCredential("gender"),
+            new SimulatedUnloadedCredential("telephone")
         ])
     }
     loadCredential(credentialId: string, onSuccess: (credential: DIDPlugin.VerifiableCredential) => void, onError?: (err: any) => void) {
         simulated("loadCredential", "SimulatedDID");
-        onSuccess(new SimulatedCredential());
+        onSuccess(SimulatedCredential.makeForCredentialId(credentialId));
     }
     storeCredential(credential: DIDPlugin.VerifiableCredential, onSuccess?: () => void, onError?: (err: any) => void) {
         simulated("storeCredential", "SimulatedDID");
