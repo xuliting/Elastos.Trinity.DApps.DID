@@ -33,7 +33,7 @@ export class DIDService {
     }
 
     getCurrentDidString() {
-        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+        if (BrowserSimulation.runningInBrowser()) {
             return "did:elastos:azeeza786zea67zaek221fxi9";
         }
         console.log("didservice  this.curDidString:" + this.curDidString);
@@ -51,7 +51,7 @@ export class DIDService {
 
     //
     initDidStore(didStoreId: string): Promise<DIDPlugin.DIDStore> {
-        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+        if (BrowserSimulation.runningInBrowser()) {
             return new Promise((resolve, reject)=>{
                resolve(new SimulatedDIDStore());
             });
@@ -72,7 +72,7 @@ export class DIDService {
 
     deleteDidStore(didStoreId: string): Promise<any> {
         console.log("deleteDidStore:",didStoreId);
-        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+        if (BrowserSimulation.runningInBrowser()) {
             return new Promise((resolve, reject)=>{
                resolve();
             });
@@ -87,7 +87,7 @@ export class DIDService {
 
     generateMnemonic(language): Promise<any> {
         return new Promise((resolve, reject)=>{
-            if (this.platform.platforms().indexOf("cordova") >= 0) {
+            if (BrowserSimulation.runningInBrowser()) {
                 didManager.generateMnemonic(
                     language,
                     (ret) => {resolve(ret)}, (err) => {reject(err)},
@@ -110,7 +110,7 @@ export class DIDService {
 
     //DIDStore
     initPrivateIdentity(language, mnemonic, password, force): Promise<void> {
-        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+        if (BrowserSimulation.runningInBrowser()) {
             return new Promise((resolve, reject)=>{
                resolve()
             });
@@ -125,7 +125,7 @@ export class DIDService {
     }
 
     hasPrivateIdentity(): Promise<boolean> {
-        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+        if (BrowserSimulation.runningInBrowser()) {//for test
             return new Promise((resolve, reject)=>{
                resolve(true)
             });
@@ -172,7 +172,7 @@ export class DIDService {
     }
 
     listDids(): Promise<DIDPlugin.UnloadedDID[]> {
-        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+        if (BrowserSimulation.runningInBrowser()) {//for test
             return new Promise((resolve, reject)=>{
                 let ret = [
                    {did:"elastos:azeeza786zea67zaek221fxi9", alias:""}
@@ -269,7 +269,7 @@ export class DIDService {
 
     deleteCredential(didString: DIDPlugin.DIDString, didUrlString): Promise<any> {
         console.log("deleteCredential:" + didUrlString);
-        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+        if (BrowserSimulation.runningInBrowser()) {//for test
             return new Promise((resolve, reject)=>{
                resolve()
             });
@@ -376,7 +376,7 @@ export class DIDService {
 
     //Credential
     credentialToJSON(credential: DIDPlugin.VerifiableCredential): Promise<string> {
-        if (this.platform.platforms().indexOf("cordova") < 0) {//for test
+        if (BrowserSimulation.runningInBrowser()) {//for test
             return new Promise((resolve, reject)=>{
                 let ret = "{\"id\":\"did:elastos:ikoWcH4HJYGsHFzYH3VEVL7iMeL6NGm8VF#test\",\"type\":[\"SelfProclaimedCredential\"],\"issuanceDate\":\"2019-11-11T08:00:00Z\",\"expirationDate\":\"2034-11-11T08:00:00Z\",\"credentialSubject\":{\"id\":\"did:elastos:ikoWcH4HJYGsHFzYH3VEVL7iMeL6NGm8VF\",\"remark\":\"ttttttttt\",\"title\":\"test\",\"url\":\"tst\"},\"proof\":{\"verificationMethod\":\"#primary\",\"signature\":\"foJZLqID4C27eDheK/VDYjaGlxgTzy88s+o95GL4KwFbxLYechjOQ/JjMv7UFTYByOg84dECezeqjR7pjHeu1g==\"}}"
                 resolve(ret)

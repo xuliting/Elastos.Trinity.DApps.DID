@@ -66,11 +66,11 @@ export class UXService {
             }
             else {
                 // No intent was received at boot. So we go through the regular screens.
-                //Config.didStoreManager.displayDefaultScreen();
+                Config.didStoreManager.displayDefaultScreen();
                 
-                this.authService.chooseIdentity({
+                /*this.authService.chooseIdentity({
                     redirectPath: "/credaccessrequest"
-                });
+                });*/
 
                 //selfUxService.native.go("/importdid"); // TMP
                 //selfUxService.native.go("/noidentity"); // TMP
