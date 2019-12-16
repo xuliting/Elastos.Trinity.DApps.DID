@@ -87,13 +87,13 @@ export class DIDService {
 
     generateMnemonic(language): Promise<any> {
         return new Promise((resolve, reject)=>{
-            if (BrowserSimulation.runningInBrowser()) {
+            if (!BrowserSimulation.runningInBrowser()) {
                 didManager.generateMnemonic(
                     language,
                     (ret) => {resolve(ret)}, (err) => {reject(err)},
                 );
             }
-            else {//for test
+            else {
                 resolve("abandon ability able about above absent absorb abstract bike bind bird blue");
             }
         });
@@ -125,7 +125,7 @@ export class DIDService {
     }
 
     hasPrivateIdentity(): Promise<boolean> {
-        if (BrowserSimulation.runningInBrowser()) {//for test
+        if (BrowserSimulation.runningInBrowser()) {
             return new Promise((resolve, reject)=>{
                resolve(true)
             });
@@ -172,7 +172,7 @@ export class DIDService {
     }
 
     listDids(): Promise<DIDPlugin.UnloadedDID[]> {
-        if (BrowserSimulation.runningInBrowser()) {//for test
+        if (BrowserSimulation.runningInBrowser()) {
             return new Promise((resolve, reject)=>{
                 let ret = [
                    {did:"elastos:azeeza786zea67zaek221fxi9", alias:""}

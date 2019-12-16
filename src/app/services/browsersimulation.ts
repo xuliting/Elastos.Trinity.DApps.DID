@@ -217,6 +217,7 @@ export class BrowserSimulation {
     private static _runningInBrowser: boolean = false;
 
     public static setRunningInBrowser() {
+        console.warn("Setting app to BROWSER mode (simulated)");
         this._runningInBrowser = true;
     }
 

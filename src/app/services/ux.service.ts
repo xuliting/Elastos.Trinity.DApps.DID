@@ -183,7 +183,7 @@ export class UXService {
         if (Util.isEmptyObject(intent.params) || Util.isEmptyObject(intent.params.claims)) return false;
 
         let requestProfile = [];
-        intent.params.claims.forEach((item,index,array)=>{
+        /*intent.params.claims.forEach((item,index,array)=>{
             for(var prop in item) {
                 if (item[prop] === true) {
                     requestProfile.push(prop);
@@ -191,13 +191,13 @@ export class UXService {
                 // TODO if item[prop] is object ?
                 // get reason
             }
-        });
+        });*/
 
         Config.requestDapp = {
             appName: intent.from,
             intentId: intent.intentId,
             action: intent.action,
-            requestProfile: requestProfile,
+            requestProfile: intent.params.claims,
             // reason: ret.params.claims.reason
         }
         return true;
