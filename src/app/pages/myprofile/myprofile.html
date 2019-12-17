@@ -2,87 +2,78 @@
   <header-bar title="my-profile" [transparent]="false"></header-bar>
 
   <ion-content no-bounce>
-      <ion-grid class="ion-padding">
+    <ion-grid class="ion-no-padding">
       <div class="profile-container">
         <div class="profile-picture">
           <div class="no-picture">
             {{'no-picture-placeholder'|translate}}
           </div>
-          <img src="assets/images/defaultuser.png">
+          <img src="assets/images/Guy_Face.svg">
         </div>
         <div class="profile-items">
-          <ion-list>
-            <ion-item class="ion-text-center" (click)="showQRCode()">
-              <ion-grid class="ion-margin">
-                <ion-row>
-                  <ion-col>
-                    <div class="name">{{profile.name}}</div>
-                  </ion-col>
-                </ion-row>
-                <ion-row *ngIf="didString!=''">
-                  <ion-col>
-                    <ion-img [src]="'/assets/images/QR_CODE_ICON.svg'" class="qrcode"></ion-img>
-                    <p class="qrcode-info">{{'touch-for-qr-code'|translate}}</p>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </ion-item>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <div class="name">{{profile.name}}</div>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col>
+                <div class="actions">
+                  <rounded-action-button title="qr-code" (click)="showQRCode()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
+                  <rounded-action-button title="edit-visibility" (click)="editVisibility()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
+                  <rounded-action-button title="backup" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
+                  <rounded-action-button title="password" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
+                  <rounded-action-button title="delete-did" (click)="deleteDID()" color="#FF4D4D" imgcolor="#FFFFFF"></rounded-action-button>
+                </div>
+              </ion-col>
+            </ion-row>
 
-            <ion-grid>
-              <ion-item>
-                <ion-label class="cred-name" >{{'email'|translate}}</ion-label>
-                <ion-label class="cred-value ion-text-right">{{profile.email || ('not-set'|translate)}}</ion-label>
-              </ion-item>
-              <ion-item>
-                <ion-label class="cred-name" >{{'phone-number'|translate}}</ion-label>
-                <ion-label class="cred-value ion-text-right">{{profile.telephone || ('not-set'|translate)}}</ion-label>
-              </ion-item>
-              <ion-item>
-                <ion-label class="cred-name" >{{'country'|translate}}</ion-label>
-                <ion-label class="cred-value ion-text-right">{{getDisplayableNation(profile.nation) || ('not-set'|translate) }}</ion-label>
-              </ion-item>
-              <ion-item lines="none">
-                <ion-label class="cred-name" >{{'birth-date'|translate}}</ion-label>
-                <ion-label class="cred-value ion-text-right">{{getDisplayableBirthDate(profile.birthDate) || ('not-set'|translate)}}</ion-label>
-              </ion-item>
-            </ion-grid>
-          </ion-list>
+            <ion-row *ngIf="visibleData.length > 0">
+              <ion-col>
+                <div class="section">
+                  <div class="section-title">{{'my-visible-data'|translate}}</div>
+                  <ion-list>
+                    <ion-item *ngFor="let entry of visibleData" class="ion-no-margin">
+                      <ion-label class="cred-name" >{{entry.label}}</ion-label>
+                      <ion-label class="cred-value ion-text-right">{{entry.value}}</ion-label>
+                      <ion-checkbox [(ngModel)]="entry.willingToBePubliclyVisible" [disabled]="!editingVisibility" mode="ios" [ngClass]="{'checkBox-visibility-edit': editingVisibility}"></ion-checkbox>
+                    </ion-item>
+                  </ion-list>
+                </div>
+              </ion-col>
+            </ion-row>
+
+            <ion-row *ngIf="invisibleData.length > 0">
+              <ion-col>
+                <div class="section">
+                  <div class="section-title">{{'my-hidden-data'|translate}}</div>
+                  <ion-list>
+                    <ion-item *ngFor="let entry of invisibleData" class="ion-no-margin">
+                      <ion-label class="cred-name" >{{entry.label}}</ion-label>
+                      <ion-label class="cred-value ion-text-right">{{entry.value}}</ion-label>
+                      <ion-checkbox [(ngModel)]="entry.willingToBePubliclyVisible" [disabled]="!editingVisibility" mode="ios" [ngClass]="{'checkBox-visibility-edit': editingVisibility}"></ion-checkbox>
+                    </ion-item>
+                  </ion-list>
+                </div>
+              </ion-col>
+            </ion-row>
+
+            <ion-row [ngStyle]="{'visibility':(editingVisibility?'visible':'hidden')}">
+              <ion-col class="ion-text-center">
+                  <did-button class="publish-button" (click)="publishVisibilityChanges()" 
+                    [title]="'publish-changes' | translate" 
+                    [textcolor]="'#FFFFFF'"
+                    [bgcolor]="'var(--ion-color-primary)'" 
+                    [bordercolor]="'var(--ion-color-primary)'"
+                    [shadow]="true"></did-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </div>
       </div>
-    </ion-grid> 
-    
-    <div class="bottom-drawer-translucent-background" *ngIf="bottomDrawerState == 1" (click)="hideBottomDrawer()"></div>
+    </ion-grid>     
   </ion-content>
-
-  <ion-footer *ngIf="createDid" class="ion-text-center ion-padding">
-    <ion-button expand="full" size="large" (click)="next()">Next</ion-button>
-  </ion-footer>
 </div>
-
-<ion-bottom-drawer *ngIf="didString!=''" [(state)]="bottomDrawerState" [dockedHeight]="330" [disableDrag]="true">
-  <div class="drawer-content ion-padding">
-    <ion-grid>
-      <ion-row>
-        <ion-col (click)="hideBottomDrawer()">
-          <ion-img [src]="'/assets/images/bottomarrow.png'" class="bottom-close-arrow"></ion-img>
-        </ion-col>
-      </ion-row>
-      <ion-row >
-        <ion-col class="ion-text-center">
-          <qrcode [qrdata]="didString" [size]="150"></qrcode>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <div class="bottom-did-string">{{didString}}</div>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-          <ion-col class="ion-text-center">
-            <ion-button size="small" (click)="copyDIDToClipboard()">{{'copy-to-clipboard'|translate}}</ion-button>
-          </ion-col>
-        </ion-row>
-    </ion-grid>
-  </div>
-</ion-bottom-drawer>
 

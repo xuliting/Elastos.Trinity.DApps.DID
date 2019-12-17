@@ -3,11 +3,14 @@ export const fr = {
     'submit': 'Envoyer',
     'next': 'Suivant',
     'copy-to-clipboard': 'Copier dans le presse-papier',
+    'copied-to-clipboard': 'Copié dans le presse-papier!',
     'confirm': 'Confirmer',
     'accept': 'Accepter',
     'select-one': 'Sélectionner',
     'select-date': 'Sélectionner la date',
     'enter-here': 'Saisir ici',
+    'backup': 'Sauvegarder',
+    'edit-visibility': 'Modif. Visibilité',
 
     // DID operations
     'create-my-did': 'Créer mon DID',
@@ -27,6 +30,7 @@ export const fr = {
     'import-password2-placeholder': 'Répéter le mot de passe',
     'text-pwd-validator': '8 symboles ou plus',
     'password-set': 'Mot de passe Défini!',
+    'password': 'Password',
 
     // Generic items
     'profile': 'Profil',
@@ -76,7 +80,10 @@ export const fr = {
     // screen: my profile
     'no-picture-placeholder': 'Photo de<br/>Profil',
     'my-profile': 'Mon profil',
-    'touch-for-qr-code': 'Toucher pour voir le QR code',
+    'qr-code': 'QR code',
+    'delete-did': 'Supprimer le DID',
+    'my-visible-data': 'Mes Données Visibles',
+    'my-hidden-data': 'Mes Données Cachées',
 
     // screen: edit profile
     'edit-profile': 'Editer le profil',

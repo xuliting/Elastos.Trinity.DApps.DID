@@ -46,6 +46,7 @@ import { CreatePasswordComponent } from './components/createpassword/createpassw
 import { LocalStorage } from './services/localstorage';
 import { PopupProvider } from './services/popup';
 import { ChooseDIDPage } from './pages/choosedid/choosedid';
+import { ShowQRCodeComponent } from './components/showqrcode/showqrcode.component';
 
 /** 通过类引用方式解析国家化文件 */
 export class CustomTranslateLoader implements TranslateLoader {
@@ -123,7 +124,8 @@ export function TranslateLoaderFactory() {
   entryComponents: [
     MyApp,
     SecurityCheckComponent,
-    CreatePasswordComponent
+    CreatePasswordComponent,
+    ShowQRCodeComponent
   ],
   providers: [
     Clipboard,

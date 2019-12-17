@@ -1,0 +1,27 @@
+<ion-grid>
+  <ion-row>
+    <ion-col (click)="hideModal()" class="ion-text-center">
+      <img src="/assets/images/bottomarrow.png" class="close-arrow"/>
+    </ion-col>
+  </ion-row>
+  <ion-row >
+    <ion-col class="ion-text-center">
+      <qrcode [qrdata]="didString" [size]="150"></qrcode>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <div class="did-string">{{didString}}</div>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+      <ion-col class="ion-text-center">
+          <did-button class="main-button" (click)="copyDIDToClipboard()" 
+            [title]="'copy-to-clipboard' | translate" 
+            [textcolor]="'#FFFFFF'"
+            [bgcolor]="'var(--ion-color-primary)'" 
+            [bordercolor]="'var(--ion-color-primary)'"
+            [shadow]="true"></did-button>
+      </ion-col>
+    </ion-row>
+</ion-grid>

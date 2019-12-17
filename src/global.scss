@@ -108,3 +108,13 @@ ion-toolbar {
         border-top-right-radius: 30px;    
     }
 }
+
+.show-qr-code-modal {
+    --height:350px;
+    align-items:flex-end;
+
+    .modal-wrapper {
+        border-top-left-radius: 30px;
+        border-top-right-radius: 30px;    
+    }
+}

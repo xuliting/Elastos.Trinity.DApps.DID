@@ -3,11 +3,14 @@ export const en = {
     'submit': 'Submit',
     'next': 'Next',
     'copy-to-clipboard': 'Copy to clipboard',
+    'copied-to-clipboard': 'Copied to clipboard!',
     'confirm': 'Confirm',
     'accept': 'Accept',
     'select-one': 'Select one',
     'select-date': 'Select date',
     'enter-here': 'Enter here',
+    'backup': 'Backup',
+    'edit-visibility': 'Edit visibility',
 
     // DID operations
     'create-my-did': 'Create my DID',
@@ -27,6 +30,7 @@ export const en = {
     'import-password2-placeholder': 'Repeat Password',
     'text-pwd-validator': 'must be 8 or more characters',
     'password-set': 'Password Set!',
+    'password': 'Password',
 
     // Generic items
     'profile': 'Profile',
@@ -76,7 +80,10 @@ export const en = {
     // screen: my profile
     'no-picture-placeholder': 'Profile<br/>Picture',
     'my-profile': 'My profile',
-    'touch-for-qr-code': 'Touch for QR code',
+    'qr-code': 'QR code',
+    'delete-did': 'Delete DID',
+    'my-visible-data': 'My Visible Data',
+    'my-hidden-data': 'My Hidden Data',
 
     // screen: edit profile
     'edit-profile': 'Edit profile',

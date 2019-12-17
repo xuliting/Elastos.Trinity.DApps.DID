@@ -58,15 +58,6 @@ export class DIDSettingsPage {
     // TODO
   }
 
-  deleteDID() {
-    this.popupProvider.ionicConfirm("Delete", "Delete DID?", "Yes", "NO").then(async (data) => {
-      if (data) {
-        let activeDidStore = Config.didStoreManager.getActiveDidStore();
-        await Config.didStoreManager.deleteDidStore(activeDidStore);
-      }
-    });
-  }
-
   async openPayModal() {
     const modal = await this.modalCtrl.create({
         component: SecurityCheckComponent,

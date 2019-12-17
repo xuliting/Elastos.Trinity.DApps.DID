@@ -12,6 +12,9 @@ import { LargeMenuItemComponent } from './large-menu-item/large-menu-item.compon
 import { VerifyMnemonicWordComponent } from './verify-mnemonic-word/verify-mnemonic-word.component';
 import { MainContentComponent } from './main-content/main-content.component';
 import { CreatePasswordComponent } from './createpassword/createpassword.component';
+import { RoundedActionButtonComponent } from './rounded-action-button/rounded-action-button.component';
+import { ShowQRCodeComponent } from './showqrcode/showqrcode.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 @NgModule({
   declarations: [
@@ -23,13 +26,16 @@ import { CreatePasswordComponent } from './createpassword/createpassword.compone
     LargeMenuItemComponent,
     VerifyMnemonicWordComponent,
     MainContentComponent,
-    CreatePasswordComponent
+    CreatePasswordComponent,
+    RoundedActionButtonComponent,
+    ShowQRCodeComponent,
   ],
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TranslateModule
+    TranslateModule,
+    QRCodeModule
   ],
   exports: [
     HeaderBarComponent, 
@@ -40,7 +46,9 @@ import { CreatePasswordComponent } from './createpassword/createpassword.compone
     LargeMenuItemComponent,
     VerifyMnemonicWordComponent,
     MainContentComponent,
-    CreatePasswordComponent
+    CreatePasswordComponent,
+    RoundedActionButtonComponent,
+    ShowQRCodeComponent,
   ],
   providers: [
   ],

@@ -40,16 +40,19 @@ export class UXService {
     init() {
         console.log("UXService init");
 
-        this.computeAndShowEntryScreen();
-
         if (!BrowserSimulation.runningInBrowser()) {
-            appManager.setListener(this.onReceive);
             this.getLanguage();
+            
+            this.computeAndShowEntryScreen();
+
+            appManager.setListener(this.onReceive);
             this.setIntentListener();
         }
         else {
             // Simulated settings
-            this.setCurLang("fr");
+            this.setCurLang("en");
+
+            this.showEntryScreen();
         }
     }
 
@@ -63,8 +66,6 @@ export class UXService {
     computeAndShowEntryScreen() {
         console.log("Checking if there are pending intents");
         appManager.hasPendingIntent((hasPendingIntent: boolean)=>{
-            console.log(hasPendingIntent)
-            console.log(typeof hasPendingIntent)
             if (hasPendingIntent) {
                 // Do nothing, the intent listener will show the appropriate screen.
                 console.log("There are some pending intents.");
@@ -73,14 +74,7 @@ export class UXService {
                 console.log("No pending intent.");
 
                 // No intent was received at boot. So we go through the regular screens.
-                Config.didStoreManager.displayDefaultScreen();
-                
-                /*this.authService.chooseIdentity({
-                    redirectPath: "/credaccessrequest"
-                });*/
-
-                //selfUxService.native.go("/importdid"); // TMP
-                //selfUxService.native.go("/noidentity"); // TMP
+                this.showEntryScreen();
             }
         }, (err: string)=>{
             console.error(err);
@@ -88,6 +82,17 @@ export class UXService {
             // Error while checking - fallback to default behaviour
             Config.didStoreManager.displayDefaultScreen();
         });
+    }
+
+    showEntryScreen() {
+        Config.didStoreManager.displayDefaultScreen();
+                
+        /*this.authService.chooseIdentity({
+            redirectPath: "/credaccessrequest"
+        });*/
+
+        //selfUxService.native.go("/importdid"); // TMP
+        //selfUxService.native.go("/noidentity"); // TMP
     }
 
     /**
