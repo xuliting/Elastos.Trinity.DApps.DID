@@ -39,6 +39,9 @@ export class UXService {
 
     init() {
         console.log("UXService init");
+
+        this.computeAndShowEntryScreen();
+
         if (!BrowserSimulation.runningInBrowser()) {
             appManager.setListener(this.onReceive);
             this.getLanguage();
@@ -48,8 +51,6 @@ export class UXService {
             // Simulated settings
             this.setCurLang("fr");
         }
-
-        this.computeAndShowEntryScreen();
     }
 
     /**
@@ -60,26 +61,33 @@ export class UXService {
      * This method must be called only during the initial app start.
      */
     computeAndShowEntryScreen() {
-        // DIRTY - but no choice for now because of the asynchronous design of the intent API.
-        // Wait for a while and check later if an intent ahs been received asynchronously. Then we can
-        // decide where to go.
-        // TODO: Replace this with the new API: AppManager.hadPendingIntent()
-        setTimeout(()=>{
-            if (this.appIsLaunchingFromIntent) {
+        console.log("Checking if there are pending intents");
+        appManager.hasPendingIntent((hasPendingIntent: boolean)=>{
+            console.log(hasPendingIntent)
+            console.log(typeof hasPendingIntent)
+            if (hasPendingIntent) {
                 // Do nothing, the intent listener will show the appropriate screen.
+                console.log("There are some pending intents.");
             }
             else {
+                console.log("No pending intent.");
+
                 // No intent was received at boot. So we go through the regular screens.
-                //Config.didStoreManager.displayDefaultScreen();
+                Config.didStoreManager.displayDefaultScreen();
                 
-                this.authService.chooseIdentity({
+                /*this.authService.chooseIdentity({
                     redirectPath: "/credaccessrequest"
-                });
+                });*/
 
                 //selfUxService.native.go("/importdid"); // TMP
                 //selfUxService.native.go("/noidentity"); // TMP
             }
-        }, 500);
+        }, (err: string)=>{
+            console.error(err);
+
+            // Error while checking - fallback to default behaviour
+            Config.didStoreManager.displayDefaultScreen();
+        });
     }
 
     /**
