@@ -3,6 +3,7 @@ import { Platform, ToastController } from '@ionic/angular';
 
 import { SimulatedDID, SimulatedDIDStore, BrowserSimulation, SimulatedCredential } from '../services/browsersimulation';
 import { resolve } from 'path';
+import { TranslateService } from '@ngx-translate/core';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let didManager: DIDPlugin.DIDManager;
@@ -18,6 +19,7 @@ export class DIDService {
     constructor(
         private platform: Platform,
         public zone: NgZone,
+        private translate: TranslateService,
         public toastCtrl: ToastController) {
             console.log("DIDService created");
     }
@@ -406,19 +408,20 @@ export class DIDService {
      * We maintain a list of hardcoded basic profile keys=>user friendly string, to avoid
      * always displaying credential keys to user, and instead, show him something nicer.
      */
-    getUserFriendlyBasicProfileKeyName(key: string) {
-        // TODO: translations
+    getUserFriendlyBasicProfileKeyName(key: string): string {
         switch (key) {
             case "did":
-                return "Your DID";
+                return this.translate.instant("your-did");
             case "name":
-                return "Your name";
+                return this.translate.instant("your-name");
             case "email":
-                return "Your email address";
+                return this.translate.instant("your-email-address");
             case "birthDate":
-                return "Your birthday";
+                return this.translate.instant("your-birthday");
             case "gender":
-                return "Your gender";
+                return this.translate.instant("your-gender");
+            case "phoneNumber":
+                return this.translate.instant("your-phone-number");
             default:
                 return key; // Unhandled key return the key itself.
         }

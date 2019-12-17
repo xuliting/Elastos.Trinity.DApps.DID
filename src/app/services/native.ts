@@ -12,7 +12,7 @@ import * as _ from 'lodash';
     providedIn: 'root'
 })
 export class Native {
-  private mnemonicLang:number = 0;
+  private mnemonicLang: DIDPlugin.MnemonicLanguage = DIDPlugin.MnemonicLanguage.ENGLISH;
   private loadingIsOpen: boolean = false;
 
   constructor(private toastCtrl: ToastController,
@@ -85,7 +85,7 @@ export class Native {
       return this.mnemonicLang;
   }
 
-  public setMnemonicLang(lang) {
+  public setMnemonicLang(lang: DIDPlugin.MnemonicLanguage) {
       this.mnemonicLang = lang;
   }
 

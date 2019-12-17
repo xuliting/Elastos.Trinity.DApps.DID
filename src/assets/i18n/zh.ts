@@ -5,6 +5,9 @@ export const zh = {
     'copy-to-clipboard': 'Copy to clipboard',
     'confirm': 'Confirm',
     'accept': 'Accept',
+    'select-one': 'Select one',
+    'select-date': 'Select date',
+    'enter-here': 'Enter here',
 
     // DID operations
     'create-my-did': '创建新的DID',
@@ -25,10 +28,27 @@ export const zh = {
     'text-pwd-validator': 'must be 8 or more characters',
     'password-set': 'Password Set!',
 
+    // Generic items
+    'profile': 'Profile',
+    'portfolio': 'Portfolio',
+    'credentials': 'Credentials',
+    'settings': 'Settings',
+    'missing': 'Missing',
+
     // Profile fields
+    'name': 'Name',
     'email': 'Email',
     'phone-number': 'Phone number',
     'birth-date': 'Birth date',
+    'gender': 'Gender',
+    'male': 'Male',
+    'female': 'Female',
+    'your-did': 'Your DID',
+    'your-name': 'Your name',
+    'your-email-address': 'Your email address',
+    'your-birthday': 'Your birthday',
+    'your-gender': 'Your gender',
+    'your-phone-number': 'Your phone number',
 
     // Error messages
     'text-request-fail': '授权失败',
@@ -57,4 +77,50 @@ export const zh = {
     'no-picture-placeholder': 'Profile<br/>Picture',
     'my-profile': 'My profile',
     'touch-for-qr-code': 'Touch for QR code',
+
+    // screen: edit profile
+    'edit-profile': 'Edit profile',
+    'edit-profile-intro': 'You can fill in as much or as little as you would like.',
+    'name-is-required': 'Name is required.',
+
+    // screen: did list
+    'did-portfolio': 'DID Portfolio',
+
+    // screen: credaccess
+    'data-access': 'Data access',
+    'data-access-from': 'Data Access From:',
+    'credaccess-intro': 'This is a request for information<br/>Please review the following data items.',
+    'mandatory-data-access': 'Mandatory Data Access',
+    'optional-data-access': 'Optional Data Access',
+    'credaccess-information-missing': 'At least one mandatory information is missing from your profile. Please complete your profile first and try again.',
+
+    // screen: did credentials
+    'did-credentials': 'DID Credentials',
+    'no-credential-yet': 'Seems like there is no credential yet.',
+    'issuer': 'Issuer',
+    'information-it-contains': 'Information it contains',
+
+    // screen: verify mnemonic
+    'verification': 'Verification',
+    'verify-title': 'Please select your mnemonic words.',
+    'verify-subtitle': 'This verification is needed to make sure that your correctly saved your mnemonics.',
+
+    // screen: choose did
+    'choose-did': 'Choose DID',
+    'choose-did-intro': 'Please select the DID Profile you want to use for this action',
+
+    ////////////////////////////////////////////////////
+    //////////////// COMPONENT SPECIFIC ////////////////
+    ////////////////////////////////////////////////////
+
+    // component: active-did
+    'current-active-profile': 'Current active profile',
+
+    // component: createpassword
+    'createpassword-intro': 'Let\'s get started with setting a password.',
+    'passwords-dont-match': 'Passwords don\'t match.',
+
+    // component: security check
+    'security-check': 'Security check!',
+    'wrong-password': 'Wrong password, please try again.',
 };

@@ -1,9 +1,9 @@
 <div class="container">
   <p class="title">
-    Security check!
+    {{'security-check'|translate}}
   </p>
 
-  <div class="password-failed-info" *ngIf="previousPasswordWasWrong && password == ''">Wrong password, please try again.</div>
+  <div class="password-failed-info" *ngIf="previousPasswordWasWrong && password == ''">{{'wrong-password'|translate}}</div>
  
   <div [ngClass]="{'input-container':true, 'failed':(previousPasswordWasWrong && password == '')}">
     <ion-input placeholder="{{ 'text-password-input' | translate }}" #pwd 

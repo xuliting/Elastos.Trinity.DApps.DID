@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
 
 import { zh } from './../assets/i18n/zh';
 import { en } from './../assets/i18n/en';
+import { fr } from './../assets/i18n/fr';
 
 import { MyApp } from './app.component';
 import { ComponentsModule } from './components/components.module';
@@ -27,7 +28,6 @@ import { NewPasswordSetPage } from './pages/newpasswordset/newpasswordset';
 import { EditProfilePage } from './pages/editprofile/editprofile';
 import { HomePage } from './pages/home/home.page';
 import { MyProfilePage } from './pages/myprofile/myprofile';
-import { SlideMenuPage } from './pages/myprofile/slidemenu/slidemenu';
 import { BackupDIDPage } from './pages/backupdid/backupdid';
 import { ImportDIDPage } from './pages/importdid/importdid';
 import { DIDSettingsPage } from './pages/didsettings/didsettings';
@@ -53,11 +53,14 @@ export class CustomTranslateLoader implements TranslateLoader {
         return Observable.create(observer => {
             switch (lang) {
                 case 'zh':
-                default:
-                    observer.next(zh);
-                    break;
+                  observer.next(zh);
+                  break;
+                case 'fr':
+                  observer.next(fr);
+                  break;
                 case 'en':
-                    observer.next(en);
+                default:
+                  observer.next(en);
             }
 
             observer.complete();
@@ -86,7 +89,6 @@ export function TranslateLoaderFactory() {
     MyProfilePage,
     NoIdentityPage,
     NewPasswordSetPage,
-    SlideMenuPage,
     VerifyMnemonicsPage,
     RegisterApplicationProfileRequestPage,
     DIDListPage,

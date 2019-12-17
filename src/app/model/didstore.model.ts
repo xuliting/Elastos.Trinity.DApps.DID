@@ -95,8 +95,6 @@ export class DIDStore {
 
         // Create a private root key
         console.log("Adding DID to the store", this);
-        console.log("TMP", mnemonicLang)
-        console.log("TMP", mnemonic)
         await this.didService.initPrivateIdentity(mnemonicLang, mnemonic, newDid.password, true)
 
         // Save password for later use

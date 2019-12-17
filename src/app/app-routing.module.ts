@@ -7,7 +7,6 @@ import { NewPasswordSetPage } from './pages/newpasswordset/newpasswordset';
 import { EditProfilePage } from './pages/editprofile/editprofile';
 import { HomePage } from './pages/home/home.page';
 import { MyProfilePage } from './pages/myprofile/myprofile';
-import { SlideMenuPage } from './pages/myprofile/slidemenu/slidemenu';
 import { BackupDIDPage } from './pages/backupdid/backupdid';
 import { ImportDIDPage } from './pages/importdid/importdid';
 import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
@@ -30,13 +29,6 @@ const routes: Routes = [
   { path: 'newpasswordset', component: NewPasswordSetPage },
   { path: 'createidentity', component: EditProfilePage },
   { path: 'editprofile', component: EditProfilePage },
-  {
-    path: 'profile',
-    component: SlideMenuPage,
-    children: [
-      { path: 'myprofile', component: MyProfilePage },
-    ],
-  },
   {
     path: 'home', // Bottom Tab Navigation
     component: HomePage,

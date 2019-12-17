@@ -39,10 +39,14 @@ export class UXService {
 
     init() {
         console.log("UXService init");
-        if (this.platform.platforms().indexOf("cordova") >= 0) {
+        if (!BrowserSimulation.runningInBrowser()) {
             appManager.setListener(this.onReceive);
             this.getLanguage();
             this.setIntentListener();
+        }
+        else {
+            // Simulated settings
+            this.setCurLang("fr");
         }
 
         this.computeAndShowEntryScreen();
@@ -66,11 +70,11 @@ export class UXService {
             }
             else {
                 // No intent was received at boot. So we go through the regular screens.
-                Config.didStoreManager.displayDefaultScreen();
+                //Config.didStoreManager.displayDefaultScreen();
                 
-                /*this.authService.chooseIdentity({
+                this.authService.chooseIdentity({
                     redirectPath: "/credaccessrequest"
-                });*/
+                });
 
                 //selfUxService.native.go("/importdid"); // TMP
                 //selfUxService.native.go("/noidentity"); // TMP
@@ -100,13 +104,20 @@ export class UXService {
     }
 
     setCurLang(lang: string) {
+        console.log("Setting current language to "+lang);
+
+        // Setting UI/translations language
         this.translate.use(lang);
+
+        // Settings DID SDK language
         if (lang == 'en') {
-            this.native.setMnemonicLang(0);
+            this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.ENGLISH);
         } else if (lang == "zh") {
-            this.native.setMnemonicLang(3);
+            this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.CHINESE_SIMPLIFIED);
+        } else if (lang == "fr") {
+            this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.FRENCH);
         } else {
-            this.native.setMnemonicLang(0);
+            this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.ENGLISH);
         }
     }
 

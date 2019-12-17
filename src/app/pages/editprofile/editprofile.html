@@ -1,16 +1,16 @@
 <div class="root-container">
-    <header-bar title="Edit profile" [showBack]="true" [transparent]="false"></header-bar>
+    <header-bar title="edit-profile" [showBack]="true" [transparent]="false"></header-bar>
 
   <ion-content>  
     <ion-grid class="ion-text-center ion-padding">
       <ion-row *ngIf="!isEdit">
         <ion-col class="ion-text-center">
-          You can fill in as much or as little as you would like.
+          {{'edit-profile-intro'|translate}}
         </ion-col>
       </ion-row>
       <ion-row class="ion-padding" *ngIf="!isEdit">
         <ion-col class="ion-text-center">
-          Name is required.
+          {{'name-is-required'|translate}}
         </ion-col>
       </ion-row>
       <ion-row>
@@ -25,36 +25,35 @@
       <div class="profile-container">
         <div class="profile-picture">
           <div class="no-picture" *ngIf="false">
-            Profile<br/>
-            Picture
+            {{'no-picture-placeholder'|translate}}
           </div>
           <img src="assets/images/defaultuser.png">
         </div>
         <div class="profile-items">
           <ion-list>
             <ion-item>
-              <ion-label>Name</ion-label> <ion-input #nameInput placeholder="Enter here" [(ngModel)]="profile.name" class="ion-text-right" (keyup)="maybeMoveFocus(emailInput, $event)"></ion-input>
+              <ion-label>{{'name'|translate}}</ion-label> <ion-input #nameInput [placeholder]="'enter-here'|translate" [(ngModel)]="profile.name" class="ion-text-right" (keyup)="maybeMoveFocus(emailInput, $event)"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Email</ion-label> <ion-input #emailInput placeholder="Enter here" [(ngModel)]="profile.email" type="email" pattern="email" class="ion-text-right" (keyup)="maybeMoveFocus(telInput, $event)"></ion-input>
+              <ion-label>{{'email'|translate}}</ion-label> <ion-input #emailInput [placeholder]="'enter-here'|translate" [(ngModel)]="profile.email" type="email" pattern="email" class="ion-text-right" (keyup)="maybeMoveFocus(telInput, $event)"></ion-input>
             </ion-item>
             <ion-item>
-              <ion-label>Phone Number</ion-label> <ion-input #telInput placeholder="Select One" [(ngModel)]="profile.telephone" type="tel" class="ion-text-right" (keyup)="maybeClearFocus(telInput, $event)"></ion-input>
+              <ion-label>{{'phone-number'|translate}}</ion-label> <ion-input #telInput [placeholder]="'select-one'|translate" [(ngModel)]="profile.telephone" type="tel" class="ion-text-right" (keyup)="maybeClearFocus(telInput, $event)"></ion-input>
             </ion-item>
             <ion-item (click)="selectArea()">
-              <ion-label>Country</ion-label>
-              <ion-label class="input-label ion-text-right">{{ getDisplayableNation(profile.nation) || 'Enter here' }}</ion-label>
+              <ion-label>{{'country'|translate}}</ion-label>
+              <ion-label class="input-label ion-text-right">{{ getDisplayableNation(profile.nation) || ('enter-here'|translate) }}</ion-label>
             </ion-item>
             <ion-item>
-              <ion-label>Gender</ion-label>
-              <ion-select [(ngModel)]="profile.gender" placeholder="Select One" interface="popover">
-                <ion-select-option value="female">Female</ion-select-option>
-                <ion-select-option value="male">Male</ion-select-option>
+              <ion-label>{{'gender'|translate}}</ion-label>
+              <ion-select [(ngModel)]="profile.gender" [placeholder]="'select-one'|translate" interface="popover">
+                <ion-select-option value="female">{{'female'|translate}}</ion-select-option>
+                <ion-select-option value="male">{{'male'|translate}}</ion-select-option>
               </ion-select>
             </ion-item>
             <ion-item>
-              <ion-label>Date of Birth</ion-label>
-              <ion-datetime picker-format="YYYY/M/D" [(ngModel)]="birthDate" placeholder="Select Date"></ion-datetime>
+              <ion-label>{{'birth-date'|translate}}</ion-label>
+              <ion-datetime picker-format="YYYY/M/D" [(ngModel)]="birthDate" [placeholder]="'select-date'|translate"></ion-datetime>
               </ion-item>
           </ion-list>
         </div>

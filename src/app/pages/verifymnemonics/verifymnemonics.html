@@ -1,5 +1,5 @@
 <div class="root-container">
-  <header-bar title="Verification" [transparent]="false" [showBack]="true"></header-bar>
+  <header-bar title="verification" [transparent]="false" [showBack]="true"></header-bar>
 
   <ion-content class="ion-text-center">
     <div class="mnemonics-box">
@@ -15,8 +15,8 @@
       </ion-grid>
     </div>
 
-    <div class="title">Please select your mnemonic words.</div>
-    <div class="subtitle">This verification is needed to make sure that your correctly saved your mnemonics.</div>
+    <div class="title">{{'verify-title'|translate}}</div>
+    <div class="subtitle">{{'verify-subtitle'|translate}}</div>
 
     <div class="enter-mnemonic-box ion-margin">
       <span *ngFor="let _word of mnemonicList; let i = index">
@@ -32,12 +32,6 @@
           </ion-col>
         </ion-row>
       </span>
-      <!--<div class="words">
-        <ion-button outline *ngFor="let item of mnemonicList; let i = index"
-            (click)="addButton(i, item)" [disabled]="item.selected">
-            {{item.text}}
-        </ion-button>
-      </div>-->
     </div>
 
     <did-button class="main-button" (click)="nextClicked()" 
