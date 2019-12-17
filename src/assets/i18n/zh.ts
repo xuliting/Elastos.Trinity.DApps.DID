@@ -5,6 +5,7 @@ export const zh = {
     'copy-to-clipboard': 'Copy to clipboard',
     'copied-to-clipboard': 'Copied to clipboard!',
     'confirm': 'Confirm',
+    'go-back': 'Go back',
     'accept': 'Accept',
     'select-one': 'Select one',
     'select-date': 'Select date',
@@ -84,7 +85,9 @@ export const zh = {
     'delete-did': 'Delete DID',
     'my-visible-data': 'My Visible Data',
     'my-hidden-data': 'My Hidden Data',
-
+    'deletion-popup-warning': 'Warning!',
+    'deletion-popup-content': 'Your identity will be permanently deleted along with all related credentials and third party app connections.',
+    'deletion-popup-confirm-question': 'Are you sure?',
 
     // screen: edit profile
     'edit-profile': 'Edit profile',

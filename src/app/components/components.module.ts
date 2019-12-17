@@ -15,6 +15,8 @@ import { CreatePasswordComponent } from './createpassword/createpassword.compone
 import { RoundedActionButtonComponent } from './rounded-action-button/rounded-action-button.component';
 import { ShowQRCodeComponent } from './showqrcode/showqrcode.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { AdvancedPopupController } from './advanced-popup/advancedpopup.controller';
+import { AdvancedPopupComponent } from './advanced-popup/advancedpopup.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,7 @@ import { QRCodeModule } from 'angularx-qrcode';
     CreatePasswordComponent,
     RoundedActionButtonComponent,
     ShowQRCodeComponent,
+    AdvancedPopupComponent,
   ],
   imports: [
     CommonModule,
@@ -51,8 +54,10 @@ import { QRCodeModule } from 'angularx-qrcode';
     ShowQRCodeComponent,
   ],
   providers: [
+    AdvancedPopupController
   ],
   entryComponents: [
+    AdvancedPopupComponent
   ],
 })
 export class ComponentsModule { }

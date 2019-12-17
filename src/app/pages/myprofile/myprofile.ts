@@ -12,6 +12,7 @@ import { CountryCodeInfo } from 'src/app/model/countrycodeinfo';
 import { TranslateService } from '@ngx-translate/core';
 import { ShowQRCodeComponent } from 'src/app/components/showqrcode/showqrcode.component';
 import { PopupProvider } from 'src/app/services/popup';
+import { AdvancedPopupController } from 'src/app/components/advanced-popup/advancedpopup.controller';
 
 type ProfileDisplayEntry = {
   label: string,
@@ -38,6 +39,7 @@ export class MyProfilePage {
   constructor(public event: Events,
               public route:ActivatedRoute,
               public zone: NgZone,
+              private advancedPopup: AdvancedPopupController,
               private popupProvider: PopupProvider,
               private translate: TranslateService,
               private appService: UXService,
@@ -159,12 +161,30 @@ export class MyProfilePage {
    * Permanently delete the DID after user confirmation.
    */
   deleteDID() {
-    this.popupProvider.ionicConfirm("Delete", "Delete DID?", "Yes", "NO").then(async (data) => {
+    this.advancedPopup.create({
+      color:'#FF4D4D',
+      info: {
+          picture: '/assets/images/Local_Data_Delete_Icon.svg',
+          title: this.translate.instant("deletion-popup-warning"),
+          content: this.translate.instant("deletion-popup-content")
+      },
+      prompt: {
+          title: this.translate.instant("deletion-popup-confirm-question"),
+          confirmAction: this.translate.instant("confirm"),
+          cancelAction: this.translate.instant("go-back"),
+          confirmCallback: async ()=>{
+            console.log("Deletion confirmed by user");
+            let activeDidStore = Config.didStoreManager.getActiveDidStore();
+            await Config.didStoreManager.deleteDidStore(activeDidStore);
+          }
+      }
+    }).show();
+    /*this.popupProvider.ionicConfirm("Delete", "Delete DID?", "Yes", "NO").then(async (data) => {
       if (data) {
         let activeDidStore = Config.didStoreManager.getActiveDidStore();
         await Config.didStoreManager.deleteDidStore(activeDidStore);
       }
-    });
+    });*/
   }
 
   /**

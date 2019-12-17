@@ -79,3 +79,8 @@ ion-footer {
     background-color: #161723;
     font-size: 20px;
 }
+
+.no-background{
+    --background:none;
+    background:none;
+}

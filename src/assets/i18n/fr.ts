@@ -5,6 +5,7 @@ export const fr = {
     'copy-to-clipboard': 'Copier dans le presse-papier',
     'copied-to-clipboard': 'Copié dans le presse-papier!',
     'confirm': 'Confirmer',
+    'go-back': 'Retour',
     'accept': 'Accepter',
     'select-one': 'Sélectionner',
     'select-date': 'Sélectionner la date',
@@ -84,6 +85,9 @@ export const fr = {
     'delete-did': 'Supprimer le DID',
     'my-visible-data': 'Mes Données Visibles',
     'my-hidden-data': 'Mes Données Cachées',
+    'deletion-popup-warning': 'Attention!',
+    'deletion-popup-content': 'Votre identité sera définitivement supprimée ainsi que les références associées et connexions aux applications tierces.',
+    'deletion-popup-confirm-question': 'Etes-vous sûr(e)?',
 
     // screen: edit profile
     'edit-profile': 'Editer le profil',

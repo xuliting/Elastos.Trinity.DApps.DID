@@ -50,7 +50,7 @@ export class UXService {
         }
         else {
             // Simulated settings
-            this.setCurLang("en");
+            this.setCurLang("fr");
 
             this.showEntryScreen();
         }
