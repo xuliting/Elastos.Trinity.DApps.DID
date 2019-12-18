@@ -7,7 +7,7 @@
   "short_description": "Decentralized User Identity Management",
   "description": "Manage your decentralized identity, choose personal information to share with others, using this DID DApp.",
   "start_url": "index.html",
-  "type": "file",
+  "type": "app",
   "category": "finance",
   "icons": [
     {
