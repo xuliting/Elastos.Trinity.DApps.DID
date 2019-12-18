@@ -8,7 +8,8 @@
           <div class="no-picture">
             {{'no-picture-placeholder'|translate}}
           </div>
-          <img src="assets/images/Guy_Face.svg">
+          <img src="assets/images/Guy_Face.svg" *ngIf="isMale()">
+          <img src="assets/images/DefaultProfileWoman.svg" *ngIf="!isMale()">
         </div>
         <div class="profile-items">
           <ion-grid>
@@ -22,6 +23,7 @@
               <ion-col>
                 <div class="actions">
                   <rounded-action-button title="qr-code" (click)="showQRCode()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
+                  <rounded-action-button title="edit-profile" (click)="editProfile()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
                   <rounded-action-button title="edit-visibility" (click)="editVisibility()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
                   <rounded-action-button title="backup" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
                   <!--<rounded-action-button title="password" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>-->

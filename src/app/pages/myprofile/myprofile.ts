@@ -135,6 +135,13 @@ export class MyProfilePage {
   }
 
   /**
+   * Tells if current profile
+   */
+  isMale() {
+    return (!this.profile || this.profile.gender == "" || this.profile.gender == "male")
+  }
+
+  /**
    * Shows a pop-under with a large qr code and DID string.
    */
   async showQRCode() {
@@ -148,6 +155,10 @@ export class MyProfilePage {
     modal.onDidDismiss().then((params) => {
     });
     modal.present();
+  }
+
+  editProfile() {
+    this.native.go("/editprofile", {create: false});
   }
 
   /**

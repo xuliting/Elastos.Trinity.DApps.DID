@@ -62,6 +62,13 @@ export class EditProfilePage {
     });
   }
 
+  /**
+   * Tells if current profile
+   */
+  isMale() {
+    return (!this.profile || this.profile.gender == "" || this.profile.gender == "male")
+  }
+
   selectArea() {
     this.events.subscribe('selectarea', (params: CountryCodeInfo) => {
       this.zone.run(() => {

@@ -27,7 +27,8 @@
           <div class="no-picture" *ngIf="false">
             {{'no-picture-placeholder'|translate}}
           </div>
-          <img src="assets/images/Guy_Face.svg">
+          <img src="assets/images/Guy_Face.svg" *ngIf="isMale()">
+          <img src="assets/images/DefaultProfileWoman.svg" *ngIf="!isMale()">
         </div>
         <div class="profile-items">
           <ion-list>
