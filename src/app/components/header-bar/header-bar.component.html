@@ -15,5 +15,5 @@
             <ion-icon slot="icon-only" name="close"></ion-icon>
         </ion-button>
     </ion-buttons>-->
-    <header-menu-button (click)="close()"></header-menu-button>
+    <header-menu-button (click)="close()" *ngIf="showClose"></header-menu-button>
 </ion-toolbar>

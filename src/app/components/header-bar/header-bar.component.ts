@@ -16,7 +16,7 @@ export class HeaderBarComponent implements OnInit {
     @Input('showClose') showClose: boolean = true;
     @Input('showMenu') showMenu: boolean = false;
     @Input('transparent') transparent: boolean = false;
-    // @Output('onMenu') onMenu = new EventEmitter();
+    @Output('onClose') onClose = new EventEmitter();
 
     constructor(public uxService: UXService, private native: Native) { }
 
@@ -27,7 +27,11 @@ export class HeaderBarComponent implements OnInit {
     }
 
     close() {
-        this.uxService.close()
+        // Call custom close callback if any provided, otherwise directly close the app.
+        if (this.onClose.observers.length > 0)
+            this.onClose.emit();
+        else
+            this.uxService.close()
     }
 
     navBack() {

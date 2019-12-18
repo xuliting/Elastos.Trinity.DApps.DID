@@ -93,6 +93,10 @@ export class UXService {
             redirectPath: "/credaccessrequest"
         });*/
 
+        /*this.authService.chooseIdentity({
+            redirectPath: "/regappprofilerequest"
+        });*/
+
         //selfUxService.native.go("/importdid"); // TMP
         //selfUxService.native.go("/noidentity"); // TMP
     }
@@ -172,7 +176,7 @@ export class UXService {
         switch (intent.action) {
             case "credaccess":
                 console.log("Received credential access intent request");
-                if (selfUxService.checkIntentParams(intent)) {
+                if (selfUxService.checkCredAccessIntentParams(intent)) {
                     this.appIsLaunchingFromIntent = true;
 
                     this.authService.chooseIdentity({
@@ -204,8 +208,8 @@ export class UXService {
         }
     }
 
-    checkIntentParams(intent) {
-        console.log("Checking intent parameters");
+    checkCredAccessIntentParams(intent) {
+        console.log("Checking credaccess intent parameters");
         if (Util.isEmptyObject(intent.params) || Util.isEmptyObject(intent.params.claims)) return false;
 
         let requestProfile = [];
@@ -244,7 +248,8 @@ export class UXService {
         Config.requestDapp = {
             appName: intent.from,
             intentId: intent.intentId,
-            action: intent.action
+            action: intent.action,
+            allParams: intent.params
         }
 
         return true;
