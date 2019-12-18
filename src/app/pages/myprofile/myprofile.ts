@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ShowQRCodeComponent } from 'src/app/components/showqrcode/showqrcode.component';
 import { PopupProvider } from 'src/app/services/popup';
 import { AdvancedPopupController } from 'src/app/components/advanced-popup/advancedpopup.controller';
+import { DIDService } from 'src/app/services/did.service';
 
 type ProfileDisplayEntry = {
   label: string,
@@ -42,6 +43,7 @@ export class MyProfilePage {
               private advancedPopup: AdvancedPopupController,
               private popupProvider: PopupProvider,
               private translate: TranslateService,
+              private didService: DIDService,
               private appService: UXService,
               private modalCtrl: ModalController,
               private native: Native) {
@@ -55,7 +57,7 @@ export class MyProfilePage {
   }
 
   ngOnInit() {
-    this.event.subscribe('did:didstorechanged', ()=> {
+    this.event.subscribe('did:didchanged', ()=> {
       this.zone.run(() => {
         this.init();
       });
@@ -63,18 +65,18 @@ export class MyProfilePage {
   }
 
   ngOnDestroy() {
-    this.event.unsubscribe('did:didstorechanged');
+    this.event.unsubscribe('did:didchanged');
   }
 
   init() {
-    this.profile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
+    this.profile = this.didService.getActiveDid().getBasicProfile();
     console.log("MyProfilePage is using this profile:", this.profile);
 
     this.buildDisplayEntries();
   }
 
   ionViewDidEnter() {
-    this.didString = Config.didStoreManager.getActiveDidStore().getCurrentDid();
+    this.didString = this.didService.getActiveDid().getDIDString();
     if (this.didString != '') {
       this.appService.setIntentListener();
     }
@@ -185,8 +187,8 @@ export class MyProfilePage {
           cancelAction: this.translate.instant("go-back"),
           confirmCallback: async ()=>{
             console.log("Deletion confirmed by user");
-            let activeDidStore = Config.didStoreManager.getActiveDidStore();
-            await Config.didStoreManager.deleteDidStore(activeDidStore);
+            let activeDid = this.didService.getActiveDid();
+            await this.didService.deleteDid(activeDid);
           }
       }
     }).show();

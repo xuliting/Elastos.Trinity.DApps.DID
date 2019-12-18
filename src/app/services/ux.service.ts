@@ -6,8 +6,8 @@ import { Native } from './native';
 import { Config } from './config';
 import { Util } from './util';
 import { BrowserSimulation } from './browsersimulation';
-import { DidStoreManager } from './didstoremanager';
 import { AuthService } from './auth.service';
+import { DIDService } from './did.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
 let selfUxService: UXService = null;
@@ -33,6 +33,7 @@ export class UXService {
     constructor(public translate: TranslateService, 
         private platform: Platform, 
         private native: Native,
+        private didService: DIDService,
         private authService: AuthService) {
         selfUxService = this;
     }
@@ -80,12 +81,12 @@ export class UXService {
             console.error(err);
 
             // Error while checking - fallback to default behaviour
-            Config.didStoreManager.displayDefaultScreen();
+            this.didService.displayDefaultScreen();
         });
     }
 
     showEntryScreen() {
-        Config.didStoreManager.displayDefaultScreen();
+        this.didService.displayDefaultScreen();
 
         //selfUxService.native.go("/editprofile"); // TMP
                 

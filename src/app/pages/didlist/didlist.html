@@ -21,7 +21,7 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-item *ngFor="let item of didStoreList" (click)="switchDidStore(item)" class="ion-activatable">
+          <ion-item *ngFor="let item of didList" (click)="switchDidStore(item)" class="ion-activatable">
             <ion-label class="did-item">{{item.name}}</ion-label>
             <ion-ripple-effect></ion-ripple-effect>
           </ion-item>

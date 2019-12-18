@@ -30,7 +30,6 @@ import { HomePage } from './pages/home/home.page';
 import { MyProfilePage } from './pages/myprofile/myprofile';
 import { BackupDIDPage } from './pages/backupdid/backupdid';
 import { ImportDIDPage } from './pages/importdid/importdid';
-import { DIDSettingsPage } from './pages/didsettings/didsettings';
 import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 import { CredentialListPage } from './pages/credential/list/credentiallist';
@@ -83,7 +82,6 @@ export function TranslateLoaderFactory() {
     CredentialListPage,
     CredentialCreatePage,
     CredentialBackupPage,
-    DIDSettingsPage,
     EditProfilePage,
     ImportDIDPage,
     HomePage,

@@ -3,6 +3,7 @@ import { NavController } from '@ionic/angular';
 
 import { Config } from '../../services/config';
 import { Native } from '../../services/native';
+import { DIDService } from 'src/app/services/did.service';
 
 @Component({
   selector: 'page-newpasswordset',
@@ -10,10 +11,9 @@ import { Native } from '../../services/native';
   styleUrls: ['newpasswordset.scss']
 })
 export class NewPasswordSetPage {
-  constructor(public navCtrl: NavController, private native: Native) {}
+  constructor(public navCtrl: NavController, private didService: DIDService, private native: Native) {}
 
   async createProfile() {
-    await Config.didStoreManager.addDidStore();
     this.native.go('/editprofile', {create: true});
   }
 }

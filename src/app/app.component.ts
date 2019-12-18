@@ -8,7 +8,6 @@ import { Config } from './services/config';
 import { DIDService } from './services/did.service';
 import { LocalStorage } from './services/localstorage';
 import { Native } from './services/native';
-import { DidStoreManager } from './services/didstoremanager';
 import { UXService } from './services/ux.service';
 import { BrowserSimulation } from './services/browsersimulation';
 import { AuthService } from './services/auth.service';
@@ -26,10 +25,10 @@ export class MyApp {
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     public translate: TranslateService,
-    private didService: DIDService,
     private localStorage: LocalStorage,
     private native: Native,
     private popupProvider: PopupProvider,
+    private didService: DIDService,
     private uxService: UXService
   ) {
     this.initializeApp();
@@ -47,9 +46,6 @@ export class MyApp {
 
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-
-      // this.didService.init();
-      Config.didStoreManager = new DidStoreManager(this.event, this.zone, this.platform, this.localStorage, this.didService, this.popupProvider, this.native);
 
       // Call this after the DID store manager is initialized
       this.uxService.init();

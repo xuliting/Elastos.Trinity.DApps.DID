@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Config } from '../../../services/config';
 import { Native } from '../../../services/native';
+import { DIDService } from 'src/app/services/did.service';
 
 @Component({
   selector: 'page-credentialcreate',
@@ -15,12 +16,12 @@ export class CredentialCreatePage {
   remark: String = "";
   profile:any = {};
 
-  constructor(public route:ActivatedRoute, private native: Native) {
+  constructor(public route:ActivatedRoute, private didService: DIDService, private native: Native) {
     this.init();
   }
 
   init() {
-    this.profile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
+    this.profile = this.didService.getActiveDid().getBasicProfile();
   }
 
   async createCredential() {
@@ -33,7 +34,7 @@ export class CredentialCreatePage {
         nation: this.profile.nation
     }
 
-    await Config.didStoreManager.getActiveDidStore().addCredential(this.title, props);
+    await this.didService.getActiveDid().addCredential(this.title, props, "PASSWORD-TODO");
   }
 
   add() {

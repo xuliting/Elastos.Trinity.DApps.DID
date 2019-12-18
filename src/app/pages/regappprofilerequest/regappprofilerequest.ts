@@ -109,7 +109,7 @@ export class RegisterApplicationProfileRequestPage {
     ];
     this.requestDapp.allParams.customcredentialtypes.map((type)=>customCredentialTypes.push(type));
 
-    // Map each parameter provide by the app as a custom parameter for the main credential
+    // Map each parameter provided by the app as a custom parameter for the main credential
     let props = {};
     Object.keys(this.requestDapp.allParams).map((key)=>{
       // Skip non-user keys
@@ -122,7 +122,7 @@ export class RegisterApplicationProfileRequestPage {
     });
     
     // Create and append the new ApplicationProfileCredential credential to the local store.
-    await Config.didStoreManager.getActiveDidStore().addCredential(credentialTitle, props, customCredentialTypes);
+    await this.didService.getActiveDid().addCredential(credentialTitle, props, "PASSWORDTODO", customCredentialTypes);
   }
 
   async createIndependantCredentials() {
@@ -133,7 +133,7 @@ export class RegisterApplicationProfileRequestPage {
       let value = sharedClaims[key];
 
       console.log("Creating independant credential with key "+key+" and value:", value);
-      await Config.didStoreManager.getActiveDidStore().addCredential(key, {key:value});
+      await this.didService.getActiveDid().addCredential(key, {key:value}, "PASSWORDTODO");
     });
   }
 

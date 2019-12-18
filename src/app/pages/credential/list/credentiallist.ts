@@ -33,7 +33,7 @@ export class CredentialListPage {
       });
     });
 
-    this.event.subscribe('did:didstorechanged', ()=> {
+    this.event.subscribe('did:didchanged', ()=> {
       this.zone.run(() => {
         this.init();
       });
@@ -42,13 +42,13 @@ export class CredentialListPage {
 
   ngOnDestroy() {
     this.event.unsubscribe('did:credentialadded');
-    this.event.unsubscribe('did:didstorechanged');
+    this.event.unsubscribe('did:didchanged');
   }
 
   init() {
-    this.profile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
-    this.didString = Config.didStoreManager.getActiveDidStore().getCurrentDid();
-    this.credentials = Config.didStoreManager.getActiveDidStore().credentials;
+    this.profile = this.didService.getActiveDid().getBasicProfile();
+    this.didString = this.didService.getActiveDid().getDIDString();
+    this.credentials = this.didService.getActiveDid().credentials;
     this.hasCredential = this.credentials.length > 0 ? true : false;
 
     // Sort credentials by title
@@ -120,7 +120,7 @@ export class CredentialListPage {
 
   getDisplayableIssuer(credential: DIDPlugin.VerifiableCredential) {
     let issuer = credential.getIssuer();
-    if (issuer == Config.didStoreManager.getActiveDidStore().getCurrentDid())
+    if (issuer == this.didService.getActiveDid().getDIDString())
       return "Myself";
     else
       return issuer;

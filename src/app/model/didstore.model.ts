@@ -1,280 +1,304 @@
 import { Events } from '@ionic/angular';
 
-import { Profile } from './profile.model';
-import { DIDService } from '../services/did.service';
 import { NewDID } from './newdid.model';
-import { AuthService } from '../services/auth.service';
+import { DID } from './did.model';
+import { BrowserSimulation, SimulatedDID, SimulatedDIDStore } from '../services/browsersimulation';
+import { Config } from '../services/config';
 import { WrongPasswordException } from './exceptions/wrongpasswordexception.exception';
+
+declare let didManager: DIDPlugin.DIDManager;
+declare let appManager: AppManagerPlugin.AppManager;
 
 export class DIDStore {
     public pluginDidStore: DIDPlugin.DIDStore = null;
-    public dids: DIDPlugin.UnloadedDID[] = [];
-    private unloadedCredentials: DIDPlugin.UnloadedVerifiableCredential[] = [];
-    public credentials: DIDPlugin.VerifiableCredential[] = [];
+    public unloadedDids: DIDPlugin.DID[] = [];
+    public dids: DID[] = [];
+    private activeDid: DID = null;
 
-    constructor(private didService: DIDService, private events: Events) {}
+    constructor(private events: Events) {}
 
-    public getCurrentDid(): DIDPlugin.DIDString {
-        if (!this.dids || this.dids.length == 0) {
-            console.warn("Abnormal case: no active DID in the DID Store!");
-            return null;
+    public getActiveDid(): DID {
+        return this.activeDid
+    }
+
+    public setActiveDid(did: DID) {
+        console.log("DID store "+this.getId()+" is setting its active DID to "+(did?did.getDIDString():null));
+        this.activeDid = did;
+    }
+
+    public getId(): string {
+        return this.pluginDidStore.getId();
+    }
+
+    /**
+     * Right after its creation, a DID store needs to define a private root key (private identity)
+     */
+    public async createPrivateIdentity(password: string, mnemonicLang: DIDPlugin.MnemonicLanguage, mnemonic: string) : Promise<boolean> {
+        let hasPrivId = await this.hasPrivateIdentity();
+        if (hasPrivId) {
+            console.error("Private identity already exists!")
+            return false; // Unable to load store data correctly
         }
 
-        return this.dids[0].did; // Handle only one DID per DIDStore for now.
+        // Create a private root key
+        console.log("Creating private root key");
+        await this.initPluginPrivateIdentity(mnemonicLang, mnemonic, password, true);
+        
+        return true;
+    }
+
+    public async initNewDidStore() {
+        let didStoreId = Config.uuid(6, 16);
+        
+        console.log("Initializing a new DID Store with ID "+didStoreId);
+        await this.initDidStore(didStoreId);
+    }
+
+    private async initDidStore(didStoreId: string) {
+        this.pluginDidStore = await this.initPluginDidStore(didStoreId);
     }
 
     /**
      * Fills this object model by loading a plugin DID store with all its contained DIDs, credentials, etc.
      */
-    async loadFromDidStoreId(didStoreId: string) : Promise<Boolean> {
+    public static async loadFromDidStoreId(didStoreId: string, events: Events) : Promise<DIDStore> {
         console.log("loadFromDidStoreId "+didStoreId);
 
+        let didStore;
         try {
-            this.pluginDidStore = await this.didService.initDidStore(didStoreId);
-            let hasPrivId = await this.didService.hasPrivateIdentity();
-            if (!hasPrivId) {
-                console.error("No private identity found...")
-                return false; // Unable to load store data correctly
-            }
+            didStore = new DIDStore(events);
+            await didStore.initDidStore(didStoreId);
+            
+            let pluginDids = await didStore.listPluginDids();
 
-            this.dids = await this.didService.listDids();
-            console.log("DIDs:", this.dids)
-            if (this.dids.length == 0) {
+            console.log("Plugin DIDs:", pluginDids);
+            if (pluginDids.length == 0) {
                 // Something went wrong earlier, no DID in the DID store...
                 console.warn("No DID in the DID Store, that's a bit strange but we want to continue here.")
             }
 
-            await this.loadAllCredentials();
+            await didStore.loadAllDids(pluginDids);
         }
         catch (e) {
             console.error("Fatal error while loading from DID Store id.", e);
-            return false;
+            return null;
         }
 
-        return true;
+        return didStore;
+    }
+
+    protected async loadAllDids(pluginDids: DIDPlugin.DID[]) {
+        this.dids = [];
+        for(let pluginDid of pluginDids) {
+            let did = new DID(pluginDid, this.events);
+            await did.loadAll();
+            this.dids.push(did);
+        }
+        console.log("Loaded DIDs:", this.dids);
     }
 
     /**
-     * Gets the list of unloaded credentials then load them one by one.
-     * After this call, all credentials related to the active DID of this DID store are loaded
-     * in memory.
+     * Finds a loaded DID in the DID list, from its DID string.
      */
-    async loadAllCredentials() {
-        if (this.getCurrentDid() == null) {
-            console.log("Not loading credentials as there is no DID in the store.");
-            return;
-        }
+    public findDidByString(didString: string): DID {
+        console.log("Searching DID from did string "+didString);
 
-        console.log("Loading DID store credentials for DID", this.getCurrentDid());
+        if (!didString)
+            return null;
 
-        // Get the list of unloaded credentials
-        // TODO: Should load only BASIC type credentials here to get basic profile info, we don't need everything.
-        this.unloadedCredentials = await this.didService.listCredentials(this.getCurrentDid());
-        console.log("Current credentials list: ", this.unloadedCredentials);
-
-        this.credentials = [];
-        for (let entry of this.unloadedCredentials) {
-            await this.loadCredential(this.getCurrentDid(), entry);
-        }
-    }
-
-    async loadCredential(curDidId: DIDPlugin.DIDString, entry: DIDPlugin.UnloadedVerifiableCredential) {
-        let loadedCredential = await this.didService.loadCredential(curDidId, entry.credentialId);
-        console.log("Credential loaded:", loadedCredential);
-        this.credentials.push(loadedCredential);
+        return this.dids.find((did)=>{
+            return did.getDIDString() == didString;
+        })
     }
 
     /**
      * Converts the DID being created into a real DID in the DID store, with some credentials
      * for user's default profile.
      */
-    public async addNewDidWithProfile(newDid: NewDID, mnemonicLang: DIDPlugin.MnemonicLanguage, mnemonic: string) {
-        if (this.dids.length >= 1) {
-            console.warn("Caution! Your are adding a new DID to the DIDStore but there are already some DIDs, and we don't support more than one DID per store for now!");
+    public async addNewDidWithProfile(newDid: NewDID): Promise<string> {
+        let createdDid: {did: DIDPlugin.DID, didDocument: DIDPlugin.DIDDocument};
+        try {
+            // Create and add a DID to the DID store in physical storage.
+            createdDid = await this.createPluginDid(newDid.password, "");
+            console.log("Created DID:", createdDid);
         }
-
-        // Create a private root key
-        console.log("Adding DID to the store", this);
-        await this.didService.initPrivateIdentity(mnemonicLang, mnemonic, newDid.password, true)
-
-        // Save password for later use
-        AuthService.instance.saveCurrentUserPassword(this.pluginDidStore.getId(), newDid.password);
-
-        // Create and add a DID to the DID store in physical storage.
-        let createdDid = await this.didService.createDid(newDid.password, "");
-        console.log("Created DID:", createdDid);
+        catch (e) {
+            console.error("Create DID exception - assuming wrong password", e);
+            throw new WrongPasswordException();
+        }
 
         // Add DID to our memory model.
-        this.dids.push({
-            did: createdDid.didString,
-            alias:""
-        });
+        let did: DID;
+        if (BrowserSimulation.runningInBrowser())
+            did = new DID(new SimulatedDID(), this.events);
+        else
+            did = new DID(createdDid.did, this.events);
+        this.dids.push(did);
 
         // Now create credentials for each profile entry
-        await this.writeProfile(newDid.profile);
+        await did.writeProfile(newDid.profile, newDid.password);
+
+        // This new DID becomes the active one.
+        await this.setActiveDid(did);
+
+        return did.getDIDString();
     }
 
-    /**
-     */
-    async addCredential(title: String, props: any, userTypes?: String[]): Promise<DIDPlugin.VerifiableCredential> {
-        return new Promise(async (resolve, reject)=>{
-            console.log("Adding credential", title, props, userTypes);
+    public async deleteDid(did: DID) {
+        // Delete for real
+        await this.deletePluginDid(did.getDIDString());
 
-            let types: String[] = [
-                "SelfProclaimedCredential"
-            ];
-            // types[0] = "BasicProfileCredential";
+        // Delete from our local model
+        let didIndex = this.dids.findIndex(d=>d==did);
+        this.dids.splice(didIndex, 1);
 
-            // If caller provides custom types, we add them to the list
-            // TODO: This is way too simple for now. We need to deal with types schemas in the future.
-            if (userTypes) {
-                userTypes.map((type)=>{
-                    types.push(type);
-                })
-            }
+        console.log("Deleted DID");
 
-            let credential: DIDPlugin.VerifiableCredential = null;
-            try {
-                console.log("Asking DIDService to create the credential");
-                credential = await this.didService.createCredential(this.getCurrentDid(), title, types, 15, props, AuthService.instance.getCurrentUserPassword());
-                console.log("Created credential:",credential);
-            }
-            catch (e) {
-                console.error("Create credential exception - assuming wrong password", e);
-                reject(new WrongPasswordException());
-                return;
-            }
+        await this.setActiveDid(null);
+    }
 
-            console.log("Asking DIDService to store the credential");
-            await this.didService.storeCredential(this.getCurrentDid(), credential);
-
-            // NO - for now we don't want to "publish" (= put in the DID document) - we just want to store it
-            //console.log("Asking DIDService to add the credential");
-            //await this.didService.addCredential(credential.getId());
-
-            console.log("Credential successfully added");
-
-            // Add the new credential to the memory model
-            this.credentials.push(credential);
-
-            // Notify listeners that a credential has been added
-            this.events.publish('did:credentialadded');
-
-            resolve(credential);
+    private initPluginDidStore(didStoreId: string): Promise<DIDPlugin.DIDStore> {
+        if (BrowserSimulation.runningInBrowser()) {
+            return new Promise((resolve, reject)=>{
+               resolve(new SimulatedDIDStore());
+            });
+        }
+        return new Promise((resolve, reject)=>{
+            didManager.initDidStore(
+                didStoreId,
+                this.createIdTransactionCallback,
+                (pluginDidStore: DIDPlugin.DIDStore) => {
+                    console.log("Initialized DID Store is ", pluginDidStore);
+                    resolve(pluginDidStore);
+                },
+                (err) => {reject(err)},
+            );
         });
     }
 
-    async deleteCredential(credentialDidUrl: String): Promise<boolean> {
-        console.log("Asking DIDService to delete the credential "+credentialDidUrl);
-        await this.didService.deleteCredential(this.getCurrentDid(), credentialDidUrl);
-
-        // Delete from our local model as well
-        let deletionIndex = this.credentials.findIndex((c)=>c.getId() == credentialDidUrl);
-        this.credentials.splice(deletionIndex, 1);
-
-        return true;
-    }
-
-    /**
-     * Based on some predefined basic credentials (name, email...) we build a Profile structure
-     * to ease profile editing on UI.
-     */
-    getBasicProfile() : Profile {
-        let profile = new Profile();
-
-        // We normally have one credential for each profile field
-        this.credentials.map((cred)=>{
-            let props = cred.getSubject();
-            if (!props) {
-                console.warn("Found an empty credential subject while trying to build profile, this should not happen...");
-                return;
-            }
-
-            if (props.name)
-                profile.name = props.name;
-            if (props.birthDate)
-                profile.birthDate = props.birthDate;
-            if (props.nation)
-                profile.nation = props.nation;
-            if (props.email)
-                profile.email = props.email;
-            if (props.gender)
-                profile.gender = props.gender;
-            if (props.telephone)
-                profile.telephone = props.telephone;
-        })
-
-        console.log("Basic profile:", profile);
-        return profile;
-    }
-
-    /**
-     * Overwrites profile info using a new profile. Each field info is updated
-     * into its respective credential
-     */
-    writeProfile(newProfile: Profile): Promise<void> {
-        return new Promise(async (resolve, reject)=>{
-            console.log("Writing profile fields as credentials", newProfile);
-
-            for(let key of Object.keys(newProfile)) {
-                let props = {};
-                props[key] = newProfile[key];
-
-                if (!this.credentialContentHasChanged(key, newProfile[key])) {
-                    console.log("Not updating credential "+key+" as it has not changed");
-                    continue; // SKip this credential, go to next one.
-                }
-
-                try {
-                    // Update use case: if this credential already exist, we delete it first before re-creating it.
-                    if (this.credentialExists(key)) {
-                        let credentialDidUrl = this.getCurrentDid() + "#" + key;
-                        await this.deleteCredential(credentialDidUrl);
-                    }
-
-                    console.log("Adding credential for profile key "+key);
-                    let credential = await this.addCredential(key, props, ["BasicProfileCredential"]);
-                    console.log("Created credential:", credential);
-                }
-                catch (e) {
-                    // We may have catched a wrong password exception - stop the loop here.
-                    reject(e);
-                    return;
-                }
-            }
-
-            resolve();
+    private createIdTransactionCallback(payload: string, memo: string) {
+        let params = {
+            didrequest: payload,
+        }
+        appManager.sendIntent('didtransaction', params, (ret)=> {
+            //TODO
+            console.log('sendIntent didtransaction:', ret);
         });
     }
 
-    /**
-     * Checks if a given credential exists in current DID
-     */
-    credentialExists(key: string): boolean {
-        return (this.credentials.find((c)=>{
-            return c.getFragment() == key;
-        }) != null);
-    }
-
-    /**
-     * Compares the given credential properties with an existing credential properties to see if
-     * something has changed or not. This function is used to make sure we don't try to delete/re-create
-     * an existing creedntial on profile update, in case nothing has changed (performance)
-     */
-    credentialContentHasChanged(key: string, newProfileValue: string) {
-        let currentCredential: DIDPlugin.VerifiableCredential = this.credentials.find((c)=>{
-            return c.getFragment() == key;
-        });
-
-        if (!currentCredential) {
-            return true; // Doesn't exist? consider this has changed.
+    private initPluginPrivateIdentity(language, mnemonic, password, force): Promise<void> {
+        if (BrowserSimulation.runningInBrowser()) {
+            return new Promise((resolve, reject)=>{
+                resolve()
+            });
         }
 
-        // NOTE: FLAT comparison only for now, not deep.
-        let currentProps = currentCredential.getSubject();
-        if (currentProps[key] != newProfileValue)
-            return true;
+        return new Promise((resolve, reject)=>{
+            this.pluginDidStore.initPrivateIdentity(
+                language, mnemonic, password, password, force,
+                () => {resolve()}, (err) => {reject(err)},
+            );
+        });
+    }
 
-        return false;
+    hasPrivateIdentity(): Promise<boolean> {
+        if (BrowserSimulation.runningInBrowser()) {
+            return new Promise((resolve, reject)=>{
+               resolve(true)
+            });
+        }
+
+        return new Promise((resolve, reject)=>{
+            this.pluginDidStore.containsPrivateIdentity(
+                (hasPrivId) => {resolve(hasPrivId)}, (err) => {reject(err)},
+            );
+        });
+    }
+
+    deletePluginDid(didString): Promise<void> {
+        return new Promise((resolve, reject)=>{
+            this.pluginDidStore.deleteDid(
+                didString,
+                () => {resolve()}, (err) => {reject(err)},
+            );
+        });
+    }
+
+    createPluginDid(passphrase, hint = ""): Promise<{did:DIDPlugin.DID, didDocument:DIDPlugin.DIDDocument}> {
+        console.log("Creating DID");
+        return new Promise((resolve, reject)=>{
+            if (!BrowserSimulation.runningInBrowser()) {
+                this.pluginDidStore.newDid(
+                    passphrase, hint,
+                    (did, didDocument) => {
+                        console.log("Created DID:", did);
+                        resolve({did:did, didDocument:didDocument})
+                    },
+                    (err) => {reject(err)},
+                );
+            }
+            else {
+                resolve({did:new SimulatedDID(), didDocument: null})
+            }
+        });
+    }
+
+    listPluginDids(): Promise<DIDPlugin.DID[]> {
+        if (BrowserSimulation.runningInBrowser()) {
+            return new Promise((resolve, reject)=>{
+               resolve([new SimulatedDID(), new SimulatedDID(), new SimulatedDID()]);
+            });
+        }
+        return new Promise((resolve, reject)=>{
+            this.pluginDidStore.listDids(
+                DIDPlugin.DIDStoreFilter.DID_ALL,
+                (ret) => {resolve(ret)}, (err) => {reject(err)},
+            );
+        });
+    }
+
+    resolveDid(didString): Promise<any> {
+        return new Promise((resolve, reject)=>{
+            this.pluginDidStore.resolveDidDocument(
+                didString,
+                (ret) => {resolve(ret)}, (err) => {reject(err)},
+            );
+        });
+    }
+
+    storeDid(didDocumentId, hint): Promise<any> {
+        return new Promise((resolve, reject)=>{
+            this.pluginDidStore.storeDidDocument(
+                didDocumentId, hint,
+                () => {resolve()}, (err) => {reject(err)},
+            );
+        });
+    }
+
+    updateDid(didDocument: DIDPlugin.DIDDocument, didUrlString, storepass): Promise<any> {
+        return new Promise((resolve, reject)=>{
+            this.pluginDidStore.updateDidDocument(
+                didDocument, storepass,
+                () => {resolve()}, (err) => {reject(err)},
+            );
+        });
+    }
+
+    setResolverUrl(resolverUrl): Promise<any> {
+        return new Promise((resolve, reject)=>{
+            this.pluginDidStore.setResolverUrl(
+                resolverUrl,
+                () => {resolve()}, (err) => {reject(err)},
+            );
+        });
+    }
+
+    synchronize(storepass): Promise<any> {
+        return new Promise((resolve, reject)=>{
+            this.pluginDidStore.synchronize(
+                storepass,
+                () => {resolve()}, (err) => {reject(err)},
+            );
+        });
     }
 }

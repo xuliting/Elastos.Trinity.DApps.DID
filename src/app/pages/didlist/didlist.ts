@@ -7,7 +7,7 @@ import { Profile } from '../../model/profile.model';
 import { Native } from '../../services/native';
 import { DIDStore } from 'src/app/model/didstore.model';
 import { DIDService } from 'src/app/services/did.service';
-import { DIDStoreEntry } from '../../model/didstoreentry.model';
+import { DIDEntry } from '../../model/didentry.model';
 
 @Component({
   selector: 'page-didlist',
@@ -15,18 +15,19 @@ import { DIDStoreEntry } from '../../model/didstoreentry.model';
   styleUrls: ['didlist.scss']
 })
 export class DIDListPage {
-  public didStoreList: DIDStoreEntry[];
+  public didList: DIDEntry[];
   public activeProfile: Profile = null;
 
   constructor(private native: Native,
               public event: Events,
+              private didService: DIDService,
               public zone: NgZone) {
     this.init();
   }
 
   ngOnInit() {
     this.init();
-    this.event.subscribe('did:didstorechanged', ()=> {
+    this.event.subscribe('did:didchanged', ()=> {
       this.zone.run(() => {
         this.refreshStoreList();
         this.refreshActiveProfile();
@@ -35,7 +36,7 @@ export class DIDListPage {
   }
 
   ngOnDestroy() {
-    this.event.unsubscribe('did:didstorechanged');
+    this.event.unsubscribe('did:didchanged');
   }
 
   async init() {
@@ -44,11 +45,11 @@ export class DIDListPage {
   }
 
   async refreshStoreList() {
-    this.didStoreList = await Config.didStoreManager.getDidStoreEntries();
+    this.didList = await this.didService.getDidEntries();
   }
 
   refreshActiveProfile() {
-    this.activeProfile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
+    this.activeProfile = this.didService.getActiveDid().getBasicProfile();
     console.log("DID list: refreshed active profile", this.activeProfile);
   }
 
@@ -56,8 +57,8 @@ export class DIDListPage {
     this.native.go("/noidentity", {isfirst: false});
   }
 
-  switchDidStore(didStoreEntry: DIDStoreEntry) {
-    Config.didStoreManager.activateDidStore(didStoreEntry.storeId);
+  switchDidStore(didStoreEntry: DIDEntry) {
+    this.didService.activateDid(this.didService.getActiveDidStore().getId(), didStoreEntry.didString);
     this.native.setRootRouter("/home/myprofile", {create: false});
   }
 

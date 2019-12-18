@@ -42,8 +42,8 @@ export class BackupDIDPage {
 
   generateMnemonic() {
     this.didService.generateMnemonic(this.native.getMnemonicLang()).then((ret) => {
-        Config.didBeingCreated.mnemonic = ret;
-        this.mnemonicList = Config.didBeingCreated.mnemonic.split(/[\u3000\s]+/).map((word)=>{
+        this.didService.didBeingCreated.mnemonic = ret;
+        this.mnemonicList = this.didService.didBeingCreated.mnemonic.split(/[\u3000\s]+/).map((word)=>{
           return word;
         });
     });
@@ -52,7 +52,7 @@ export class BackupDIDPage {
   nextClicked() {
     if (this.isCreation) {
       // Next button pressed: go to mnemonic verification screen.
-      this.native.go("/verifymnemonics", { mnemonicStr: Config.didBeingCreated.mnemonic});
+      this.native.go("/verifymnemonics", { mnemonicStr: this.didService.didBeingCreated.mnemonic});
     }
     else {
       // TODO

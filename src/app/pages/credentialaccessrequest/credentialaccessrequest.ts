@@ -43,8 +43,8 @@ export class CredentialAccessRequestPage {
 
   ionViewWillEnter() {    
     this.zone.run(() => {
-      this.profile = Config.didStoreManager.getActiveDidStore().getBasicProfile();
-      this.credentials = Config.didStoreManager.getActiveDidStore().credentials;
+      this.profile = this.didService.getActiveDidStore().getActiveDid().getBasicProfile();
+      this.credentials = this.didService.getActiveDidStore().getActiveDid().credentials;
 
       if (!BrowserSimulation.runningInBrowser()) {
         this.requestDapp = Config.requestDapp;
@@ -134,7 +134,7 @@ export class CredentialAccessRequestPage {
   addDIDToMandatoryItems() {
     let claimRequest: ClaimRequest = {
       name: "did",
-      value: Config.didStoreManager.getActiveDidStore().getCurrentDid(),
+      value: this.didService.getActiveDidStore().getActiveDid().getDIDString(),
       credential: null,
       canBeDelivered: true,
       selected: true,
@@ -217,18 +217,19 @@ export class CredentialAccessRequestPage {
     this.checkPasswordAndSendPresentation(selectedCredentials, false);
   }
 
+  // TODO: REPLACE WITH AUTHSERVICE.checkPasswordThenExecute()
   private async checkPasswordAndSendPresentation(selectedCredentials: DIDPlugin.VerifiableCredential[], forcePasswordPrompt: boolean = false): Promise<DIDPlugin.VerifiablePresentation> {
     // This write operation requires password. Make sure we have this in memory, or prompt user.
-    if (forcePasswordPrompt || this.authService.needToPromptPassword(Config.didStoreManager.getCurDidStoreId())) {
+    if (forcePasswordPrompt || this.authService.needToPromptPassword(this.didService.getActiveDidStore())) {
       let previousPasswordWasWrong = forcePasswordPrompt;
-      await this.authService.promptPasswordInContext(Config.didStoreManager.getCurDidStoreId(), previousPasswordWasWrong);
+      await this.authService.promptPasswordInContext(this.didService.getActiveDidStore(), previousPasswordWasWrong);
       // Password will be saved by the auth service.
     }
 
     let presentation = null;
-    let currentDidString = Config.didStoreManager.getActiveDidStore().getCurrentDid();
+    let currentDidString: string = this.didService.getActiveDid().getDIDString();
     try {
-      presentation = await this.didService.createVerifiablePresentationFromCredentials(currentDidString, selectedCredentials, this.authService.getCurrentUserPassword());  
+      presentation = await this.didService.getActiveDid().createVerifiablePresentationFromCredentials(selectedCredentials, this.authService.getCurrentUserPassword());  
       console.log("Created presentation:", presentation);
     }
     catch (e) {

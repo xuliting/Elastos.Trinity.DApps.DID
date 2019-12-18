@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 
-import { DIDStoreEntry } from '../model/didstoreentry.model';
+import { DIDEntry } from '../model/didentry.model';
 import { BrowserSimulation, BrowserSimulationConfig } from './browsersimulation';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class LocalStorage {
         console.log("LocalStorage init")
     }
 
-    public add(key: string, value: any): any {
+    private add(key: string, value: any): any {
         return this.get(key).then((val) => {
             let id = value['id'];
             if (val === null) {
@@ -25,15 +25,15 @@ export class LocalStorage {
         });
     }
 
-    public set(key: string, value: any): any {
+    private set(key: string, value: any): any {
         return this.storage.set(key, JSON.stringify(value));
     }
 
-    public get(key: string): Promise<any> {
+    private get(key: string): Promise<any> {
         return this.storage.get(key);
     }
 
-    public getAsJson<T>(key) : Promise<T> {
+    private getAsJson<T>(key) : Promise<T> {
         return new Promise(async (resolve, reject)=>{
             try {
                 let val = await this.storage.get(key)
@@ -45,87 +45,45 @@ export class LocalStorage {
         });
     }
 
-    // @deprecated
-    public getVal(key, func) {
-        this.storage.get(key).then((val) => {
-            if (typeof(val) == "string") {
-                val = JSON.parse(val);
-            }
-            func(val);
-        });
-    }
-
-    public remove(key: string): any {
+    private remove(key: string): any {
         return this.storage.remove(key);
     }
 
-    public clear(): any {
+    private clear(): any {
         return this.storage.clear();
     }
 
-    public setPassword(value: any): any {
-        let key = "Did-password";
-        return this.storage.set(key, JSON.stringify(value));
-    }
-
-    public getPassword(): Promise<any> {
-        let key = "Did-password";
-        return this.get(key);
-    }
-
-    public setMnemonic(value: any): any {
-        let key = "Did-mnemonic";
-        return this.storage.set(key, JSON.stringify(value));
-    }
-
-    public getMnemonic(func): any {
-        let key = "Did-mnemonic";
-        this.getVal(key, func);
-    }
-
-    public setCurrentDid(value: any): any {
-        // TODO
-        let key = "Did-string";
-        return this.storage.set(key, JSON.stringify(value));
-    }
-
-    public getCurrentDid(func): any {
-        // TODO
-        let key = "Did-string";
-        this.getVal(key, func);
-    }
-
-    public saveDidStoreEntries(entries: DIDStoreEntry[]) {
-        console.log("Setting DID store entries", entries);
-        let key = "didstores";
+    public saveDidEntries(entries: DIDEntry[]) {
+        console.log("Setting DID entries", entries);
+        let key = "didentries";
         this.storage.set(key, JSON.stringify(entries));
     }
 
-    public getDidStoreEntries(): Promise<DIDStoreEntry[]> {
-        let key = "didstores";
+    public getDidEntries(): Promise<DIDEntry[]> {
+        let key = "didentries";
         return this.getAsJson(key);
     }
 
     public saveCurrentDidStoreId(value: string): any {
-        // TODO
         let key = "cur-didstoreId";
-        return this.storage.set(key, JSON.stringify(value));
+        return this.storage.set(key, value);
     }
 
     public getCurrentDidStoreId(): Promise<string> {
-        /*if (BrowserSimulation.runningInBrowser()) {
-            return new Promise((resolve)=>{
-                if (BrowserSimulationConfig.hasDIDStores())
-                    resolve("store-abcedf");
-                else
-                    resolve(null);
-            });
-        }
-        else {*/
-            let key = "cur-didstoreId";
-            return this.getAsJson(key);
-        //}
+        let key = "cur-didstoreId";
+        return this.get(key);
     }
+
+    public setCurrentDid(value: string): any {
+        let key = "cur-didstring";
+        return this.storage.set(key, value);
+    }
+
+    public getCurrentDid(): Promise<string> {
+        let key = "cur-didstring";
+        return this.get(key);
+    }
+
 }
 
 

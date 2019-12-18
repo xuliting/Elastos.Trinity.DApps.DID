@@ -9,6 +9,7 @@ import { NewDID } from 'src/app/model/newdid.model';
 import { Styling } from '../../services/styling';
 import { ModalController } from '@ionic/angular';
 import { AuthService } from 'src/app/services/auth.service';
+import { DIDService } from 'src/app/services/did.service';
 
 @Component({
   selector: 'page-noidentity',
@@ -24,19 +25,29 @@ export class NoIdentityPage {
   public password: string = "";
   public passwordConfirmation: string = "";
 
-  constructor(public route:ActivatedRoute, private native: Native, private authService: AuthService) {
+  constructor(public route:ActivatedRoute, private native: Native, private didService: DIDService, private authService: AuthService) {
     this.route.queryParams.subscribe((data) => {
         if (!Util.isEmptyObject(data)) this.isfirst = false;
     });
   }
 
   async createIdentity() {
-    Config.didBeingCreated = new NewDID();
+    this.didService.didBeingCreated = new NewDID();
 
-    this.password = await this.authService.promptNewPassword();
-    if (this.password != null) {
-      Config.didBeingCreated.password = this.password;
-      this.native.go('/newpasswordset');
+    // If there is an already active DID store, we don't need to create a new password to 
+    // create a new DID Store. We will only prompt user password for the existing DID store later
+    // in the UI flow.
+    if (this.didService.getActiveDidStore() != null) {
+      this.native.go('/editprofile');
+    }
+    else {
+      // Need to create a new DID store with a password
+      this.password = await this.authService.promptNewPassword();
+      if (this.password != null) {
+        this.didService.didBeingCreated.password = this.password;
+        await this.didService.addDidStore();
+        this.native.go('/newpasswordset');
+      }
     }
   }
 
@@ -50,9 +61,5 @@ export class NoIdentityPage {
 
   nextSlide(slider) {
     slider.slideNext();
-  }
-
-  async confirmPassword() {
-    
   }
 }

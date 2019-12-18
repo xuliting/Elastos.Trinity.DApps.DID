@@ -14,6 +14,7 @@ import { WrongPasswordException } from 'src/app/model/exceptions/wrongpasswordex
 import { PopupProvider } from 'src/app/services/popup';
 import { CountryCodeInfo } from 'src/app/model/countrycodeinfo';
 import { area } from '../../../assets/area/area';
+import { DID } from 'src/app/model/did.model';
 
 @Component({
   selector: 'page-editprofile',
@@ -25,7 +26,6 @@ export class EditProfilePage {
   public isEdit: boolean = false;
   private paramsSubscription: Subscription;
 
-  public editedStore: DIDStore;
   public profile: Profile;
 
   constructor(public route: ActivatedRoute,
@@ -42,9 +42,8 @@ export class EditProfilePage {
       if (data['create'] == 'false') {
         console.log("Editing an existing profile");
 
-        this.editedStore = Config.didStoreManager.getActiveDidStore();
         // Edition - We clone the received profile in case user wants to cancel editing.
-        this.profile = Profile.fromProfile(Config.didStoreManager.getActiveDidStore().getBasicProfile());
+        this.profile = Profile.fromProfile(this.didService.getActiveDid().getBasicProfile());
         this.birthDate = this.profile.birthDate;
         this.isEdit = true;
       }
@@ -52,7 +51,6 @@ export class EditProfilePage {
         console.log("Editing a new profile");
 
         // Creation
-        this.editedStore = new DIDStore(this.didService, this.events);
         this.profile = new Profile();
       }
 
@@ -115,27 +113,43 @@ export class EditProfilePage {
         await this.checkPasswordAndWriteProfile();
 
         // Tell others that DID needs to be refreshed (profile info has changed)
-        this.events.publish('did:didstorechanged');
+        this.events.publish('did:didchanged');
         
         this.navCtrl.pop();
       }
       else { // If creation mode, go to backup did flow.
-        Config.didBeingCreated.profile = this.profile; // Save filled profile for later.
-        this.native.go("/backupdid", {create: true});
+        this.didService.didBeingCreated.profile = this.profile; // Save filled profile for later.
+
+        if (!await this.didService.getActiveDidStore().hasPrivateIdentity())
+          this.native.go("/backupdid", {create: true});
+        else {
+          await this.authService.checkPasswordThenExecute(async ()=>{
+            this.didService.didBeingCreated.password = this.authService.getCurrentUserPassword();
+
+            // Creation mode but no need to create a did store
+            await this.didService.finalizeDidCreation();
+            this.native.go("/home/myprofile", {create: true});
+          }, ()=>{
+            this.popupProvider.ionicAlert("DID creation error", "Sorry, we are unable to create your DID.");
+          });
+        }
       }
     }
   }
 
+  // TODO: REPLACE WITH AUTHSERVICE.checkPasswordThenExecute()
   private async checkPasswordAndWriteProfile(forcePasswordPrompt: boolean = false) {
     // This write operation requires password. Make sure we have this in memory, or prompt user.
-    if (forcePasswordPrompt || this.authService.needToPromptPassword(Config.didStoreManager.getCurDidStoreId())) {
+    if (forcePasswordPrompt || this.authService.needToPromptPassword(this.didService.getActiveDidStore())) {
       let previousPasswordWasWrong = forcePasswordPrompt;
-      await this.authService.promptPasswordInContext(Config.didStoreManager.getCurDidStoreId(), previousPasswordWasWrong);
+      await this.authService.promptPasswordInContext(this.didService.getActiveDidStore(), previousPasswordWasWrong);
       // Password will be saved by the auth service.
     }
 
     try {
-      await this.editedStore.writeProfile(this.profile); // Update profile/credentials
+      // We are editing an existing DID: just ask the DID to save its profile.
+      // DID being created are NOT saved here.
+      await this.didService.getActiveDid().writeProfile(this.profile, AuthService.instance.getCurrentUserPassword()); // Update profile/credentials
     }
     catch (e) {
       console.error(e);

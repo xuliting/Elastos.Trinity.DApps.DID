@@ -136,12 +136,18 @@ export class SimulatedDIDStore implements DIDPlugin.DIDStore {
         simulated("deleteDid", "SimulatedDIDStore");
     }
 
-    newDid(passphrase: string, alias: string, onSuccess: (didString: string, didDocument: DIDPlugin.DIDDocument) => void, onError?: (err: any) => void) {
+    newDid(passphrase: string, alias: string, onSuccess: (did: DIDPlugin.DID, didDocument: DIDPlugin.DIDDocument) => void, onError?: (err: any) => void) {
         simulated("newDid", "SimulatedDIDStore");
+        onSuccess(new SimulatedDID(), null);
     }
 
-    listDids(filter: any, onSuccess: (didString: DIDPlugin.UnloadedDID[]) => void, onError?: (err: any) => void) {
+    listDids(filter: any, onSuccess: (dids: DIDPlugin.DID[]) => void, onError?: (err: any) => void) {
         simulated("listDids", "SimulatedDIDStore");
+        onSuccess([
+            new SimulatedDID(),
+            new SimulatedDID(),
+            new SimulatedDID()
+        ])
     }
 
     loadDidDocument(didString: string, onSuccess: (didDocument: DIDPlugin.DIDDocument) => void, onError?: (err: any) => void) {
@@ -170,9 +176,9 @@ export class SimulatedDIDStore implements DIDPlugin.DIDStore {
 }
 
 export class SimulatedDID implements DIDPlugin.DID {
-    getId(): string {
-        simulated("getId", "SimulatedDID");
-        return "";
+    getDIDString(): string {
+        simulated("getDIDString", "SimulatedDID");
+        return "did:elastos:my-did";
     }
     getMethod(onSuccess: (data: any) => void, onError?: (err: any) => void) {
         simulated("getMethod", "SimulatedDID");
@@ -183,10 +189,6 @@ export class SimulatedDID implements DIDPlugin.DID {
     resolveDidDocument(onSuccess: (didDocument: DIDPlugin.DIDDocument) => void, onError?: (err: any)=>void) {
         simulated("resolveDidDocument", "SimulatedDID");
         onSuccess(null);
-    }
-    toString(onSuccess: (data: any) => void, onError?: (err: any) => void) {
-        simulated("toString", "SimulatedDID");
-        onSuccess("");
     }
     issueCredential(subjectDID: string, credentialId: string, types: string[], expirationDate: Date, properties: any, passphrase: string, onSuccess: (credential: DIDPlugin.VerifiableCredential) => void, onError?: (err: any) => void) {
         simulated("issueCredential", "SimulatedDID");

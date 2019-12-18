@@ -6,6 +6,9 @@ import { Config } from './config';
 import { UXService } from './ux.service';
 import { Native } from './native';
 import { CreatePasswordComponent } from '../components/createpassword/createpassword.component';
+import { DIDService } from './did.service';
+import { DIDStore } from '../model/didstore.model';
+import { WrongPasswordException } from '../model/exceptions/wrongpasswordexception.exception';
 
 @Injectable({
     providedIn: 'root'
@@ -16,15 +19,15 @@ export class AuthService {
     private savedPassword: string = null; // Latest password input by user
     private savedPasswordRelatedDIDStoreId: string = null; // Store ID for which the user password was provided.
 
-    constructor(public modalCtrl: ModalController, private native: Native) {
+    constructor(public modalCtrl: ModalController, private native: Native, private didService: DIDService) {
         AuthService.instance = this;
     }
 
     /**
      * Do we know the DID store password for the currently active store?
      */
-    needToPromptPassword(didStoreId: string): boolean {
-        if (didStoreId == this.savedPasswordRelatedDIDStoreId && this.savedPassword != null) {
+    needToPromptPassword(didStore: DIDStore): boolean {
+        if (didStore.getId() == this.savedPasswordRelatedDIDStoreId && this.savedPassword != null) {
             // We already know the password for current 
             return false;
         }
@@ -37,10 +40,10 @@ export class AuthService {
     /**
      * Remember password provided by user for later.
      */
-    saveCurrentUserPassword(didStoreId: string, password: string) {
-        console.log("Saving user password for DID Store id "+didStoreId);
+    saveCurrentUserPassword(didStore: DIDStore, password: string) {
+        console.log("Saving user password for DID Store id "+didStore.getId());
 
-        this.savedPasswordRelatedDIDStoreId = didStoreId;
+        this.savedPasswordRelatedDIDStoreId = didStore.getId();
         this.savedPassword = password;
     }
 
@@ -51,7 +54,7 @@ export class AuthService {
     /**
      * Ask user to provide his password
      */
-    async promptPasswordInContext(forDidStore: string, previousPasswordWasWrong: boolean = false) {
+    async promptPasswordInContext(forDidStore: DIDStore, previousPasswordWasWrong: boolean = false) {
         console.log("Asking for user password ", previousPasswordWasWrong);
 
         return new Promise(async (resolve, reject)=>{
@@ -93,6 +96,26 @@ export class AuthService {
         })
     }
 
+    public async checkPasswordThenExecute(writeActionCb: ()=>Promise<void>, onError: ()=>void, forcePasswordPrompt: boolean = false) {
+        // A write operation requires password. Make sure we have this in memory, or prompt user.
+        if (forcePasswordPrompt || this.needToPromptPassword(this.didService.getActiveDidStore())) {
+          let previousPasswordWasWrong = forcePasswordPrompt;
+          await this.promptPasswordInContext(this.didService.getActiveDidStore(), previousPasswordWasWrong);
+          // Password will be saved by the auth service.
+        }
+    
+        writeActionCb().then(()=>{}).catch((e)=>{
+            console.error(e);
+            if (e instanceof WrongPasswordException) {
+                // Wrong password provided - try again.
+                this.checkPasswordThenExecute(writeActionCb, onError, forcePasswordPrompt = true);
+            }
+            else {
+                onError();
+            }
+        });
+      }
+
     /**
      * This method lets user choose a DID before going to another screen.
      * If there is only one identity, it will be selected and activated by default.
@@ -102,21 +125,21 @@ export class AuthService {
     public async chooseIdentity(opts: ChooseIdentityOptions) {
         console.log("ChooseIdentity: checking");
 
-        let didStoreEntries = await Config.didStoreManager.getDidStoreEntries();
+        let didEntries = await this.didService.getDidEntries();
 
-        if (!didStoreEntries || didStoreEntries.length == 0) {
+        if (!didEntries || didEntries.length == 0) {
             console.log("ChooseIdentity: no DID exists, redirecting to ID creation");
 
             // No identity? Ask user to create one.
-            Config.didStoreManager.displayDefaultScreen();
+            this.didService.displayDefaultScreen();
 
             // TODO: REDIRECT TO THE INTENT AFTER ID CREATION
         }
-        else if (didStoreEntries.length == 1) {
+        else if (didEntries.length == 1) {
             console.log("ChooseIdentity: only one DID exists, redirecting to the target screen directly");
 
             // Only one identity? Then use this one directly.
-            await Config.didStoreManager.activateSavedDidStore();
+            await this.didService.activateSavedDid();
             this.native.go(opts.redirectPath);
         }
         else {

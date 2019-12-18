@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Config } from '../../services/config';
 import { Native } from '../../services/native';
 import { Util } from '../../services/util';
+import { DIDService } from 'src/app/services/did.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 type MnemonicWord = {
     text: string;
@@ -22,6 +24,8 @@ export class VerifyMnemonicsPage {
 
     constructor(public route: ActivatedRoute,
                 public zone: NgZone,
+                private didService: DIDService,
+                private authService: AuthService,
                 private native: Native) {
         this.init();
     }
@@ -53,10 +57,12 @@ export class VerifyMnemonicsPage {
     }
 
     async createDid() {
-        console.log("Creating a new DID");
-        await Config.didStoreManager.getActiveDidStore().addNewDidWithProfile(Config.didBeingCreated, this.native.getMnemonicLang(), this.mnemonicStr);
-        await Config.didStoreManager.finalizeDidCreation();
-        
+        await this.didService.getActiveDidStore().createPrivateIdentity(this.didService.didBeingCreated.password, this.native.getMnemonicLang(), this.mnemonicStr);
+        await this.didService.finalizeDidCreation();
+
+        // Save password for later use
+        this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), this.didService.didBeingCreated.password);
+
         console.log("Redirecting user to his profile page");
         this.native.setRootRouter("/home/myprofile");
     }

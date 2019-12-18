@@ -1,28 +1,11 @@
 
 import { Injectable } from '@angular/core';
 
-import { DidStoreManager } from './didstoremanager';
 import { NewDID } from '../model/newdid.model';
 
 @Injectable()
 export class Config {
     public static requestDapp: any;
-    public static modifyId = "";
-    public static initialized: boolean = false;
-
-    public static curDidStoreId: string = "-1";
-    public static credentialInfos: any = {};
-    public static _runningInBrowser: boolean = false;
-
-    public static curDidStore: any = {
-        id: "",
-        name: "",
-        password: "",
-        mnemonic: "",
-        didList: [],
-    };
-    public static didStoreManager: DidStoreManager;
-    public static didBeingCreated: NewDID = null;
 
     public static uuid(len, radix): string {
         var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
@@ -59,34 +42,5 @@ export class Config {
             arr.push(obj[key]);
         }
         return arr;
-    }
-
-    public static getCurDidStoreId() {
-        return this.didStoreManager.getCurDidStoreId();
-    }
-
-    public static async setCurDidStoreId(id) {
-        await this.didStoreManager.activateDidStore(id);
-    }
-
-    public static getCurDid(id) {
-        return null;
-        // TMP BPI return Config.didStoreManager.masterWallet[id].chainList || null;
-    }
-
-    public static getDidList() {
-        var didList = [];
-        let didStoreId = Config.getCurDidStoreId();
-        let did = Config.getCurDid(didStoreId);
-        if (did != null) {
-            for (let index in did) {
-                let coin = did[index];
-                if (coin != 'ELA') {
-                    didList.push({ name: coin });
-                }
-            }
-        }
-
-        return didList;
     }
 }

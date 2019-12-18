@@ -1,79 +1,282 @@
 import { Injectable, NgZone } from '@angular/core';
-import { Platform, ToastController } from '@ionic/angular';
+import { Platform, ToastController, Events } from '@ionic/angular';
 
 import { SimulatedDID, SimulatedDIDStore, BrowserSimulation, SimulatedCredential } from '../services/browsersimulation';
 import { resolve } from 'path';
 import { TranslateService } from '@ngx-translate/core';
+import { LocalStorage } from './localstorage';
+import { PopupProvider } from './popup';
+import { Native } from './native';
+import { DIDStore } from '../model/didstore.model';
+import { Config } from './config';
+import { DIDEntry } from '../model/didentry.model';
+import { DID } from '../model/did.model';
+import { NewDID } from '../model/newdid.model';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let didManager: DIDPlugin.DIDManager;
-//declare let didManager: any;
+
 @Injectable({
     providedIn: 'root'
 })
 export class DIDService {
-    selfDidStore: DIDPlugin.DIDStore;
-    selfDidDocument: DIDPlugin.DIDDocument;
-    curDidString: string = "";
+    public static instance: DIDService = null;
+
+    public activeDidStore: DIDStore;
+    public didBeingCreated: NewDID = null;
 
     constructor(
         private platform: Platform,
         public zone: NgZone,
         private translate: TranslateService,
-        public toastCtrl: ToastController) {
+        public toastCtrl: ToastController,
+        public events: Events,
+        public localStorage: LocalStorage,
+        private popupProvider: PopupProvider,
+        public native: Native) {
             console.log("DIDService created");
+            DIDService.instance = this;
     }
 
-    createIdTransactionCallback(payload: string, memo: string) {
-        let params = {
-            didrequest: payload,
-        }
-        appManager.sendIntent('didtransaction', params, (ret)=> {
-            //TODO
-            console.log('sendIntent didtransaction:', ret);
+    public async displayDefaultScreen() {    
+        let didStoreId = await this.localStorage.getCurrentDidStoreId();
+        let didString = await this.localStorage.getCurrentDid();
+
+        console.log("Existing DID Store ID found:", didStoreId);
+        let couldActivate = await this.activateSavedDid();
+        if (couldActivate)
+            this.showDid(didStoreId, didString);
+        else
+            this.handleNull();
+    }
+    
+      /**
+       * Activate the DID saved from a previous session.
+       */
+      public async activateSavedDid(): Promise<boolean> {
+        let storeId = await this.localStorage.getCurrentDidStoreId();
+        let didString = await this.localStorage.getCurrentDid();
+        return this.activateDid(storeId, didString);
+      }
+    
+      private activateDidStore(storeId: string): Promise<boolean> {
+        return new Promise(async (resolve, reject)=>{
+            if (storeId == null) {
+                console.error("Impossible to activate a null store id!");
+                resolve(false);
+                return;
+            }
+
+            if (storeId == this.getCurDidStoreId()) {
+                console.log("DID Store ID hasn't changed - not loading the DID Store");
+                resolve(true); // Nothing changed but considered as successful.
+                return;
+            }
+
+            let didStore = await DIDStore.loadFromDidStoreId(storeId, this.events);
+            if (!didStore) {
+              this.popupProvider.ionicAlert("Store load error", "Sorry, we were unable to load your DID store...");
+              resolve(false);
+              return;
+            }
+    
+            console.log("Setting active DID store", didStore);
+            this.activeDidStore = didStore;
+
+            this.localStorage.saveCurrentDidStoreId(didStore.getId());
+
+            this.events.publish('did:didchanged');
+
+            resolve(true);
         });
-    }
+      }
 
-    getCurrentDidString() {
-        if (BrowserSimulation.runningInBrowser()) {
-            return "did:elastos:azeeza786zea67zaek221fxi9";
-        }
-        console.log("didservice  this.curDidString:" + this.curDidString);
-        return this.curDidString;
-    }
+      /**
+       * Make the given DID store becoming the active one for all further operations.
+       * Redirects to the right screen after activation, if a switch is required.
+       */
+      public activateDid(storeId: string, didString: string): Promise<boolean> {
+        console.log("Activating DID using DID store ID "+storeId+" and DID "+didString);
+    
+        return new Promise(async (resolve, reject)=>{
+            if (didString == null) {
+                console.error("Impossible to activate a null did string!");
+                resolve(false);
+                return;
+            }
 
-    /**
-     * Creates a new local user identity.
-     */
-    createIdentity() {
-        return new Promise((resolve, reject)=>{
-           resolve()
+            let couldActivateStore = await this.activateDidStore(storeId);
+            if (!couldActivateStore) {
+                resolve(false);
+                return;
+            }        
+
+            try {
+                let did = this.getActiveDidStore().findDidByString(didString);
+                if (!did) { // Just in case, should not happen but for robustness...
+                    console.error("No DID found! Failed to activate DID");
+                    resolve(false);
+                    return;
+                }
+                this.localStorage.setCurrentDid(did.getDIDString());
+                this.getActiveDidStore().setActiveDid(did);
+        
+                this.events.publish('did:didchanged');
+        
+                resolve(true);
+          }
+          catch (e) {
+            // Failed to load this full DID content
+            console.error(e);
+            resolve(false);
+          }
         });
-    }
-
-    //
-    initDidStore(didStoreId: string): Promise<DIDPlugin.DIDStore> {
-        if (BrowserSimulation.runningInBrowser()) {
-            return new Promise((resolve, reject)=>{
-               resolve(new SimulatedDIDStore());
-            });
+      }
+    
+      public async showDid(storeId:string, didString: string) {
+        console.log("Showing DID Store "+storeId+" with DID "+didString);
+        let couldEnableStore = await this.activateDid(storeId, didString);
+        if (!couldEnableStore) {
+          console.error("Unable to load the previously selected DID store");
+          this.handleNull(); // TODO: go to DID list instead
         }
-        return new Promise((resolve, reject)=>{
-            didManager.initDidStore(
-                didStoreId,
-                this.createIdTransactionCallback,
-                (ret) => {
-                    console.log("Initialized DID Store is ",ret);
-                    this.selfDidStore = ret;
-                    resolve(ret);
-                },
-                (err) => {reject(err)},
-            );
-        });
-    }
+        else {
+            if (this.getActiveDid() != null)
+                this.native.setRootRouter('/home/myprofile', {create:false});
+            else {
+                // Oops, no active DID...
+                console.warn("No active DID in this store!");
+                this.native.setRootRouter('/choosedid');
+            }
+          //this.native.setRootRouter('/choosedid');
+          //this.native.setRootRouter('/home/didsettings');
+          //this.native.setRootRouter('/newpasswordset');
+          //this.native.setRootRouter('/noidentity');
+          //this.native.setRootRouter('/editprofile');
+          /*this.native.setRootRouter('/verifymnemonics', {
+            mnemonicStr:"a b c d e f g h k l m o",
+          });*/
+          /*this.native.setRootRouter('/backupdid', {
+            mnemonicStr:"a b c d e f g h k l m o",
+          });*/
+          //this.native.setRootRouter('/home/credentiallist');
+        }
+      }
+    
+      handleNull() {
+        this.native.setRootRouter('/noidentity');
+      }
+    
+      /**
+       * Called at the beginning of a new DID creation process.
+       */
+      public async addDidStore() {   
+        let didStore = new DIDStore(this.events); 
+        await didStore.initNewDidStore();
 
-    deleteDidStore(didStoreId: string): Promise<any> {
-        console.log("deleteDidStore:",didStoreId);
+        // Activate the DID store, without DID
+        await this.activateDidStore(didStore.getId());
+      }
+    
+      /**
+       * Called at the end of the DID creation process to finalize a few things.
+       */
+      public async finalizeDidCreation() {
+        console.log("Finalizing DID creation");
+        
+        let createdDidString = await this.getActiveDidStore().addNewDidWithProfile(this.didBeingCreated);
+        await this.activateDid(this.getCurDidStoreId(), createdDidString);
+
+        let name = this.didBeingCreated.profile.name;
+        console.log("Finalizing DID creation for did string "+createdDidString+" - with name "+name);
+    
+        await this.addDidEntry(new DIDEntry(createdDidString, name));
+      }
+    
+      /**
+       * Create a new simple DIDStoreEntry to save it to local storage, just to maintain
+       * a list of existing stores and their names/ids
+       */
+      private async addDidEntry(didEntry: DIDEntry) {
+        let existingDidEntries = await this.getDidEntries();
+        existingDidEntries.push(didEntry);
+
+        this.localStorage.saveDidEntries(existingDidEntries);
+      }
+    
+      public async getDidEntries(): Promise<DIDEntry[]> {
+        let entries = await this.localStorage.getDidEntries();
+        if (!entries)
+          return [];
+    
+        return entries;
+      }
+    
+      public getCurDidStoreId() {
+        if (!this.activeDidStore)
+          return null;
+    
+        return this.activeDidStore.pluginDidStore.getId();
+      }
+    
+      public getActiveDidStore() : DIDStore {
+        return this.activeDidStore;
+      }
+    
+      public getActiveDid(): DID {
+        return this.activeDidStore.getActiveDid();
+      }
+    
+      /*public async deleteDidStore(didStore: DIDStore) {
+        this.deletePluginDidStore(didStore.pluginDidStore.getId());
+    
+        // Remove store from DidStoreEntry list
+        let entries = await this.localStorage.getDidStoreEntries();
+        let storeId = didStore.pluginDidStore.getId();
+        for (let i = 0; i < entries.length; i++) {
+            if (entries[i].storeId === storeId) {
+                entries.splice(i, 1);
+                break;
+           }
+        }
+        this.localStorage.saveDidStoreEntries(entries);
+    
+        // Switch current store to the first one in the DID list, or go to new identity creation screen.
+        if (entries.length > 0) {
+          this.showDidStore(entries[0].storeId);
+        } else {
+          this.localStorage.saveCurrentDidStoreId('');
+          this.activeDidStore = null;
+          this.handleNull();
+        }
+      }*/
+
+      async deleteDid(did: DID) {
+        let storeId = this.getActiveDidStore().getId();
+        await this.getActiveDidStore().deleteDid(did);
+    
+        // Remove DID from DidStoreEntry list
+        let entries = await this.localStorage.getDidEntries();
+        for (let i = 0; i < entries.length; i++) {
+            if (entries[i].didString === did.getDIDString()) {
+                entries.splice(i, 1);
+                break;
+           }
+        }
+        this.localStorage.saveDidEntries(entries);
+    
+        // Switch current store to use the first did in the DID list, or go to new identity creation screen.
+        if (entries.length > 0) {
+          this.showDid(storeId, entries[0].didString);
+        } else {
+          this.localStorage.setCurrentDid(null);
+          this.activeDidStore.setActiveDid(null);
+          this.handleNull();
+        }
+      }
+
+    private deletePluginDidStore(didStoreId: string): Promise<any> {
+        console.log("deletePluginDidStore:",didStoreId);
         if (BrowserSimulation.runningInBrowser()) {
             return new Promise((resolve, reject)=>{
                resolve();
@@ -110,290 +313,6 @@ export class DIDService {
         });
     }
 
-    //DIDStore
-    initPrivateIdentity(language, mnemonic, password, force): Promise<void> {
-        if (BrowserSimulation.runningInBrowser()) {
-            return new Promise((resolve, reject)=>{
-               resolve()
-            });
-        }
-
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.initPrivateIdentity(
-                language, mnemonic, password, password, force,
-                () => {resolve()}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    hasPrivateIdentity(): Promise<boolean> {
-        if (BrowserSimulation.runningInBrowser()) {
-            return new Promise((resolve, reject)=>{
-               resolve(true)
-            });
-        }
-
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.containsPrivateIdentity(
-                (hasPrivId) => {resolve(hasPrivId)}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    deleteDid(didString): Promise<void> {
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.deleteDid(
-                didString,
-                () => {resolve()}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    createDid(passparase, hint = ""): Promise<any> {
-        console.log("Creating DID");
-        return new Promise((resolve, reject)=>{
-            if (!BrowserSimulation.runningInBrowser()) {
-                this.selfDidStore.newDid(
-                    passparase, hint,
-                    (didString, didDocument) => {
-                        this.selfDidDocument = didDocument;
-                        this.curDidString = didString;
-                        console.log("createDid this.curDidString:" + this.curDidString);
-                        resolve({didString:didString, didDocument:didDocument})
-                    },
-                    (err) => {reject(err)},
-                );
-            }
-            else {
-                resolve({
-                    didString: "did:elastos:azeeza786zea67zaek221fxi9",
-                    didDocument: null
-                })
-            }
-        });
-    }
-
-    listDids(): Promise<DIDPlugin.UnloadedDID[]> {
-        if (BrowserSimulation.runningInBrowser()) {
-            return new Promise((resolve, reject)=>{
-                let ret = [
-                   {did:"elastos:azeeza786zea67zaek221fxi9", alias:""}
-                ];
-               resolve(ret);
-            });
-        }
-        console.log("listDids");
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.listDids(
-                DIDPlugin.DIDStoreFilter.DID_ALL,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    publishDid(didDocument: DIDPlugin.DIDDocument, storepass: string): Promise<any> {
-        return new Promise((resolve, reject)=>{
-            didDocument.publish(
-                storepass,
-                () => {resolve()}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    /**
-     * didString to DID object.
-     */
-    _resolveDid(didString: DIDPlugin.DIDString): Promise<DIDPlugin.DID> {
-        console.log("Resolving DID object for DID", didString);
-
-        return new Promise((resolve, reject)=>{
-            if (!BrowserSimulation.runningInBrowser()) {
-                this.selfDidStore.loadDidDocument(didString, (didDocument: DIDPlugin.DIDDocument)=>{
-                    //console.log(didString, didDocument);
-                    didDocument.getSubject((did: DIDPlugin.DID)=>{
-                        resolve(did);
-                    }, (err)=>{
-                        console.error(err);
-                        resolve(null);
-                    });
-                }, (err)=>{
-                    console.error(err);
-                    resolve(null);
-                });
-            }
-            else {
-                resolve(new SimulatedDID())
-            }
-        });
-    }
-
-    resolveDid(didString): Promise<any> {
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.resolveDidDocument(
-                didString,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    storeDid(didDocumentId, hint): Promise<any> {
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.storeDidDocument(
-                didDocumentId, hint,
-                () => {resolve()}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    updateDid(didDocument: DIDPlugin.DIDDocument, didUrlString, storepass): Promise<any> {
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.updateDidDocument(
-                didDocument, storepass,
-                () => {resolve()}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    setResolverUrl(resolverUrl): Promise<any> {
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.setResolverUrl(
-                resolverUrl,
-                () => {resolve()}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    synchronize(storepass): Promise<any> {
-        return new Promise((resolve, reject)=>{
-            this.selfDidStore.synchronize(
-                storepass,
-                () => {resolve()}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    createCredential(didString: DIDPlugin.DIDString, credentialId, type, expirationDate, properties, passphrase): Promise<DIDPlugin.VerifiableCredential> {
-        return new Promise(async (resolve, reject)=>{
-            let did = await this._resolveDid(didString);
-            if (!did) {
-                reject("Unable to resolve DID");
-            }
-            else {
-                did.issueCredential(
-                    didString, credentialId, type, expirationDate, properties, passphrase,
-                    (ret) => {resolve(ret)}, (err) => {reject(err)},
-                );
-            }
-        });
-    }
-
-    deleteCredential(didString: DIDPlugin.DIDString, didUrlString): Promise<any> {
-        console.log("deleteCredential:" + didUrlString);
-        if (BrowserSimulation.runningInBrowser()) {//for test
-            return new Promise((resolve, reject)=>{
-               resolve()
-            });
-        }
-
-        return new Promise(async (resolve, reject)=>{
-            let did = await this._resolveDid(didString);
-            if (!did) {
-                reject("Unable to resolve DID");
-            }
-            else {
-                did.deleteCredential(
-                    didUrlString,
-                    () => {resolve()}, (err) => {reject(err)},
-                );
-            }
-        });
-    }
-
-    listCredentials(didString: DIDPlugin.DIDString): Promise<DIDPlugin.UnloadedVerifiableCredential[]> {
-        if (BrowserSimulation.runningInBrowser()) {//for test
-            return new Promise((resolve, reject)=>{
-                let fakeDID = new SimulatedDID()
-                fakeDID.listCredentials((credentials)=>{
-                    resolve(credentials);
-                })
-            });
-        }
-
-        return new Promise(async (resolve, reject)=>{
-            let did = await this._resolveDid(didString);
-            if (!did) {
-                reject("Unable to resolve DID");
-            }
-            else {
-                did.listCredentials(
-                    (ret) => {resolve(ret)}, (err) => {reject(err)},
-                );
-            }
-        });
-    }
-
-    loadCredential(didString: DIDPlugin.DIDString, didUrlString): Promise<any> {
-        if (BrowserSimulation.runningInBrowser()) {//for test
-            return new Promise((resolve, reject)=>{
-                let ret = SimulatedCredential.makeForCredentialId(didUrlString)
-                resolve(ret)
-            });
-        }
-
-        return new Promise(async (resolve, reject)=>{
-            let did = await this._resolveDid(didString);
-            if (!did) {
-                reject("Unable to resolve DID");
-            }
-            else {
-                did.loadCredential(
-                    didUrlString,
-                    (ret) => {resolve(ret)}, (err) => {reject(err)},
-                );
-            }
-        });
-    }
-
-    storeCredential(didString: DIDPlugin.DIDString, credential: DIDPlugin.VerifiableCredential): Promise<void> {
-        console.log("DIDService - storeCredential", didString, credential);
-        return new Promise(async (resolve, reject)=>{
-            let did = await this._resolveDid(didString);
-            if (!did) {
-                reject("Unable to resolve DID");
-            }
-            else {
-                console.log("DIDService - Calling real storeCredential");
-                did.storeCredential(
-                    credential,
-                    () => {
-                        console.log("DIDService - storeCredential responded");
-                        resolve()
-                    }, (err) => {reject(err)},
-                );
-            }
-        });
-    }
-
-    //DIDDocument
-    getDidDocumentSubject() : Promise<any> {
-        return new Promise((resolve, reject)=>{
-            this.selfDidDocument.getSubject(
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    //Did
-    addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<any> {
-        return new Promise((resolve, reject)=>{
-            this.selfDidDocument.addCredential(
-                credential,
-                storePass,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
-            );
-        });
-    }
-
     //Credential
     credentialToJSON(credential: DIDPlugin.VerifiableCredential): Promise<string> {
         if (BrowserSimulation.runningInBrowser()) {//for test
@@ -406,21 +325,6 @@ export class DIDService {
         return credential.toString();
     }
 
-    createVerifiablePresentationFromCredentials(didString: DIDPlugin.DIDString, credentials: DIDPlugin.VerifiableCredential[], storePass: string): Promise<DIDPlugin.VerifiablePresentation> {
-        return new Promise(async (resolve, reject)=>{
-            let did = await this._resolveDid(didString);
-            if (!did) {
-                reject("Unable to resolve DID");
-            }
-            else {
-                did.createVerifiablePresentation(credentials, "no-realm", "no-nonce", storePass, (presentation: DIDPlugin.VerifiablePresentation)=>{
-                    resolve(presentation);
-                }, (err)=>{
-                    reject(err);
-                });
-            }
-        });
-    }
 
     /**
      * We maintain a list of hardcoded basic profile keys=>user friendly string, to avoid
