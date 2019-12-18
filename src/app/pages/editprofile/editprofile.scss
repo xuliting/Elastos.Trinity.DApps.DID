@@ -54,9 +54,8 @@ ion-content {
     }
 
     .profile-items {
-        margin-top:17vw;
+        margin-top:15vw;
         background:white;
-        border-radius: 20px;
         margin-bottom:20px;
         padding-top:15vw;
         padding-bottom:15px;
@@ -71,7 +70,7 @@ ion-content {
 
                 ion-label {
                     font-weight:600;
-                    font-size:14px;
+                    font-size:16px;
                     --color:#6E7379;
                 }
 
@@ -80,7 +79,7 @@ ion-content {
                     --placeholder-opacity:1;
                     --font-weight:600 !important;
                     font-weight:600 !important;
-                    font-size:12px;
+                    font-size:14px;
                     --color:#CACCD0;
                     color:#CACCD0;
                 }

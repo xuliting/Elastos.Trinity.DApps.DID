@@ -1,10 +1,10 @@
 <div class="root-container">
-    <header-bar title="edit-profile" [showBack]="true" [transparent]="false"></header-bar>
+  <header-bar title="edit-profile" [showBack]="true" [transparent]="false"></header-bar>
 
   <ion-content>  
-    <ion-grid class="ion-text-center ion-padding">
+    <ion-grid class="ion-text-center ion-no-padding">
       <ion-row *ngIf="!isEdit">
-        <ion-col class="ion-text-center">
+        <ion-col class="ion-text-center ion-padding">
           {{'edit-profile-intro'|translate}}
         </ion-col>
       </ion-row>
@@ -13,7 +13,7 @@
           {{'name-is-required'|translate}}
         </ion-col>
       </ion-row>
-      <ion-row>
+      <ion-row class="ion-padding">
         <ion-col class="ion-align-self-center">
           <did-button class="secondary-button" (click)="next()" 
             [title]="'save-profile' | translate" 
@@ -27,7 +27,7 @@
           <div class="no-picture" *ngIf="false">
             {{'no-picture-placeholder'|translate}}
           </div>
-          <img src="assets/images/defaultuser.png">
+          <img src="assets/images/Guy_Face.svg">
         </div>
         <div class="profile-items">
           <ion-list>

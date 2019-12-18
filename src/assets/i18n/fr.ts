@@ -93,6 +93,7 @@ export const fr = {
     'edit-profile': 'Editer le profil',
     'edit-profile-intro': 'Saisissez autant, ou aussi peu que vous le souhaitez.',
     'name-is-required': 'Un nom est tout de même requis.',
+    'name-is-missing': 'Saisissez au moins votre nom SVP',
 
     // screen: did list
     'did-portfolio': 'Portefeuille DID',

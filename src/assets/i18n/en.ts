@@ -93,6 +93,7 @@ export const en = {
     'edit-profile': 'Edit profile',
     'edit-profile-intro': 'You can fill in as much or as little as you would like.',
     'name-is-required': 'Name is required.',
+    'name-is-missing': 'Please at least provide your name',
 
     // screen: did list
     'did-portfolio': 'DID Portfolio',

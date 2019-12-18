@@ -144,7 +144,7 @@ export class EditProfilePage {
 
   checkParms(){
     if(Util.isNull(this.profile.name)){
-      this.native.toast_trans('text-full-name');
+      this.native.toast_trans('name-is-missing');
       return false;
     }
     return true;
