@@ -88,6 +88,10 @@ export const fr = {
     'deletion-popup-warning': 'Attention!',
     'deletion-popup-content': 'Votre identité sera définitivement supprimée ainsi que les références associées et connexions aux applications tierces.',
     'deletion-popup-confirm-question': 'Etes-vous sûr(e)?',
+    'publish-changes': 'Publier les modifications',
+    'publish-popup-title': 'Publier Le Profil Public',
+    'publish-popup-content': 'Les informations seront stockées sur la blockchain et resteront toujours visibles!',
+    'publish-popup-confirm-question': 'Etes-vous sûr(e)?',
 
     // screen: edit profile
     'edit-profile': 'Editer le profil',

@@ -88,6 +88,10 @@ export const zh = {
     'deletion-popup-warning': 'Warning!',
     'deletion-popup-content': 'Your identity will be permanently deleted along with all related credentials and third party app connections.',
     'deletion-popup-confirm-question': 'Are you sure?',
+    'publish-changes': 'Publier les modifications',
+    'publish-popup-title': 'Publish Your Selected Visibility',
+    'publish-popup-content': 'Information will be stored on the blockchain when you confirm and will stay there!',
+    'publish-popup-confirm-question': 'Are you sure?',
 
     // screen: edit profile
     'edit-profile': 'Edit profile',

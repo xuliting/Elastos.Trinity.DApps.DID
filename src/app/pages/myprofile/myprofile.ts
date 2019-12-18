@@ -179,12 +179,6 @@ export class MyProfilePage {
           }
       }
     }).show();
-    /*this.popupProvider.ionicConfirm("Delete", "Delete DID?", "Yes", "NO").then(async (data) => {
-      if (data) {
-        let activeDidStore = Config.didStoreManager.getActiveDidStore();
-        await Config.didStoreManager.deleteDidStore(activeDidStore);
-      }
-    });*/
   }
 
   /**
@@ -192,7 +186,22 @@ export class MyProfilePage {
    * for each profile item (+ the DID itself).
    */
   publishVisibilityChanges() {
-    // TODO
+    this.advancedPopup.create({
+      color:'var(--ion-color-primary)',
+      info: {
+          picture: '/assets/images/Visibility_Icon.svg',
+          title: this.translate.instant("publish-popup-title"),
+          content: this.translate.instant("publish-popup-content")
+      },
+      prompt: {
+          title: this.translate.instant("publish-popup-confirm-question"),
+          confirmAction: this.translate.instant("confirm"),
+          cancelAction: this.translate.instant("go-back"),
+          confirmCallback: async ()=>{
+            // TODO
+          }
+      }
+    }).show();
   }
 
   getDisplayableNation(countryAlpha3) {

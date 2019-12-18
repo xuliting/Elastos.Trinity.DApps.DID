@@ -85,9 +85,9 @@ export class UXService {
     }
 
     showEntryScreen() {
-        //Config.didStoreManager.displayDefaultScreen();
+        Config.didStoreManager.displayDefaultScreen();
 
-        selfUxService.native.go("/editprofile"); // TMP
+        //selfUxService.native.go("/editprofile"); // TMP
                 
         /*this.authService.chooseIdentity({
             redirectPath: "/credaccessrequest"
