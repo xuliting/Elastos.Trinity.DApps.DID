@@ -254,6 +254,24 @@ export class DIDService {
         });
     }
 
+    setResolverUrl(resolverUrl): Promise<any> {
+        return new Promise((resolve, reject)=>{
+            this.selfDidStore.setResolverUrl(
+                resolverUrl,
+                () => {resolve()}, (err) => {reject(err)},
+            );
+        });
+    }
+
+    synchronize(storepass): Promise<any> {
+        return new Promise((resolve, reject)=>{
+            this.selfDidStore.synchronize(
+                storepass,
+                () => {resolve()}, (err) => {reject(err)},
+            );
+        });
+    }
+
     createCredential(didString: DIDPlugin.DIDString, credentialId, type, expirationDate, properties, passphrase): Promise<DIDPlugin.VerifiableCredential> {
         return new Promise(async (resolve, reject)=>{
             let did = await this._resolveDid(didString);

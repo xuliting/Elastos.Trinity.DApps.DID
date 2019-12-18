@@ -159,6 +159,14 @@ export class SimulatedDIDStore implements DIDPlugin.DIDStore {
     updateDidDocument(didDocument: DIDPlugin.DIDDocument, storepass: string, onSuccess?: () => void, onError?: (err: any) => void) {
         simulated("updateDidDocument", "SimulatedDIDStore");
     }
+
+    setResolverUrl(resolver: string, onSuccess: () => void, onError?: (err: any) => void) {
+        simulated("setResolverUrl", "SimulatedDIDStore");
+    }
+
+    synchronize(storepass: string, onSuccess: () => void, onError?: (err: any) => void) {
+        simulated("synchronize", "SimulatedDIDStore");
+    }
 }
 
 export class SimulatedDID implements DIDPlugin.DID {

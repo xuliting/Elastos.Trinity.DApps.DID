@@ -58,6 +58,10 @@ export class DIDSettingsPage {
     // TODO
   }
 
+  deleteDID() {
+    //TODO
+  }
+
   async openPayModal() {
     const modal = await this.modalCtrl.create({
         component: SecurityCheckComponent,
@@ -70,7 +74,7 @@ export class DIDSettingsPage {
     });
     return modal.present();
   }
-  
+
   viewActiveProfile() {
     this.native.setRootRouter("/home/myprofile", {create: false});
   }

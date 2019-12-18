@@ -9,8 +9,9 @@ export class RoundedActionButtonComponent implements OnInit {
     @Input('title') title: string = "";
     @Input('color') color: string = "#FAFAFA";
     @Input('imgcolor') imgcolor: string = "#FFFFFF";
+    @Input('mode') mode: string = "primary";
 
-    constructor() { 
+    constructor() {
     }
 
     ngOnInit() { }
