@@ -5,20 +5,11 @@
     <div class="title">
         {{'choose-did-intro'|translate}}
     </div>
-    <ion-grid class="ion-no-padding">
-      <ion-row>
-        <ion-col class="ion-text-center">
-          
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-item *ngFor="let item of didStoreList" (click)="selectDidStore(item)" class="ion-activatable">
-            <ion-label class="did-item">{{item.name}}</ion-label>
-            <ion-ripple-effect></ion-ripple-effect>
-          </ion-item>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <ion-list>
+      <ion-item *ngFor="let item of didStoreList" (click)="selectDidStore(item)" class="ion-activatable ion-no-margin">
+        <ion-label class="did-item">{{item.name}}</ion-label>
+        <ion-ripple-effect></ion-ripple-effect>
+      </ion-item>
+    </ion-list>
   </ion-content>
 </div>
