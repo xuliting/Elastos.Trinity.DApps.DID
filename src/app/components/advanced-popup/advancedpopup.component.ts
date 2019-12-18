@@ -28,7 +28,7 @@ export class AdvancedPopupComponent implements OnInit {
         // Animate boxes appearance with a fade in.
         setTimeout(()=>{
             this.readyToDisplay = true;
-        },200)
+        },100)
     }
 
     /**
