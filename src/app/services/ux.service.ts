@@ -30,8 +30,8 @@ export class UXService {
     private isReceiveIntentReady = false;
     private appIsLaunchingFromIntent = false; // Is the app starting because of an intent request?
 
-    constructor(public translate: TranslateService, 
-        private platform: Platform, 
+    constructor(public translate: TranslateService,
+        private platform: Platform,
         private native: Native,
         private didService: DIDService,
         private authService: AuthService) {
@@ -43,7 +43,7 @@ export class UXService {
 
         if (!BrowserSimulation.runningInBrowser()) {
             this.getLanguage();
-            
+
             this.computeAndShowEntryScreen();
 
             appManager.setListener(this.onReceive);
@@ -58,10 +58,10 @@ export class UXService {
     }
 
     /**
-     * This method defines which screen has to be displayed when the app start. This can be the default 
+     * This method defines which screen has to be displayed when the app start. This can be the default
      * no identity or current identity main screen, (defined by the didstoremanager), but the app is maybe
      * starting because we are receiving an intent.
-     * 
+     *
      * This method must be called only during the initial app start.
      */
     computeAndShowEntryScreen() {
@@ -89,7 +89,7 @@ export class UXService {
         this.didService.displayDefaultScreen();
 
         //selfUxService.native.go("/editprofile"); // TMP
-                
+
         /*this.authService.chooseIdentity({
             redirectPath: "/credaccessrequest"
         });*/
@@ -117,7 +117,7 @@ export class UXService {
 
     getLanguage() {
         appManager.getLocale(
-            (currentLang, systemLang) => {
+            (defaultLang, currentLang, systemLang) => {
                 selfUxService.setCurLang(currentLang);
             }
         );
@@ -203,7 +203,7 @@ export class UXService {
 
     sendIntentResponse(action, result, intentId) {
         if (!BrowserSimulation.runningInBrowser()) {
-            appManager.sendIntentResponse(action, result, intentId, null);    
+            appManager.sendIntentResponse(action, result, intentId, null);
         } else {
             console.warn("Not sending intent response, we are in browser");
         }
@@ -266,12 +266,12 @@ export class UXService {
         if (!intent.params.identifier) {
             console.error("Missing profile 'identifier'.");
             return false;
-        } 
+        }
 
         if (!intent.params.connectactiontitle) {
             console.error("Missing profile 'connectactiontitle'.");
             return false;
-        } 
+        }
 
         // Config.requestDapp was already initialized earlier.
         Config.requestDapp.identifier = intent.params.identifier;
