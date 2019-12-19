@@ -35,7 +35,7 @@
             <ion-icon name="arrow-round-back"></ion-icon>
           </div>
           <ion-grid>
-            <ion-img [src]="'assets/images/Lock_Icon.svg'" class="mainicon"></ion-img>
+            <img-loader useImg><img [src]="'assets/images/Lock_Icon.svg'" class="mainicon"></img-loader>
             <p *ngIf="isfirst" class="welcome">
               {{'welcome-text-intro-3'|translate}}
             </p>
@@ -43,16 +43,16 @@
               {{'welcome-text-intro-4'|translate}}
             </p>
             <ion-row>
-              <did-button class="main-button" (click)="createIdentity()" 
-                [title]="'create-new-did-profile' | translate" 
-                [bgcolor]="styling.primaryButtonColor" 
+              <did-button class="main-button" (click)="createIdentity()"
+                [title]="'create-new-did-profile' | translate"
+                [bgcolor]="styling.primaryButtonColor"
                 [bordercolor]="styling.primaryButtonColor"
                 [shadow]="true"></did-button>
             </ion-row>
             <ion-row>
-                <did-button class="secondary-button" (click)="importIdentity()" 
-                [title]="'import-did-profile' | translate" 
-                [bgcolor]="'rgba(0,0,0,0)'" 
+                <did-button class="secondary-button" (click)="importIdentity()"
+                [title]="'import-did-profile' | translate"
+                [bgcolor]="'rgba(0,0,0,0)'"
                 [bordercolor]="'#FFFFFF'"
                 [shadow]="false"></did-button>
             </ion-row>

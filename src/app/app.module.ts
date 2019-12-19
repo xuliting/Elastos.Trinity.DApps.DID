@@ -13,6 +13,8 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { IonBottomDrawerModule } from 'ion-bottom-drawer';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { IonicImageLoader } from 'ionic-image-loader';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 import { zh } from './../assets/i18n/zh';
 import { en } from './../assets/i18n/en';
@@ -90,7 +92,7 @@ export function TranslateLoaderFactory() {
     VerifyMnemonicsPage,
     RegisterApplicationProfileRequestPage,
     DIDListPage,
-    ChooseDIDPage
+    ChooseDIDPage,
   ],
   imports: [
     CommonModule,
@@ -116,6 +118,7 @@ export function TranslateLoaderFactory() {
             useFactory: (TranslateLoaderFactory)
         }
     }),
+    IonicImageLoader.forRoot(),
   ],
   bootstrap: [MyApp],
   entryComponents: [
@@ -131,6 +134,7 @@ export function TranslateLoaderFactory() {
     StatusBar,
     SplashScreen,
     Platform,
+    WebView,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {provide: ErrorHandler, useClass: ErrorHandler}
   ]
