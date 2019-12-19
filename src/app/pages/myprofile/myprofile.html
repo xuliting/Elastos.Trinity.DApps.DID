@@ -22,18 +22,18 @@
             <ion-row>
               <ion-col>
                 <div class="actions">
-                  <rounded-action-button title="qr-code" (click)="showQRCode()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
-                  <rounded-action-button title="edit-profile" (click)="editProfile()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
-                  <rounded-action-button title="edit-visibility" (click)="editVisibility()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
-                  <rounded-action-button title="backup" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
+                  <rounded-action-button title="qr-code" image="assets/images/QR_Simple_Icon.svg" (click)="showQRCode()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
+                  <rounded-action-button title="edit-profile" image='assets/images/Edit_Simple_Icon.svg' (click)="editProfile()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
+                  <rounded-action-button title="edit-visibility" image="assets/images/Visibility_Tick_Simple_Icon.svg" (click)="editVisibility()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
+                  <rounded-action-button title="backup" image='assets/images/Backup_Simple_Icon.svg' color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
                   <!--<rounded-action-button title="password" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>-->
-                  <rounded-action-button title="delete-did" (click)="deleteDID()" color="#FF4D4D" imgcolor="#FFFFFF"></rounded-action-button>
+                  <rounded-action-button title="delete-did" image="assets/images/Delete_Warning_Simple_Icon.svg" (click)="deleteDID()" color="#FF4D4D" imgcolor="#FFFFFF"></rounded-action-button>
                 </div>
               </ion-col>
             </ion-row>
 
             <ion-row *ngIf="visibleData.length > 0">
-              <ion-col>
+              <ion-col class="ion-no-padding">
                 <div class="section">
                   <div class="section-title">{{'my-visible-data'|translate}}</div>
                   <ion-list>
@@ -48,7 +48,7 @@
             </ion-row>
 
             <ion-row *ngIf="invisibleData.length > 0">
-              <ion-col>
+              <ion-col class="ion-no-padding">
                 <div class="section">
                   <div class="section-title">{{'my-hidden-data'|translate}}</div>
                   <ion-list>

@@ -41,9 +41,20 @@ ion-slide {
 ion-slide {
     .left-arrow {
         float:left;
+
+        ion-icon {
+            width:35px;
+            height:35px;
+        }
     }
     .right-arrow {
         float:right;
+        width:25px;
+
+        ion-icon {
+            width:35px;
+            height:35px;
+        }
     }
 }
 

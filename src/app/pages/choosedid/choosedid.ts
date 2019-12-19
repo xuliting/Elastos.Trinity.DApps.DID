@@ -45,6 +45,7 @@ export class ChooseDIDPage {
   }
 
   async selectDid(didEntry: DIDEntry) {
+    await this.didService.activateSavedDidStore();
     await this.didService.activateDid(this.didService.getActiveDidStore().getId(), didEntry.didString);
     this.native.setRootRouter(this.redirectOptions.redirectPath);
   }

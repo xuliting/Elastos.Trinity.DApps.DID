@@ -11,6 +11,7 @@ export const fr = {
     'select-date': 'Sélectionner la date',
     'enter-here': 'Saisir ici',
     'backup': 'Sauvegarder',
+    'delete': 'Supprimer',
     'edit-visibility': 'Modif. Visibilité',
 
     // DID operations

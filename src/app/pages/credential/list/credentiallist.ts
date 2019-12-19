@@ -8,6 +8,12 @@ import { Native } from '../../../services/native';
 import { PopupProvider } from '../../../services/popup';
 import { Profile } from 'src/app/model/profile.model';
 
+type CredentialDisplayEntry = {
+  credential: DIDPlugin.VerifiableCredential,
+  willingToBePubliclyVisible: boolean,
+  willingToDelete: boolean
+}
+
 @Component({
   selector: 'page-credentiallist',
   templateUrl: 'credentiallist.html',
@@ -17,8 +23,11 @@ export class CredentialListPage {
   didString: DIDPlugin.DIDString = "";
   public credentials: DIDPlugin.VerifiableCredential[];
   public hasCredential: boolean = false;
-  public isEdit = false;
   public profile: Profile = null;
+  visibleData: CredentialDisplayEntry[];
+  invisibleData: CredentialDisplayEntry[];
+  public editingVisibility: boolean = false;
+  public deletionMode: boolean = false;
 
   constructor(public event: Events, public route:ActivatedRoute, public zone: NgZone,
       private didService: DIDService,
@@ -58,6 +67,54 @@ export class CredentialListPage {
       else 
         return -1;
     });
+
+    this.buildDisplayEntries();
+  }
+
+  /**
+   * Convenience conversion to display credential data on UI.
+   */
+  buildDisplayEntries() {
+    // Initialize
+    this.visibleData = [];
+    this.invisibleData = [];
+
+    for(let c of this.credentials) {
+      if (this.credentialIsVisibleOnChain(c)) {
+        this.visibleData.push({
+          credential: c,
+          willingToBePubliclyVisible: true,
+          willingToDelete: false
+        })
+      }
+      else {
+        this.invisibleData.push({
+          credential: c,
+          willingToBePubliclyVisible: false,
+          willingToDelete: false
+        })
+      }
+    }
+  }
+
+  /**
+   * Tells if a given credential is currently visible on chain or not (inside the DID document or not).
+   */
+  credentialIsVisibleOnChain(credential: DIDPlugin.VerifiableCredential) {
+    return true; // TODO - check with DID Document data
+  }
+
+  /**
+   * Toggle credential visibility edition mode.
+   */
+  toggleVisibilityMode() {
+    this.deletionMode = false;
+    this.editingVisibility = !this.editingVisibility;
+  }
+
+  toggleDeleteMode() {
+    this.editingVisibility = false;
+    this.deletionMode = !this.deletionMode;
   }
 
   createCredential() {
@@ -65,8 +122,6 @@ export class CredentialListPage {
   }
 
   backupCredential(credential) {
-    if (this.isEdit) return;
-
     this.didService.credentialToJSON(credential).then( (ret)=> {
       this.native.go('/credentialbackup', {content: ret});
     })
@@ -104,20 +159,6 @@ export class CredentialListPage {
     });
   }
 
-  editCredential() {
-    this.isEdit = true;
-  }
-
-  CanDeactivate() {
-    if (this.isEdit) {
-      this.isEdit = false;
-      return false;
-    }
-    else {
-      return true;
-    }
-  }
-
   getDisplayableIssuer(credential: DIDPlugin.VerifiableCredential) {
     let issuer = credential.getIssuer();
     if (issuer == this.didService.getActiveDid().getDIDString())
@@ -134,5 +175,24 @@ export class CredentialListPage {
         value: (subject[prop] != "" ? subject[prop] : "Not set")
       }
     });
+  }
+
+  /**
+   * Tells if gender in current profile is a male 
+   */
+  isMale() {
+    return (!this.profile || this.profile.gender == "" || this.profile.gender == "male")
+  }
+
+  publishVisibilityChanges() {
+    // TODO: Confirmation popup (advanced popup) 
+    // + add/remove credentials from diddocument locally 
+    // + publish DID document on sidechain
+  }
+
+  deleteSelectedCredentials() {
+    // TODO: Confirmation popup (advanced popup)
+    // + publish DID document on sidechain
+    // + delete locally
   }
 }

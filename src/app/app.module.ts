@@ -33,7 +33,6 @@ import { ImportDIDPage } from './pages/importdid/importdid';
 import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 import { CredentialListPage } from './pages/credential/list/credentiallist';
-import { CanDeactivateList } from './pages/credential/list/candeactivate.service';
 import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
 import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
 import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequest/regappprofilerequest';
@@ -129,7 +128,6 @@ export function TranslateLoaderFactory() {
     Clipboard,
     LocalStorage,
     PopupProvider,
-    CanDeactivateList,
     StatusBar,
     SplashScreen,
     Platform,

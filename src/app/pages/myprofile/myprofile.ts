@@ -105,13 +105,19 @@ export class MyProfilePage {
       value: this.profile.telephone || notSetTranslated
     });
 
-    // Phone number
+    // Country
     this.pushDisplayEntry("country", {
       label: this.translate.instant("country"),
       value: this.getDisplayableNation(this.profile.nation) || notSetTranslated
     });
 
-    // Phone number
+    // Gender
+    this.pushDisplayEntry("gender", {
+      label: this.translate.instant("gender"),
+      value: (this.profile.gender?(this.translate.instant(this.profile.gender) || notSetTranslated):notSetTranslated)
+    });
+
+    // Birth date
     this.pushDisplayEntry("birthDate", {
       label: this.translate.instant("birth-date"),
       value: this.getDisplayableBirthDate(this.profile.birthDate) || notSetTranslated
@@ -137,7 +143,7 @@ export class MyProfilePage {
   }
 
   /**
-   * Tells if current profile
+   * Tells if gender in current profile is a male 
    */
   isMale() {
     return (!this.profile || this.profile.gender == "" || this.profile.gender == "male")

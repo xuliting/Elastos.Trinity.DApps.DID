@@ -12,7 +12,6 @@ import { ImportDIDPage } from './pages/importdid/importdid';
 import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 import { CredentialListPage } from './pages/credential/list/credentiallist';
-import { CanDeactivateList } from './pages/credential/list/candeactivate.service';
 import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
 import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
 import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequest/regappprofilerequest';
@@ -40,8 +39,8 @@ const routes: Routes = [
         path: 'didlist', component: DIDListPage
       },
       {
-        path: 'credentiallist', component: CredentialListPage, canDeactivate: [CanDeactivateList]
-      }
+        path: 'credentiallist', component: CredentialListPage
+      },
     ]
   },
   // { path: 'myprofile', component: MyProfilePage },

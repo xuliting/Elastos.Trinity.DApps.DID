@@ -58,6 +58,11 @@ export class DIDService {
         let didString = await this.localStorage.getCurrentDid();
         return this.activateDid(storeId, didString);
       }
+
+      public async activateSavedDidStore(): Promise<boolean> {
+        let storeId = await this.localStorage.getCurrentDidStoreId();
+        return this.activateDidStore(storeId);
+      }
     
       private activateDidStore(storeId: string): Promise<boolean> {
         return new Promise(async (resolve, reject)=>{
@@ -163,7 +168,7 @@ export class DIDService {
         }
       }
     
-      handleNull() {
+      private handleNull() {
         this.native.setRootRouter('/noidentity');
       }
     
@@ -304,14 +309,14 @@ export class DIDService {
         });
     }
 
-    isMnemonicValid(language, mnemonic): Promise<any> {
+    /*isMnemonicValid(language, mnemonic): Promise<any> {
         return new Promise((resolve, reject)=>{
             didManager.isMnemonicValid(
                 language, mnemonic,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
         });
-    }
+    }*/
 
     //Credential
     credentialToJSON(credential: DIDPlugin.VerifiableCredential): Promise<string> {

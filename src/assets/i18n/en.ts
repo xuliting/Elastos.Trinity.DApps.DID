@@ -11,6 +11,7 @@ export const en = {
     'select-date': 'Select date',
     'enter-here': 'Enter here',
     'backup': 'Backup',
+    'delete': 'Delete',
     'edit-visibility': 'Edit visibility',
 
     // DID operations

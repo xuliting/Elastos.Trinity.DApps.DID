@@ -10,6 +10,7 @@ export class RoundedActionButtonComponent implements OnInit {
     @Input('color') color: string = "#FAFAFA";
     @Input('imgcolor') imgcolor: string = "#FFFFFF";
     @Input('mode') mode: string = "primary";
+    @Input('image') image: string = null;
 
     constructor() {
     }

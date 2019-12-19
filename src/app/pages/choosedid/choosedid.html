@@ -6,7 +6,7 @@
         {{'choose-did-intro'|translate}}
     </div>
     <ion-list>
-      <ion-item *ngFor="let item of didList" (click)="selectDidStore(item)" class="ion-activatable ion-no-margin">
+      <ion-item *ngFor="let item of didList" (click)="selectDid(item)" class="ion-activatable ion-no-margin">
         <ion-label class="did-item">{{item.name}}</ion-label>
         <ion-ripple-effect></ion-ripple-effect>
       </ion-item>
