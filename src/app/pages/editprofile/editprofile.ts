@@ -2,11 +2,9 @@ import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Events, NavController, IonInput } from '@ionic/angular';
 
-import { Config } from '../../services/config';
 import { Profile } from '../../model/profile.model';
 import { Native } from '../../services/native';
 import { Util } from '../../services/util';
-import { DIDStore } from 'src/app/model/didstore.model';
 import { DIDService } from 'src/app/services/did.service';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -14,7 +12,6 @@ import { WrongPasswordException } from 'src/app/model/exceptions/wrongpasswordex
 import { PopupProvider } from 'src/app/services/popup';
 import { CountryCodeInfo } from 'src/app/model/countrycodeinfo';
 import { area } from '../../../assets/area/area';
-import { DID } from 'src/app/model/did.model';
 
 @Component({
   selector: 'page-editprofile',
@@ -104,17 +101,16 @@ export class EditProfilePage {
       });
     }
   }
- 
+
   async next() {
     if(this.checkParms()){
       this.profile.birthDate = this.birthDate; //.split("T")[0];
-
       if (this.isEdit) { // If edition mode, go back to my profile after editing.
         await this.checkPasswordAndWriteProfile();
 
         // Tell others that DID needs to be refreshed (profile info has changed)
         this.events.publish('did:didchanged');
-        
+
         this.navCtrl.pop();
       }
       else { // If creation mode, go to backup did flow.
@@ -125,10 +121,13 @@ export class EditProfilePage {
         else {
           await this.authService.checkPasswordThenExecute(async ()=>{
             this.didService.didBeingCreated.password = this.authService.getCurrentUserPassword();
-
-            // Creation mode but no need to create a did store
-            await this.didService.finalizeDidCreation();
-            this.native.go("/home/myprofile", {create: true});
+            this.native.showLoading('loading-msg').then(() => {
+              // Creation mode but no need to create a did store
+              this.didService.finalizeDidCreation().then(()=> {
+                this.native.hideLoading();
+                this.native.go("/home/myprofile", {create: true});
+              })
+            });
           }, ()=>{
             this.popupProvider.ionicAlert("DID creation error", "Sorry, we are unable to create your DID.");
           });
@@ -149,7 +148,12 @@ export class EditProfilePage {
     try {
       // We are editing an existing DID: just ask the DID to save its profile.
       // DID being created are NOT saved here.
-      await this.didService.getActiveDid().writeProfile(this.profile, AuthService.instance.getCurrentUserPassword()); // Update profile/credentials
+      this.native.showLoading('loading-msg').then(() => {
+        this.didService.getActiveDid().writeProfile(this.profile, AuthService.instance.getCurrentUserPassword()).then(() => {
+            this.native.hideLoading();
+          }
+        )
+      });
     }
     catch (e) {
       console.error(e);

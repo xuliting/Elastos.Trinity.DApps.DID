@@ -139,6 +139,9 @@ export const fr = {
 
     // component: security check
     'security-check': 'Vérification de sécurité!',
+
+    // loading
+    'loading-msg': 'Veuillez patienter',
 };
 
 

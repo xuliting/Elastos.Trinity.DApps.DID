@@ -110,8 +110,10 @@ export class Native {
   public async showLoading(content: string = '') {
       if (!this.loadingIsOpen) {
           this.loadingIsOpen = true;
+          content = this.translate.instant(content);
           let loading = await this.loadingCtrl.create({
-              message: content
+              message: content,
+              duration: 10000//10s
           });
           return await loading.present();
       }

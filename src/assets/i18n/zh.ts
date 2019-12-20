@@ -140,4 +140,7 @@ export const zh = {
     // component: security check
     'security-check': 'Security check!',
     'wrong-password': 'Wrong password, please try again.',
+
+    // loading
+    'loading-msg': '稍等片刻',
 };

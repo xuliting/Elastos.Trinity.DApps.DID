@@ -1,7 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Config } from '../../services/config';
 import { Native } from '../../services/native';
 import { Util } from '../../services/util';
 import { DIDService } from 'src/app/services/did.service';
@@ -58,13 +57,16 @@ export class VerifyMnemonicsPage {
 
     async createDid() {
         await this.didService.getActiveDidStore().createPrivateIdentity(this.didService.didBeingCreated.password, this.native.getMnemonicLang(), this.mnemonicStr);
-        await this.didService.finalizeDidCreation();
+        this.native.showLoading('loading-msg').then(() => {
+            this.didService.finalizeDidCreation().then(()=> {
+                this.native.hideLoading();
+                // Save password for later use
+                this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), this.didService.didBeingCreated.password);
 
-        // Save password for later use
-        this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), this.didService.didBeingCreated.password);
-
-        console.log("Redirecting user to his profile page");
-        this.native.setRootRouter("/home/myprofile");
+                console.log("Redirecting user to his profile page");
+                this.native.setRootRouter("/home/myprofile");
+            })
+        });
     }
 
     allWordsMatch() {
