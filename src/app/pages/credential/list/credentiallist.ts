@@ -213,5 +213,14 @@ export class CredentialListPage {
     // TODO: Confirmation popup (advanced popup)
     // + publish DID document on sidechain
     // + delete locally
+
+    /*
+    flow:
+    - conf popup
+    - if at least one of the credentials is in the did document:
+    -   delete the credential from local storage
+    -   remove credential(s) from the diddocument locally
+    -   ask user if he wants to publish his did document changes (use a service that compares the local did document with remote one)
+    */
   }
 }
