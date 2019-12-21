@@ -47,6 +47,7 @@ import { LocalStorage } from './services/localstorage';
 import { PopupProvider } from './services/popup';
 import { ChooseDIDPage } from './pages/choosedid/choosedid';
 import { ShowQRCodeComponent } from './components/showqrcode/showqrcode.component';
+import { ProfileEntryPickerPage } from './pages/profileentrypicker/profileentrypicker';
 
 /** 通过类引用方式解析国家化文件 */
 export class CustomTranslateLoader implements TranslateLoader {
@@ -93,6 +94,7 @@ export function TranslateLoaderFactory() {
     RegisterApplicationProfileRequestPage,
     DIDListPage,
     ChooseDIDPage,
+    ProfileEntryPickerPage,
   ],
   imports: [
     CommonModule,
@@ -125,7 +127,8 @@ export function TranslateLoaderFactory() {
     MyApp,
     SecurityCheckComponent,
     CreatePasswordComponent,
-    ShowQRCodeComponent
+    ShowQRCodeComponent,
+    ProfileEntryPickerPage
   ],
   providers: [
     Clipboard,

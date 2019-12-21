@@ -97,22 +97,27 @@ export class AuthService {
     }
 
     public async checkPasswordThenExecute(writeActionCb: ()=>Promise<void>, onError: ()=>void, forcePasswordPrompt: boolean = false) {
-        // A write operation requires password. Make sure we have this in memory, or prompt user.
-        if (forcePasswordPrompt || this.needToPromptPassword(this.didService.getActiveDidStore())) {
-          let previousPasswordWasWrong = forcePasswordPrompt;
-          await this.promptPasswordInContext(this.didService.getActiveDidStore(), previousPasswordWasWrong);
-          // Password will be saved by the auth service.
-        }
-    
-        writeActionCb().then(()=>{}).catch((e)=>{
-            console.error(e);
-            if (e instanceof WrongPasswordException) {
-                // Wrong password provided - try again.
-                this.checkPasswordThenExecute(writeActionCb, onError, forcePasswordPrompt = true);
+        return new Promise(async (resolve, reject)=>{
+            // A write operation requires password. Make sure we have this in memory, or prompt user.
+            if (forcePasswordPrompt || this.needToPromptPassword(this.didService.getActiveDidStore())) {
+                let previousPasswordWasWrong = forcePasswordPrompt;
+                await this.promptPasswordInContext(this.didService.getActiveDidStore(), previousPasswordWasWrong);
+                // Password will be saved by the auth service.
             }
-            else {
-                onError();
-            }
+        
+            writeActionCb().then(()=>{
+                resolve();
+            }).catch(async (e)=>{
+                console.error(e);
+                if (e instanceof WrongPasswordException) {
+                    // Wrong password provided - try again.
+                    await this.checkPasswordThenExecute(writeActionCb, onError, forcePasswordPrompt = true);
+                }
+                else {
+                    onError();
+                    reject();
+                }
+            });
         });
       }
 

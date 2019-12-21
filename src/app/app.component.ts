@@ -12,6 +12,7 @@ import { UXService } from './services/ux.service';
 import { BrowserSimulation } from './services/browsersimulation';
 import { AuthService } from './services/auth.service';
 import { PopupProvider } from './services/popup';
+import { BasicCredentialsService } from './services/basiccredentials.service';
 
 @Component({
   selector: 'my-app',
@@ -29,7 +30,8 @@ export class MyApp {
     private native: Native,
     private popupProvider: PopupProvider,
     private didService: DIDService,
-    private uxService: UXService
+    private uxService: UXService,
+    private basicCredentialsService: BasicCredentialsService
   ) {
     this.initializeApp();
   }

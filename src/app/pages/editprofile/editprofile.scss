@@ -68,6 +68,11 @@ ion-content {
                 --highlight-color-valid: var(--ion-color-primary);
                 --highlight-background: var(--ion-color-primary);
 
+                .item {
+                    width:inherit;
+                    display:inherit;
+                }
+
                 ion-label {
                     font-weight:600;
                     font-size:16px;
@@ -93,6 +98,17 @@ ion-content {
                     --color:#CACCD0;
                     color:#CACCD0;
                 }
+            }
+        }
+
+        .bottom-actions {
+            --action-color:#4A9DF9;
+            padding:10px;
+
+            rounded-action-button {
+                width:110px;
+                flex:none;
+                margin: 0 auto;
             }
         }
     }

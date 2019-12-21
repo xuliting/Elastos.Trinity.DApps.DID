@@ -53,10 +53,10 @@ export class LocalStorage {
         return this.storage.clear();
     }
 
-    public saveDidEntries(entries: DIDEntry[]) {
+    public async saveDidEntries(entries: DIDEntry[]) {
         console.log("Setting DID entries", entries);
         let key = "didentries";
-        this.storage.set(key, JSON.stringify(entries));
+        await this.storage.set(key, JSON.stringify(entries));
     }
 
     public getDidEntries(): Promise<DIDEntry[]> {

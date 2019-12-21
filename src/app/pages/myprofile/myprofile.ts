@@ -18,7 +18,7 @@ import { DIDService } from 'src/app/services/did.service';
 type ProfileDisplayEntry = {
   label: string,
   value: string,
-  willingToBePubliclyVisible: boolean
+  willingToBePubliclyVisible?: boolean
 }
 
 @Component({
@@ -93,45 +93,35 @@ export class MyProfilePage {
     this.visibleData = [];
     this.invisibleData = [];
 
-    // Email
-    this.pushDisplayEntry("email", {
-      label: this.translate.instant("email"),
-      value: this.profile.email || notSetTranslated
-    });
+    // TODO: TYPE SPECIFIC DISPLAY METHOD
 
-    // Phone number
-    this.pushDisplayEntry("phoneNumber", {
-      label: this.translate.instant("phone-number"),
-      value: this.profile.telephone || notSetTranslated
-    });
+    let profileEntries = this.profile.entries;
+    for (let entry of profileEntries) {
+      this.pushDisplayEntry(entry.info.key, {
+        label: this.translate.instant("credential-info-type-"+entry.info.key),
+        value: entry.toDisplayString() || notSetTranslated
+      });
+    }
 
-    // Country
-    this.pushDisplayEntry("country", {
-      label: this.translate.instant("country"),
-      value: this.getDisplayableNation(this.profile.nation) || notSetTranslated
-    });
-
+    /* TODO
+  
     // Gender
     this.pushDisplayEntry("gender", {
       label: this.translate.instant("gender"),
       value: (this.profile.gender?(this.translate.instant(this.profile.gender) || notSetTranslated):notSetTranslated)
     });
+    */
 
-    // Birth date
-    this.pushDisplayEntry("birthDate", {
-      label: this.translate.instant("birth-date"),
-      value: this.getDisplayableBirthDate(this.profile.birthDate) || notSetTranslated
-    });
   }
 
   /**
    * Tells if a given profile key is currently visible on chain or not (inside the DID document or not).
    */
-  profileEntryIsVisibleOnChain(profileKey) {
+  profileEntryIsVisibleOnChain(profileKey: string) {
     return true; // TODO - check with DID Document data
   }
 
-  pushDisplayEntry(profileKey, entry) {
+  pushDisplayEntry(profileKey: string, entry: ProfileDisplayEntry) {
     if (this.profileEntryIsVisibleOnChain(profileKey)) {
       entry.willingToBePubliclyVisible = true;
       this.visibleData.push(entry);
@@ -146,7 +136,8 @@ export class MyProfilePage {
    * Tells if gender in current profile is a male 
    */
   isMale() {
-    return (!this.profile || this.profile.gender == "" || this.profile.gender == "male")
+    let genderEntry = this.profile.getEntryByKey("gender");
+    return (genderEntry.value == "" || genderEntry.value == "male")
   }
 
   /**
@@ -221,25 +212,6 @@ export class MyProfilePage {
           }
       }
     }).show();
-  }
-
-  getDisplayableNation(countryAlpha3) {
-    let countryInfo = area.find((a : CountryCodeInfo)=>{
-      return countryAlpha3 == a.alpha3;
-    })
-
-    if (!countryInfo)
-      return null;
-
-    return countryInfo.name;
-  }
-
-  getDisplayableBirthDate(birthDate) {
-    if (!birthDate)
-      return null;
-      
-    let d = new Date(birthDate);
-    return d.toLocaleDateString();
   }
 
   next() {

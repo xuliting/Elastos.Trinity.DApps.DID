@@ -12,8 +12,8 @@ import { Config } from './config';
 import { DIDEntry } from '../model/didentry.model';
 import { DID } from '../model/did.model';
 import { NewDID } from '../model/newdid.model';
+import { BasicCredentialInfo, BasicCredentialInfoType } from '../model/basiccredentialinfo.model';
 
-declare let appManager: AppManagerPlugin.AppManager;
 declare let didManager: DIDPlugin.DIDManager;
 
 @Injectable({
@@ -188,14 +188,14 @@ export class DIDService {
        */
       public async finalizeDidCreation() {
         console.log("Finalizing DID creation");
-        
+
         let createdDidString = await this.getActiveDidStore().addNewDidWithProfile(this.didBeingCreated);
+        let name = this.didBeingCreated.profile.getEntryByKey("name").value;
+        await this.addDidEntry(new DIDEntry(createdDidString, name));
+        
         await this.activateDid(this.getCurDidStoreId(), createdDidString);
 
-        let name = this.didBeingCreated.profile.name;
-        console.log("Finalizing DID creation for did string "+createdDidString+" - with name "+name);
-    
-        await this.addDidEntry(new DIDEntry(createdDidString, name));
+        console.log("Finalized DID creation for did string "+createdDidString+" - with name "+name);
       }
     
       /**
@@ -203,10 +203,12 @@ export class DIDService {
        * a list of existing stores and their names/ids
        */
       private async addDidEntry(didEntry: DIDEntry) {
+        console.log("Adding DID entry:", didEntry);
+
         let existingDidEntries = await this.getDidEntries();
         existingDidEntries.push(didEntry);
 
-        this.localStorage.saveDidEntries(existingDidEntries);
+        await this.localStorage.saveDidEntries(existingDidEntries);
       }
     
       public async getDidEntries(): Promise<DIDEntry[]> {
@@ -336,21 +338,10 @@ export class DIDService {
      * always displaying credential keys to user, and instead, show him something nicer.
      */
     getUserFriendlyBasicProfileKeyName(key: string): string {
-        switch (key) {
-            case "did":
-                return this.translate.instant("your-did");
-            case "name":
-                return this.translate.instant("your-name");
-            case "email":
-                return this.translate.instant("your-email-address");
-            case "birthDate":
-                return this.translate.instant("your-birthday");
-            case "gender":
-                return this.translate.instant("your-gender");
-            case "phoneNumber":
-                return this.translate.instant("your-phone-number");
-            default:
-                return key; // Unhandled key return the key itself.
-        }
+      let translated = this.translate.instant("credential-info-type-"+key);
+      if (!translated || translated == "")
+        return key;
+      
+      return translated;
     }
 }

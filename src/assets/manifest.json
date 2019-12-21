@@ -32,7 +32,8 @@
     "Device",
     "DIDPlugin",
     "SplashScreen",
-    "NetworkStatus"
+    "NetworkStatus",
+    "File"
   ],
   "urls": [],
   "intent_filters": [

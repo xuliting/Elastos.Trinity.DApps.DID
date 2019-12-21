@@ -1,6 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Events, NavController, IonInput } from '@ionic/angular';
+import { Events, NavController, IonInput, ModalController } from '@ionic/angular';
 
 import { Profile } from '../../model/profile.model';
 import { Native } from '../../services/native';
@@ -12,6 +12,9 @@ import { WrongPasswordException } from 'src/app/model/exceptions/wrongpasswordex
 import { PopupProvider } from 'src/app/services/popup';
 import { CountryCodeInfo } from 'src/app/model/countrycodeinfo';
 import { area } from '../../../assets/area/area';
+import { ProfileEntryPickerPage } from '../profileentrypicker/profileentrypicker';
+import { BasicCredentialInfo, BasicCredentialInfoType } from 'src/app/model/basiccredentialinfo.model';
+import { BasicCredentialEntry } from 'src/app/model/basiccredentialentry.model';
 
 @Component({
   selector: 'page-editprofile',
@@ -19,7 +22,6 @@ import { area } from '../../../assets/area/area';
   styleUrls: ['editprofile.scss']
 })
 export class EditProfilePage {
-  public birthDate: string = "";
   public isEdit: boolean = false;
   private paramsSubscription: Subscription;
 
@@ -31,6 +33,7 @@ export class EditProfilePage {
               public navCtrl: NavController,
               private didService: DIDService,
               private authService: AuthService,
+              private modalCtrl: ModalController,
               private popupProvider: PopupProvider,
               private native: Native) {
     this.paramsSubscription = this.route.queryParams.subscribe((data) => {
@@ -41,14 +44,13 @@ export class EditProfilePage {
 
         // Edition - We clone the received profile in case user wants to cancel editing.
         this.profile = Profile.fromProfile(this.didService.getActiveDid().getBasicProfile());
-        this.birthDate = this.profile.birthDate;
         this.isEdit = true;
       }
       else {
         console.log("Editing a new profile");
 
         // Creation
-        this.profile = new Profile();
+        this.profile = Profile.createDefaultProfile();
       }
 
       // Unsubscribe to not receive params again when coming back from the "country selection" screen
@@ -58,16 +60,33 @@ export class EditProfilePage {
   }
 
   /**
-   * Tells if current profile
+   * 
    */
   isMale() {
-    return (!this.profile || this.profile.gender == "" || this.profile.gender == "male")
+    let genderEntry = this.profile.getEntryByKey("gender");
+    return (!genderEntry || genderEntry.value == "" || genderEntry.value == "male")
   }
 
-  selectArea() {
+  entryIsText(entry: BasicCredentialEntry): boolean {
+    return entry.info.type == BasicCredentialInfoType.TEXT;
+  }
+
+  entryIsEmail(entry: BasicCredentialEntry): boolean {
+    return entry.info.type == BasicCredentialInfoType.EMAIL;
+  }
+
+  entryIsPhoneNumber(entry: BasicCredentialEntry): boolean {
+    return entry.info.type == BasicCredentialInfoType.PHONE_NUMBER;
+  }
+
+  entryIsCountry(entry: BasicCredentialEntry): boolean {
+    return entry.info.type == BasicCredentialInfoType.EMAIL;
+  }
+
+  selectCountry(countryEntry: BasicCredentialEntry) {
     this.events.subscribe('selectarea', (params: CountryCodeInfo) => {
       this.zone.run(() => {
-        this.profile.nation = params.alpha3;
+        countryEntry.value = params.alpha3;
       });
       this.events.unsubscribe('selectarea');
     });
@@ -88,12 +107,14 @@ export class EditProfilePage {
   /**
    * Move text input focus to the given item
    */
+  // TODO - REWORK
   maybeMoveFocus(element: IonInput, event: KeyboardEvent) {
     if (event.keyCode == 13) {  // Return
       element.setFocus();
     }
   }
 
+  // TODO - REWORK
   maybeClearFocus(element: IonInput, event: KeyboardEvent) {
     if (event.keyCode == 13) {  // Return
       element.getInputElement().then((el: HTMLInputElement)=>{
@@ -104,9 +125,16 @@ export class EditProfilePage {
 
   async next() {
     if(this.checkParms()){
-      this.profile.birthDate = this.birthDate; //.split("T")[0];
       if (this.isEdit) { // If edition mode, go back to my profile after editing.
-        await this.checkPasswordAndWriteProfile();
+        await this.authService.checkPasswordThenExecute(async ()=>{
+          // We are editing an existing DID: just ask the DID to save its profile.
+          // DID being created are NOT saved here.
+          await this.native.showLoading('loading-msg');
+          await this.didService.getActiveDid().writeProfile(this.profile, AuthService.instance.getCurrentUserPassword())
+          this.native.hideLoading();
+        }, ()=>{
+          this.popupProvider.ionicAlert("DID creation error", "Sorry, we are unable to csave your profile.");
+        });
 
         // Tell others that DID needs to be refreshed (profile info has changed)
         this.events.publish('did:didchanged');
@@ -136,42 +164,34 @@ export class EditProfilePage {
     }
   }
 
-  // TODO: REPLACE WITH AUTHSERVICE.checkPasswordThenExecute()
-  private async checkPasswordAndWriteProfile(forcePasswordPrompt: boolean = false) {
-    // This write operation requires password. Make sure we have this in memory, or prompt user.
-    if (forcePasswordPrompt || this.authService.needToPromptPassword(this.didService.getActiveDidStore())) {
-      let previousPasswordWasWrong = forcePasswordPrompt;
-      await this.authService.promptPasswordInContext(this.didService.getActiveDidStore(), previousPasswordWasWrong);
-      // Password will be saved by the auth service.
-    }
-
-    try {
-      // We are editing an existing DID: just ask the DID to save its profile.
-      // DID being created are NOT saved here.
-      this.native.showLoading('loading-msg').then(() => {
-        this.didService.getActiveDid().writeProfile(this.profile, AuthService.instance.getCurrentUserPassword()).then(() => {
-            this.native.hideLoading();
-          }
-        )
-      });
-    }
-    catch (e) {
-      console.error(e);
-      if (e instanceof WrongPasswordException) {
-        // Wrong password provided - try again.
-        this.checkPasswordAndWriteProfile(forcePasswordPrompt = true);
-      }
-      else {
-        this.popupProvider.ionicAlert("Save profile error", "Sorry, we are unable to save your edited profile.");
-      }
-    }
-  }
-
   checkParms(){
-    if(Util.isNull(this.profile.name)){
+    let nameEntry = this.profile.getEntryByKey("name");
+    if(!nameEntry || nameEntry.value == ""){
       this.native.toast_trans('name-is-missing');
       return false;
     }
     return true;
+  }
+
+  // Show the profile entry field picker to let user pick a profile entry to create.
+  async addProfileEntry() {
+      let modal = await this.modalCtrl.create({
+          component: ProfileEntryPickerPage,
+          componentProps: {
+            // TODO: filter out already existing items to not show them in the addable items list
+          }
+      })
+
+      modal.onDidDismiss().then((params) => {
+        if (params && params.data && params.data.pickedItem) {
+          let pickedItem: BasicCredentialInfo = params.data.pickedItem;
+
+          // Add the new entry to the current profile
+          // Default value is an empty string
+          this.profile.setValue(pickedItem, "");
+        }
+      });
+
+      modal.present();
   }
 }

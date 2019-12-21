@@ -42,19 +42,25 @@ export const en = {
     'missing': 'Missing',
 
     // Profile fields
-    'name': 'Name',
-    'email': 'Email',
-    'phone-number': 'Phone number',
-    'birth-date': 'Birth date',
-    'gender': 'Gender',
+    'credential-info-type-did': 'DID',
+    'credential-info-type-name': 'Name',
+    'credential-info-type-email': 'Email',
+    'credential-info-type-birthDate': 'Birth date',
+    'credential-info-type-gender': 'Gender',
+    'credential-info-type-nation': 'Nation',
+    'credential-info-type-telephone': 'Telephone',
+    'credential-info-type-nickname': 'Nickname',
+    'credential-info-type-birthPlace': 'Place of birth',
+    'credential-info-type-description': 'Description',
+    'credential-info-type-url': 'Website',
+    'credential-info-type-facebook': 'Facebook',
+    'credential-info-type-twitter': 'Twitter',
+    'credential-info-type-telegram': 'Telegram',
+    'credential-info-type-wechat': 'Wechat',
+    'credential-info-type-weibo': 'Weibo',
     'male': 'Male',
     'female': 'Female',
     'your-did': 'Your DID',
-    'your-name': 'Your name',
-    'your-email-address': 'Your email address',
-    'your-birthday': 'Your birthday',
-    'your-gender': 'Your gender',
-    'your-phone-number': 'Your phone number',
 
     // Error messages
     'text-request-fail': 'request fail',
@@ -99,6 +105,7 @@ export const en = {
     'edit-profile-intro': 'You can fill in as much or as little as you would like.',
     'name-is-required': 'Name is required.',
     'name-is-missing': 'Please at least provide your name',
+    'add-info': 'Add info',
 
     // screen: did list
     'did-portfolio': 'DID Portfolio',

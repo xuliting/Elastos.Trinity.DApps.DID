@@ -2,6 +2,7 @@ import { Events } from '@ionic/angular';
 import { Profile } from './profile.model';
 import { WrongPasswordException } from './exceptions/wrongpasswordexception.exception';
 import { BrowserSimulation, SimulatedDID, SimulatedCredential } from '../services/browsersimulation';
+import { BasicCredentialsService } from '../services/basiccredentials.service';
 
 export class DID {
     private unloadedCredentials: DIDPlugin.UnloadedVerifiableCredential[] = [];
@@ -94,28 +95,36 @@ export class DID {
      * to ease profile editing on UI.
      */
     getBasicProfile() : Profile {
-        let profile = new Profile();
+        let profile = Profile.createDefaultProfile();
 
         // We normally have one credential for each profile field
         this.credentials.map((cred)=>{
-            let props = cred.getSubject();
+            let props = cred.getSubject(); // Credentials properties
             if (!props) {
                 console.warn("Found an empty credential subject while trying to build profile, this should not happen...");
                 return;
             }
 
-            if (props.name)
-                profile.name = props.name;
-            if (props.birthDate)
-                profile.birthDate = props.birthDate;
-            if (props.nation)
-                profile.nation = props.nation;
-            if (props.email)
-                profile.email = props.email;
-            if (props.gender)
-                profile.gender = props.gender;
-            if (props.telephone)
-                profile.telephone = props.telephone;
+            // Only deal with BasicProfileCredential credentials
+            if (cred.getType().indexOf("BasicProfileCredential") < 0) {
+                return;
+            }
+
+            // Loop over each property in the credential (even if normally there is only one property per credential)
+            for (let p of Object.keys(props)) {
+                // Skip the special entry "id" that exists in every credential.
+                if (p == "id")
+                    continue;
+
+                // Try to retrieve a standard property info from this property
+                let basicCredentialInfo = BasicCredentialsService.instance.getBasicCredentialInfoByKey(p);
+                if (!basicCredentialInfo) {
+                    console.warn("Unhandled basic credential "+p);
+                }
+                else {
+                    profile.setValue(basicCredentialInfo, props[p]);
+                }
+            }
         })
 
         console.log("Basic profile:", profile);
@@ -130,24 +139,24 @@ export class DID {
         return new Promise(async (resolve, reject)=>{
             console.log("Writing profile fields as credentials", newProfile);
 
-            for(let key of Object.keys(newProfile)) {
+            for(let entry of newProfile.entries) {
                 let props = {};
-                props[key] = newProfile[key];
+                props[entry.info.key] = entry.value;
 
-                if (!this.credentialContentHasChanged(key, newProfile[key])) {
-                    console.log("Not updating credential "+key+" as it has not changed");
+                if (!this.credentialContentHasChanged(entry.info.key, entry.value)) {
+                    console.log("Not updating credential "+entry.info.key+" as it has not changed");
                     continue; // SKip this credential, go to next one.
                 }
 
                 try {
                     // Update use case: if this credential already exist, we delete it first before re-creating it.
-                    if (this.credentialExists(key)) {
-                        let credentialDidUrl = this.getDIDString() + "#" + key;
+                    if (this.credentialExists(entry.info.key)) {
+                        let credentialDidUrl = this.getDIDString() + "#" + entry.info.key;
                         await this.deleteCredential(credentialDidUrl);
                     }
 
-                    console.log("Adding credential for profile key "+key);
-                    let credential = await this.addCredential(key, props, password, ["BasicProfileCredential"]);
+                    console.log("Adding credential for profile key "+entry.info.key);
+                    let credential = await this.addCredential(entry.info.key, props, password, ["BasicProfileCredential"]);
                     console.log("Created credential:", credential);
                 }
                 catch (e) {

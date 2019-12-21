@@ -181,7 +181,8 @@ export class CredentialListPage {
    * Tells if gender in current profile is a male 
    */
   isMale() {
-    return (!this.profile || this.profile.gender == "" || this.profile.gender == "male")
+    let genderEntry = this.profile.getEntryByKey("gender");
+    return (genderEntry.value == "" || genderEntry.value == "male")
   }
 
   publishVisibilityChanges() {

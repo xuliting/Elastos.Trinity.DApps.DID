@@ -45,12 +45,16 @@ export class DIDListPage {
   }
 
   async refreshStoreList() {
+    console.log("DID List is refreshing store list");
     this.didList = await this.didService.getDidEntries();
   }
 
   refreshActiveProfile() {
-    this.activeProfile = this.didService.getActiveDid().getBasicProfile();
-    console.log("DID list: refreshed active profile", this.activeProfile);
+    let activeDid = this.didService.getActiveDid();
+    if (activeDid) {
+      this.activeProfile = activeDid.getBasicProfile();
+      console.log("DID list: refreshed active profile", this.activeProfile);
+    }
   }
 
   addDIDStore() {
