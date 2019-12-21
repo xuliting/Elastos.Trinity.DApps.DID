@@ -123,6 +123,7 @@ export const fr = {
     'no-credential-yet': 'Il semblerait qu\il n\'y ait aucune référence pour l\'instant.',
     'issuer': 'Délivré par',
     'information-it-contains': 'Information contenue',
+    'issuer-myself': 'Moi-même',
 
     // screen: verify mnemonic
     'verification': 'V"rification',

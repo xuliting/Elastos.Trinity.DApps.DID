@@ -1,14 +1,10 @@
 import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Events, ModalController } from '@ionic/angular';
-import { DrawerState } from 'ion-bottom-drawer';
 
 import { UXService } from '../../services/ux.service';
-import { Config } from '../../services/config';
 import { Profile } from '../../model/profile.model';
 import { Native } from '../../services/native';
-import { area } from '../../../assets/area/area';
-import { CountryCodeInfo } from 'src/app/model/countrycodeinfo';
 import { TranslateService } from '@ngx-translate/core';
 import { ShowQRCodeComponent } from 'src/app/components/showqrcode/showqrcode.component';
 import { PopupProvider } from 'src/app/services/popup';
@@ -28,14 +24,13 @@ type ProfileDisplayEntry = {
 })
 export class MyProfilePage {
   public creatingIdentity: boolean = false;
-  public bottomDrawerState: DrawerState = DrawerState.Bottom;
   public didString: String = "";
   public profile: Profile;
   visibleData: ProfileDisplayEntry[];
   invisibleData: ProfileDisplayEntry[];
   public editingVisibility: boolean = false;
 
-  public createDid = false;
+  public createDid: boolean = false;
 
   constructor(public event: Events,
               public route:ActivatedRoute,
@@ -73,6 +68,12 @@ export class MyProfilePage {
     console.log("MyProfilePage is using this profile:", this.profile);
 
     this.buildDisplayEntries();
+
+  }
+
+  ionViewDidLeave() {
+    // Restore some UI state in case we just go refreshed
+    this.editingVisibility = false;
   }
 
   ionViewDidEnter() {
@@ -93,8 +94,6 @@ export class MyProfilePage {
     this.visibleData = [];
     this.invisibleData = [];
 
-    // TODO: TYPE SPECIFIC DISPLAY METHOD
-
     let profileEntries = this.profile.entries;
     for (let entry of profileEntries) {
       this.pushDisplayEntry(entry.info.key, {
@@ -102,16 +101,6 @@ export class MyProfilePage {
         value: entry.toDisplayString() || notSetTranslated
       });
     }
-
-    /* TODO
-  
-    // Gender
-    this.pushDisplayEntry("gender", {
-      label: this.translate.instant("gender"),
-      value: (this.profile.gender?(this.translate.instant(this.profile.gender) || notSetTranslated):notSetTranslated)
-    });
-    */
-
   }
 
   /**
@@ -157,6 +146,7 @@ export class MyProfilePage {
   }
 
   editProfile() {
+    this.editingVisibility = false;
     this.native.go("/editprofile", {create: false});
   }
 
@@ -171,6 +161,7 @@ export class MyProfilePage {
    * Permanently delete the DID after user confirmation.
    */
   deleteDID() {
+    this.editingVisibility = false;
     this.advancedPopup.create({
       color:'#FF4D4D',
       info: {

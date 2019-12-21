@@ -27,6 +27,7 @@ enum MessageType {
     providedIn: 'root'
 })
 export class UXService {
+    public static instance: UXService = null;
     private isReceiveIntentReady = false;
     private appIsLaunchingFromIntent = false; // Is the app starting because of an intent request?
 
@@ -36,6 +37,7 @@ export class UXService {
         private didService: DIDService,
         private authService: AuthService) {
         selfUxService = this;
+        UXService.instance = this;
     }
 
     init() {
@@ -139,6 +141,10 @@ export class UXService {
         } else {
             this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.ENGLISH);
         }
+    }
+
+    public translateInstant(key: string): string {
+        return this.translate.instant(key);
     }
 
     setIntentListener() {

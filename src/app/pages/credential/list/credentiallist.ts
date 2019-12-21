@@ -7,6 +7,7 @@ import { DIDService } from '../../../services/did.service';
 import { Native } from '../../../services/native';
 import { PopupProvider } from '../../../services/popup';
 import { Profile } from 'src/app/model/profile.model';
+import { TranslateService } from '@ngx-translate/core';
 
 type CredentialDisplayEntry = {
   credential: DIDPlugin.VerifiableCredential,
@@ -31,6 +32,7 @@ export class CredentialListPage {
 
   constructor(public event: Events, public route:ActivatedRoute, public zone: NgZone,
       private didService: DIDService,
+      private translate: TranslateService,
       private native: Native, private popupProvider: PopupProvider) {
     this.init();
   }
@@ -69,6 +71,12 @@ export class CredentialListPage {
     });
 
     this.buildDisplayEntries();
+  }
+
+  ionViewDidLeave() {
+    // Restore some UI state in case we just go refreshed
+    this.editingVisibility = false;
+    this.deletionMode = false;
   }
 
   /**
@@ -127,6 +135,16 @@ export class CredentialListPage {
     })
   }
 
+  getDisplayableCredentialTitle(entry: CredentialDisplayEntry): string {
+    let fragment = entry.credential.getFragment();
+    let translated = this.translate.instant("credential-info-type-"+fragment);
+   
+    if (!translated || translated == "")
+      return fragment;
+
+    return translated;
+  }
+
   getSelectedCount() {
     let count = 0;
     for (let i = 0; i < this.credentials.length; i++) {
@@ -162,7 +180,7 @@ export class CredentialListPage {
   getDisplayableIssuer(credential: DIDPlugin.VerifiableCredential) {
     let issuer = credential.getIssuer();
     if (issuer == this.didService.getActiveDid().getDIDString())
-      return "Myself";
+      return this.translate.instant("issuer-myself");
     else
       return issuer;
   }
@@ -172,7 +190,7 @@ export class CredentialListPage {
     return Object.keys(subject).filter(key=>key!="id").sort().map((prop)=>{
       return {
         name: prop,
-        value: (subject[prop] != "" ? subject[prop] : "Not set")
+        value: (subject[prop] != "" ? subject[prop] : this.translate.instant("not-set"))
       }
     });
   }

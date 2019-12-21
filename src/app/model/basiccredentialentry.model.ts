@@ -1,6 +1,7 @@
 import { BasicCredentialInfo, BasicCredentialInfoType } from "./basiccredentialinfo.model";
 import { area } from '../../assets/area/area';
 import { CountryCodeInfo } from "./countrycodeinfo";
+import { TranslationService } from "../services/translation.service";
 
 export class BasicCredentialEntry {
     constructor(
@@ -23,6 +24,8 @@ export class BasicCredentialEntry {
                 return this.getDisplayableNation();
             case BasicCredentialInfoType.DATE:
                 return this.getDisplayableDate();
+            case BasicCredentialInfoType.GENDER:
+                return this.getDisplayableGender();
             default:
                 return this.value;
         }
@@ -45,5 +48,12 @@ export class BasicCredentialEntry {
           
         let d = new Date(this.value);
         return d.toLocaleDateString();
+    }
+
+    private getDisplayableGender(): string {
+        if (!this.value || this.value == "")
+          return null;
+
+        return TranslationService.instance.translateInstant(this.value);
     }
 }

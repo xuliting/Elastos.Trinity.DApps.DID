@@ -123,6 +123,7 @@ export const zh = {
     'no-credential-yet': 'Seems like there is no credential yet.',
     'issuer': 'Issuer',
     'information-it-contains': 'Information it contains',
+    'issuer-myself': 'Myself',
 
     // screen: verify mnemonic
     'verification': 'Verification',
