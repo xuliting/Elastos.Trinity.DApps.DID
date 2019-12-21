@@ -190,6 +190,12 @@ export class SimulatedDID implements DIDPlugin.DID {
         simulated("resolveDidDocument", "SimulatedDID");
         onSuccess(null);
     }
+
+    prepareIssuer(onSuccess?: ()=>void) {
+        simulated("prepareIssuer", "SimulatedDID");
+        onSuccess();
+    }
+
     issueCredential(subjectDID: string, credentialId: string, types: string[], expirationDate: Date, properties: any, passphrase: string, onSuccess: (credential: DIDPlugin.VerifiableCredential) => void, onError?: (err: any) => void) {
         simulated("issueCredential", "SimulatedDID");
         onSuccess(new SimulatedCredential(credentialId, "someproperty"));
