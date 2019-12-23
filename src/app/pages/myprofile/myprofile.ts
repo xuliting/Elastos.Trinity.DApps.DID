@@ -37,7 +37,7 @@ export class MyProfilePage {
   public editingVisibility: boolean = false;
   public didNeedsToBePublished: boolean = false;
 
-  constructor(public event: Events,
+  constructor(public events: Events,
               public route:ActivatedRoute,
               public zone: NgZone,
               private advancedPopup: AdvancedPopupController,
@@ -52,21 +52,28 @@ export class MyProfilePage {
   }
 
   ngOnInit() {
-    this.event.subscribe('did:didchanged', ()=> {
+    this.events.subscribe('did:didchanged', ()=> {
       this.zone.run(() => {
         this.init();
       });
     });
 
-    this.event.subscribe('did:publicationstatus', (status: DIDPublicationStatusEvent)=>{
+    this.events.subscribe('did:publicationstatus', (status: DIDPublicationStatusEvent)=>{
       let activeDid = this.didService.getActiveDid();
       if (activeDid && activeDid == status.did)
         this.didNeedsToBePublished = status.shouldPublish;
     })
+
+    this.events.subscribe('diddocument:changed', ()=>{
+      // When the did document content changes, we rebuild our profile entries on screen.
+      this.buildDisplayEntries();
+    })
   }
 
   ngOnDestroy() {
-    this.event.unsubscribe('did:didchanged');
+    this.events.unsubscribe('did:didchanged');
+    this.events.unsubscribe('did:publicationstatus');
+    this.events.unsubscribe('diddocument:changed');
   }
 
   init() {
@@ -243,21 +250,28 @@ export class MyProfilePage {
 
   // TODO: edit did doc from editprofile changes
   // TODO: edit did doc from credentials changes (delete)
-  // TODO: edit did doc from credentials changes ()
 
   /**
    * Checks visibility status for each profile item and update the DID document accordingly
    * (add / remove items).
    */
   private async updateDIDDocumentFromSelection(password: string) {
+    let changeCount = 0;
     let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
     
     for (let displayEntry of this.visibleData) {
-      this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
+      await this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
+      changeCount++;
     }
 
     for (let displayEntry of this.invisibleData) {
-      this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
+      await this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
+      changeCount++;
+    }
+
+    // Tell everyone that the DID document has some modifications.
+    if (changeCount > 0) {
+      this.events.publish("diddocument:changed");
     }
   }
 
@@ -273,7 +287,5 @@ export class MyProfilePage {
       // Credential exists but user wants to remove it from chain? Then delete it from the did document
       await currentDidDocument.deleteCredential(relatedCredential, password);
     }
-
-    console.log("currentDidDocument:", currentDidDocument)
   }
 }

@@ -8,6 +8,10 @@ import { Native } from '../../../services/native';
 import { PopupProvider } from '../../../services/popup';
 import { Profile } from 'src/app/model/profile.model';
 import { TranslateService } from '@ngx-translate/core';
+import { AdvancedPopupController } from 'src/app/components/advanced-popup/advancedpopup.controller';
+import { AuthService } from 'src/app/services/auth.service';
+import { DIDSyncService } from 'src/app/services/didsync.service';
+import { DIDDocument } from 'src/app/model/diddocument.model';
 
 type CredentialDisplayEntry = {
   credential: DIDPlugin.VerifiableCredential,
@@ -33,6 +37,9 @@ export class CredentialListPage {
   constructor(public event: Events, public route:ActivatedRoute, public zone: NgZone,
       private didService: DIDService,
       private translate: TranslateService,
+      private didSyncService: DIDSyncService,
+      private events: Events,
+      private advancedPopup: AdvancedPopupController,
       private native: Native, private popupProvider: PopupProvider) {
     this.init();
   }
@@ -49,11 +56,18 @@ export class CredentialListPage {
         this.init();
       });
     });
+
+    this.events.subscribe('diddocument:changed', ()=>{
+      // When the did document content changes, we rebuild our credentials entries on screen.
+      this.buildDisplayEntries();
+    });
   }
 
   ngOnDestroy() {
+    console.log("ON DESTROY")
     this.event.unsubscribe('did:credentialadded');
     this.event.unsubscribe('did:didchanged');
+    this.event.unsubscribe('diddocument:changed');
   }
 
   init() {
@@ -103,7 +117,7 @@ export class CredentialListPage {
           credential: c,
           willingToBePubliclyVisible: false,
           willingToDelete: false
-        })
+        }) 
       }
     }
   }
@@ -112,7 +126,12 @@ export class CredentialListPage {
    * Tells if a given credential is currently visible on chain or not (inside the DID document or not).
    */
   credentialIsVisibleOnChain(credential: DIDPlugin.VerifiableCredential) {
-    return true; // TODO - check with DID Document data
+    let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
+    if (!currentDidDocument)
+      return false;
+      
+    let didDocumentCredential = currentDidDocument.getCredentialByKey(credential.getFragment());
+    return didDocumentCredential != null;
   }
 
   /**
@@ -180,6 +199,9 @@ export class CredentialListPage {
     });
   }
 
+  /**
+   * User friendly string that shows who issued a credential in the list.
+   */
   getDisplayableIssuer(credential: DIDPlugin.VerifiableCredential) {
     let issuer = credential.getIssuer();
     if (issuer == this.didService.getActiveDid().getDIDString())
@@ -207,9 +229,76 @@ export class CredentialListPage {
   }
 
   publishVisibilityChanges() {
-    // TODO: Confirmation popup (advanced popup) 
-    // + add/remove credentials from diddocument locally 
-    // + publish DID document on sidechain
+    this.advancedPopup.create({
+      color:'var(--ion-color-primary)',
+      info: {
+          picture: '/assets/images/Visibility_Icon.svg',
+          title: this.translate.instant("publish-popup-title"),
+          content: this.translate.instant("publish-popup-content")
+      },
+      prompt: {
+          title: this.translate.instant("publish-popup-confirm-question"),
+          confirmAction: this.translate.instant("confirm"),
+          cancelAction: this.translate.instant("go-back"),
+          confirmCallback: async ()=>{
+            this.publishDIDDocumentReal();
+          }
+      }
+    }).show();
+  }
+
+  private publishDIDDocumentReal() {
+    AuthService.instance.checkPasswordThenExecute(async ()=>{
+      let password = AuthService.instance.getCurrentUserPassword();
+
+      await this.updateDIDDocumentFromSelection(password);
+      await this.didSyncService.publishActiveDIDDIDDocument(password);
+    }, ()=>{
+      // Error - TODO feedback
+    }, ()=>{
+      // Password failed
+    });
+  }
+
+  /**
+   * Checks visibility status for each credential and update the DID document accordingly
+   * (add / remove items).
+   */
+  private async updateDIDDocumentFromSelection(password: string) {
+    let changeCount = 0;
+    let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
+    
+    for (let displayEntry of this.visibleData) {
+      await this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
+      changeCount++;
+    }
+
+    for (let displayEntry of this.invisibleData) {
+      await this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
+      changeCount++;
+    }
+
+    // Tell everyone that the DID document has some modifications.
+    if (changeCount > 0) {
+      this.events.publish("diddocument:changed");
+    }
+  }
+
+  private async updateDIDDocumentFromSelectionEntry(currentDidDocument: DIDDocument, displayEntry: CredentialDisplayEntry, password: string) {
+    if (!displayEntry.credential)
+      return;
+
+    let relatedCredential = this.didService.getActiveDid().getCredentialByKey(displayEntry.credential.getFragment());
+
+    let existingCredential = await currentDidDocument.getCredentialByKey(relatedCredential.getFragment());
+    if (!existingCredential && displayEntry.willingToBePubliclyVisible) {
+      // Credential doesn't exist in the did document yet but user wants to add it? Then add it.
+      await currentDidDocument.addCredential(relatedCredential, password);
+    }
+    else if (existingCredential && !displayEntry.willingToBePubliclyVisible) {
+      // Credential exists but user wants to remove it from chain? Then delete it from the did document
+      await currentDidDocument.deleteCredential(relatedCredential, password);
+    }
   }
 
   deleteSelectedCredentials() {

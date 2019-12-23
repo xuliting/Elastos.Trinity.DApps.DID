@@ -13,6 +13,7 @@ import { BrowserSimulation } from './services/browsersimulation';
 import { AuthService } from './services/auth.service';
 import { PopupProvider } from './services/popup';
 import { BasicCredentialsService } from './services/basiccredentials.service';
+import { TranslationService } from './services/translation.service';
 
 @Component({
   selector: 'my-app',
@@ -30,6 +31,7 @@ export class MyApp {
     private native: Native,
     private popupProvider: PopupProvider,
     private didService: DIDService,
+    private translationService: TranslationService,
     private uxService: UXService,
     private basicCredentialsService: BasicCredentialsService
   ) {

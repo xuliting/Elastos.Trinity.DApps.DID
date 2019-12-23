@@ -103,7 +103,7 @@ export class AuthService {
     public async checkPasswordThenExecute(writeActionCb: ()=>Promise<void>, onError: ()=>void, wrongPasswordCb: ()=>void, forcePasswordPrompt: boolean = false) {
         return new Promise(async (resolve, reject)=>{
             // A write operation requires password. Make sure we have this in memory, or prompt user.
-            let passwordProvided: boolean = false;
+            let passwordProvided: boolean = true;
             if (forcePasswordPrompt || this.needToPromptPassword(this.didService.getActiveDidStore())) {
                 let previousPasswordWasWrong = forcePasswordPrompt;
                 passwordProvided = await this.promptPasswordInContext(this.didService.getActiveDidStore(), previousPasswordWasWrong);
