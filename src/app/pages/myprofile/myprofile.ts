@@ -10,11 +10,17 @@ import { ShowQRCodeComponent } from 'src/app/components/showqrcode/showqrcode.co
 import { PopupProvider } from 'src/app/services/popup';
 import { AdvancedPopupController } from 'src/app/components/advanced-popup/advancedpopup.controller';
 import { DIDService } from 'src/app/services/did.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { DIDSyncService } from 'src/app/services/didsync.service';
+import { DIDPublicationStatusEvent } from 'src/app/model/eventtypes.model';
+import { DIDDocument } from 'src/app/model/diddocument.model';
+import { currentId } from 'async_hooks';
 
 type ProfileDisplayEntry = {
-  label: string,
-  value: string,
-  willingToBePubliclyVisible?: boolean
+  credentialKey: string, // related credential key name
+  label: string,         // "title" to display
+  value: string,         // value to display
+  willingToBePubliclyVisible?: boolean    // Whether it's currently set to become published or not.
 }
 
 @Component({
@@ -29,8 +35,7 @@ export class MyProfilePage {
   visibleData: ProfileDisplayEntry[];
   invisibleData: ProfileDisplayEntry[];
   public editingVisibility: boolean = false;
-
-  public createDid: boolean = false;
+  public didNeedsToBePublished: boolean = false;
 
   constructor(public event: Events,
               public route:ActivatedRoute,
@@ -39,15 +44,10 @@ export class MyProfilePage {
               private popupProvider: PopupProvider,
               private translate: TranslateService,
               private didService: DIDService,
+              private didSyncService: DIDSyncService,
               private appService: UXService,
               private modalCtrl: ModalController,
               private native: Native) {
-    this.route.queryParams.subscribe((data) => {
-        if (data['create'] == 'true')
-          this.createDid = true;
-        else
-          this.createDid = false;
-    });
     this.init();
   }
 
@@ -57,6 +57,12 @@ export class MyProfilePage {
         this.init();
       });
     });
+
+    this.event.subscribe('did:publicationstatus', (status: DIDPublicationStatusEvent)=>{
+      let activeDid = this.didService.getActiveDid();
+      if (activeDid && activeDid == status.did)
+        this.didNeedsToBePublished = status.shouldPublish;
+    })
   }
 
   ngOnDestroy() {
@@ -68,7 +74,6 @@ export class MyProfilePage {
     console.log("MyProfilePage is using this profile:", this.profile);
 
     this.buildDisplayEntries();
-
   }
 
   ionViewDidLeave() {
@@ -80,6 +85,8 @@ export class MyProfilePage {
     this.didString = this.didService.getActiveDid().getDIDString();
     if (this.didString != '') {
       this.appService.setIntentListener();
+
+      this.didNeedsToBePublished = this.didSyncService.didDocumentNeedsToBePublished(this.didService.getActiveDid());
     }
     console.log("MyProfilePage ionViewDidEnter did: " + this.didString);
   }
@@ -97,6 +104,7 @@ export class MyProfilePage {
     let profileEntries = this.profile.entries;
     for (let entry of profileEntries) {
       this.pushDisplayEntry(entry.info.key, {
+        credentialKey: entry.info.key,
         label: this.translate.instant("credential-info-type-"+entry.info.key),
         value: entry.toDisplayString() || notSetTranslated
       });
@@ -105,9 +113,16 @@ export class MyProfilePage {
 
   /**
    * Tells if a given profile key is currently visible on chain or not (inside the DID document or not).
+   * 
+   * @param profileKey Credential key.
    */
-  profileEntryIsVisibleOnChain(profileKey: string) {
-    return true; // TODO - check with DID Document data
+  profileEntryIsVisibleOnChain(profileKey: string): boolean {
+    let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
+    if (!currentDidDocument)
+      return false;
+      
+    let credential = currentDidDocument.getCredentialByKey(profileKey);
+    return credential != null;
   }
 
   pushDisplayEntry(profileKey: string, entry: ProfileDisplayEntry) {
@@ -183,10 +198,10 @@ export class MyProfilePage {
   }
 
   /**
-   * Publish an updated DID document locally and to the DID sidechain, according to user's choices
-   * for each profile item (+ the DID itself).
+   * This action can be raised at any time by the user in case his local did document is not in sync
+   * with the one on the did sidechain. That will publish the document on chain with latest changes.
    */
-  publishVisibilityChanges() {
+  publishDIDDocument() {
     this.advancedPopup.create({
       color:'var(--ion-color-primary)',
       info: {
@@ -199,13 +214,66 @@ export class MyProfilePage {
           confirmAction: this.translate.instant("confirm"),
           cancelAction: this.translate.instant("go-back"),
           confirmCallback: async ()=>{
-            // TODO
+            this.publishDIDDocumentReal();
           }
       }
     }).show();
   }
 
-  next() {
-    this.native.go("/backupdid");
+  /**
+   * Publish an updated DID document locally and to the DID sidechain, according to user's choices
+   * for each profile item (+ the DID itself).
+   */
+  publishVisibilityChanges() {
+    this.publishDIDDocument();
+  }
+
+  private publishDIDDocumentReal() {
+    AuthService.instance.checkPasswordThenExecute(async ()=>{
+      let password = AuthService.instance.getCurrentUserPassword();
+
+      await this.updateDIDDocumentFromSelection(password);
+      await this.didSyncService.publishActiveDIDDIDDocument(password);
+    }, ()=>{
+      // Error - TODO feedback
+    }, ()=>{
+      // Password failed
+    });
+  }
+
+  // TODO: edit did doc from editprofile changes
+  // TODO: edit did doc from credentials changes (delete)
+  // TODO: edit did doc from credentials changes ()
+
+  /**
+   * Checks visibility status for each profile item and update the DID document accordingly
+   * (add / remove items).
+   */
+  private async updateDIDDocumentFromSelection(password: string) {
+    let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
+    
+    for (let displayEntry of this.visibleData) {
+      this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
+    }
+
+    for (let displayEntry of this.invisibleData) {
+      this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
+    }
+  }
+
+  private async updateDIDDocumentFromSelectionEntry(currentDidDocument: DIDDocument, displayEntry: ProfileDisplayEntry, password: string) {
+    let relatedCredential = this.didService.getActiveDid().getCredentialByKey(displayEntry.credentialKey);
+
+    let existingCredential = await currentDidDocument.getCredentialByKey(relatedCredential.getFragment());
+    if (!existingCredential && displayEntry.willingToBePubliclyVisible) {
+      // Credential doesn't exist in the did document yet but user wants to add it? Then add it.
+      await currentDidDocument.addCredential(relatedCredential, password);
+    }
+    else if (existingCredential && !displayEntry.willingToBePubliclyVisible) {
+      // Credential exists but user wants to remove it from chain? Then delete it from the did document
+      await currentDidDocument.deleteCredential(relatedCredential, password);
+    }
+
+    console.log("currentDidDocument:", currentDidDocument)
   }
 }

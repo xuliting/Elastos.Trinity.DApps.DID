@@ -74,7 +74,7 @@ export class LocalStorage {
         return this.get(key);
     }
 
-    public setCurrentDid(value: string): any {
+    public setCurrentDid(value: string): Promise<any> {
         let key = "cur-didstring";
         return this.storage.set(key, value);
     }

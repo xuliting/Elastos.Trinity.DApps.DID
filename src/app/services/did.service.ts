@@ -8,13 +8,12 @@ import { LocalStorage } from './localstorage';
 import { PopupProvider } from './popup';
 import { Native } from './native';
 import { DIDStore } from '../model/didstore.model';
-import { Config } from './config';
 import { DIDEntry } from '../model/didentry.model';
 import { DID } from '../model/did.model';
 import { NewDID } from '../model/newdid.model';
-import { BasicCredentialInfo, BasicCredentialInfoType } from '../model/basiccredentialinfo.model';
 
 declare let didManager: DIDPlugin.DIDManager;
+declare let appManager: AppManagerPlugin.AppManager;
 
 @Injectable({
     providedIn: 'root'
@@ -50,251 +49,212 @@ export class DIDService {
             this.handleNull();
     }
     
-      /**
-       * Activate the DID saved from a previous session.
-       */
-      public async activateSavedDid(): Promise<boolean> {
-        let storeId = await this.localStorage.getCurrentDidStoreId();
-        let didString = await this.localStorage.getCurrentDid();
-        return this.activateDid(storeId, didString);
-      }
+    /**
+     * Activate the DID saved from a previous session.
+     */
+    public async activateSavedDid(): Promise<boolean> {
+      let storeId = await this.localStorage.getCurrentDidStoreId();
+      let didString = await this.localStorage.getCurrentDid();
+      return this.activateDid(storeId, didString);
+    }
 
-      public async activateSavedDidStore(): Promise<boolean> {
-        let storeId = await this.localStorage.getCurrentDidStoreId();
-        return this.activateDidStore(storeId);
-      }
-    
-      private activateDidStore(storeId: string): Promise<boolean> {
-        return new Promise(async (resolve, reject)=>{
-            if (storeId == null) {
-                console.error("Impossible to activate a null store id!");
-                resolve(false);
-                return;
-            }
-
-            if (storeId == this.getCurDidStoreId()) {
-                console.log("DID Store ID hasn't changed - not loading the DID Store");
-                resolve(true); // Nothing changed but considered as successful.
-                return;
-            }
-
-            let didStore = await DIDStore.loadFromDidStoreId(storeId, this.events);
-            if (!didStore) {
-              this.popupProvider.ionicAlert("Store load error", "Sorry, we were unable to load your DID store...");
+    public async activateSavedDidStore(): Promise<boolean> {
+      let storeId = await this.localStorage.getCurrentDidStoreId();
+      return this.activateDidStore(storeId);
+    }
+  
+    private activateDidStore(storeId: string): Promise<boolean> {
+      return new Promise(async (resolve, reject)=>{
+          if (storeId == null) {
+              console.error("Impossible to activate a null store id!");
               resolve(false);
               return;
-            }
-    
-            console.log("Setting active DID store", didStore);
-            this.activeDidStore = didStore;
-
-            this.localStorage.saveCurrentDidStoreId(didStore.getId());
-
-            this.events.publish('did:didchanged');
-
-            resolve(true);
-        });
-      }
-
-      /**
-       * Make the given DID store becoming the active one for all further operations.
-       * Redirects to the right screen after activation, if a switch is required.
-       */
-      public activateDid(storeId: string, didString: string): Promise<boolean> {
-        console.log("Activating DID using DID store ID "+storeId+" and DID "+didString);
-    
-        return new Promise(async (resolve, reject)=>{
-            if (didString == null) {
-                console.error("Impossible to activate a null did string!");
-                resolve(false);
-                return;
-            }
-
-            let couldActivateStore = await this.activateDidStore(storeId);
-            if (!couldActivateStore) {
-                resolve(false);
-                return;
-            }        
-
-            try {
-                let did = this.getActiveDidStore().findDidByString(didString);
-                if (!did) { // Just in case, should not happen but for robustness...
-                    console.error("No DID found! Failed to activate DID");
-                    resolve(false);
-                    return;
-                }
-                this.localStorage.setCurrentDid(did.getDIDString());
-                this.getActiveDidStore().setActiveDid(did);
-        
-                this.events.publish('did:didchanged');
-        
-                resolve(true);
           }
-          catch (e) {
-            // Failed to load this full DID content
-            console.error(e);
+
+          if (storeId == this.getCurDidStoreId()) {
+              console.log("DID Store ID hasn't changed - not loading the DID Store");
+              resolve(true); // Nothing changed but considered as successful.
+              return;
+          }
+
+          let didStore = await DIDStore.loadFromDidStoreId(storeId, this.events);
+          if (!didStore) {
+            this.popupProvider.ionicAlert("Store load error", "Sorry, we were unable to load your DID store...");
             resolve(false);
+            return;
           }
-        });
-      }
-    
-      public async showDid(storeId:string, didString: string) {
-        console.log("Showing DID Store "+storeId+" with DID "+didString);
-        let couldEnableStore = await this.activateDid(storeId, didString);
-        if (!couldEnableStore) {
-          console.error("Unable to load the previously selected DID store");
-          this.handleNull(); // TODO: go to DID list instead
-        }
-        else {
-            if (this.getActiveDid() != null)
-                this.native.setRootRouter('/home/myprofile', {create:false});
-            else {
-                // Oops, no active DID...
-                console.warn("No active DID in this store!");
-                this.native.setRootRouter('/choosedid');
-            }
-          //this.native.setRootRouter('/choosedid');
-          //this.native.setRootRouter('/home/didsettings');
-          //this.native.setRootRouter('/newpasswordset');
-          //this.native.setRootRouter('/noidentity');
-          //this.native.setRootRouter('/editprofile');
-          /*this.native.setRootRouter('/verifymnemonics', {
-            mnemonicStr:"a b c d e f g h k l m o",
-          });*/
-          /*this.native.setRootRouter('/backupdid', {
-            mnemonicStr:"a b c d e f g h k l m o",
-          });*/
-          //this.native.setRootRouter('/home/credentiallist');
-        }
-      }
-    
-      private handleNull() {
-        this.native.setRootRouter('/noidentity');
-      }
-    
-      /**
-       * Called at the beginning of a new DID creation process.
-       */
-      public async addDidStore() {   
-        let didStore = new DIDStore(this.events); 
-        await didStore.initNewDidStore();
+  
+          console.log("Setting active DID store", didStore);
+          this.activeDidStore = didStore;
 
-        // Activate the DID store, without DID
-        await this.activateDidStore(didStore.getId());
-      }
-    
-      /**
-       * Called at the end of the DID creation process to finalize a few things.
-       */
-      public async finalizeDidCreation() {
-        console.log("Finalizing DID creation");
+          this.localStorage.saveCurrentDidStoreId(didStore.getId());
 
-        let createdDidString = await this.getActiveDidStore().addNewDidWithProfile(this.didBeingCreated);
-        let name = this.didBeingCreated.profile.getEntryByKey("name").value;
-        await this.addDidEntry(new DIDEntry(createdDidString, name));
-        
-        await this.activateDid(this.getCurDidStoreId(), createdDidString);
+          this.events.publish('did:didchanged');
 
-        console.log("Finalized DID creation for did string "+createdDidString+" - with name "+name);
-      }
-    
-      /**
-       * Create a new simple DIDStoreEntry to save it to local storage, just to maintain
-       * a list of existing stores and their names/ids
-       */
-      private async addDidEntry(didEntry: DIDEntry) {
-        console.log("Adding DID entry:", didEntry);
+          resolve(true);
+      });
+    }
 
-        let existingDidEntries = await this.getDidEntries();
-        existingDidEntries.push(didEntry);
+    /**
+     * Make the given DID store becoming the active one for all further operations.
+     * Redirects to the right screen after activation, if a switch is required.
+     */
+    public activateDid(storeId: string, didString: string): Promise<boolean> {
+      console.log("Activating DID using DID store ID "+storeId+" and DID "+didString);
+  
+      return new Promise(async (resolve, reject)=>{
+          if (didString == null) {
+              console.error("Impossible to activate a null did string!");
+              resolve(false);
+              return;
+          }
 
-        await this.localStorage.saveDidEntries(existingDidEntries);
-      }
-    
-      public async getDidEntries(): Promise<DIDEntry[]> {
-        let entries = await this.localStorage.getDidEntries();
-        if (!entries)
-          return [];
-    
-        return entries;
-      }
-    
-      public getCurDidStoreId() {
-        if (!this.activeDidStore)
-          return null;
-    
-        return this.activeDidStore.pluginDidStore.getId();
-      }
-    
-      public getActiveDidStore() : DIDStore {
-        return this.activeDidStore;
-      }
-    
-      public getActiveDid(): DID {
-        return this.activeDidStore.getActiveDid();
-      }
-    
-      /*public async deleteDidStore(didStore: DIDStore) {
-        this.deletePluginDidStore(didStore.pluginDidStore.getId());
-    
-        // Remove store from DidStoreEntry list
-        let entries = await this.localStorage.getDidStoreEntries();
-        let storeId = didStore.pluginDidStore.getId();
-        for (let i = 0; i < entries.length; i++) {
-            if (entries[i].storeId === storeId) {
-                entries.splice(i, 1);
-                break;
-           }
+          let couldActivateStore = await this.activateDidStore(storeId);
+          if (!couldActivateStore) {
+              resolve(false);
+              return;
+          }        
+
+          try {
+              let did = this.getActiveDidStore().findDidByString(didString);
+              if (!did) { // Just in case, should not happen but for robustness...
+                  console.error("No DID found! Failed to activate DID");
+                  resolve(false);
+                  return;
+              }
+              await this.localStorage.setCurrentDid(did.getDIDString());
+              await this.getActiveDidStore().setActiveDid(did);
+      
+              this.events.publish('did:didchanged');
+      
+              resolve(true);
         }
-        this.localStorage.saveDidStoreEntries(entries);
-    
-        // Switch current store to the first one in the DID list, or go to new identity creation screen.
-        if (entries.length > 0) {
-          this.showDidStore(entries[0].storeId);
-        } else {
-          this.localStorage.saveCurrentDidStoreId('');
-          this.activeDidStore = null;
-          this.handleNull();
+        catch (e) {
+          // Failed to load this full DID content
+          console.error(e);
+          resolve(false);
         }
-      }*/
-
-      async deleteDid(did: DID) {
-        let storeId = this.getActiveDidStore().getId();
-        await this.getActiveDidStore().deleteDid(did);
-    
-        // Remove DID from DidStoreEntry list
-        let entries = await this.localStorage.getDidEntries();
-        for (let i = 0; i < entries.length; i++) {
-            if (entries[i].didString === did.getDIDString()) {
-                entries.splice(i, 1);
-                break;
-           }
-        }
-        this.localStorage.saveDidEntries(entries);
-    
-        // Switch current store to use the first did in the DID list, or go to new identity creation screen.
-        if (entries.length > 0) {
-          this.showDid(storeId, entries[0].didString);
-        } else {
-          this.localStorage.setCurrentDid(null);
-          this.activeDidStore.setActiveDid(null);
-          this.handleNull();
-        }
+      });
+    }
+  
+    public async showDid(storeId:string, didString: string) {
+      console.log("Showing DID Store "+storeId+" with DID "+didString);
+      let couldEnableStore = await this.activateDid(storeId, didString);
+      if (!couldEnableStore) {
+        console.error("Unable to load the previously selected DID store");
+        this.handleNull(); // TODO: go to DID list instead
       }
+      else {
+          if (this.getActiveDid() != null)
+              this.native.setRootRouter('/home/myprofile');
+          else {
+              // Oops, no active DID...
+              console.warn("No active DID in this store!");
+              this.native.setRootRouter('/choosedid');
+          }
+        //this.native.setRootRouter('/choosedid');
+        //this.native.setRootRouter('/home/didsettings');
+        //this.native.setRootRouter('/newpasswordset');
+        //this.native.setRootRouter('/noidentity');
+        //this.native.setRootRouter('/editprofile');
+        /*this.native.setRootRouter('/verifymnemonics', {
+          mnemonicStr:"a b c d e f g h k l m o",
+        });*/
+        /*this.native.setRootRouter('/backupdid', {
+          mnemonicStr:"a b c d e f g h k l m o",
+        });*/
+        //this.native.setRootRouter('/home/credentiallist');
+      }
+    }
+  
+    private handleNull() {
+      this.native.setRootRouter('/noidentity');
+    }
+  
+    /**
+     * Called at the beginning of a new DID creation process.
+     */
+    public async addDidStore() {   
+      let didStore = new DIDStore(this.events); 
+      await didStore.initNewDidStore();
 
-    private deletePluginDidStore(didStoreId: string): Promise<any> {
-        console.log("deletePluginDidStore:",didStoreId);
-        if (BrowserSimulation.runningInBrowser()) {
-            return new Promise((resolve, reject)=>{
-               resolve();
-            });
-        }
-        return new Promise((resolve, reject)=>{
-            didManager.deleteDidStore(
-                didStoreId,
-                () => {resolve()}, (err) => {reject(err)},
-            );
-        });
+      // Activate the DID store, without DID
+      await this.activateDidStore(didStore.getId());
+    }
+  
+    /**
+     * Called at the end of the DID creation process to finalize a few things.
+     */
+    public async finalizeDidCreation() {
+      console.log("Finalizing DID creation");
+
+      let createdDidString = await this.getActiveDidStore().addNewDidWithProfile(this.didBeingCreated);
+      let name = this.didBeingCreated.profile.getEntryByKey("name").value;
+      await this.addDidEntry(new DIDEntry(createdDidString, name));
+      
+      await this.activateDid(this.getCurDidStoreId(), createdDidString);
+
+      console.log("Finalized DID creation for did string "+createdDidString+" - with name "+name);
+    }
+  
+    /**
+     * Create a new simple DIDStoreEntry to save it to local storage, just to maintain
+     * a list of existing stores and their names/ids
+     */
+    private async addDidEntry(didEntry: DIDEntry) {
+      console.log("Adding DID entry:", didEntry);
+
+      let existingDidEntries = await this.getDidEntries();
+      existingDidEntries.push(didEntry);
+
+      await this.localStorage.saveDidEntries(existingDidEntries);
+    }
+  
+    public async getDidEntries(): Promise<DIDEntry[]> {
+      let entries = await this.localStorage.getDidEntries();
+      if (!entries)
+        return [];
+  
+      return entries;
+    }
+  
+    public getCurDidStoreId() {
+      if (!this.activeDidStore)
+        return null;
+  
+      return this.activeDidStore.pluginDidStore.getId();
+    }
+  
+    public getActiveDidStore() : DIDStore {
+      return this.activeDidStore;
+    }
+  
+    public getActiveDid(): DID {
+      return this.activeDidStore.getActiveDid();
+    }
+  
+    async deleteDid(did: DID) {
+      let storeId = this.getActiveDidStore().getId();
+      await this.getActiveDidStore().deleteDid(did);
+  
+      // Remove DID from DidStoreEntry list
+      let entries = await this.localStorage.getDidEntries();
+      for (let i = 0; i < entries.length; i++) {
+          if (entries[i].didString === did.getDIDString()) {
+              entries.splice(i, 1);
+              break;
+          }
+      }
+      this.localStorage.saveDidEntries(entries);
+  
+      // Switch current store to use the first did in the DID list, or go to new identity creation screen.
+      if (entries.length > 0) {
+        this.showDid(storeId, entries[0].didString);
+      } else {
+        this.localStorage.setCurrentDid(null);
+        this.activeDidStore.setActiveDid(null);
+        this.handleNull();
+      }
     }
 
     generateMnemonic(language): Promise<any> {

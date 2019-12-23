@@ -3,12 +3,14 @@ import { Profile } from './profile.model';
 import { WrongPasswordException } from './exceptions/wrongpasswordexception.exception';
 import { BrowserSimulation, SimulatedDID, SimulatedCredential } from '../services/browsersimulation';
 import { BasicCredentialsService } from '../services/basiccredentials.service';
+import { DIDDocument } from './diddocument.model';
 
 export class DID {
     private unloadedCredentials: DIDPlugin.UnloadedVerifiableCredential[] = [];
     public credentials: DIDPlugin.VerifiableCredential[] = [];
+    private didDocument: DIDDocument;
 
-    constructor(private pluginDid: DIDPlugin.DID, private events: Events) {
+    constructor(public pluginDid: DIDPlugin.DID, private events: Events) {
     }
 
     public async loadAll() {
@@ -90,6 +92,15 @@ export class DID {
         });
     }
 
+    getCredentialByKey(key: string): DIDPlugin.VerifiableCredential {
+        if (!this.credentials)
+            return null;
+
+        return this.credentials.find((c)=>{
+            return c.getFragment() == key;
+        });
+    }
+  
     /**
      * Based on some predefined basic credentials (name, email...) we build a Profile structure
      * to ease profile editing on UI.
@@ -292,5 +303,14 @@ export class DID {
                 reject(err);
             });
         });
+    }
+
+    public setLoadedDIDDocument(didDocument: DIDDocument) {
+        console.log("Setting loaded did document to:", didDocument);
+        this.didDocument = didDocument;
+    }
+
+    public getDIDDocument(): DIDDocument {
+        return this.didDocument;
     }
 }

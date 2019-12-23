@@ -1,33 +1,59 @@
 import { Events } from '@ionic/angular';
 
-import { Profile } from './profile.model';
-import { DIDService } from '../services/did.service';
-import { NewDID } from './newdid.model';
-import { AuthService } from '../services/auth.service';
-import { WrongPasswordException } from './exceptions/wrongpasswordexception.exception';
-
 export class DIDDocument {
-    constructor(private pluginDidDocument: DIDPlugin.DIDDocument) {
-
+    constructor(public pluginDidDocument: DIDPlugin.DIDDocument) {
     }
 
-    addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<any> {
+    addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
+        console.log("Adding credential with key "+credential.getFragment()+" into DIDDocument");
         return new Promise((resolve, reject)=>{
             this.pluginDidDocument.addCredential(
                 credential,
                 storePass,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    publish(didDocument: DIDPlugin.DIDDocument, storepass: string): Promise<any> {
-        return new Promise((resolve, reject)=>{
-            didDocument.publish(
-                storepass,
                 () => {resolve()}, (err) => {reject(err)},
             );
         });
     }
 
+    deleteCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
+        console.log("Delete credential with key "+credential.getFragment()+" from the DIDDocument");
+        return new Promise((resolve, reject)=>{
+            this.pluginDidDocument.deleteCredential(
+                credential,
+                storePass,
+                () => {resolve()}, (err) => {reject(err)},
+            );
+        });
+    }
+
+    /**
+     * Retrieve a credential from the given key.
+     * Key format: "my-key"
+     * Credential id format: "#my-key"
+     * Fragment format: "my-key"
+     */
+    getCredentialByKey(key: DIDPlugin.DIDURLFragment) : DIDPlugin.VerifiableCredential {
+        let credentials = this.getCredentials();
+        console.log("credentials", credentials)
+        return credentials.find((c)=>{
+            return c.getFragment() == key;
+        });
+    }
+
+    getCredentials(): DIDPlugin.VerifiableCredential[] {
+        return this.pluginDidDocument.getCredentials();
+    }
+
+    /**
+     * Start publishing this DID document on chain.
+     * Response will be received in DIDStore.createIdTransactionCallback().
+     */
+    publish(storepass: string): Promise<void> {
+        return new Promise((resolve, reject)=>{
+            this.pluginDidDocument.publish(
+                storepass,
+                () => {resolve()}, (err) => {reject(err)},
+            );
+        });
+    }
 }

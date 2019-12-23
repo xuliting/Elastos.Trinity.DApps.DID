@@ -54,7 +54,7 @@ export class AuthService {
     /**
      * Ask user to provide his password
      */
-    async promptPasswordInContext(forDidStore: DIDStore, previousPasswordWasWrong: boolean = false) {
+    async promptPasswordInContext(forDidStore: DIDStore, previousPasswordWasWrong: boolean = false): Promise<boolean> {
         console.log("Asking for user password ", previousPasswordWasWrong);
 
         return new Promise(async (resolve, reject)=>{
@@ -67,10 +67,14 @@ export class AuthService {
                 cssClass:"security-check-modal"
             });
             modal.onDidDismiss().then((params) => {
-                if (params.data && params.data.password)
+                if (params.data && params.data.password) {
                     this.saveCurrentUserPassword(forDidStore, params.data.password);
-
-                resolve();
+                    resolve(true);
+                }
+                else {
+                    // Cancelled.
+                    resolve(false);
+                }
             });
             modal.present();
         })
@@ -96,28 +100,36 @@ export class AuthService {
         })
     }
 
-    public async checkPasswordThenExecute(writeActionCb: ()=>Promise<void>, onError: ()=>void, forcePasswordPrompt: boolean = false) {
+    public async checkPasswordThenExecute(writeActionCb: ()=>Promise<void>, onError: ()=>void, wrongPasswordCb: ()=>void, forcePasswordPrompt: boolean = false) {
         return new Promise(async (resolve, reject)=>{
             // A write operation requires password. Make sure we have this in memory, or prompt user.
+            let passwordProvided: boolean = false;
             if (forcePasswordPrompt || this.needToPromptPassword(this.didService.getActiveDidStore())) {
                 let previousPasswordWasWrong = forcePasswordPrompt;
-                await this.promptPasswordInContext(this.didService.getActiveDidStore(), previousPasswordWasWrong);
+                passwordProvided = await this.promptPasswordInContext(this.didService.getActiveDidStore(), previousPasswordWasWrong);
                 // Password will be saved by the auth service.
             }
         
-            writeActionCb().then(()=>{
-                resolve();
-            }).catch(async (e)=>{
-                console.error(e);
-                if (e instanceof WrongPasswordException) {
-                    // Wrong password provided - try again.
-                    await this.checkPasswordThenExecute(writeActionCb, onError, forcePasswordPrompt = true);
-                }
-                else {
-                    onError();
-                    reject();
-                }
-            });
+            if (passwordProvided) {
+                writeActionCb().then(()=>{
+                    resolve();
+                }).catch(async (e)=>{
+                    console.error(e);
+                    if (e instanceof WrongPasswordException) {
+                        wrongPasswordCb();
+
+                        // Wrong password provided - try again.
+                        await this.checkPasswordThenExecute(writeActionCb, onError, wrongPasswordCb, forcePasswordPrompt = true);
+                    }
+                    else {
+                        onError();
+                        reject();
+                    }
+                });
+            }
+            else {
+                // No password provided - stop this check loop as that was cancelled by user.
+            }
         });
       }
 

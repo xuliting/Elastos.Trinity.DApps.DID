@@ -57,6 +57,9 @@ export class CredentialListPage {
   }
 
   init() {
+    if (!this.didService.getActiveDid()) // Could happen when creating a DID while already in another DID
+      return;
+
     this.profile = this.didService.getActiveDid().getBasicProfile();
     this.didString = this.didService.getActiveDid().getDIDString();
     this.credentials = this.didService.getActiveDid().credentials;

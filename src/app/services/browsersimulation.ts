@@ -229,6 +229,73 @@ export class SimulatedDID implements DIDPlugin.DID {
     }
 }
 
+export class SimulatedDIDDocument implements DIDPlugin.DIDDocument {
+    getId(): string {
+        simulated("createVerifiablePresentation", "SimulatedDIDDocument");
+        return "SimulatedDIDDocumentId";
+    }
+
+    setSubject(subject: any, onSuccess?: (data: any) => void, onError?: (err: any) => void) {
+        simulated("setSubject", "SimulatedDIDDocument");
+    }
+
+    getCreated(): Date {
+        simulated("getCreated", "SimulatedDIDDocument");
+        return new Date();
+    }
+    getUpdated(): Date {
+        simulated("getUpdated", "SimulatedDIDDocument");
+        return new Date();
+    }
+    getSubject(): DIDPlugin.DID {
+        simulated("getSubject", "SimulatedDIDDocument");
+        return new SimulatedDID();
+    }
+    getPublicKeyCount(): Number {
+        simulated("getPublicKeyCount", "SimulatedDIDDocument");
+        return 0;
+    }
+    getPublicKey(didString: string): DIDPlugin.PublicKey {
+        simulated("getPublicKey", "SimulatedDIDDocument");
+        return null;
+    }
+    getPublicKeys(): DIDPlugin.PublicKey[] {
+        simulated("getPublicKeys", "SimulatedDIDDocument");
+        return null;
+    }
+    deleteCredential(credential: DIDPlugin.VerifiableCredential, storePass: string, onSuccess?: () => void, onError?: (err: any) => void) {
+        simulated("deleteCredential", "SimulatedDIDDocument");
+    }
+    getCredential(credentialId: string): DIDPlugin.VerifiableCredential {
+        simulated("getCredential", "SimulatedDIDDocument");
+        return null;
+    }
+    getCredentials(): DIDPlugin.VerifiableCredential[] {
+        simulated("getCredentials", "SimulatedDIDDocument");
+        return null;
+    }
+
+    getDefaultPublicKey(onSuccess: (data: any) => void, onError?: (err: any) => void) {
+        simulated("getDefaultPublicKey", "SimulatedDIDDocument");
+    }
+
+    addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string, onSuccess?: (d: any) => void, onError?: (err: any) => void) {
+        simulated("addCredential", "SimulatedDIDDocument");
+    }
+
+    sign(storePass: string, originString: string, onSuccess: (data: any) => void, onError?: (err: any) => void) {
+        simulated("sign", "SimulatedDIDDocument");
+    }
+
+    verify(signString: string, originString: string, onSuccess: (data: any) => void, onError?: (err: any) => void) {
+        simulated("verify", "SimulatedDIDDocument");
+    }
+
+    publish(storepass: string, onSuccess?: () => void, onError?: (err: any) => void) {
+        simulated("publish", "SimulatedDIDDocument");
+    }
+}
+
 export class BrowserSimulation {
     private static _runningInBrowser: boolean = false;
 

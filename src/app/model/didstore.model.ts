@@ -2,9 +2,10 @@ import { Events } from '@ionic/angular';
 
 import { NewDID } from './newdid.model';
 import { DID } from './did.model';
-import { BrowserSimulation, SimulatedDID, SimulatedDIDStore } from '../services/browsersimulation';
+import { BrowserSimulation, SimulatedDID, SimulatedDIDStore, SimulatedDIDDocument } from '../services/browsersimulation';
 import { Config } from '../services/config';
 import { WrongPasswordException } from './exceptions/wrongpasswordexception.exception';
+import { DIDDocument } from './diddocument.model';
 
 declare let didManager: DIDPlugin.DIDManager;
 declare let appManager: AppManagerPlugin.AppManager;
@@ -21,9 +22,15 @@ export class DIDStore {
         return this.activeDid
     }
 
-    public setActiveDid(did: DID) {
+    public async setActiveDid(did: DID) {
         console.log("DID store "+this.getId()+" is setting its active DID to "+(did?did.getDIDString():null));
         this.activeDid = did;
+
+        // When we set a new active DID, we also load its DIDDocument to cache it for later use.
+        if (this.activeDid) {
+            let didDocument = await this.loadDidDocument(this.activeDid.getDIDString());
+            this.activeDid.setLoadedDIDDocument(didDocument);
+        }
     }
 
     public getId(): string {
@@ -47,8 +54,10 @@ export class DIDStore {
         return true;
     }
 
-    public async initNewDidStore() {
-        let didStoreId = Config.uuid(6, 16);
+    public async initNewDidStore(didStoreId = null) {
+        // No ID provided (which is normally the case except for the resolver DID store) -> create one.
+        if (!didStoreId)
+            didStoreId = Config.uuid(6, 16);
         
         console.log("Initializing a new DID Store with ID "+didStoreId);
         await this.initDidStore(didStoreId);
@@ -116,7 +125,7 @@ export class DIDStore {
      * for user's default profile.
      */
     public async addNewDidWithProfile(newDid: NewDID): Promise<string> {
-        let createdDid: {did: DIDPlugin.DID, didDocument: DIDPlugin.DIDDocument};
+        let createdDid: DIDPlugin.DID;
         try {
             // Create and add a DID to the DID store in physical storage.
             createdDid = await this.createPluginDid(newDid.password, "");
@@ -132,7 +141,7 @@ export class DIDStore {
         if (BrowserSimulation.runningInBrowser())
             did = new DID(new SimulatedDID(), this.events);
         else
-            did = new DID(createdDid.did, this.events);
+            did = new DID(createdDid, this.events);
         this.dids.push(did);
 
         // Now create credentials for each profile entry
@@ -166,7 +175,9 @@ export class DIDStore {
         return new Promise((resolve, reject)=>{
             didManager.initDidStore(
                 didStoreId,
-                this.createIdTransactionCallback,
+                (payload: string, memo: string) =>{
+                    this.createIdTransactionCallback(payload, memo);
+                },
                 (pluginDidStore: DIDPlugin.DIDStore) => {
                     console.log("Initialized DID Store is ", pluginDidStore);
                     resolve(pluginDidStore);
@@ -176,14 +187,88 @@ export class DIDStore {
         });
     }
 
+    /**
+     * This callback is called after calling publish() on a DIDDocument. It returns a DID request payload
+     * that we have to forward to the wallet application so it can write the did request on the did 
+     * sidechain for us.
+     */
     private createIdTransactionCallback(payload: string, memo: string) {
+        let jsonPayload = JSON.parse(payload);
+        console.log("Received id transaction callback with payload: ", jsonPayload);
         let params = {
-            didrequest: payload,
+            didrequest: jsonPayload
         }
-        appManager.sendIntent('didtransaction', params, (ret)=> {
-            //TODO
-            console.log('sendIntent didtransaction:', ret);
+
+        console.log("Sending didtransaction intent with params:", params);
+        appManager.sendIntent("didtransaction", params, (response)=>{
+          console.log("Got didtransaction intent response.", response);
+
+          // If txid is set in the response this means a transaction has been sent on chain.
+          // If null, this means user has cancelled the operation (no ELA, etc).
+          if (response.txid) {
+            this.events.publish("diddocument:publish", {
+                didStore: this,
+                published: true
+            });
+          }
+          else {
+            this.events.publish("diddocument:publish", {
+                didStore: this,
+                cancelled: true
+            });
+          }
+        }, (err)=>{
+            console.error("Failed to send app manager didtransaction intent!", err);
+            this.events.publish("diddocument:publish", {
+                didStore: this,
+                error: true
+            });
         });
+    }
+
+    public async loadDidDocument(didString: string): Promise<DIDDocument> {
+        let pluginDidDocument = await this.loadPluginDidDocument(didString);
+        return new DIDDocument(pluginDidDocument);
+    }
+
+    private loadPluginDidDocument(didString: string): Promise<DIDPlugin.DIDDocument> {
+        if (BrowserSimulation.runningInBrowser()) {
+            return new Promise((resolve, reject)=>{
+                resolve(new SimulatedDIDDocument());
+            });
+        }
+        else {
+            return new Promise((resolve, reject)=>{
+                this.pluginDidStore.loadDidDocument(
+                    didString,
+                    (didDocument) => {
+                        resolve(didDocument)
+                    }, (err) => {
+                        reject(err)
+                    },
+                );
+            });
+        }
+    }
+
+    public async resolveDidDocument(didString: string): Promise<DIDDocument> {
+        let pluginDidDocument = await this.resolvePluginDidDocument(didString);
+        return new DIDDocument(pluginDidDocument);
+    }
+
+    private resolvePluginDidDocument(didString: string): Promise<DIDPlugin.DIDDocument> {
+        if (!BrowserSimulation.runningInBrowser()) {
+            return new Promise((resolve, reject)=>{
+                this.pluginDidStore.resolveDidDocument(
+                    didString,
+                    (didDocument) => {
+                        resolve(didDocument)
+                    }, (err) => {
+                        reject(err)
+                    },
+                );
+            });
+        }
     }
 
     private initPluginPrivateIdentity(language, mnemonic, password, force): Promise<void> {
@@ -224,21 +309,21 @@ export class DIDStore {
         });
     }
 
-    createPluginDid(passphrase, hint = ""): Promise<{did:DIDPlugin.DID, didDocument:DIDPlugin.DIDDocument}> {
+    createPluginDid(passphrase, hint = ""): Promise<DIDPlugin.DID> {
         console.log("Creating DID");
         return new Promise((resolve, reject)=>{
             if (!BrowserSimulation.runningInBrowser()) {
                 this.pluginDidStore.newDid(
                     passphrase, hint,
-                    (did, didDocument) => {
+                    (did) => {
                         console.log("Created DID:", did);
-                        resolve({did:did, didDocument:didDocument})
+                        resolve(did)
                     },
                     (err) => {reject(err)},
                 );
             }
             else {
-                resolve({did:new SimulatedDID(), didDocument: null})
+                resolve(new SimulatedDID())
             }
         });
     }

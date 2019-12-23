@@ -43,7 +43,7 @@ export class ImportDIDPage {
   doImport() {
     if(this.checkParams()){
       // TODO import = create DID, restore from chain if possible, and activate in app
-      this.native.go("/home/myprofile", {create:false});
+      this.native.go("/home/myprofile");
     }
   }
 

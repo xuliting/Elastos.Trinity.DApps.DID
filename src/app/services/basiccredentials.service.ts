@@ -33,7 +33,6 @@ export class BasicCredentialsService {
         new BasicCredentialInfo("telegram", BasicCredentialInfoType.TEXT),
         new BasicCredentialInfo("wechat", BasicCredentialInfoType.TEXT),
         new BasicCredentialInfo("weibo", BasicCredentialInfoType.TEXT)
-
       ];
     }
 

@@ -126,14 +126,21 @@ export class EditProfilePage {
   async next() {
     if(this.checkParms()){
       if (this.isEdit) { // If edition mode, go back to my profile after editing.
+        console.log("1")
         await this.authService.checkPasswordThenExecute(async ()=>{
+          console.log("2")
           // We are editing an existing DID: just ask the DID to save its profile.
           // DID being created are NOT saved here.
           await this.native.showLoading('loading-msg');
+          console.log("3")
           await this.didService.getActiveDid().writeProfile(this.profile, AuthService.instance.getCurrentUserPassword())
+          
           this.native.hideLoading();
         }, ()=>{
           this.popupProvider.ionicAlert("DID creation error", "Sorry, we are unable to csave your profile.");
+        }, ()=>{
+          // Password failed - Hide loading popup while inputting password again.
+          this.native.hideLoading();
         });
 
         // Tell others that DID needs to be refreshed (profile info has changed)
@@ -149,15 +156,18 @@ export class EditProfilePage {
         else {
           await this.authService.checkPasswordThenExecute(async ()=>{
             this.didService.didBeingCreated.password = this.authService.getCurrentUserPassword();
-            this.native.showLoading('loading-msg').then(() => {
-              // Creation mode but no need to create a did store
-              this.didService.finalizeDidCreation().then(()=> {
-                this.native.hideLoading();
-                this.native.go("/home/myprofile", {create: true});
-              })
-            });
+            await this.native.showLoading('loading-msg');
+
+            // Creation mode but no need to create a did store
+            await this.didService.finalizeDidCreation();
+
+            this.native.hideLoading();
+            this.native.go("/home/myprofile");
           }, ()=>{
             this.popupProvider.ionicAlert("DID creation error", "Sorry, we are unable to create your DID.");
+          }, ()=>{
+            // Password failed - Hide loading popup while inputting password again.
+            this.native.hideLoading();
           });
         }
       }

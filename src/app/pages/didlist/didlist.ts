@@ -57,16 +57,16 @@ export class DIDListPage {
     }
   }
 
-  addDIDStore() {
+  addDID() {
     this.native.go("/noidentity", {isfirst: false});
   }
 
   switchDidStore(didStoreEntry: DIDEntry) {
     this.didService.activateDid(this.didService.getActiveDidStore().getId(), didStoreEntry.didString);
-    this.native.setRootRouter("/home/myprofile", {create: false});
+    this.native.setRootRouter("/home/myprofile");
   }
 
   viewActiveProfile() {
-    this.native.setRootRouter("/home/myprofile", {create: false});
+    this.native.setRootRouter("/home/myprofile");
   }
 }
