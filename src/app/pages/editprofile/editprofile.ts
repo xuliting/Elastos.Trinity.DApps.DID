@@ -126,13 +126,10 @@ export class EditProfilePage {
   async next() {
     if(this.checkParms()){
       if (this.isEdit) { // If edition mode, go back to my profile after editing.
-        console.log("1")
         await this.authService.checkPasswordThenExecute(async ()=>{
-          console.log("2")
           // We are editing an existing DID: just ask the DID to save its profile.
           // DID being created are NOT saved here.
           await this.native.showLoading('loading-msg');
-          console.log("3")
           await this.didService.getActiveDid().writeProfile(this.profile, AuthService.instance.getCurrentUserPassword())
           
           this.native.hideLoading();

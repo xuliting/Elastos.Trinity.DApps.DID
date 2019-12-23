@@ -249,7 +249,6 @@ export class MyProfilePage {
   }
 
   // TODO: edit did doc from editprofile changes
-  // TODO: edit did doc from credentials changes (delete)
 
   /**
    * Checks visibility status for each profile item and update the DID document accordingly

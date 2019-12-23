@@ -13,6 +13,7 @@ export const zh = {
     'backup': 'Backup',
     'delete': 'Delete',
     'edit-visibility': 'Edit visibility',
+    'delete-credentials': 'Delete credentials',
 
     // DID operations
     'create-my-did': '创建新的DID',
@@ -124,6 +125,7 @@ export const zh = {
     'issuer': 'Issuer',
     'information-it-contains': 'Information it contains',
     'issuer-myself': 'Myself',
+    'credential-deletion-popup-content': 'The selected credentials are going to be deleted locally and on chain permanently.',
 
     // screen: verify mnemonic
     'verification': 'Verification',

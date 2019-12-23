@@ -13,6 +13,7 @@ export const fr = {
     'backup': 'Sauvegarder',
     'delete': 'Supprimer',
     'edit-visibility': 'Modif. Visibilité',
+    'delete-credentials': 'Supprimer les références',
 
     // DID operations
     'create-my-did': 'Créer mon DID',
@@ -124,6 +125,7 @@ export const fr = {
     'issuer': 'Délivré par',
     'information-it-contains': 'Information contenue',
     'issuer-myself': 'Moi-même',
+    'credential-deletion-popup-content': 'Les références sélectionnées vont être définitivement supprimées de votre appareil et de la chaîne de bloc.',
 
     // screen: verify mnemonic
     'verification': 'V"rification',

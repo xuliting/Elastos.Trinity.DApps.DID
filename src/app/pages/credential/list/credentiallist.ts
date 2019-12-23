@@ -177,28 +177,6 @@ export class CredentialListPage {
     return count;
   }
 
-  deleteCredential() {
-    let selectedCount = this.getSelectedCount();
-    if (selectedCount == 0) {
-      //TODO
-      return;
-    }
-
-    this.popupProvider.ionicConfirm("Delete", "Delete Credential?", "Yes", "NO").then((data) => {
-      if (data) {
-          this.credentials.forEach((credential,index,array)=>{
-          /*if (credential.isChecked === true) {
-            this.didService.deleteCredential(this.didString, credential['didurl']).then( (ret)=> {
-              this.credentials.splice(index, 1);
-              this.hasCredential = this.credentials.length > 0 ? true : false;
-              if (!this.hasCredential) this.isEdit = false;
-            })
-          }*/
-        });
-      }
-    });
-  }
-
   /**
    * User friendly string that shows who issued a credential in the list.
    */
@@ -228,7 +206,20 @@ export class CredentialListPage {
     return (genderEntry.value == "" || genderEntry.value == "male")
   }
 
-  publishVisibilityChanges() {
+  saveVisibilityChanges() {
+    AuthService.instance.checkPasswordThenExecute(async ()=>{
+      let password = AuthService.instance.getCurrentUserPassword();
+
+      await this.updateDIDDocumentFromSelection(password);
+      this.promptPublishVisibilityChanges(password);
+    }, ()=>{
+      // Error - TODO feedback
+    }, ()=>{
+      // Password failed
+    });
+  }
+
+  promptPublishVisibilityChanges(password: string) {
     this.advancedPopup.create({
       color:'var(--ion-color-primary)',
       info: {
@@ -241,23 +232,14 @@ export class CredentialListPage {
           confirmAction: this.translate.instant("confirm"),
           cancelAction: this.translate.instant("go-back"),
           confirmCallback: async ()=>{
-            this.publishDIDDocumentReal();
+            this.publishDIDDocumentReal(password);
           }
       }
     }).show();
   }
 
-  private publishDIDDocumentReal() {
-    AuthService.instance.checkPasswordThenExecute(async ()=>{
-      let password = AuthService.instance.getCurrentUserPassword();
-
-      await this.updateDIDDocumentFromSelection(password);
-      await this.didSyncService.publishActiveDIDDIDDocument(password);
-    }, ()=>{
-      // Error - TODO feedback
-    }, ()=>{
-      // Password failed
-    });
+  private publishDIDDocumentReal(password: string) {
+    this.didSyncService.publishActiveDIDDIDDocument(password);
   }
 
   /**
@@ -269,13 +251,13 @@ export class CredentialListPage {
     let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
     
     for (let displayEntry of this.visibleData) {
-      await this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
-      changeCount++;
+      let somethingChanged = await this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
+      changeCount += (somethingChanged?1:0);
     }
 
     for (let displayEntry of this.invisibleData) {
-      await this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
-      changeCount++;
+      let somethingChanged = await this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
+      changeCount += (somethingChanged?1:0);
     }
 
     // Tell everyone that the DID document has some modifications.
@@ -284,35 +266,111 @@ export class CredentialListPage {
     }
   }
 
-  private async updateDIDDocumentFromSelectionEntry(currentDidDocument: DIDDocument, displayEntry: CredentialDisplayEntry, password: string) {
+  /**
+   * Returns true if something has been modified, false otherwise.
+   */
+  private async updateDIDDocumentFromSelectionEntry(currentDidDocument: DIDDocument, displayEntry: CredentialDisplayEntry, password: string): Promise<boolean> {
     if (!displayEntry.credential)
-      return;
+      return false;
 
     let relatedCredential = this.didService.getActiveDid().getCredentialByKey(displayEntry.credential.getFragment());
 
     let existingCredential = await currentDidDocument.getCredentialByKey(relatedCredential.getFragment());
-    if (!existingCredential && displayEntry.willingToBePubliclyVisible) {
+    if (this.editingVisibility && !existingCredential && displayEntry.willingToBePubliclyVisible) {
       // Credential doesn't exist in the did document yet but user wants to add it? Then add it.
       await currentDidDocument.addCredential(relatedCredential, password);
+      return true;
     }
-    else if (existingCredential && !displayEntry.willingToBePubliclyVisible) {
+    else if (this.editingVisibility && existingCredential && !displayEntry.willingToBePubliclyVisible) {
       // Credential exists but user wants to remove it from chain? Then delete it from the did document
       await currentDidDocument.deleteCredential(relatedCredential, password);
+      return true;
     }
+
+    return false;
   }
 
-  deleteSelectedCredentials() {
-    // TODO: Confirmation popup (advanced popup)
-    // + publish DID document on sidechain
-    // + delete locally
+  /**
+   * Ask user if he really wants to proceed to deletion of selected credentials, then delete if 
+   * agreed.
+   */
+  deleteSelectedCredentials(password) {
+    this.advancedPopup.create({
+      color:'#FF4D4D',
+      info: {
+          picture: '/assets/images/Local_Data_Delete_Icon.svg',
+          title: this.translate.instant("deletion-popup-warning"),
+          content: this.translate.instant("credential-deletion-popup-content")
+      },
+      prompt: {
+          title: this.translate.instant("deletion-popup-confirm-question"),
+          confirmAction: this.translate.instant("confirm"),
+          cancelAction: this.translate.instant("go-back"),
+          
+          confirmCallback: async ()=>{
+            console.log("Deletion confirmed by user");
+            this.deleteSelectedCredentialsReal();
+          }
+      }
+    }).show();
+  }
 
-    /*
-    flow:
-    - conf popup
-    - if at least one of the credentials is in the did document:
-    -   delete the credential from local storage
-    -   remove credential(s) from the diddocument locally
-    -   ask user if he wants to publish his did document changes (use a service that compares the local did document with remote one)
-    */
+  private async deleteSelectedCredentialsReal() {
+    AuthService.instance.checkPasswordThenExecute(async ()=>{
+      let password = AuthService.instance.getCurrentUserPassword();
+
+      let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
+    
+      let documentChangeCount = 0;
+
+      for (let entry of this.visibleData) {
+        if (entry.willingToDelete) {
+          let didDocumentHasChanged = await this.deleteSelectedEntryReal(entry, currentDidDocument);
+          documentChangeCount += (didDocumentHasChanged?1:0);
+        }
+      }
+
+      for (let entry of this.invisibleData) {
+        if (entry.willingToDelete) {
+          let didDocumentHasChanged = await this.deleteSelectedEntryReal(entry, currentDidDocument);
+          documentChangeCount += (didDocumentHasChanged?1:0);
+        }
+      }
+    
+      // Prompt user to publish his DID document (he can skip this)
+      if (documentChangeCount > 0) {
+        await this.promptPublishVisibilityChanges(password);
+
+        // Tell everyone that the DID document has some modifications.
+        this.events.publish("diddocument:changed");
+      }
+
+      // Exit deletion mode
+      this.deletionMode = false;
+
+      // Rebuild entries
+      this.buildDisplayEntries();
+
+    }, ()=>{
+      // Error - TODO feedback
+    }, ()=>{
+      // Password failed
+    });
+  }
+
+  /**
+   * Returns true if the current did document has been modified, false otherwise.
+   */
+  private async deleteSelectedEntryReal(entry: CredentialDisplayEntry, currentDidDocument: DIDDocument): Promise<boolean> {
+    // Delete locally
+    await this.didService.getActiveDid().deleteCredential(entry.credential.getId());
+
+    // Delete from local DID document
+    if (currentDidDocument.getCredentialByKey(entry.credential.getFragment())) {
+      await currentDidDocument.deleteCredential(entry.credential, AuthService.instance.getCurrentUserPassword());
+      return true;
+    }
+
+    return false;
   }
 }
