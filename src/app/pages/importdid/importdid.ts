@@ -56,7 +56,7 @@ export class ImportDIDPage {
   async importDid() {
     console.log('importDid');
     await this.native.showLoading('loading-msg').then(async () => {
-      await this.didService.getActiveDidStore().createPrivateIdentity(this.password, this.native.getMnemonicLang(), this.mnemonicSentence);
+      await this.didService.getActiveDidStore().createPrivateIdentity(this.password, this.getMnemonicLang(), this.mnemonicSentence);
       this.didService.getActiveDidStore().synchronize(this.password).then(async ()=>{
         console.log('synchronize success');
         this.native.hideLoading();
@@ -80,7 +80,7 @@ export class ImportDIDPage {
         //delete didstore
       })
     });
-}
+  }
 
   checkParams(){
     if(Util.isNull(this.password)){
@@ -89,5 +89,12 @@ export class ImportDIDPage {
     }
 
     return true;
+  }
+
+  getMnemonicLang(): DIDPlugin.MnemonicLanguage {
+    if (Util.english(this.mnemonicWords[0])) return DIDPlugin.MnemonicLanguage.ENGLISH;
+    if (Util.chinese(this.mnemonicWords[0])) return DIDPlugin.MnemonicLanguage.CHINESE_SIMPLIFIED;
+    // TODO
+    return this.native.getMnemonicLang();
   }
 }
