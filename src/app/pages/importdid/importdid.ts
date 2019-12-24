@@ -3,6 +3,7 @@ import { NavController, IonInput } from '@ionic/angular';
 
 import { DIDService } from '../../services/did.service';
 import { Native } from '../../services/native';
+import { PopupProvider } from '../../services/popup';
 import { Util } from '../../services/util';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -18,12 +19,15 @@ export class ImportDIDPage {
 
   @ViewChild('addMnemonicWordInput', { static:false }) addMnemonicWordInput: IonInput;
 
-  constructor(public navCtrl: NavController, private native: Native, private didService: DIDService, private authService: AuthService) {
+  constructor(public navCtrl: NavController, private native: Native, private didService: DIDService, private authService: AuthService, private popupProvider: PopupProvider) {
   }
 
   onMnemonicSentenceChanged() {
     // Remove all values
     this.mnemonicWords.length = 0;
+
+    //for test
+    // this.mnemonicSentence = "crawl same crystal magic pave scare rifle torch rug reunion size pluck";
 
     // Rebuild words based on typed sentence
     this.mnemonicWords = this.mnemonicSentence.trim().split(" ");
@@ -40,12 +44,41 @@ export class ImportDIDPage {
     }
   }
 
-  doImport() {
+  async doImport() {
     if(this.checkParams()){
       // TODO import = create DID, restore from chain if possible, and activate in app
-      this.native.go("/home/myprofile");
+      await this.didService.addDidStore();
+      await this.importDid();
     }
   }
+
+  async importDid() {
+    console.log('importDid');
+    await this.native.showLoading('loading-msg').then(async () => {
+      await this.didService.getActiveDidStore().createPrivateIdentity(this.password, this.native.getMnemonicLang(), this.mnemonicSentence);
+      this.didService.getActiveDidStore().synchronize(this.password).then(async ()=>{
+        console.log('synchronize success');
+        this.native.hideLoading();
+        if (null != this.didService.getActiveDidStore().getActiveDid()) {
+          // Save password for later use
+          this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), this.password);
+
+          console.log("Redirecting user to his profile page");
+          this.native.go("/home/myprofile", {create:false});
+        }
+        else {
+          this.popupProvider.ionicAlert("Store is empty", "ooh, your DID store is empty...");
+          //delete didStore?
+        }
+      })
+      .catch( (e)=> {
+        this.native.hideLoading();
+        console.log('synchronize error:', e);
+        this.popupProvider.ionicAlert("Store load error", "Sorry, we were unable to load your DID store... " + e);
+        //delete didstore
+      })
+    });
+}
 
   checkParams(){
     if(Util.isNull(this.password)){
