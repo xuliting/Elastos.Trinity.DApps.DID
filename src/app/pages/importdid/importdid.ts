@@ -27,7 +27,8 @@ export class ImportDIDPage {
     this.mnemonicWords.length = 0;
 
     //for test
-    // this.mnemonicSentence = "crawl same crystal magic pave scare rifle torch rug reunion size pluck";
+    // this.mnemonicSentence = "income diesel latin coffee tourist kangaroo lumber great ill amazing say left";
+    this.mnemonicSentence = this.mnemonicSentence.toLowerCase();
 
     // Rebuild words based on typed sentence
     this.mnemonicWords = this.mnemonicSentence.trim().split(" ");
@@ -59,6 +60,7 @@ export class ImportDIDPage {
       this.didService.getActiveDidStore().synchronize(this.password).then(async ()=>{
         console.log('synchronize success');
         this.native.hideLoading();
+        //do loadDids
         if (null != this.didService.getActiveDidStore().getActiveDid()) {
           // Save password for later use
           this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), this.password);
