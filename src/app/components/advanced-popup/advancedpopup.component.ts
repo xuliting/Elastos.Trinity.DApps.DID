@@ -37,7 +37,7 @@ export class AdvancedPopupComponent implements OnInit {
     backgroundClicked(dismissIfId: string, event: MouseEvent) {
         let target:any = event.target;
         if (target.id == dismissIfId)
-            this.modalCtrl.dismiss(null);
+            this.cancel();
     }
 
     confirm() {
@@ -48,6 +48,9 @@ export class AdvancedPopupComponent implements OnInit {
     }
 
     cancel() {
+        if (this.config.prompt.cancelCallback)
+            this.config.prompt.cancelCallback();
+
         this.modalCtrl.dismiss(null);
     }
 }

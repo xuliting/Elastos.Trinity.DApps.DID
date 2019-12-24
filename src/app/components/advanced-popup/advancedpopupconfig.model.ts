@@ -1,4 +1,5 @@
 type AdvancedPopupConfirmCallback = ()=>void;
+type AdvancedPopupCancelCallback = ()=>void;
 
 export type AdvancedPopupConfig = {
     color: string,
@@ -12,5 +13,6 @@ export type AdvancedPopupConfig = {
         confirmAction: string,
         cancelAction: string,
         confirmCallback: AdvancedPopupConfirmCallback
+        cancelCallback?: AdvancedPopupCancelCallback
     }
 }

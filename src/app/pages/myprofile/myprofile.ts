@@ -15,9 +15,10 @@ import { DIDSyncService } from 'src/app/services/didsync.service';
 import { DIDPublicationStatusEvent } from 'src/app/model/eventtypes.model';
 import { DIDDocument } from 'src/app/model/diddocument.model';
 import { currentId } from 'async_hooks';
+import { DIDURL } from 'src/app/model/didurl.model';
 
 type ProfileDisplayEntry = {
-  credentialKey: string, // related credential key name
+  credentialId: string, // related credential id
   label: string,         // "title" to display
   value: string,         // value to display
   willingToBePubliclyVisible?: boolean    // Whether it's currently set to become published or not.
@@ -111,7 +112,7 @@ export class MyProfilePage {
     let profileEntries = this.profile.entries;
     for (let entry of profileEntries) {
       this.pushDisplayEntry(entry.info.key, {
-        credentialKey: entry.info.key,
+        credentialId: "#"+entry.info.key,
         label: this.translate.instant("credential-info-type-"+entry.info.key),
         value: entry.toDisplayString() || notSetTranslated
       });
@@ -128,7 +129,7 @@ export class MyProfilePage {
     if (!currentDidDocument)
       return false;
       
-    let credential = currentDidDocument.getCredentialByKey(profileKey);
+    let credential = currentDidDocument.getCredentialById(new DIDURL("#"+profileKey));
     return credential != null;
   }
 
@@ -239,6 +240,9 @@ export class MyProfilePage {
     AuthService.instance.checkPasswordThenExecute(async ()=>{
       let password = AuthService.instance.getCurrentUserPassword();
 
+      // Exit visibility edition
+      this.editingVisibility = false;
+
       await this.updateDIDDocumentFromSelection(password);
       await this.didSyncService.publishActiveDIDDIDDocument(password);
     }, ()=>{
@@ -247,8 +251,6 @@ export class MyProfilePage {
       // Password failed
     });
   }
-
-  // TODO: edit did doc from editprofile changes
 
   /**
    * Checks visibility status for each profile item and update the DID document accordingly
@@ -275,9 +277,9 @@ export class MyProfilePage {
   }
 
   private async updateDIDDocumentFromSelectionEntry(currentDidDocument: DIDDocument, displayEntry: ProfileDisplayEntry, password: string) {
-    let relatedCredential = this.didService.getActiveDid().getCredentialByKey(displayEntry.credentialKey);
+    let relatedCredential = this.didService.getActiveDid().getCredentialById(new DIDURL(displayEntry.credentialId));
 
-    let existingCredential = await currentDidDocument.getCredentialByKey(relatedCredential.getFragment());
+    let existingCredential = await currentDidDocument.getCredentialById(new DIDURL(relatedCredential.getId()));
     if (!existingCredential && displayEntry.willingToBePubliclyVisible) {
       // Credential doesn't exist in the did document yet but user wants to add it? Then add it.
       await currentDidDocument.addCredential(relatedCredential, password);

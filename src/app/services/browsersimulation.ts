@@ -1,3 +1,5 @@
+import { DIDURL } from "../model/didurl.model";
+
 /**
  * ################################################################
  * ################################################################
@@ -36,16 +38,16 @@ export class SimulatedUnloadedCredential implements DIDPlugin.UnloadedVerifiable
 }
 
 export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
-    constructor(public credentialId: string, public basicProfileValue: string){
+    constructor(public fragment: string, public basicProfileValue: string){
     }
 
     getId() {
         simulated("getId", "SimulatedCredential");
-        return "did:elastos:"+randomString()+"#"+this.credentialId;
+        return "#"+this.fragment;
     }
     getFragment() {
         simulated("getFragment", "SimulatedCredential");
-        return this.credentialId;
+        return this.fragment;
     }
     getType() {
         simulated("getType", "SimulatedCredential");
@@ -66,7 +68,7 @@ export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
     getSubject() {
         simulated("getSubject", "SimulatedCredential");
         let subject = {};
-        subject[this.credentialId] = this.basicProfileValue;
+        subject[this.fragment] = this.basicProfileValue;
         return subject;
     }
     getProof() {
@@ -79,8 +81,9 @@ export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
         })
     }
 
-    static makeForCredentialId(credentialId: string): SimulatedCredential {
-        switch(credentialId) {
+    static makeForCredentialId(credentialId: DIDURL): SimulatedCredential {
+        let fragment = credentialId.getFragment();
+        switch(fragment) {
             case "name":
                 return new SimulatedCredential("name", "User_"+randomString());
             case "email":
@@ -95,11 +98,11 @@ export class SimulatedVerifiablePresentation implements DIDPlugin.VerifiablePres
     credentials: DIDPlugin.VerifiableCredential[] = [];
 
     constructor() {
-        this.credentials.push(SimulatedCredential.makeForCredentialId("name"));
-        this.credentials.push(SimulatedCredential.makeForCredentialId("email"));
-        this.credentials.push(SimulatedCredential.makeForCredentialId("gender"));
+        this.credentials.push(SimulatedCredential.makeForCredentialId(new DIDURL("#name")));
+        this.credentials.push(SimulatedCredential.makeForCredentialId(new DIDURL("#email")));
+        this.credentials.push(SimulatedCredential.makeForCredentialId(new DIDURL("#gender")));
     }
-
+ 
     getCredentials(): DIDPlugin.VerifiableCredential[] {
         simulated("getCredentials", "SimulatedVerifiablePresentation");
         return this.credentials;
@@ -215,9 +218,9 @@ export class SimulatedDID implements DIDPlugin.DID {
             new SimulatedUnloadedCredential("telephone")
         ])
     }
-    loadCredential(credentialId: string, onSuccess: (credential: DIDPlugin.VerifiableCredential) => void, onError?: (err: any) => void) {
+    loadCredential(credentialId: DIDPlugin.CredentialID, onSuccess: (credential: DIDPlugin.VerifiableCredential) => void, onError?: (err: any) => void) {
         simulated("loadCredential", "SimulatedDID");
-        onSuccess(SimulatedCredential.makeForCredentialId(credentialId));
+        onSuccess(SimulatedCredential.makeForCredentialId(new DIDURL(credentialId)));
     }
     storeCredential(credential: DIDPlugin.VerifiableCredential, onSuccess?: () => void, onError?: (err: any) => void) {
         simulated("storeCredential", "SimulatedDID");

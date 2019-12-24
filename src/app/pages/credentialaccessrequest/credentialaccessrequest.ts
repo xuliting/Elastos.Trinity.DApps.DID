@@ -147,6 +147,8 @@ export class CredentialAccessRequestPage {
   /**
    * NOTE: For now we assume that the credential name (fragment) is the same as the requested claim value.
    * But this may not be tue in the future: we would have to search inside credential properties one by one.
+   * 
+   * key format: "my-key" (credential fragment)
    */
   findCredential(key: string): DIDPlugin.VerifiableCredential {
     return this.credentials.find((c)=>{

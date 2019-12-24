@@ -15,6 +15,9 @@ import { area } from '../../../assets/area/area';
 import { ProfileEntryPickerPage } from '../profileentrypicker/profileentrypicker';
 import { BasicCredentialInfo, BasicCredentialInfoType } from 'src/app/model/basiccredentialinfo.model';
 import { BasicCredentialEntry } from 'src/app/model/basiccredentialentry.model';
+import { AdvancedPopupController } from 'src/app/components/advanced-popup/advancedpopup.controller';
+import { TranslateService } from '@ngx-translate/core';
+import { DIDSyncService } from 'src/app/services/didsync.service';
 
 @Component({
   selector: 'page-editprofile',
@@ -34,7 +37,10 @@ export class EditProfilePage {
               private didService: DIDService,
               private authService: AuthService,
               private modalCtrl: ModalController,
+              private advancedPopup: AdvancedPopupController,
               private popupProvider: PopupProvider,
+              private translate: TranslateService,
+              private didSyncService: DIDSyncService,
               private native: Native) {
     this.paramsSubscription = this.route.queryParams.subscribe((data) => {
       console.log("Entering EditProfile page");
@@ -126,15 +132,16 @@ export class EditProfilePage {
   async next() {
     if(this.checkParms()){
       if (this.isEdit) { // If edition mode, go back to my profile after editing.
+        let localDidDocumentHasChanged = false;
         await this.authService.checkPasswordThenExecute(async ()=>{
           // We are editing an existing DID: just ask the DID to save its profile.
           // DID being created are NOT saved here.
           await this.native.showLoading('loading-msg');
-          await this.didService.getActiveDid().writeProfile(this.profile, AuthService.instance.getCurrentUserPassword())
+          localDidDocumentHasChanged = await this.didService.getActiveDid().writeProfile(this.profile, AuthService.instance.getCurrentUserPassword())
           
           this.native.hideLoading();
         }, ()=>{
-          this.popupProvider.ionicAlert("DID creation error", "Sorry, we are unable to csave your profile.");
+          this.popupProvider.ionicAlert("DID error", "Sorry, we are unable to save your profile.");
         }, ()=>{
           // Password failed - Hide loading popup while inputting password again.
           this.native.hideLoading();
@@ -143,7 +150,14 @@ export class EditProfilePage {
         // Tell others that DID needs to be refreshed (profile info has changed)
         this.events.publish('did:didchanged');
 
-        this.navCtrl.pop();
+        if (localDidDocumentHasChanged) {
+          // DID Document was modified: ask user if he wants to publish his new did document version now or not.
+          this.promptPublishDIDDocument();
+        }
+        else {
+          // Exit the screen.
+          this.navCtrl.pop();
+        }
       }
       else { // If creation mode, go to backup did flow.
         this.didService.didBeingCreated.profile = this.profile; // Save filled profile for later.
@@ -169,6 +183,36 @@ export class EditProfilePage {
         }
       }
     }
+  }
+
+  private promptPublishDIDDocument() {
+    this.advancedPopup.create({
+      color:'var(--ion-color-primary)',
+      info: {
+          picture: '/assets/images/Visibility_Icon.svg',
+          title: this.translate.instant("publish-popup-title"),
+          content: this.translate.instant("publish-popup-content")
+      },
+      prompt: {
+          title: this.translate.instant("publish-popup-confirm-question"),
+          confirmAction: this.translate.instant("confirm"),
+          cancelAction: this.translate.instant("go-back"),
+          confirmCallback: async ()=>{
+            await this.publishDIDDocumentReal();
+            // Exit the screen.
+            this.navCtrl.pop();
+          },
+          cancelCallback: async ()=>{
+            // Exit the screen.
+            this.navCtrl.pop();
+          }
+      }
+    }).show();
+  }
+
+  private async publishDIDDocumentReal() {
+    let password = AuthService.instance.getCurrentUserPassword();
+    await this.didSyncService.publishActiveDIDDIDDocument(password);
   }
 
   checkParms(){

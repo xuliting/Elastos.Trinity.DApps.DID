@@ -1,11 +1,12 @@
 import { Events } from '@ionic/angular';
+import { DIDURL } from './didurl.model';
 
 export class DIDDocument {
     constructor(public pluginDidDocument: DIDPlugin.DIDDocument) {
     }
 
-    addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
-        console.log("Adding credential with key "+credential.getFragment()+" into DIDDocument");
+    public addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
+        console.log("Adding credential with key "+credential.getId()+" into DIDDocument", credential);
         return new Promise((resolve, reject)=>{
             this.pluginDidDocument.addCredential(
                 credential,
@@ -15,8 +16,8 @@ export class DIDDocument {
         });
     }
 
-    deleteCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
-        console.log("Delete credential with key "+credential.getFragment()+" from the DIDDocument");
+    public deleteCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
+        console.log("Delete credential with key "+credential.getId()+" from the DIDDocument", credential);
         return new Promise((resolve, reject)=>{
             this.pluginDidDocument.deleteCredential(
                 credential,
@@ -26,17 +27,18 @@ export class DIDDocument {
         });
     }
 
+    public async updateCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
+        await this.deleteCredential(credential, storePass);
+        await this.addCredential(credential, storePass);
+    }
+
     /**
-     * Retrieve a credential from the given key.
-     * Key format: "my-key"
-     * Credential id format: "#my-key"
-     * Fragment format: "my-key"
+     * Retrieve a credential from the given credential id.
      */
-    getCredentialByKey(key: DIDPlugin.DIDURLFragment) : DIDPlugin.VerifiableCredential {
+    getCredentialById(credentialId: DIDURL) : DIDPlugin.VerifiableCredential {
         let credentials = this.getCredentials();
-        console.log("credentials", credentials)
         return credentials.find((c)=>{
-            return c.getFragment() == key;
+            return credentialId.matches(c.getId());
         });
     }
 

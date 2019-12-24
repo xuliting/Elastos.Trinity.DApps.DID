@@ -7,6 +7,7 @@ import { PopupProvider } from '../../services/popup';
 import { BrowserSimulation } from 'src/app/services/browsersimulation';
 import { AdvancedPopupController } from 'src/app/components/advanced-popup/advancedpopup.controller';
 import { TranslateService } from '@ngx-translate/core';
+import { DIDURL } from 'src/app/model/didurl.model';
 
 // TODO: Show credential(s) content that will be created to the user. He needs to make sure for example
 // that no shared credential will overwrite existing ones like "name" or "email"...
@@ -122,7 +123,8 @@ export class RegisterApplicationProfileRequestPage {
     });
     
     // Create and append the new ApplicationProfileCredential credential to the local store.
-    await this.didService.getActiveDid().addCredential(credentialTitle, props, "PASSWORDTODO", customCredentialTypes);
+    let credentialId = new DIDURL("#"+credentialTitle);
+    await this.didService.getActiveDid().addCredential(credentialId, props, "PASSWORDTODO", customCredentialTypes);
   }
 
   async createIndependantCredentials() {
@@ -133,7 +135,8 @@ export class RegisterApplicationProfileRequestPage {
       let value = sharedClaims[key];
 
       console.log("Creating independant credential with key "+key+" and value:", value);
-      await this.didService.getActiveDid().addCredential(key, {key:value}, "PASSWORDTODO");
+      let credentialId = new DIDURL("#"+key);
+      await this.didService.getActiveDid().addCredential(credentialId, {key:value}, "PASSWORDTODO");
     });
   }
 

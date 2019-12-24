@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Config } from '../../../services/config';
 import { Native } from '../../../services/native';
 import { DIDService } from 'src/app/services/did.service';
+import { DIDURL } from 'src/app/model/didurl.model';
 
 @Component({
   selector: 'page-credentialcreate',
@@ -34,7 +35,7 @@ export class CredentialCreatePage {
         nation: this.profile.nation
     }
 
-    await this.didService.getActiveDid().addCredential(this.title, props, "PASSWORD-TODO");
+    await this.didService.getActiveDid().addCredential(new DIDURL("#"+this.title), props, "PASSWORD-TODO");
   }
 
   add() {

@@ -12,6 +12,7 @@ import { AdvancedPopupController } from 'src/app/components/advanced-popup/advan
 import { AuthService } from 'src/app/services/auth.service';
 import { DIDSyncService } from 'src/app/services/didsync.service';
 import { DIDDocument } from 'src/app/model/diddocument.model';
+import { DIDURL } from 'src/app/model/didurl.model';
 
 type CredentialDisplayEntry = {
   credential: DIDPlugin.VerifiableCredential,
@@ -130,7 +131,7 @@ export class CredentialListPage {
     if (!currentDidDocument)
       return false;
       
-    let didDocumentCredential = currentDidDocument.getCredentialByKey(credential.getFragment());
+    let didDocumentCredential = currentDidDocument.getCredentialById(new DIDURL(credential.getId()));
     return didDocumentCredential != null;
   }
 
@@ -273,9 +274,9 @@ export class CredentialListPage {
     if (!displayEntry.credential)
       return false;
 
-    let relatedCredential = this.didService.getActiveDid().getCredentialByKey(displayEntry.credential.getFragment());
+    let relatedCredential = this.didService.getActiveDid().getCredentialById(new DIDURL(displayEntry.credential.getId()));
 
-    let existingCredential = await currentDidDocument.getCredentialByKey(relatedCredential.getFragment());
+    let existingCredential = await currentDidDocument.getCredentialById(new DIDURL(relatedCredential.getId()));
     if (this.editingVisibility && !existingCredential && displayEntry.willingToBePubliclyVisible) {
       // Credential doesn't exist in the did document yet but user wants to add it? Then add it.
       await currentDidDocument.addCredential(relatedCredential, password);
@@ -363,10 +364,10 @@ export class CredentialListPage {
    */
   private async deleteSelectedEntryReal(entry: CredentialDisplayEntry, currentDidDocument: DIDDocument): Promise<boolean> {
     // Delete locally
-    await this.didService.getActiveDid().deleteCredential(entry.credential.getId());
+    await this.didService.getActiveDid().deleteCredential(new DIDURL(entry.credential.getId()));
 
     // Delete from local DID document
-    if (currentDidDocument.getCredentialByKey(entry.credential.getFragment())) {
+    if (currentDidDocument.getCredentialById(new DIDURL(entry.credential.getId()))) {
       await currentDidDocument.deleteCredential(entry.credential, AuthService.instance.getCurrentUserPassword());
       return true;
     }
