@@ -217,6 +217,22 @@ export class DIDService {
   
       return entries;
     }
+
+    /**
+     * Used after importing a DID store from chain in order to update our local storage list of DIDs.
+     */
+    public async rebuildDidEntries() {
+      let entries: DIDEntry[] = [];
+      
+      for (let did of this.activeDidStore.dids) {
+        let profile = did.getBasicProfile();
+        
+        let entry = new DIDEntry(did.getDIDString(), profile.getName());
+        entries.push(entry);
+      }
+
+      await this.localStorage.saveDidEntries(entries);
+    }
   
     public getCurDidStoreId() {
       if (!this.activeDidStore)

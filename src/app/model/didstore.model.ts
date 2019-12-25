@@ -12,7 +12,6 @@ declare let appManager: AppManagerPlugin.AppManager;
 
 export class DIDStore {
     public pluginDidStore: DIDPlugin.DIDStore = null;
-    public unloadedDids: DIDPlugin.DID[] = [];
     public dids: DID[] = [];
     private activeDid: DID = null;
 
@@ -67,18 +66,12 @@ export class DIDStore {
         this.pluginDidStore = await this.initPluginDidStore(didStoreId);
     }
 
-    /**
-     * Fills this object model by loading a plugin DID store with all its contained DIDs, credentials, etc.
-     */
-    public static async loadFromDidStoreId(didStoreId: string, events: Events) : Promise<DIDStore> {
-        console.log("loadFromDidStoreId "+didStoreId);
-
-        let didStore;
+    public async loadAll(didStoreId: string) {
+        console.log("DID store loading all.");
         try {
-            didStore = new DIDStore(events);
-            await didStore.initDidStore(didStoreId);
-            
-            let pluginDids = await didStore.listPluginDids();
+            await this.initDidStore(didStoreId);
+                
+            let pluginDids = await this.listPluginDids();
 
             console.log("Plugin DIDs:", pluginDids);
             if (pluginDids.length == 0) {
@@ -86,12 +79,22 @@ export class DIDStore {
                 console.warn("No DID in the DID Store, that's a bit strange but we want to continue here.")
             }
 
-            await didStore.loadAllDids(pluginDids);
+            await this.loadAllDids(pluginDids);
         }
         catch (e) {
             console.error("Fatal error while loading from DID Store id.", e);
             return null;
         }
+    }
+
+    /**
+     * Fills this object model by loading a plugin DID store with all its contained DIDs, credentials, etc.
+     */
+    public static async loadFromDidStoreId(didStoreId: string, events: Events) : Promise<DIDStore> {
+        console.log("loadFromDidStoreId "+didStoreId);
+
+        let didStore = new DIDStore(events);
+        await didStore.loadAll(didStoreId);
 
         return didStore;
     }
@@ -251,26 +254,6 @@ export class DIDStore {
         }
     }
 
-    public async resolveDidDocument(didString: string): Promise<DIDDocument> {
-        let pluginDidDocument = await this.resolvePluginDidDocument(didString);
-        return new DIDDocument(pluginDidDocument);
-    }
-
-    private resolvePluginDidDocument(didString: string): Promise<DIDPlugin.DIDDocument> {
-        if (!BrowserSimulation.runningInBrowser()) {
-            return new Promise((resolve, reject)=>{
-                this.pluginDidStore.resolveDidDocument(
-                    didString,
-                    (didDocument) => {
-                        resolve(didDocument)
-                    }, (err) => {
-                        reject(err)
-                    },
-                );
-            });
-        }
-    }
-
     private initPluginPrivateIdentity(language, mnemonic, password, force): Promise<void> {
         if (BrowserSimulation.runningInBrowser()) {
             return new Promise((resolve, reject)=>{
@@ -337,15 +320,6 @@ export class DIDStore {
         return new Promise((resolve, reject)=>{
             this.pluginDidStore.listDids(
                 DIDPlugin.DIDStoreFilter.DID_ALL,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    resolveDid(didString): Promise<any> {
-        return new Promise((resolve, reject)=>{
-            this.pluginDidStore.resolveDidDocument(
-                didString,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
         });

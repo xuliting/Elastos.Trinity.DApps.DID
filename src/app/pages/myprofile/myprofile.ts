@@ -78,10 +78,12 @@ export class MyProfilePage {
   }
 
   init() {
-    this.profile = this.didService.getActiveDid().getBasicProfile();
-    console.log("MyProfilePage is using this profile:", this.profile);
+    if (this.didService.getActiveDid()) { // Happens when importing a new mnemonic over an existing one
+      this.profile = this.didService.getActiveDid().getBasicProfile();
+      console.log("MyProfilePage is using this profile:", this.profile);
 
-    this.buildDisplayEntries();
+      this.buildDisplayEntries();
+    }
   }
 
   ionViewDidLeave() {
@@ -277,8 +279,10 @@ export class MyProfilePage {
   }
 
   private async updateDIDDocumentFromSelectionEntry(currentDidDocument: DIDDocument, displayEntry: ProfileDisplayEntry, password: string) {
+    console.log("Updating document selection from entry ", currentDidDocument, displayEntry);
     let relatedCredential = this.didService.getActiveDid().getCredentialById(new DIDURL(displayEntry.credentialId));
-
+    console.log("Related credential: ", relatedCredential);
+    
     let existingCredential = await currentDidDocument.getCredentialById(new DIDURL(relatedCredential.getId()));
     if (!existingCredential && displayEntry.willingToBePubliclyVisible) {
       // Credential doesn't exist in the did document yet but user wants to add it? Then add it.

@@ -41,9 +41,14 @@ export class AuthService {
      * Remember password provided by user for later.
      */
     saveCurrentUserPassword(didStore: DIDStore, password: string) {
-        console.log("Saving user password for DID Store id "+didStore.getId());
+        console.log("Saving user password for DID Store id "+(didStore?didStore.getId():null));
 
-        this.savedPasswordRelatedDIDStoreId = didStore.getId();
+        // When importing a DID, we can save a password without having a related DID store yet.
+        if (didStore)
+            this.savedPasswordRelatedDIDStoreId = didStore.getId();
+        else
+            this.savedPasswordRelatedDIDStoreId = null;
+
         this.savedPassword = password;
     }
 

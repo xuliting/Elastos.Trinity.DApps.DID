@@ -14,7 +14,8 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class ImportDIDPage {
   public mnemonicWords = new Array<String>()
-  public mnemonicSentence: string = "";
+  //public mnemonicSentence: string = "";
+  public mnemonicSentence: string = "income diesel latin coffee tourist kangaroo lumber great ill amazing say left"; // TMP TESTNET
   private password: string = null;
 
   @ViewChild('addMnemonicWordInput', { static:false }) addMnemonicWordInput: IonInput;
@@ -26,8 +27,6 @@ export class ImportDIDPage {
     // Remove all values
     this.mnemonicWords.length = 0;
 
-    //for test
-    // this.mnemonicSentence = "income diesel latin coffee tourist kangaroo lumber great ill amazing say left";
     this.mnemonicSentence = this.mnemonicSentence.toLowerCase();
 
     // Rebuild words based on typed sentence
@@ -39,56 +38,62 @@ export class ImportDIDPage {
   }
 
   async promptPassword() {
-    this.password = await this.authService.promptNewPassword();
-    if (this.checkParams()) {
+    let passwordProvided = await this.authService.promptPasswordInContext(null, false);
+    if (passwordProvided) {
+      this.password = this.authService.getCurrentUserPassword();
       this.doImport();
     }
   }
 
   async doImport() {
-    if(this.checkParams()){
-      // TODO import = create DID, restore from chain if possible, and activate in app
-      await this.didService.addDidStore();
-      await this.importDid();
-    }
+    // TODO import = create DID, restore from chain if possible, and activate in app
+    await this.didService.addDidStore();
+    await this.importDid();
   }
 
   async importDid() {
-    console.log('importDid');
-    await this.native.showLoading('loading-msg').then(async () => {
-      await this.didService.getActiveDidStore().createPrivateIdentity(this.password, this.getMnemonicLang(), this.mnemonicSentence);
-      this.didService.getActiveDidStore().synchronize(this.password).then(async ()=>{
-        console.log('synchronize success');
-        this.native.hideLoading();
-        //do loadDids
-        if (null != this.didService.getActiveDidStore().getActiveDid()) {
-          // Save password for later use
-          this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), this.password);
+    console.log('Importing DIDs');
 
-          console.log("Redirecting user to his profile page");
-          this.native.go("/home/myprofile", {create:false});
-        }
-        else {
-          this.popupProvider.ionicAlert("Store is empty", "ooh, your DID store is empty...");
-          //delete didStore?
-        }
-      })
-      .catch( (e)=> {
-        this.native.hideLoading();
-        console.log('synchronize error:', e);
-        this.popupProvider.ionicAlert("Store load error", "Sorry, we were unable to load your DID store... " + e);
-        //delete didstore
-      })
+    await this.native.showLoading('loading-msg');
+    await this.didService.getActiveDidStore().createPrivateIdentity(this.password, this.native.getMnemonicLang(), this.mnemonicSentence);
+    
+    console.log("Synchronizing on chain DID info with local device");
+    this.didService.getActiveDidStore().synchronize(this.password).then(async ()=>{
+      console.log('Synchronization success. Now loading DID store information');
+
+      let didStore = this.didService.getActiveDidStore();
+      await didStore.loadAll(didStore.getId());
+
+      this.native.hideLoading();
+
+      console.log("Checking active DID")
+
+      if (null != didStore.dids.length > 0) {
+        // Save password for later use
+        this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), this.password);
+
+        // Last DID on the list as default DID ("last" because that's probably the most recently created)
+        let didToActivate = didStore.dids[didStore.dids.length-1];
+        console.log("Activating the last DID in the list", didToActivate);
+        await this.didService.activateDid(didStore.getId(), didToActivate.getDIDString());
+
+        // Rebuild DID list UI entries based on imported DIDs (and their names)
+        await this.didService.rebuildDidEntries();
+
+        console.log("Redirecting user to his profile page");
+        this.native.go("/home/myprofile", {create:false});
+      }
+      else {
+        this.popupProvider.ionicAlert("Store is empty", "Sorry, we could import your identity from your mnemonic but we couldn't find any related DID on the DID sidechain. Make sure you typed the original password.");
+        //delete didStore?
+      }
+    })
+    .catch( (e)=> {
+      this.native.hideLoading();
+      console.log('synchronize error:', e);
+      this.popupProvider.ionicAlert("Store load error", "Sorry, we were unable to load your DID store... " + e);
+      //delete didstore
     });
-  }
-
-  checkParams(){
-    if(Util.isNull(this.password)){
-      this.native.toast_trans('text-pay-password');
-      return false;
-    }
-
-    return true;
   }
 
   getMnemonicLang(): DIDPlugin.MnemonicLanguage {

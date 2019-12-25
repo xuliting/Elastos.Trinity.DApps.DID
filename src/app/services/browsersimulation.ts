@@ -29,14 +29,6 @@ function randomString() {
     return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 15);
 }
 
-export class SimulatedUnloadedCredential implements DIDPlugin.UnloadedVerifiableCredential {
-    hint: string = "fakehint";
-    alias: string = "fakealias";
-
-    constructor(public credentialId: string) {
-    }
-}
-
 export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
     constructor(public fragment: string, public basicProfileValue: string){
     }
@@ -203,29 +195,42 @@ export class SimulatedDID implements DIDPlugin.DID {
         simulated("issueCredential", "SimulatedDID");
         onSuccess(new SimulatedCredential(credentialId, "someproperty"));
     }
+
+    addCredential(credential: DIDPlugin.VerifiableCredential, onSuccess?: () => void, onError?: (err: any) => void) {
+        simulated("storeCredential", "SimulatedDID");
+        onSuccess();
+    }
+    loadCredentials(onSuccess: (credentials: DIDPlugin.VerifiableCredential[]) => void, onError?: (err: any) => void) {
+        simulated("loadCredentials", "SimulatedDID");
+        onSuccess([
+            new SimulatedCredential("name", "My name"),
+            new SimulatedCredential("email", "email@email.com"),
+            new SimulatedCredential("nation", "CHN"),
+            new SimulatedCredential("birthDate", ""),
+            new SimulatedCredential("gender", "male"),
+            new SimulatedCredential("telephone", "12345"),
+        ])
+    }
+    getCredential(credentialId: string): DIDPlugin.VerifiableCredential {
+        simulated("findCredentials", "SimulatedDID");
+        return null;
+    }
+
+    findCredentials(includedTypes?: string[], includedPropertyName?: string): DIDPlugin.VerifiableCredential[] {
+        simulated("findCredentials", "SimulatedDID");
+        return [];
+    }
+
     deleteCredential(credentialId: string, onSuccess?: () => void, onError?: (err: any) => void) {
         simulated("deleteCredential", "SimulatedDID");
         onSuccess();
     }
-    listCredentials(onSuccess: (credentials: DIDPlugin.UnloadedVerifiableCredential[]) => void, onError?: (err: any) => void) {
-        simulated("listCredentials", "SimulatedDID");
-        onSuccess([
-            new SimulatedUnloadedCredential("name"),
-            new SimulatedUnloadedCredential("email"),
-            new SimulatedUnloadedCredential("nation"),
-            new SimulatedUnloadedCredential("birthDate"),
-            new SimulatedUnloadedCredential("gender"),
-            new SimulatedUnloadedCredential("telephone")
-        ])
-    }
+
     loadCredential(credentialId: DIDPlugin.CredentialID, onSuccess: (credential: DIDPlugin.VerifiableCredential) => void, onError?: (err: any) => void) {
         simulated("loadCredential", "SimulatedDID");
         onSuccess(SimulatedCredential.makeForCredentialId(new DIDURL(credentialId)));
     }
-    storeCredential(credential: DIDPlugin.VerifiableCredential, onSuccess?: () => void, onError?: (err: any) => void) {
-        simulated("storeCredential", "SimulatedDID");
-        onSuccess();
-    }
+    
     createVerifiablePresentation(credentials: DIDPlugin.VerifiableCredential[], realm: string, nonce: string, storepass: string, onSuccess: (presentation: DIDPlugin.VerifiablePresentation) => void, onError?: (err: any) => void) {
         simulated("createVerifiablePresentation", "SimulatedDID");
         onSuccess(new SimulatedVerifiablePresentation());
@@ -284,6 +289,11 @@ export class SimulatedDIDDocument implements DIDPlugin.DIDDocument {
 
     addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string, onSuccess?: (d: any) => void, onError?: (err: any) => void) {
         simulated("addCredential", "SimulatedDIDDocument");
+    }
+
+    findCredentials(includedTypes?: string[], includedPropertyName?: string): DIDPlugin.VerifiableCredential[] {
+        simulated("findCredentials", "SimulatedDIDDocument");
+        return [];
     }
 
     sign(storePass: string, originString: string, onSuccess: (data: any) => void, onError?: (err: any) => void) {

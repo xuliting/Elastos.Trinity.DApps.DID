@@ -7,7 +7,6 @@ import { DIDDocument } from './diddocument.model';
 import { DIDURL } from './didurl.model';
 
 export class DID {
-    private unloadedCredentials: DIDPlugin.UnloadedVerifiableCredential[] = [];
     public credentials: DIDPlugin.VerifiableCredential[] = [];
     private didDocument: DIDDocument;
 
@@ -30,21 +29,25 @@ export class DID {
     async loadAllCredentials() {
         console.log("Loading credentials for DID", this);
 
-        // Get the list of unloaded credentials
-        // TODO: Should load only BASIC type credentials here to get basic profile info, we don't need everything.
-        this.unloadedCredentials = await this.listPluginCredentials();
-        console.log("Current credentials list: ", this.unloadedCredentials);
-
-        this.credentials = [];
-        for (let entry of this.unloadedCredentials) {
-            await this.loadCredential(this.getDIDString(), entry);
-        }
+        this.credentials = await this.loadPluginCredentials();
+        console.log("Current credentials list: ", this.credentials);
     }
 
-    public async loadCredential(curDidId: DIDPlugin.DIDString, entry: DIDPlugin.UnloadedVerifiableCredential) {
-        let loadedCredential = await this.loadPluginCredential(new DIDURL(entry.credentialId));
-        console.log("Credential loaded:", loadedCredential);
-        this.credentials.push(loadedCredential);
+    private loadPluginCredentials(): Promise<DIDPlugin.VerifiableCredential[]> {
+        if (BrowserSimulation.runningInBrowser()) {//for test
+            return new Promise((resolve, reject)=>{
+                let fakeDID = new SimulatedDID()
+                fakeDID.loadCredentials((credentials)=>{
+                    resolve(credentials);
+                })
+            });
+        }
+
+        return new Promise(async (resolve, reject)=>{
+            this.pluginDid.loadCredentials(
+                (ret) => {resolve(ret)}, (err) => {reject(err)},
+            );
+        });
     }
 
     /**
@@ -79,7 +82,7 @@ export class DID {
             }
 
             console.log("Asking DIDService to store the credential");
-            await this.storePluginCredential(credential);
+            await this.addPluginCredential(credential);
 
             console.log("Credential successfully added");
 
@@ -269,44 +272,11 @@ export class DID {
         });
     }
 
-    private listPluginCredentials(): Promise<DIDPlugin.UnloadedVerifiableCredential[]> {
-        if (BrowserSimulation.runningInBrowser()) {//for test
-            return new Promise((resolve, reject)=>{
-                let fakeDID = new SimulatedDID()
-                fakeDID.listCredentials((credentials)=>{
-                    resolve(credentials);
-                })
-            });
-        }
-
-        return new Promise(async (resolve, reject)=>{
-            this.pluginDid.listCredentials(
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    private loadPluginCredential(didUrlString: DIDURL): Promise<any> {
-        if (BrowserSimulation.runningInBrowser()) {//for test
-            return new Promise((resolve, reject)=>{
-                let ret = SimulatedCredential.makeForCredentialId(didUrlString)
-                resolve(ret)
-            });
-        }
-
-        return new Promise(async (resolve, reject)=>{
-            this.pluginDid.loadCredential(
-                didUrlString.toString(),
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
-            );
-        });
-    }
-
-    private storePluginCredential(credential: DIDPlugin.VerifiableCredential): Promise<void> {
+    private addPluginCredential(credential: DIDPlugin.VerifiableCredential): Promise<void> {
         console.log("DIDService - storeCredential", this.getDIDString(), credential);
         return new Promise(async (resolve, reject)=>{
             console.log("DIDService - Calling real storeCredential");
-            this.pluginDid.storeCredential(
+            this.pluginDid.addCredential(
                 credential,
                 () => {
                     console.log("DIDService - storeCredential responded");
@@ -314,6 +284,25 @@ export class DID {
                 }, (err) => {reject(err)},
             );
         });
+    }
+
+    public async resolveDidDocument(didString: string): Promise<DIDDocument> {
+        let pluginDidDocument = await this.resolvePluginDidDocument(didString);
+        return new DIDDocument(pluginDidDocument);
+    }
+
+    private resolvePluginDidDocument(didString: string): Promise<DIDPlugin.DIDDocument> {
+        if (!BrowserSimulation.runningInBrowser()) {
+            return new Promise((resolve, reject)=>{
+                this.pluginDid.resolveDidDocument(
+                    (didDocument) => {
+                        resolve(didDocument)
+                    }, (err) => {
+                        reject(err)
+                    },
+                );
+            });
+        }
     }
 
     createVerifiablePresentationFromCredentials(credentials: DIDPlugin.VerifiableCredential[], storePass: string): Promise<DIDPlugin.VerifiablePresentation> {
