@@ -17,6 +17,7 @@ export class ImportDIDPage {
   //public mnemonicSentence: string = "";
   public mnemonicSentence: string = "income diesel latin coffee tourist kangaroo lumber great ill amazing say left"; // TMP TESTNET
   private password: string = null;
+  private mnemonicLanguage : DIDPlugin.MnemonicLanguage;
 
   @ViewChild('addMnemonicWordInput', { static:false }) addMnemonicWordInput: IonInput;
 
@@ -38,6 +39,12 @@ export class ImportDIDPage {
   }
 
   async promptPassword() {
+    this.mnemonicLanguage = this.getMnemonicLang();
+    let mnemonicValid = await this.didService.isMnemonicValid(this.mnemonicLanguage, this.mnemonicSentence);
+    if (!mnemonicValid) {
+      this.popupProvider.ionicAlert("Mnemonic inValid", "Pls check the mnemonic... ");
+      return;
+    }
     let passwordProvided = await this.authService.promptPasswordInContext(null, false);
     if (passwordProvided) {
       this.password = this.authService.getCurrentUserPassword();
@@ -55,8 +62,8 @@ export class ImportDIDPage {
     console.log('Importing DIDs');
 
     await this.native.showLoading('loading-msg');
-    await this.didService.getActiveDidStore().createPrivateIdentity(this.password, this.native.getMnemonicLang(), this.mnemonicSentence);
-    
+    await this.didService.getActiveDidStore().createPrivateIdentity(this.password, this.mnemonicLanguage, this.mnemonicSentence);
+
     console.log("Synchronizing on chain DID info with local device");
     this.didService.getActiveDidStore().synchronize(this.password).then(async ()=>{
       console.log('Synchronization success. Now loading DID store information');

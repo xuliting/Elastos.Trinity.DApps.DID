@@ -37,7 +37,7 @@ export class DIDService {
             DIDService.instance = this;
     }
 
-    public async displayDefaultScreen() {    
+    public async displayDefaultScreen() {
         let didStoreId = await this.localStorage.getCurrentDidStoreId();
         let didString = await this.localStorage.getCurrentDid();
 
@@ -48,7 +48,7 @@ export class DIDService {
         else
             this.handleNull();
     }
-    
+
     /**
      * Activate the DID saved from a previous session.
      */
@@ -62,7 +62,7 @@ export class DIDService {
       let storeId = await this.localStorage.getCurrentDidStoreId();
       return this.activateDidStore(storeId);
     }
-  
+
     private activateDidStore(storeId: string): Promise<boolean> {
       return new Promise(async (resolve, reject)=>{
           if (storeId == null) {
@@ -83,7 +83,7 @@ export class DIDService {
             resolve(false);
             return;
           }
-  
+
           console.log("Setting active DID store", didStore);
           this.activeDidStore = didStore;
 
@@ -101,7 +101,7 @@ export class DIDService {
      */
     public activateDid(storeId: string, didString: string): Promise<boolean> {
       console.log("Activating DID using DID store ID "+storeId+" and DID "+didString);
-  
+
       return new Promise(async (resolve, reject)=>{
           if (didString == null) {
               console.error("Impossible to activate a null did string!");
@@ -113,7 +113,7 @@ export class DIDService {
           if (!couldActivateStore) {
               resolve(false);
               return;
-          }        
+          }
 
           try {
               let did = this.getActiveDidStore().findDidByString(didString);
@@ -124,9 +124,9 @@ export class DIDService {
               }
               await this.localStorage.setCurrentDid(did.getDIDString());
               await this.getActiveDidStore().setActiveDid(did);
-      
+
               this.events.publish('did:didchanged');
-      
+
               resolve(true);
         }
         catch (e) {
@@ -136,7 +136,7 @@ export class DIDService {
         }
       });
     }
-  
+
     public async showDid(storeId:string, didString: string) {
       console.log("Showing DID Store "+storeId+" with DID "+didString);
       let couldEnableStore = await this.activateDid(storeId, didString);
@@ -166,22 +166,22 @@ export class DIDService {
         //this.native.setRootRouter('/home/credentiallist');
       }
     }
-  
+
     private handleNull() {
       this.native.setRootRouter('/noidentity');
     }
-  
+
     /**
      * Called at the beginning of a new DID creation process.
      */
-    public async addDidStore() {   
-      let didStore = new DIDStore(this.events); 
+    public async addDidStore() {
+      let didStore = new DIDStore(this.events);
       await didStore.initNewDidStore();
 
       // Activate the DID store, without DID
       await this.activateDidStore(didStore.getId());
     }
-  
+
     /**
      * Called at the end of the DID creation process to finalize a few things.
      */
@@ -191,12 +191,12 @@ export class DIDService {
       let createdDidString = await this.getActiveDidStore().addNewDidWithProfile(this.didBeingCreated);
       let name = this.didBeingCreated.profile.getEntryByKey("name").value;
       await this.addDidEntry(new DIDEntry(createdDidString, name));
-      
+
       await this.activateDid(this.getCurDidStoreId(), createdDidString);
 
       console.log("Finalized DID creation for did string "+createdDidString+" - with name "+name);
     }
-  
+
     /**
      * Create a new simple DIDStoreEntry to save it to local storage, just to maintain
      * a list of existing stores and their names/ids
@@ -209,12 +209,12 @@ export class DIDService {
 
       await this.localStorage.saveDidEntries(existingDidEntries);
     }
-  
+
     public async getDidEntries(): Promise<DIDEntry[]> {
       let entries = await this.localStorage.getDidEntries();
       if (!entries)
         return [];
-  
+
       return entries;
     }
 
@@ -223,36 +223,36 @@ export class DIDService {
      */
     public async rebuildDidEntries() {
       let entries: DIDEntry[] = [];
-      
+
       for (let did of this.activeDidStore.dids) {
         let profile = did.getBasicProfile();
-        
+
         let entry = new DIDEntry(did.getDIDString(), profile.getName());
         entries.push(entry);
       }
 
       await this.localStorage.saveDidEntries(entries);
     }
-  
+
     public getCurDidStoreId() {
       if (!this.activeDidStore)
         return null;
-  
+
       return this.activeDidStore.pluginDidStore.getId();
     }
-  
+
     public getActiveDidStore() : DIDStore {
       return this.activeDidStore;
     }
-  
+
     public getActiveDid(): DID {
       return this.activeDidStore.getActiveDid();
     }
-  
+
     async deleteDid(did: DID) {
       let storeId = this.getActiveDidStore().getId();
       await this.getActiveDidStore().deleteDid(did);
-  
+
       // Remove DID from DidStoreEntry list
       let entries = await this.localStorage.getDidEntries();
       for (let i = 0; i < entries.length; i++) {
@@ -262,7 +262,7 @@ export class DIDService {
           }
       }
       this.localStorage.saveDidEntries(entries);
-  
+
       // Switch current store to use the first did in the DID list, or go to new identity creation screen.
       if (entries.length > 0) {
         this.showDid(storeId, entries[0].didString);
@@ -287,14 +287,14 @@ export class DIDService {
         });
     }
 
-    /*isMnemonicValid(language, mnemonic): Promise<any> {
+    isMnemonicValid(language, mnemonic): Promise<any> {
         return new Promise((resolve, reject)=>{
             didManager.isMnemonicValid(
                 language, mnemonic,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
         });
-    }*/
+    }
 
     //Credential
     credentialToJSON(credential: DIDPlugin.VerifiableCredential): Promise<string> {
@@ -317,7 +317,7 @@ export class DIDService {
       let translated = this.translate.instant("credential-info-type-"+key);
       if (!translated || translated == "")
         return key;
-      
+
       return translated;
     }
 }
