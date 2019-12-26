@@ -8,6 +8,7 @@ import { BrowserSimulation } from 'src/app/services/browsersimulation';
 import { AdvancedPopupController } from 'src/app/components/advanced-popup/advancedpopup.controller';
 import { TranslateService } from '@ngx-translate/core';
 import { DIDURL } from 'src/app/model/didurl.model';
+import { AuthService } from 'src/app/services/auth.service';
 
 // TODO: Show credential(s) content that will be created to the user. He needs to make sure for example
 // that no shared credential will overwrite existing ones like "name" or "email"...
@@ -53,19 +54,28 @@ export class RegisterApplicationProfileRequestPage {
   }
 
   async acceptRequest() {
-    // Create the main application profile credential
-    await this.createMainApplicationProfileCredential()
+    // Prompt password if needed
+    AuthService.instance.checkPasswordThenExecute(async ()=>{
+      let password = AuthService.instance.getCurrentUserPassword();
 
-    // Create individual credentials for each shared claim
-    await this.createIndependantCredentials()
+      // Create the main application profile credential
+      await this.createMainApplicationProfileCredential(password)
 
-    // If asked by user, add credentials to the did document and send intent to save the DID document on chain (if user checked the box)
-    await this.publishOnChainIfNeeded();
+      // Create individual credentials for each shared claim
+      await this.createIndependantCredentials(password)
 
-    this.sendIntentResponse();
+      // If asked by user, add credentials to the did document and send intent to save the DID document on chain (if user checked the box)
+      await this.publishOnChainIfNeeded(password);
+
+      this.sendIntentResponse();
+    }, ()=>{
+      // Error
+    }, ()=>{
+      // Wrong password
+    });
   }
 
-  publishOnChainIfNeeded() {
+  publishOnChainIfNeeded(password: string) {
     if (this.shouldPublishOnSidechain) {
       this.advancedPopup.create({
         color:'var(--ion-color-primary)',
@@ -79,8 +89,12 @@ export class RegisterApplicationProfileRequestPage {
             confirmAction: this.translate.instant("confirm"),
             cancelAction: this.translate.instant("go-back"),
             confirmCallback: async ()=>{
-              // TODO
-              console.log("TODO - WRITE AND PUBLISH DIDDOCUMENT ON SIDECHAIN")
+              // Publish will open the wallet app to send the DID transaction
+              this.didService.getActiveDid().getDIDDocument().publish(password);
+              // We close this screen in the meantime, nothing else to do here.
+              this.sendIntentResponse();
+            },
+            cancelCallback: ()=>{
               this.sendIntentResponse();
             }
         }
@@ -98,7 +112,7 @@ export class RegisterApplicationProfileRequestPage {
     this.appServices.close();
   }
 
-  async createMainApplicationProfileCredential() {
+  async createMainApplicationProfileCredential(password: string) {
     console.log("Creating application profile credential");
 
     // The credential title is the identifier given by the application. Ex: "twitter".
@@ -124,10 +138,13 @@ export class RegisterApplicationProfileRequestPage {
     
     // Create and append the new ApplicationProfileCredential credential to the local store.
     let credentialId = new DIDURL("#"+credentialTitle);
-    await this.didService.getActiveDid().addCredential(credentialId, props, "PASSWORDTODO", customCredentialTypes);
+    let createdCredential = await this.didService.getActiveDid().addCredential(credentialId, props, "PASSWORDTODO", customCredentialTypes);
+
+    // Add this credential to the DID document.
+    await this.didService.getActiveDid().getDIDDocument().addCredential(createdCredential, password);
   }
 
-  async createIndependantCredentials() {
+  async createIndependantCredentials(password: string) {
     console.log("Creating independant credentials");
 
     let sharedClaims = this.requestDapp.allParams.sharedclaims;
@@ -136,7 +153,10 @@ export class RegisterApplicationProfileRequestPage {
 
       console.log("Creating independant credential with key "+key+" and value:", value);
       let credentialId = new DIDURL("#"+key);
-      await this.didService.getActiveDid().addCredential(credentialId, {key:value}, "PASSWORDTODO");
+      let createdCredential = await this.didService.getActiveDid().addCredential(credentialId, {key:value}, "PASSWORDTODO");
+
+      // Add this credential to the DID document.
+      await this.didService.getActiveDid().getDIDDocument().addCredential(createdCredential, password);
     });
   }
 
@@ -144,9 +164,3 @@ export class RegisterApplicationProfileRequestPage {
     this.appServices.close();
   }
 }
-
-/*this.didService.credentialToJSON(this.credentials[0].object).then( (credential)=> {
-  console.log("Sending register application profile intent response for intent id "+this.requestDapp.intentId)
-  
-  this.appServices.close();
-})*/

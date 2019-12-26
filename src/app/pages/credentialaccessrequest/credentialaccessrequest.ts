@@ -216,37 +216,24 @@ export class CredentialAccessRequestPage {
     let selectedCredentials = this.buildDeliverableCredentialsList();
 
     // Create and send the verifiable presentation that embeds the selected credentials
-    this.checkPasswordAndSendPresentation(selectedCredentials, false);
-  }
-
-  // TODO: REPLACE WITH AUTHSERVICE.checkPasswordThenExecute()
-  private async checkPasswordAndSendPresentation(selectedCredentials: DIDPlugin.VerifiableCredential[], forcePasswordPrompt: boolean = false): Promise<DIDPlugin.VerifiablePresentation> {
-    // This write operation requires password. Make sure we have this in memory, or prompt user.
-    if (forcePasswordPrompt || this.authService.needToPromptPassword(this.didService.getActiveDidStore())) {
-      let previousPasswordWasWrong = forcePasswordPrompt;
-      await this.authService.promptPasswordInContext(this.didService.getActiveDidStore(), previousPasswordWasWrong);
-      // Password will be saved by the auth service.
-    }
-
-    let presentation = null;
-    let currentDidString: string = this.didService.getActiveDid().getDIDString();
-    try {
+    AuthService.instance.checkPasswordThenExecute(async ()=>{
+      let presentation = null;
+      let currentDidString: string = this.didService.getActiveDid().getDIDString();
       presentation = await this.didService.getActiveDid().createVerifiablePresentationFromCredentials(selectedCredentials, this.authService.getCurrentUserPassword());  
       console.log("Created presentation:", presentation);
-    }
-    catch (e) {
-      console.error(e);
-      // (Probably...) wrong password provided - try again.
-      this.checkPasswordAndSendPresentation(selectedCredentials, forcePasswordPrompt = true);
-      return;
-    }
 
-    console.log("Sending credaccess intent response for intent id "+this.requestDapp.intentId)
-    this.appServices.sendIntentResponse("credaccess", {did:currentDidString, presentation: presentation}, this.requestDapp.intentId)
-    this.appServices.close();
+      console.log("Sending credaccess intent response for intent id "+this.requestDapp.intentId)
+      this.appServices.sendIntentResponse("credaccess", {did:currentDidString, presentation: presentation}, this.requestDapp.intentId)
+      this.appServices.close();
+    }, ()=>{
+      // Error
+    }, ()=>{
+      // Wrong password
+    });
   }
 
   rejectRequest() {
+    this.appServices.sendIntentResponse("credaccess", {did:null, presentation: null}, this.requestDapp.intentId)
     this.appServices.close();
   }
 }
