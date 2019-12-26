@@ -147,14 +147,6 @@ export class MyProfilePage {
   }
 
   /**
-   * Tells if gender in current profile is a male 
-   */
-  isMale() {
-    let genderEntry = this.profile.getEntryByKey("gender");
-    return (genderEntry.value == "" || genderEntry.value == "male")
-  }
-
-  /**
    * Shows a pop-under with a large qr code and DID string.
    */
   async showQRCode() {

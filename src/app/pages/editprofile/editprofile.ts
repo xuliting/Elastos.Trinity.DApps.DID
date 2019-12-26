@@ -64,15 +64,7 @@ export class EditProfilePage {
       this.paramsSubscription.unsubscribe();
     });
   }
-
-  /**
-   * 
-   */
-  isMale() {
-    let genderEntry = this.profile.getEntryByKey("gender");
-    return (!genderEntry || genderEntry.value == "" || genderEntry.value == "male")
-  }
-
+  
   entryIsText(entry: BasicCredentialEntry): boolean {
     return entry.info.type == BasicCredentialInfoType.TEXT;
   }

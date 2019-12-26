@@ -75,4 +75,19 @@ export class Profile {
     Object.assign(newProfile, profile);
     return newProfile;
   }
+
+  /**
+   * Convenience method to check gender.
+   */
+  isMale() {
+    let genderEntry = this.getEntryByKey("gender");
+    return (genderEntry.value == "" || genderEntry.value == "male");
+  }
+
+  getDefaultProfilePicturePath() {
+    if (this.isMale())
+      return "assets/images/Guy_Face.svg";
+    else
+      return "assets/images/DefaultProfileWoman.svg";
+  }
 }

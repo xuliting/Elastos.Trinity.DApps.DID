@@ -238,6 +238,11 @@ export class SimulatedDID implements DIDPlugin.DID {
 }
 
 export class SimulatedDIDDocument implements DIDPlugin.DIDDocument {
+    credentials: DIDPlugin.VerifiableCredential[] = [
+        new SimulatedCredential("name", "Document name"),
+        new SimulatedCredential("email", "Document email"),
+    ];
+
     getId(): string {
         simulated("createVerifiablePresentation", "SimulatedDIDDocument");
         return "SimulatedDIDDocumentId";
@@ -280,7 +285,7 @@ export class SimulatedDIDDocument implements DIDPlugin.DIDDocument {
     }
     getCredentials(): DIDPlugin.VerifiableCredential[] {
         simulated("getCredentials", "SimulatedDIDDocument");
-        return null;
+        return this.credentials;
     }
 
     getDefaultPublicKey(onSuccess: (data: any) => void, onError?: (err: any) => void) {
