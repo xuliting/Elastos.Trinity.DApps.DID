@@ -52,7 +52,7 @@ export class CredentialAccessRequestPage {
       else {
         // Simulation - in browser
         this.requestDapp = {
-          appName: "org.mycompany.myapp",
+          appPackageId: "org.mycompany.myapp",
           requestProfile: {
             "email": true,
             "name": false,

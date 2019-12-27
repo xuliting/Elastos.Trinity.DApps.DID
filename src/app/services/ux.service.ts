@@ -177,7 +177,7 @@ export class UXService {
         }
     }
 
-    onReceiveIntent(intent) {
+    onReceiveIntent(intent: AppManagerPlugin.ReceivedIntent) {
         console.log("Intent received", intent);
 
         switch (intent.action) {
@@ -219,23 +219,11 @@ export class UXService {
         console.log("Checking credaccess intent parameters");
         if (Util.isEmptyObject(intent.params) || Util.isEmptyObject(intent.params.claims)) return false;
 
-        let requestProfile = [];
-        /*intent.params.claims.forEach((item,index,array)=>{
-            for(var prop in item) {
-                if (item[prop] === true) {
-                    requestProfile.push(prop);
-                }
-                // TODO if item[prop] is object ?
-                // get reason
-            }
-        });*/
-
         Config.requestDapp = {
-            appName: intent.from,
+            appPackageId: intent.from,
             intentId: intent.intentId,
             action: intent.action,
-            requestProfile: intent.params.claims,
-            // reason: ret.params.claims.reason
+            requestProfile: intent.params.claims
         }
         return true;
     }
@@ -253,7 +241,7 @@ export class UXService {
         }
 
         Config.requestDapp = {
-            appName: intent.from,
+            appPackageId: intent.from,
             intentId: intent.intentId,
             action: intent.action,
             allParams: intent.params
@@ -262,7 +250,7 @@ export class UXService {
         return true;
     }
 
-    checkRegAppProfileIntentParams(intent): boolean {
+    checkRegAppProfileIntentParams(intent: AppManagerPlugin.ReceivedIntent): boolean {
         console.log("Checking intent parameters");
 
         if (!this.checkGenericIntentParams(intent))

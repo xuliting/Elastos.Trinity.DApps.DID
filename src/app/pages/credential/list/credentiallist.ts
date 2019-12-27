@@ -160,9 +160,10 @@ export class CredentialListPage {
 
   getDisplayableCredentialTitle(entry: CredentialDisplayEntry): string {
     let fragment = entry.credential.getFragment();
-    let translated = this.translate.instant("credential-info-type-"+fragment);
+    let translationKey = "credential-info-type-"+fragment;
+    let translated = this.translate.instant(translationKey);
    
-    if (!translated || translated == "")
+    if (!translated || translated == "" || translated == translationKey)
       return fragment;
 
     return translated;

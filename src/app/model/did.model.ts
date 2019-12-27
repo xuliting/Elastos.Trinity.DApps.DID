@@ -310,7 +310,8 @@ export class DID {
             this.pluginDid.createVerifiablePresentation(credentials, "no-realm", "no-nonce", storePass, (presentation: DIDPlugin.VerifiablePresentation)=>{
                 resolve(presentation);
             }, (err)=>{
-                reject(err);
+                console.error("Create DID exception - assuming wrong password", err);
+                reject(new WrongPasswordException());
             });
         });
     }
