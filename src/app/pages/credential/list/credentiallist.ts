@@ -251,6 +251,8 @@ export class CredentialListPage {
   private async updateDIDDocumentFromSelection(password: string) {
     let changeCount = 0;
     let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
+
+    console.log("Updating DID document from selection");
     
     for (let displayEntry of this.visibleData) {
       let somethingChanged = await this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
@@ -272,6 +274,7 @@ export class CredentialListPage {
    * Returns true if something has been modified, false otherwise.
    */
   private async updateDIDDocumentFromSelectionEntry(currentDidDocument: DIDDocument, displayEntry: CredentialDisplayEntry, password: string): Promise<boolean> {
+    console.log("Updating document from selection entry", displayEntry);
     if (!displayEntry.credential)
       return false;
 
