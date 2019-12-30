@@ -13,7 +13,7 @@ export const zh = {
     'backup': '备份',
     'delete': '删除',
     'edit-visibility': '编辑公开档案',
-    'delete-credentials': '删除证书',
+    'delete-credentials': '删除凭证',
 
     // DID operations
     'create-my-did': '创建新的DID',
@@ -21,6 +21,8 @@ export const zh = {
     'create-profile': '添加档案',
     'create-new-did-profile': '创建新的DID档案',
     'import-did-profile': '导入DID档案',
+    'import-did-popup-content': '导入DID档案会覆盖现有的 DID',
+    'import-did-popup-confirm-question': '确定导入?',
     'add-new-did-profile': '增加新的DID档案',
     'save-profile': '保存档案',
 
@@ -38,7 +40,7 @@ export const zh = {
     // Generic items
     'profile': '档案',
     'portfolio': '档案中心',
-    'credentials': '证书',
+    'credentials': '凭证',
     'settings': '设置',
     'missing': '缺少',
 
@@ -65,7 +67,7 @@ export const zh = {
 
     // Error messages
     'text-request-fail': '授权失败',
-    'text-request-no-credential': '没有证书',
+    'text-request-no-credential': '没有凭证',
     'not-set': '未设置',
 
     /////////////////////////////////////////////////
@@ -74,36 +76,36 @@ export const zh = {
 
     // screen: noidentity
     'welcome': '欢迎',
-    'elastos-did-portfolio': 'elastOS DID Portfolio',
-    'welcome-text-intro-1': 'Manage your decentralized identities and share with friends and business that only you allow.',
-    'welcome-text-intro-2': 'Own your identity on elastOS!',
+    'elastos-did-portfolio': 'elastOS DID 档案中心',
+    'welcome-text-intro-1': '管理您的去中心化的身份并与只有您允许的朋友和企业分享。',
+    'welcome-text-intro-2': '在elastOS里拥有自己的身份!',
     'welcome-text-intro-3': '首次使用?',
-    'welcome-text-intro-4': 'Let\'s create a DID profile',
+    'welcome-text-intro-4': '开始创建 DID 档案',
 
     // screen: area
     'country': '国家/地区',
 
     // screen: password set
-    'password-set-next-action':'Now let\'s create your profile.<br/>You don\'t need to share all or any of this information if you don\'t want to.',
+    'password-set-next-action':'现在，让我们来创建您的个人档案。<br/>您可设置是否公开这些档案。',
 
     // screen: my profile
-    'no-picture-placeholder': 'Profile<br/>Picture',
-    'my-profile': '我的信息',
+    'no-picture-placeholder': '档案<br/>相片',
+    'my-profile': '我的档案',
     'qr-code': '二维码',
     'delete-did': '删除DID',
     'my-visible-data': '我的公开数据',
     'my-hidden-data': '我的私有数据',
     'deletion-popup-warning': '警告!',
-    'deletion-popup-content': 'Your identity will be permanently deleted along with all related credentials and third party app connections.',
-    'deletion-popup-confirm-question': 'Are you sure?',
-    'publish-changes': 'Publier les modifications',
-    'publish-popup-title': 'Publish Your Selected Visibility',
-    'publish-popup-content': 'Information will be stored on the blockchain when you confirm and will stay there!',
-    'publish-popup-confirm-question': 'Are you sure?',
+    'deletion-popup-content': '您的身份以及所有相关凭据和第三方应用程序连接将被永久删除。',
+    'deletion-popup-confirm-question': '确定?',
+    'publish-changes': '发布更新',
+    'publish-popup-title': '发布您选择的公开档案',
+    'publish-popup-content': '确认后信息将存储并保存在区块链上!',
+    'publish-popup-confirm-question': '确定?',
 
     // screen: edit profile
     'edit-profile': '编辑信息',
-    'edit-profile-intro': 'You can fill in as much or as little as you would like.',
+    'edit-profile-intro': '您可以根据需要填写任意数量的内容。',
     'name-is-required': '必须输入姓名',
     'name-is-missing': '至少需要提供姓名',
     'add-info': '添加信息',
@@ -113,35 +115,35 @@ export const zh = {
 
     // screen: credaccess
     'data-access': '数据访问',
-    'data-access-from': 'Data Access From:',
-    'credaccess-intro': 'This is a request for information<br/>Please review the following data items.',
+    'data-access-from': '数据请求来自于:',
+    'credaccess-intro': '要求提供信息<br/>请查看以下数据项。',
     'mandatory-data-access': '必须数据',
     'optional-data-access': '可选数据',
-    'credaccess-information-missing': 'At least one mandatory information is missing from your profile. Please complete your profile first and try again.',
+    'credaccess-information-missing': '您的个人资料中至少缺少一项必填信息。请先完成您的个人资料，然后重试。',
 
     // screen: did credentials
-    'did-credentials': 'DID证书',
-    'no-credential-yet': 'Seems like there is no credential yet.',
-    'issuer': 'Issuer',
-    'information-it-contains': 'Information it contains',
-    'issuer-myself': 'Myself',
-    'credential-deletion-popup-content': 'The selected credentials are going to be deleted locally and on chain permanently.',
+    'did-credentials': 'DID凭证',
+    'no-credential-yet': '没有任何凭证',
+    'issuer': '发行商',
+    'information-it-contains': '包含的信息',
+    'issuer-myself': '本人',
+    'credential-deletion-popup-content': '所选凭证将在本地和区块链上永久删除。',
 
     // screen: verify mnemonic
-    'verification': 'Verification',
-    'verify-title': 'Please select your mnemonic words.',
-    'verify-subtitle': 'This verification is needed to make sure that your correctly saved your mnemonics.',
+    'verification': '验证',
+    'verify-title': '请选择您的助记词',
+    'verify-subtitle': '需要进行此验证，以确保您正确保存了助记词。',
 
     // screen: choose did
     'choose-did': '选择DID',
-    'choose-did-intro': 'Please select the DID Profile you want to use for this action',
+    'choose-did-intro': '请选择您要用于此操作的DID档案',
 
     ////////////////////////////////////////////////////
     //////////////// COMPONENT SPECIFIC ////////////////
     ////////////////////////////////////////////////////
 
     // component: active-did
-    'current-active-profile': 'Current active profile',
+    'current-active-profile': '当前活动档案',
 
     // component: createpassword
     'createpassword-intro': '设置密码',

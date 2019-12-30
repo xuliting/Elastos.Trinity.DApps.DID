@@ -21,6 +21,8 @@ export const en = {
     'create-profile': 'Create Profile',
     'create-new-did-profile': 'Create New DID Profile',
     'import-did-profile': 'Import DID Profile',
+    'import-did-popup-content': 'Import DID will overwrite existing DID store',
+    'import-did-popup-confirm-question': 'Are you sure?',
     'add-new-did-profile': 'Add New DID Profile',
     'save-profile': 'Save profile',
 

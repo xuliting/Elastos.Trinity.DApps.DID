@@ -21,6 +21,8 @@ export const fr = {
     'create-profile': 'Créer un Profil',
     'create-new-did-profile': 'Créer un Nouveau Profil',
     'import-did-profile': 'Importer un Profil',
+    'import-did-popup-content': 'Importer un DID écrasera tout DID existant actuellement.',
+    'import-did-popup-confirm-question': 'Etes-vous sûr(e)?',
     'add-new-did-profile': 'Ajouter un Nouveau Profil',
     'save-profile': 'Enregistrer le profil',
 
