@@ -14,6 +14,7 @@ import { AuthService } from './services/auth.service';
 import { PopupProvider } from './services/popup';
 import { BasicCredentialsService } from './services/basiccredentials.service';
 import { TranslationService } from './services/translation.service';
+import { DIDSyncService } from './services/didsync.service';
 
 @Component({
   selector: 'my-app',
@@ -31,6 +32,7 @@ export class MyApp {
     private native: Native,
     private popupProvider: PopupProvider,
     private didService: DIDService,
+    private didSyncService: DIDSyncService,
     private translationService: TranslationService,
     private uxService: UXService,
     private basicCredentialsService: BasicCredentialsService

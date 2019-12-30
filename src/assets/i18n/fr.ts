@@ -14,6 +14,7 @@ export const fr = {
     'delete': 'Supprimer',
     'edit-visibility': 'Modif. Visibilité',
     'delete-credentials': 'Supprimer les références',
+    'publish': 'Publier',
 
     // DID operations
     'create-my-did': 'Créer mon DID',

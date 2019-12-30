@@ -20,8 +20,6 @@ import { DIDDocument } from '../model/diddocument.model';
 declare let didManager: DIDPlugin.DIDManager;
 declare let appManager: AppManagerPlugin.AppManager;
 
-const RESOLVER_DID_STORE_ID = "ABCEDF";
-
 @Injectable({
     providedIn: 'root'
 })
@@ -30,8 +28,6 @@ export class DIDSyncService {
 
     // Latest know status for each did, about whether it needs to be published or not (fresh changes not yet on chain)
     private needToPublishStatuses: Map<DID, boolean> = new Map();
-    // DIDStore used to cache resolved DIDs, not to store any private user data. All data inside is PUBLIC.
-    //private resolverDIDStore: DIDStore;
 
     constructor(
         private platform: Platform,
@@ -55,6 +51,7 @@ export class DIDSyncService {
       });
 
       this.events.subscribe("did:didchanged", (data: any)=>{
+        console.log("DID Sync service got did changed event", data);
         // Every time a DID has changed we check its publish status
         let did = this.didService.getActiveDid();
         if (did)
@@ -93,6 +90,7 @@ export class DIDSyncService {
      * time when resolving is required.
      */
     public async checkIfDIDDocumentNeedsToBePublished(did: DID) {
+      console.log("Checking if DID document needs to be published", did);
       let didString = did.getDIDString();
 
       // Check locally resolved DIDDocument modification date, or on chain one if notthing found locally (or expired). 
@@ -109,6 +107,7 @@ export class DIDSyncService {
       catch (e) {
         // Exception: maybe network error while resolving. So we consider there is no need (or no way)
         // to publish the document for now.
+        console.warn("Exception while resolving DID", e);
         this.setPublicationStatus(did, false);
         return;
       }
@@ -137,7 +136,7 @@ export class DIDSyncService {
           else
             resolve(new DIDDocument(didDocument));
         }, (err)=>{
-          reject();
+          reject(err);
         });
       });
     }

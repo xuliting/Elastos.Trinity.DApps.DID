@@ -14,6 +14,7 @@ export const en = {
     'delete': 'Delete',
     'edit-visibility': 'Edit visibility',
     'delete-credentials': 'Delete credentials',
+    'publish': 'Publish',
 
     // DID operations
     'create-my-did': 'Create my DID',

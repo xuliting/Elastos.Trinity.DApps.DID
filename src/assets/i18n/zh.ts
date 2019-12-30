@@ -14,6 +14,7 @@ export const zh = {
     'delete': '删除',
     'edit-visibility': '编辑公开档案',
     'delete-credentials': '删除凭证',
+    'publish': '发布',
 
     // DID operations
     'create-my-did': '创建新的DID',
