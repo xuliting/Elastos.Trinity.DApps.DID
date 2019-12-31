@@ -45,7 +45,7 @@ export class Native {
   public toast(_message: string = '操作完成', duration: number = 2000): void {
       this.toastCtrl.create({
           message: _message,
-          duration: 2000,
+          duration: duration,
           position: 'top'
       }).then(toast => toast.present());
   }
@@ -54,7 +54,7 @@ export class Native {
       _message = this.translate.instant(_message);
       this.toastCtrl.create({
           message: _message,
-          duration: 2000,
+          duration: duration,
           position: 'middle'
       }).then(toast => toast.present());
   }

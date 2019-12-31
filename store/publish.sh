@@ -1,0 +1,1 @@
+trinity-cli publish --did xxxxxx --didstore /path/to/store

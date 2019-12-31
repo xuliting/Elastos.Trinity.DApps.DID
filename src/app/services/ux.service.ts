@@ -8,6 +8,7 @@ import { Util } from './util';
 import { BrowserSimulation } from './browsersimulation';
 import { AuthService } from './auth.service';
 import { DIDService } from './did.service';
+import { PopupProvider } from './popup';
 
 declare let appManager: AppManagerPlugin.AppManager;
 let selfUxService: UXService = null;
@@ -34,6 +35,7 @@ export class UXService {
     constructor(public translate: TranslateService,
         private platform: Platform,
         private native: Native,
+        private popup: PopupProvider,
         private didService: DIDService,
         private authService: AuthService) {
         selfUxService = this;
@@ -190,6 +192,10 @@ export class UXService {
                         redirectPath: "/credaccessrequest"
                     });
                 }
+                else {
+                    // Something wrong happened while trying to handle the intent: send intent response with error
+                    this.showErrorAndExitFromIntent(intent);
+                }
                 break;
             case "registerapplicationprofile":
                 console.log("Received register application profile intent request");
@@ -202,6 +208,9 @@ export class UXService {
                 }
                 else {
                     console.error("Missing or wrong intent parameters for "+intent.action);
+
+                    // Something wrong happened while trying to handle the intent: send intent response with error
+                    this.showErrorAndExitFromIntent(intent);
                 }
                 break;
         }
@@ -215,9 +224,22 @@ export class UXService {
         }
     }
 
+    async showErrorAndExitFromIntent(intent: AppManagerPlugin.ReceivedIntent) {
+        let errorMessage = "Sorry, there are invalid parameters in the request";
+        errorMessage += "\n\n"+JSON.stringify(intent.params);
+
+        await this.popup.ionicAlert("Action error", errorMessage, "Close");
+
+        this.sendIntentResponse(intent.action, {}, intent.intentId);
+        this.close();
+    }
+
     checkCredAccessIntentParams(intent) {
         console.log("Checking credaccess intent parameters");
-        if (Util.isEmptyObject(intent.params) || Util.isEmptyObject(intent.params.claims)) return false;
+        if (Util.isEmptyObject(intent.params) || Util.isEmptyObject(intent.params.claims)) {
+            console.error("Invalid credaccess parameters received. No params or empty claims.", intent.params);
+            return false;
+        }
 
         Config.requestDapp = {
             appPackageId: intent.from,
