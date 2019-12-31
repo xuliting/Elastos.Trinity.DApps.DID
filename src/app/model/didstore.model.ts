@@ -49,7 +49,7 @@ export class DIDStore {
         // Create a private root key
         console.log("Creating private root key");
         await this.initPluginPrivateIdentity(mnemonicLang, mnemonic, password, true);
-        
+
         return true;
     }
 
@@ -57,7 +57,7 @@ export class DIDStore {
         // No ID provided (which is normally the case except for the resolver DID store) -> create one.
         if (!didStoreId)
             didStoreId = Config.uuid(6, 16);
-        
+
         console.log("Initializing a new DID Store with ID "+didStoreId);
         await this.initDidStore(didStoreId);
     }
@@ -70,7 +70,7 @@ export class DIDStore {
         console.log("DID store loading all.");
         try {
             await this.initDidStore(didStoreId);
-                
+
             let pluginDids = await this.listPluginDids();
 
             console.log("Plugin DIDs:", pluginDids);
@@ -192,7 +192,7 @@ export class DIDStore {
 
     /**
      * This callback is called after calling publish() on a DIDDocument. It returns a DID request payload
-     * that we have to forward to the wallet application so it can write the did request on the did 
+     * that we have to forward to the wallet application so it can write the did request on the did
      * sidechain for us.
      */
     private createIdTransactionCallback(payload: string, memo: string) {
@@ -334,14 +334,14 @@ export class DIDStore {
         });
     }
 
-    updateDid(didDocument: DIDPlugin.DIDDocument, didUrlString, storepass): Promise<any> {
-        return new Promise((resolve, reject)=>{
-            this.pluginDidStore.updateDidDocument(
-                didDocument, storepass,
-                () => {resolve()}, (err) => {reject(err)},
-            );
-        });
-    }
+    // updateDid(didDocument: DIDPlugin.DIDDocument, didUrlString, storepass): Promise<any> {
+    //     return new Promise((resolve, reject)=>{
+    //         this.pluginDidStore.updateDidDocument(
+    //             didDocument, storepass,
+    //             () => {resolve()}, (err) => {reject(err)},
+    //         );
+    //     });
+    // }
 
     setResolverUrl(resolverUrl): Promise<any> {
         return new Promise((resolve, reject)=>{

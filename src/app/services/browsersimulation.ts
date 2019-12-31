@@ -94,7 +94,7 @@ export class SimulatedVerifiablePresentation implements DIDPlugin.VerifiablePres
         this.credentials.push(SimulatedCredential.makeForCredentialId(new DIDURL("#email")));
         this.credentials.push(SimulatedCredential.makeForCredentialId(new DIDURL("#gender")));
     }
- 
+
     getCredentials(): DIDPlugin.VerifiableCredential[] {
         simulated("getCredentials", "SimulatedVerifiablePresentation");
         return this.credentials;
@@ -168,6 +168,10 @@ export class SimulatedDIDStore implements DIDPlugin.DIDStore {
     synchronize(storepass: string, onSuccess: () => void, onError?: (err: any) => void) {
         simulated("synchronize", "SimulatedDIDStore");
     }
+
+    exportMnemonic(storepass: string, onSuccess: (mnemonic: string) => void, onError?: (err: any) => void) {
+        simulated("exportMnemonic", "SimulatedDIDStore");
+    }
 }
 
 export class SimulatedDID implements DIDPlugin.DID {
@@ -230,7 +234,7 @@ export class SimulatedDID implements DIDPlugin.DID {
         simulated("loadCredential", "SimulatedDID");
         onSuccess(SimulatedCredential.makeForCredentialId(new DIDURL(credentialId)));
     }
-    
+
     createVerifiablePresentation(credentials: DIDPlugin.VerifiableCredential[], realm: string, nonce: string, storepass: string, onSuccess: (presentation: DIDPlugin.VerifiablePresentation) => void, onError?: (err: any) => void) {
         simulated("createVerifiablePresentation", "SimulatedDID");
         onSuccess(new SimulatedVerifiablePresentation());
