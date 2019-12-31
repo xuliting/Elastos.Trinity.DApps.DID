@@ -97,6 +97,7 @@ export class DIDSyncService {
       let currentOnChainDIDDocument: DIDDocument = null;
       try {
         currentOnChainDIDDocument = await this.resolveDIDWithoutDIDStore(didString, false);
+        console.log("Resolved on chain document: ", currentOnChainDIDDocument);
         if (!currentOnChainDIDDocument) {
           // Null? This means there is no published document yet, so we need to publish.
           console.log("DID "+did.getDIDString()+" needs to be published (no did document on chain)");
@@ -113,7 +114,8 @@ export class DIDSyncService {
       }
     
       // Compare modification dates
-      if (did.getDIDDocument().pluginDidDocument.getUpdated() > currentOnChainDIDDocument.pluginDidDocument.getUpdated()) {
+      let locallyUpdatedDate = await did.getDIDDocument().getUpdated();
+      if (locallyUpdatedDate > currentOnChainDIDDocument.pluginDidDocument.getUpdated()) {
         // User document is more recent than chain document. Need to publish.
         console.log("DID "+did.getDIDString()+" needs to be published (more recent than the on chain one).");
         this.setPublicationStatus(did, true);

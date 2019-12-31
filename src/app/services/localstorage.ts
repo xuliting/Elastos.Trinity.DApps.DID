@@ -6,9 +6,12 @@ import { BrowserSimulation, BrowserSimulationConfig } from './browsersimulation'
 
 @Injectable()
 export class LocalStorage {
+    public static instance: LocalStorage = null;
 
     constructor(private storage: Storage) {
-        console.log("LocalStorage init")
+        console.log("LocalStorage init");
+
+        LocalStorage.instance = this;
     }
 
     private add(key: string, value: any): any {
@@ -25,11 +28,11 @@ export class LocalStorage {
         });
     }
 
-    private set(key: string, value: any): any {
-        return this.storage.set(key, JSON.stringify(value));
+    public set(key: string, value: any): Promise<any> {
+        return this.storage.set(key, value);
     }
 
-    private get(key: string): Promise<any> {
+    public get(key: string): Promise<any> {
         return this.storage.get(key);
     }
 

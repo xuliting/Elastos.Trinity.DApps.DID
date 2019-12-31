@@ -1,8 +1,13 @@
 import { Events } from '@ionic/angular';
 import { DIDURL } from './didurl.model';
+import { LocalStorage } from '../services/localstorage';
 
 export class DIDDocument {
     constructor(public pluginDidDocument: DIDPlugin.DIDDocument) {
+    }
+
+    private updatedFieldStorageKey(): string {
+        return "diddocument-"+this.pluginDidDocument.getSubject().getDIDString()+"-updated"
     }
 
     public addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
@@ -11,7 +16,10 @@ export class DIDDocument {
             this.pluginDidDocument.addCredential(
                 credential,
                 storePass,
-                () => {resolve()}, (err) => {reject(err)},
+                async () => {
+                    await this.markUpdated();
+                    resolve()
+                }, (err) => {reject(err)},
             );
         });
     }
@@ -22,7 +30,10 @@ export class DIDDocument {
             this.pluginDidDocument.deleteCredential(
                 credential,
                 storePass,
-                () => {resolve()}, (err) => {reject(err)},
+                async () => {
+                    await this.markUpdated();
+                    resolve()
+                }, (err) => {reject(err)},
             );
         });
     }
@@ -30,6 +41,24 @@ export class DIDDocument {
     public async updateCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
         await this.deleteCredential(credential, storePass);
         await this.addCredential(credential, storePass);
+    }
+
+    public async getUpdated(): Promise<Date> {
+        if (!this.pluginDidDocument.getUpdated()) {
+            // No updated date provided in the DID document: fallback to our own locally saved "updated"
+            let storedDateString = await LocalStorage.instance.get(this.updatedFieldStorageKey());
+            return new Date(storedDateString);
+        }
+        return new Date();
+    }
+
+    /**
+     * Because currently the DID SDK maintains a "updated" date only for on-chain documents (updated = transaction date),
+     * local did documents need a separate local storage hack to save their "updated" date and be able to compare
+     * it with remote document date later on.
+     */
+    private async markUpdated() {
+        await LocalStorage.instance.set(this.updatedFieldStorageKey(), (new Date()).toISOString());
     }
 
     /**
