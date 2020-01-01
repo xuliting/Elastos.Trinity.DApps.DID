@@ -155,6 +155,10 @@ export const fr = {
 
     // loading
     'loading-msg': 'Veuillez patienter',
+
+    // id transaction
+    'publish-success': 'Vos informations publiques ont été envoyées à la chaîne publique DID. Veuillez patienter un moment pour que vos changements soient actifs.',
+    'publish-error': 'Vos informations publiques n\'ont pas pu être publiées pour l\'instant. Veuillez réessayer dans un moment.',
 };
 
 

@@ -11,7 +11,7 @@ export class PopupProvider {
         return new Promise((resolve, reject) => {
             this.alertCtrl.create({
                 header : this.translate.instant(title),
-                subHeader : this.translate.instant(subTitle),
+                subHeader: subTitle ? this.translate.instant(subTitle) : '',
                 backdropDismiss: false,
                 cssClass: 'my-custom-alert',
                 buttons: [{

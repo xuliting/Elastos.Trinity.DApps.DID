@@ -156,4 +156,8 @@ export const zh = {
 
     // loading
     'loading-msg': '加载中，请稍候',
+
+    // id transaction
+    'publish-success': '您公开的身份信息已发送到ID链。请稍候几分钟，以便实时查看您的更改。',
+    'publish-error': '抱歉，暂时无法发布您公开的身份信息。请稍后重试。',
 };

@@ -35,6 +35,7 @@ export class DIDSyncService {
         private translate: TranslateService,
         public toastCtrl: ToastController,
         public events: Events,
+        public popupProvider: PopupProvider,
         public localStorage: LocalStorage,
         private didService: DIDService,
         public native: Native) {
@@ -69,23 +70,25 @@ export class DIDSyncService {
     }
 
     private onDIDDocumentPublishResponse(result: DIDDocumentPublishEvent) {
-      if (result.published) {
-        console.log("PUBLISHED !")
-      }
-      else if (result.cancelled) {
-        console.log("CANCELLED");
-      }
-      else if (result.error) {
-        console.error("ERROR")
-      }
+        if (result.published) {
+            console.log("PUBLISHED !")
+            this.popupProvider.ionicAlert('publish-success');
+        }
+        else if (result.cancelled) {
+            console.log("CANCELLED");
+        }
+        else if (result.error) {
+            console.error("ERROR")
+            this.popupProvider.ionicAlert('publish-error');
+        }
 
-      // TODO: user feedback + update UI status (no need to sync any more)
+        // TODO: user feedback + update UI status (no need to sync any more)
     }
 
     /**
      * Checks if the active did's DID document needs to be uploaded to the sidechain.
      * This mostly happens when some changes have been made but user hasn't published them yet.
-     * 
+     *
      * NOTE: this method can reply quickly if checks can be done locally, but can also take networking
      * time when resolving is required.
      */
@@ -93,7 +96,7 @@ export class DIDSyncService {
       console.log("Checking if DID document needs to be published", did);
       let didString = did.getDIDString();
 
-      // Check locally resolved DIDDocument modification date, or on chain one if notthing found locally (or expired). 
+      // Check locally resolved DIDDocument modification date, or on chain one if notthing found locally (or expired).
       let currentOnChainDIDDocument: DIDDocument = null;
       try {
         currentOnChainDIDDocument = await this.resolveDIDWithoutDIDStore(didString, false);
@@ -112,7 +115,7 @@ export class DIDSyncService {
         this.setPublicationStatus(did, false);
         return;
       }
-    
+
       // Compare modification dates
       let locallyUpdatedDate = await did.getDIDDocument().getUpdated();
       if (locallyUpdatedDate > currentOnChainDIDDocument.pluginDidDocument.getUpdated()) {
@@ -145,7 +148,7 @@ export class DIDSyncService {
 
     private setPublicationStatus(did: DID, shouldPublish: boolean) {
       this.needToPublishStatuses.set(did, shouldPublish);
-      
+
       let event: DIDPublicationStatusEvent = {
         did: did,
         shouldPublish: shouldPublish

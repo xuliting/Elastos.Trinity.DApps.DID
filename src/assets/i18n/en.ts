@@ -156,6 +156,10 @@ export const en = {
 
     // loading
     'loading-msg': 'Wait a moment',
+
+    // id transaction
+    'publish-success': 'Your public identity information has been sent to the public ID chain. Please wait a few minutes to see your changes live.',
+    'publish-error':'Sorry, your public identity information could not be published for now. Please retry after a while.',
 };
 
 

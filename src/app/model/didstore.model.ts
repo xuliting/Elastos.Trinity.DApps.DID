@@ -204,25 +204,27 @@ export class DIDStore {
 
         console.log("Sending didtransaction intent with params:", params);
         appManager.sendIntent("didtransaction", params, (response)=>{
-          console.log("Got didtransaction intent response.", response);
+            console.log("Got didtransaction intent response.", response);
 
-          // If txid is set in the response this means a transaction has been sent on chain.
-          // If null, this means user has cancelled the operation (no ELA, etc).
-          if (response.txid) {
-            this.events.publish("diddocument:publish", {
-                didStore: this,
-                published: true
-            });
-          }
-          else {
-            this.events.publish("diddocument:publish", {
-                didStore: this,
-                cancelled: true
-            });
-          }
+            // If txid is set in the response this means a transaction has been sent on chain.
+            // If null, this means user has cancelled the operation (no ELA, etc).
+            if (response.result.txid) {
+                console.log('didtransaction response.result.txid ', response.result.txid);
+                this.events.publish("diddocument:publishresult", {
+                    didStore: this,
+                    published: true
+                });
+            }
+            else {
+                console.log('didtransaction response.result.txid is null');
+                this.events.publish("diddocument:publishresult", {
+                    didStore: this,
+                    cancelled: true
+                });
+            }
         }, (err)=>{
             console.error("Failed to send app manager didtransaction intent!", err);
-            this.events.publish("diddocument:publish", {
+            this.events.publish("diddocument:publishresult", {
                 didStore: this,
                 error: true
             });
