@@ -20,7 +20,7 @@
     "@angular/platform-browser": "~8.1.2",
     "@angular/platform-browser-dynamic": "~8.1.2",
     "@angular/router": "~8.1.2",
-    "@elastosfoundation/trinity-types": "^1.1.35",
+    "@elastosfoundation/trinity-types": "^1.1.36",
     "@ionic-native/clipboard": "^5.18.0",
     "@ionic-native/core": "^5.18.0",
     "@ionic-native/file": "^5.18.0",

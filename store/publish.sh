@@ -1,1 +1,1 @@
-trinity-cli publish --did xxxxxx --didstore /path/to/store
+trinity-cli publish --did xxxxxx --didstore ../../../../DAppSignatures/org.elastos.trinity.dapp.did/appdid/
