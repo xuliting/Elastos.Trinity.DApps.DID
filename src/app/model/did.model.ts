@@ -121,7 +121,7 @@ export class DID {
             }
 
             // Only deal with BasicProfileCredential credentials
-            if (cred.getType().indexOf("BasicProfileCredential") < 0) {
+            if (cred.getTypes().indexOf("BasicProfileCredential") < 0) {
                 return;
             }
 
@@ -247,6 +247,7 @@ export class DID {
 
     public async deleteCredential(credentialDidUrl: DIDURL): Promise<boolean> {
         console.log("Asking DIDService to delete the credential "+credentialDidUrl);
+        
         await this.deletePluginCredential(credentialDidUrl);
 
         // Delete from our local model as well
@@ -255,7 +256,7 @@ export class DID {
 
         return true;
     }
-
+ 
     private deletePluginCredential(didUrlString: DIDURL): Promise<any> {
         console.log("deleteCredential:" + didUrlString);
         if (BrowserSimulation.runningInBrowser()) {//for test
@@ -267,7 +268,10 @@ export class DID {
         return new Promise(async (resolve, reject)=>{
             this.pluginDid.deleteCredential(
                 didUrlString.toString(),
-                () => {resolve()}, (err) => {reject(err)},
+                () => {resolve()}, (err) => {
+                    console.error("Delete credential exception - assuming wrong password", err);
+                    reject(new WrongPasswordException());
+                },
             );
         });
     }
@@ -281,7 +285,10 @@ export class DID {
                 () => {
                     console.log("DIDService - storeCredential responded");
                     resolve()
-                }, (err) => {reject(err)},
+                }, (err) => {
+                    console.error("Add credential exception - assuming wrong password", err);
+                    reject(new WrongPasswordException());
+                },
             );
         });
     }
@@ -310,7 +317,7 @@ export class DID {
             this.pluginDid.createVerifiablePresentation(credentials, "no-realm", "no-nonce", storePass, (presentation: DIDPlugin.VerifiablePresentation)=>{
                 resolve(presentation);
             }, (err)=>{
-                console.error("Create DID exception - assuming wrong password", err);
+                console.error("Create presentation exception - assuming wrong password", err);
                 reject(new WrongPasswordException());
             });
         });

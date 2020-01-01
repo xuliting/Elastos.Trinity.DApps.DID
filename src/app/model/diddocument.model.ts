@@ -1,6 +1,7 @@
 import { Events } from '@ionic/angular';
 import { DIDURL } from './didurl.model';
 import { LocalStorage } from '../services/localstorage';
+import { WrongPasswordException } from './exceptions/wrongpasswordexception.exception';
 
 export class DIDDocument {
     constructor(public pluginDidDocument: DIDPlugin.DIDDocument) {
@@ -19,7 +20,10 @@ export class DIDDocument {
                 async () => {
                     await this.markUpdated();
                     resolve()
-                }, (err) => {reject(err)},
+                }, (err) => {
+                    console.error("Add credential exception - assuming wrong password", err);
+                    reject(new WrongPasswordException());
+                },
             );
         });
     }
@@ -33,7 +37,10 @@ export class DIDDocument {
                 async () => {
                     await this.markUpdated();
                     resolve()
-                }, (err) => {reject(err)},
+                }, (err) => {
+                    console.error("Delete credential exception - assuming wrong password", err);
+                    reject(new WrongPasswordException());
+                },
             );
         });
     }

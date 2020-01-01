@@ -41,9 +41,9 @@ export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
         simulated("getFragment", "SimulatedCredential");
         return this.fragment;
     }
-    getType() {
-        simulated("getType", "SimulatedCredential");
-        return "BasicProfileCredential";
+    getTypes() {
+        simulated("getTypes", "SimulatedCredential");
+        return ["BasicProfileCredential"];
     }
     getIssuer() {
         simulated("getIssuer", "SimulatedCredential");
