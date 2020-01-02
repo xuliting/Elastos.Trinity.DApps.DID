@@ -51,7 +51,7 @@ export const en = {
     'credential-info-type-email': 'Email',
     'credential-info-type-birthDate': 'Birth date',
     'credential-info-type-gender': 'Gender',
-    'credential-info-type-nation': 'Nation',
+    'credential-info-type-nation': 'Country',
     'credential-info-type-telephone': 'Telephone',
     'credential-info-type-nickname': 'Nickname',
     'credential-info-type-birthPlace': 'Place of birth',
