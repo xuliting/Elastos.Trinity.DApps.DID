@@ -203,7 +203,7 @@ export class DIDStore {
         }
 
         console.log("Sending didtransaction intent with params:", params);
-        appManager.sendIntent("didtransaction", params, (response)=>{
+        appManager.sendIntent("didtransaction", params, {}, (response)=>{
             console.log("Got didtransaction intent response.", response);
 
             // If txid is set in the response this means a transaction has been sent on chain.

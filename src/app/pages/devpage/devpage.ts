@@ -28,7 +28,7 @@ export class DevPage {
       unsharedcustomdata1: "not sure either"
     }
 
-    appManager.sendIntent("registerapplicationprofile", params, ()=>{
+    appManager.sendIntent("registerapplicationprofile", params, {}, ()=>{
       console.log("registerAppProfileIntent intent success");
     }, (err)=>{
       console.error("registerAppProfileIntent intent ERROR");
