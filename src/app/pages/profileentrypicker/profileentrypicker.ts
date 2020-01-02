@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Events, ModalController } from '@ionic/angular';
+import { Events, ModalController, NavParams } from '@ionic/angular';
 
 import { Native } from '../../services/native';
 import { area } from '../../../assets/area/area';
@@ -15,8 +15,13 @@ import { BasicCredentialsService } from 'src/app/services/basiccredentials.servi
 export class ProfileEntryPickerPage {
   availableItems: BasicCredentialInfo[];
 
-  constructor(private basicCredentialService: BasicCredentialsService, private modalCtrl: ModalController) {
-    this.availableItems = this.basicCredentialService.getBasicCredentialInfoList()
+  constructor(private basicCredentialService: BasicCredentialsService, private modalCtrl: ModalController, private navParams: NavParams) {
+    // List of keys we don't want to show (probably already existing in the profile)
+    let filterOutKeys: string[] = navParams.get("filterOut");
+
+    this.availableItems = this.basicCredentialService.getBasicCredentialInfoList().filter((item)=>{
+      return !filterOutKeys.includes(item.key);
+    });
   }
 
   selectItem(item: BasicCredentialInfo) {

@@ -218,23 +218,30 @@ export class EditProfilePage {
 
   // Show the profile entry field picker to let user pick a profile entry to create.
   async addProfileEntry() {
-      let modal = await this.modalCtrl.create({
-          component: ProfileEntryPickerPage,
-          componentProps: {
-            // TODO: filter out already existing items to not show them in the addable items list
-          }
-      })
+    let existingProfileItems: string[] = []; // List of credential keys - items already in the profi:e to filter out
+    this.profile.entries.map((e)=>{
+      existingProfileItems.push(e.info.key);
+    });
 
-      modal.onDidDismiss().then((params) => {
-        if (params && params.data && params.data.pickedItem) {
-          let pickedItem: BasicCredentialInfo = params.data.pickedItem;
+    console.log("Filtered items for add profile: ", existingProfileItems);
 
-          // Add the new entry to the current profile
-          // Default value is an empty string
-          this.profile.setValue(pickedItem, "");
+    let modal = await this.modalCtrl.create({
+        component: ProfileEntryPickerPage,
+        componentProps: {
+          filterOut: existingProfileItems
         }
-      });
+    })
 
-      modal.present();
+    modal.onDidDismiss().then((params) => {
+      if (params && params.data && params.data.pickedItem) {
+        let pickedItem: BasicCredentialInfo = params.data.pickedItem;
+
+        // Add the new entry to the current profile
+        // Default value is an empty string
+        this.profile.setValue(pickedItem, "");
+      }
+    });
+
+    modal.present();
   }
 }
