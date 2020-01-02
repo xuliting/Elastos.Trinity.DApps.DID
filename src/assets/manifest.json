@@ -8,7 +8,7 @@
   "description": "Manage your decentralized identity, choose personal information to share with others, using this DID DApp.",
   "start_url": "index.html",
   "type": "app",
-  "category": "finance",
+  "category": "communication",
   "icons": [
     {
       "src": "assets/images/logo.png",
