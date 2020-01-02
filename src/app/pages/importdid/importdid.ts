@@ -14,8 +14,8 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class ImportDIDPage {
   public mnemonicWords = new Array<String>()
-  //public mnemonicSentence: string = "";
-  public mnemonicSentence: string = "income diesel latin coffee tourist kangaroo lumber great ill amazing say left"; // TMP TESTNET
+  public mnemonicSentence: string = "";
+  //public mnemonicSentence: string = "income diesel latin coffee tourist kangaroo lumber great ill amazing say left"; // TMP TESTNET
   private password: string = null;
   private mnemonicLanguage : DIDPlugin.MnemonicLanguage;
 
@@ -53,7 +53,6 @@ export class ImportDIDPage {
   }
 
   async doImport() {
-    // TODO import = create DID, restore from chain if possible, and activate in app
     await this.didService.addDidStore();
     await this.importDid();
   }

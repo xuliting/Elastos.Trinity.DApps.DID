@@ -70,7 +70,7 @@ export class VerifyMnemonicsPage {
     }
 
     allWordsMatch() {
-        return true;// for test
+        //return true;// for test
         let selectComplete = this.selectedList.length === this.mnemonicList.length ? true : false;
         if (selectComplete) {
             let mn = "";
