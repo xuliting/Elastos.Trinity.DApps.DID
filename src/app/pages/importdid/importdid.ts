@@ -74,7 +74,7 @@ export class ImportDIDPage {
 
       console.log("Checking active DID")
 
-      if (null != didStore.dids.length > 0) {
+      if (didStore.dids.length > 0) {
         // Save password for later use
         this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), this.password);
 
@@ -90,7 +90,7 @@ export class ImportDIDPage {
         this.native.go("/home/myprofile", {create:false});
       }
       else {
-        this.popupProvider.ionicAlert("Store is empty", "Sorry, we could import your identity from your mnemonic but we couldn't find any related DID on the DID sidechain. Make sure you typed the original password.");
+        this.popupProvider.ionicAlert("Store is empty", "Sorry, we could import your identity from your mnemonic but we couldn't find any related DID on the DID sidechain. Make sure you previously published your DIDs, and typed the original password.");
         //delete didStore?
       }
     })
