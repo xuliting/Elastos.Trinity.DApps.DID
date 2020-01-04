@@ -12,6 +12,7 @@ export class HeaderBarComponent implements OnInit {
 
     @Input('title') title: string = "";
     @Input('showBack') showBack: boolean = false;
+    @Input('backColor') backColor: string = "000000";
     @Input('showMinimize') showMinimize: boolean = true;
     @Input('showClose') showClose: boolean = true;
     @Input('showMenu') showMenu: boolean = false;

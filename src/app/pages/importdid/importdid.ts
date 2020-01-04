@@ -6,6 +6,7 @@ import { Native } from '../../services/native';
 import { PopupProvider } from '../../services/popup';
 import { Util } from '../../services/util';
 import { AuthService } from 'src/app/services/auth.service';
+import { DIDStore } from 'src/app/model/didstore.model';
 
 @Component({
   selector: 'page-importdid',
@@ -52,29 +53,31 @@ export class ImportDIDPage {
     }
   }
 
-  async doImport() {
-    await this.didService.addDidStore();
-    await this.importDid();
+  private async doImport() {
+    let didStore = await this.didService.newDidStore();
+    await this.importDid(didStore);
   }
 
-  async importDid() {
+  private async importDid(didStore: DIDStore) {
     console.log('Importing DIDs');
 
     await this.native.showLoading('loading-msg');
-    await this.didService.getActiveDidStore().createPrivateIdentity(this.password, this.mnemonicLanguage, this.mnemonicSentence);
+    await didStore.createPrivateIdentity(this.password, this.mnemonicLanguage, this.mnemonicSentence);
 
     console.log("Synchronizing on chain DID info with local device");
-    this.didService.getActiveDidStore().synchronize(this.password).then(async ()=>{
+    didStore.synchronize(this.password).then(async ()=>{
       console.log('Synchronization success. Now loading DID store information');
 
-      let didStore = this.didService.getActiveDidStore();
       await didStore.loadAll(didStore.getId());
 
       this.native.hideLoading();
 
-      console.log("Checking active DID")
-
       if (didStore.dids.length > 0) {
+        console.log("Synchronized and loaded "+didStore.dids.length+" from chain");
+
+        // Now that we could correctly retrieve DID data, we can active this new store. Not before.
+        this.didService.activateDidStore(didStore.getId());
+
         // Save password for later use
         this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), this.password);
 
@@ -91,14 +94,14 @@ export class ImportDIDPage {
       }
       else {
         this.popupProvider.ionicAlert("Store is empty", "Sorry, we could import your identity from your mnemonic but we couldn't find any related DID on the DID sidechain. Make sure you previously published your DIDs, and typed the original password.");
-        //delete didStore?
+        // TODO delete temporary didStore
       }
     })
     .catch( (e)=> {
       this.native.hideLoading();
       console.log('synchronize error:', e);
       this.popupProvider.ionicAlert("Store load error", "Sorry, we were unable to load your DID store... " + e);
-      //delete didstore
+      // TODO: delete temporary didstore
     });
   }
 

@@ -83,4 +83,8 @@ export class NoIdentityPage {
     nextSlide(slider) {
         slider.slideNext();
     }
+
+    shouldShowBack() {
+        return !this.isfirst;
+    }
 }

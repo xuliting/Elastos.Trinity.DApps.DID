@@ -63,7 +63,7 @@ export class DIDService {
       return this.activateDidStore(storeId);
     }
 
-    private activateDidStore(storeId: string): Promise<boolean> {
+    public activateDidStore(storeId: string): Promise<boolean> {
       return new Promise(async (resolve, reject)=>{
           if (storeId == null) {
               console.error("Impossible to activate a null store id!");
@@ -171,12 +171,18 @@ export class DIDService {
       this.native.setRootRouter('/noidentity');
     }
 
+    public async newDidStore() {
+      let didStore = new DIDStore(this.events);
+      await didStore.initNewDidStore();
+
+      return didStore;
+    }
+
     /**
      * Called at the beginning of a new DID creation process.
      */
     public async addDidStore() {
-      let didStore = new DIDStore(this.events);
-      await didStore.initNewDidStore();
+      let didStore = await this.newDidStore();
 
       // Activate the DID store, without DID
       await this.activateDidStore(didStore.getId());
