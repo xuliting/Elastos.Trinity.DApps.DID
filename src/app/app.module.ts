@@ -143,9 +143,3 @@ export function TranslateLoaderFactory() {
   ]
 })
 export class AppModule {}
-
-class MyErrorHandler implements ErrorHandler {
-  handleError(err: any): void {
-    // do something with the error
-  }
-}
