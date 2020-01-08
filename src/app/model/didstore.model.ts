@@ -39,7 +39,7 @@ export class DIDStore {
     /**
      * Right after its creation, a DID store needs to define a private root key (private identity)
      */
-    public async createPrivateIdentity(password: string, mnemonicLang: DIDPlugin.MnemonicLanguage, mnemonic: string) : Promise<boolean> {
+    public async createPrivateIdentity(mnemonicPass: string, storePass: string, mnemonicLang: DIDPlugin.MnemonicLanguage, mnemonic: string) : Promise<boolean> {
         let hasPrivId = await this.hasPrivateIdentity();
         if (hasPrivId) {
             console.error("Private identity already exists!")
@@ -48,7 +48,7 @@ export class DIDStore {
 
         // Create a private root key
         console.log("Creating private root key");
-        await this.initPluginPrivateIdentity(mnemonicLang, mnemonic, password, true);
+        await this.initPluginPrivateIdentity(mnemonicLang, mnemonic, mnemonicPass, storePass, true);
 
         return true;
     }
@@ -256,7 +256,7 @@ export class DIDStore {
         }
     }
 
-    private initPluginPrivateIdentity(language, mnemonic, password, force): Promise<void> {
+    private initPluginPrivateIdentity(language, mnemonic, mnemonicPass, storePass, force): Promise<void> {
         if (BrowserSimulation.runningInBrowser()) {
             return new Promise((resolve, reject)=>{
                 resolve()
@@ -265,7 +265,7 @@ export class DIDStore {
 
         return new Promise((resolve, reject)=>{
             this.pluginDidStore.initPrivateIdentity(
-                language, mnemonic, password, password, force,
+                language, mnemonic, mnemonicPass, storePass, force,
                 () => {resolve()}, (err) => {reject(err)},
             );
         });

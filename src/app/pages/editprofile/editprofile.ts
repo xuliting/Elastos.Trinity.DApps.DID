@@ -151,7 +151,7 @@ export class EditProfilePage {
           this.navCtrl.pop();
         }
       }
-      else { // If creation mode, go to backup did flow.
+      else { // If creation mode, go to backup did flow if needed.
         this.didService.didBeingCreated.profile = this.profile; // Save filled profile for later.
 
         if (!await this.didService.getActiveDidStore().hasPrivateIdentity())

@@ -1,0 +1,19 @@
+<div class="container">
+  <p class="password-intro">
+    {{'importdidsource-intro'|translate}}
+  </p>
+
+  <did-button class="main-button" (click)="importFromMnemonic()" 
+    [title]="'import-from-mnemonic' | translate" 
+    [textcolor]="'#FFFFFF'"
+    [bgcolor]="'var(--ion-color-primary)'" 
+    [bordercolor]="'var(--ion-color-primary)'"
+    [shadow]="true"></did-button>
+
+  <did-button class="main-button" (click)="importFromWalletApp()" 
+    [title]="'import-from-wallet-app' | translate" 
+    [textcolor]="'#FFFFFF'"
+    [bgcolor]="'var(--ion-color-primary)'" 
+    [bordercolor]="'var(--ion-color-primary)'"
+    [shadow]="true"></did-button>
+</div>

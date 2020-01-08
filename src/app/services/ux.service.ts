@@ -87,6 +87,8 @@ export class UXService {
             // Error while checking - fallback to default behaviour
             this.didService.displayDefaultScreen();
         });
+
+        appManager.setVisible("show", ()=>{}, (err)=>{});
     }
 
     showEntryScreen() {

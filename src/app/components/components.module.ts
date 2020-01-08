@@ -17,6 +17,9 @@ import { ShowQRCodeComponent } from './showqrcode/showqrcode.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { AdvancedPopupController } from './advanced-popup/advancedpopup.controller';
 import { AdvancedPopupComponent } from './advanced-popup/advancedpopup.component';
+import { MnemonicPassCheckComponent } from './mnemonicpasscheck/mnemonicpasscheck.component';
+import { ImportDIDSourceComponent } from './importdidsource/importdidsource.component';
+import { EmptyImportedDocumentComponent } from './emptyimporteddocument/emptyimporteddocument.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +35,9 @@ import { AdvancedPopupComponent } from './advanced-popup/advancedpopup.component
     RoundedActionButtonComponent,
     ShowQRCodeComponent,
     AdvancedPopupComponent,
+    MnemonicPassCheckComponent,
+    ImportDIDSourceComponent,
+    EmptyImportedDocumentComponent,
   ],
   imports: [
     CommonModule,
@@ -52,12 +58,18 @@ import { AdvancedPopupComponent } from './advanced-popup/advancedpopup.component
     CreatePasswordComponent,
     RoundedActionButtonComponent,
     ShowQRCodeComponent,
+    MnemonicPassCheckComponent,
+    ImportDIDSourceComponent,
+    EmptyImportedDocumentComponent,
   ],
   providers: [
     AdvancedPopupController
   ],
   entryComponents: [
-    AdvancedPopupComponent
+    AdvancedPopupComponent,
+    ImportDIDSourceComponent,
+    MnemonicPassCheckComponent,
+    EmptyImportedDocumentComponent,
   ],
 })
 export class ComponentsModule { }

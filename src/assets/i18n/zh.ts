@@ -15,6 +15,7 @@ export const zh = {
     'edit-visibility': '编辑公开档案',
     'delete-credentials': '删除凭证',
     'publish': '发布',
+    'cancel': 'Cancel',
 
     // DID operations
     'create-my-did': '创建新的DID',
@@ -151,9 +152,24 @@ export const zh = {
     'passwords-dont-match': '两次输入的密码不一致',
 
     // component: security check
-    'security-check': '安全确认!',
+    'security-check': '安全确认! Please type your app password',
     'wrong-password': '密码错误，请重试',
 
+    // component: importdidsource
+    'importdidsource-intro': 'How would you like to import your DID?',
+    'import-from-mnemonic': 'Type my mnemonic words',
+    'import-from-wallet-app': 'Import mnemonic from wallet app',
+
+    // component: mnemonicpasscheck
+    'mnemonicpasscheck-question': 'Do you have a mnemonic passphrase?',
+    'have-passphrase': 'Yes, I will type it',
+    'dont-have-passphrase-dont-know': 'No I don\' have, or I don\'t know',
+    'mnemonicpassword-intro': 'Please type your mnemonic passphrase',
+
+    // component: emptyimporteddocument
+    'emptyimporteddocument-intro': 'We couldn\'t find any existing information to restore your profile. What would you like to do?',
+    'create-an-empty-profile': 'Create an empty profile',
+    
     // loading
     'loading-msg': '加载中，请稍候',
 

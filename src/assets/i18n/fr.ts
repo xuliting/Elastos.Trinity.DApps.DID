@@ -15,6 +15,7 @@ export const fr = {
     'edit-visibility': 'Modif. Visibilité',
     'delete-credentials': 'Supprimer les références',
     'publish': 'Publier',
+    'cancel': 'Annuler',
 
     // DID operations
     'create-my-did': 'Créer mon DID',
@@ -151,7 +152,22 @@ export const fr = {
     'passwords-dont-match': 'Les mots de passe ne correspondent pas.',
 
     // component: security check
-    'security-check': 'Vérification de sécurité!',
+    'security-check': 'Veuillez saisir le mot de passe de l\'application',
+
+    // component: importdidsource
+    'importdidsource-intro': 'Comment voulez-vous importer votre DID?',
+    'import-from-mnemonic': 'Saisir mon mnémonique',
+    'import-from-wallet-app': 'Importer depuis l\'app Wallet',
+
+    // component: mnemonicpasscheck
+    'mnemonicpasscheck-question': 'Avez-vous un mot de passe pour le mnémonique?',
+    'have-passphrase': 'Oui, je vais le saisir',
+    'dont-have-passphrase-dont-know': 'Je n\'en ai pas / Je ne sais pas',
+    'mnemonicpassword-intro': 'Veuillez saisir votre mot de passe mnémonique',
+
+    // component: emptyimporteddocument
+    'emptyimporteddocument-intro': 'Aucune information trouvée pour restorer votre profil. Que voulez-vous faire?',
+    'create-an-empty-profile': 'Créer un nouveau profil',
 
     // loading
     'loading-msg': 'Veuillez patienter',

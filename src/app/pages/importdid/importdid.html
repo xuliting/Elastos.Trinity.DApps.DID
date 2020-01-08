@@ -20,7 +20,7 @@
   
       <ion-input #addMnemonicWordInput placeholder="Your mnemonic sentence" [(ngModel)]="mnemonicSentence" (ionChange)="onMnemonicSentenceChanged()"></ion-input>
   
-      <did-button class="main-button" (click)="promptPassword()" 
+      <did-button class="main-button" (click)="promptStorePassword()" 
         [title]="'import-my-did' | translate" 
         textsize="18px"
         [bgcolor]="'var(--ion-color-primary)'" 

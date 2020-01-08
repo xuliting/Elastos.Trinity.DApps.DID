@@ -9,6 +9,7 @@ import { CreatePasswordComponent } from '../components/createpassword/createpass
 import { DIDService } from './did.service';
 import { DIDStore } from '../model/didstore.model';
 import { WrongPasswordException } from '../model/exceptions/wrongpasswordexception.exception';
+import { MnemonicPassCheckComponent } from '../components/mnemonicpasscheck/mnemonicpasscheck.component';
 
 @Injectable({
     providedIn: 'root'
@@ -18,6 +19,7 @@ export class AuthService {
 
     private savedPassword: string = null; // Latest password input by user
     private savedPasswordRelatedDIDStoreId: string = null; // Store ID for which the user password was provided.
+    private mnemonicPassphrase: string = null; // Temporary passphrase storage while importing fro mmnemonic with passphrase
 
     constructor(public modalCtrl: ModalController, private native: Native, private didService: DIDService) {
         AuthService.instance = this;
@@ -105,6 +107,30 @@ export class AuthService {
         })
     }
 
+    /**
+     * Asks user if he needs to use a mnemonic passphrase. If so, returns the input passphrase.
+     * If none, returns null.
+     */
+    public promptMnemonicPassphrase(): Promise<string> {
+        console.log("Asking for mnemonic passphrase");
+
+        return new Promise(async (resolve, reject)=>{
+            const modal = await this.modalCtrl.create({
+                component: MnemonicPassCheckComponent,
+                componentProps: {
+                },
+                cssClass:"create-password-modal"
+            });
+            modal.onDidDismiss().then((params) => {
+                if (!params.data)
+                    resolve(null);
+                else
+                    resolve(params.data.password);
+            });
+            modal.present();
+        })
+    }
+
     public async checkPasswordThenExecute(writeActionCb: ()=>Promise<void>, onError: ()=>void, wrongPasswordCb: ()=>void, forcePasswordPrompt: boolean = false) {
         return new Promise(async (resolve, reject)=>{
             // A write operation requires password. Make sure we have this in memory, or prompt user.
@@ -136,7 +162,15 @@ export class AuthService {
                 // No password provided - stop this check loop as that was cancelled by user.
             }
         });
-      }
+    }
+
+    saveMnemonicPassphrase(passphrase: string) {
+        this.mnemonicPassphrase = passphrase;
+    }
+
+    getMnemonicPassphrase(): string {
+        return this.mnemonicPassphrase;
+    }
 
     /**
      * This method lets user choose a DID before going to another screen.

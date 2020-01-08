@@ -15,6 +15,7 @@ export const en = {
     'edit-visibility': 'Edit visibility',
     'delete-credentials': 'Delete credentials',
     'publish': 'Publish',
+    'cancel': 'Cancel',
 
     // DID operations
     'create-my-did': 'Create my DID',
@@ -151,8 +152,23 @@ export const en = {
     'passwords-dont-match': 'Passwords don\'t match.',
 
     // component: security check
-    'security-check': 'Security check!',
+    'security-check': 'Security check! Please type your app password',
     'wrong-password': 'Wrong password, please try again.',
+
+    // component: importdidsource
+    'importdidsource-intro': 'How would you like to import your DID?',
+    'import-from-mnemonic': 'Type my mnemonic words',
+    'import-from-wallet-app': 'Import mnemonic from wallet app',
+
+    // component: mnemonicpasscheck
+    'mnemonicpasscheck-question': 'Do you have a mnemonic passphrase?',
+    'have-passphrase': 'Yes, I will type it',
+    'dont-have-passphrase-dont-know': 'No I don\' have, or I don\'t know',
+    'mnemonicpassword-intro': 'Please type your mnemonic passphrase',
+
+    // component: emptyimporteddocument
+    'emptyimporteddocument-intro': 'We couldn\'t find any existing information to restore your profile. What would you like to do?',
+    'create-an-empty-profile': 'Create an empty profile',
 
     // loading
     'loading-msg': 'Wait a moment',
