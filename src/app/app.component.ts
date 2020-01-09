@@ -42,7 +42,7 @@ export class MyApp {
  
   initializeApp() {
     console.log("Initialize app");
-    
+
     if (this.platform.platforms().indexOf("cordova") < 0) {
       BrowserSimulation.setRunningInBrowser();
     }

@@ -6,6 +6,7 @@ import { BrowserSimulation, SimulatedDID, SimulatedDIDStore, SimulatedDIDDocumen
 import { Config } from '../services/config';
 import { WrongPasswordException } from './exceptions/wrongpasswordexception.exception';
 import { DIDDocument } from './diddocument.model';
+import { DIDService } from '../services/did.service';
 
 declare let didManager: DIDPlugin.DIDManager;
 declare let appManager: AppManagerPlugin.AppManager;
@@ -135,8 +136,8 @@ export class DIDStore {
             console.log("Created DID:", createdDid);
         }
         catch (e) {
-            console.error("Create DID exception - assuming wrong password", e);
-            throw new WrongPasswordException();
+            console.error("Create DID exception", e);
+            throw DIDService.instance.reworkedDIDPluginException(e);
         }
 
         // Add DID to our memory model.

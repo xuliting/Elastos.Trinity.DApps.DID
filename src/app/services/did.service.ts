@@ -11,6 +11,8 @@ import { DIDStore } from '../model/didstore.model';
 import { DIDEntry } from '../model/didentry.model';
 import { DID } from '../model/did.model';
 import { NewDID } from '../model/newdid.model';
+import { WrongPasswordException } from '../model/exceptions/wrongpasswordexception.exception';
+import { DIDPluginException } from '../model/exceptions/didplugin.exception';
 
 declare let didManager: DIDPlugin.DIDManager;
 declare let appManager: AppManagerPlugin.AppManager;
@@ -325,5 +327,20 @@ export class DIDService {
         return key;
 
       return translated;
+    }
+
+    /**
+     * From a raw JS exception, try to extract more usable information and return clearer
+     * exception types such as WrongPasswordException.
+     */
+    reworkedDIDPluginException(e: DIDPluginException) {
+      if (!e || !e.message)
+        return e; // No more info - return the raw error.
+
+      if (e.message.includes("password"))
+        return new WrongPasswordException();
+        
+      // All other cases: return the raw error.
+      return e;
     }
 }

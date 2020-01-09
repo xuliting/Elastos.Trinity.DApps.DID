@@ -5,6 +5,7 @@ import { BrowserSimulation, SimulatedDID, SimulatedCredential } from '../service
 import { BasicCredentialsService } from '../services/basiccredentials.service';
 import { DIDDocument } from './diddocument.model';
 import { DIDURL } from './didurl.model';
+import { DIDService } from '../services/did.service';
 
 export class DID {
     public credentials: DIDPlugin.VerifiableCredential[] = [];
@@ -76,8 +77,8 @@ export class DID {
                 console.log("Created credential:",credential);
             }
             catch (e) {
-                console.error("Create credential exception - assuming wrong password", e);
-                reject(new WrongPasswordException());
+                console.error("Create credential exception", e);
+                reject(DIDService.instance.reworkedDIDPluginException(e));
                 return;
             }
 
@@ -192,6 +193,14 @@ export class DID {
                     console.log("Adding credential for profile key "+entry.info.key);
                     let credential = await this.addCredential(credentialId, props, password, ["BasicProfileCredential"]);
                     console.log("Created credential:", credential);
+
+                    console.log("includes?")
+                    if (entry.info.key == "name") {
+                        console.log("includes? YES")
+                        // Rebuild DID list UI entries based in case the "special" profile field "name" 
+                        // is modified.
+                        await DIDService.instance.rebuildDidEntries();
+                    }
                 }
                 catch (e) {
                     // We may have catched a wrong password exception - stop the loop here.
@@ -269,8 +278,8 @@ export class DID {
             this.pluginDid.deleteCredential(
                 didUrlString.toString(),
                 () => {resolve()}, (err) => {
-                    console.error("Delete credential exception - assuming wrong password", err);
-                    reject(new WrongPasswordException());
+                    console.error("Delete credential exception", err);
+                    reject(DIDService.instance.reworkedDIDPluginException(err));
                 },
             );
         });
@@ -286,8 +295,8 @@ export class DID {
                     console.log("DIDService - storeCredential responded");
                     resolve()
                 }, (err) => {
-                    console.error("Add credential exception - assuming wrong password", err);
-                    reject(new WrongPasswordException());
+                    console.error("Add credential exception", err);
+                    reject(DIDService.instance.reworkedDIDPluginException(err));
                 },
             );
         });
@@ -317,8 +326,8 @@ export class DID {
             this.pluginDid.createVerifiablePresentation(credentials, "no-realm", "no-nonce", storePass, (presentation: DIDPlugin.VerifiablePresentation)=>{
                 resolve(presentation);
             }, (err)=>{
-                console.error("Create presentation exception - assuming wrong password", err);
-                reject(new WrongPasswordException());
+                console.error("Create presentation exception", err);
+                reject(DIDService.instance.reworkedDIDPluginException(err));
             });
         });
     }

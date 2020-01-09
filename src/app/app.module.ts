@@ -57,10 +57,19 @@ Sentry.init({
 
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
-  constructor() {}
+  constructor(private popup: PopupProvider) {}
+
   handleError(error) {
-    const eventId = Sentry.captureException(error.originalError || error);
-    //Sentry.showReportDialog({ eventId });
+    console.error("Globally catched exception:", error);
+
+    console.log(document.URL);
+    // Only send reports to sentry if we are not debugging.
+    if (document.URL.includes('localhost')) { // Prod builds or --nodebug CLI builds use "http://localhost"
+      const eventId = Sentry.captureException(error.originalError || error);
+      //Sentry.showReportDialog({ eventId });
+    }
+
+    this.popup.ionicAlert("Error", "Sorry, the application encountered an error. This has been reported to the team.", "Close");
   }
 }
 
