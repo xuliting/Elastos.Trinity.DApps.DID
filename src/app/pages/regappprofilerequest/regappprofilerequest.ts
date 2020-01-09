@@ -50,6 +50,7 @@ export class RegisterApplicationProfileRequestPage {
   constructor(private zone: NgZone,
               private didService: DIDService,
               private popup: PopupProvider,
+              private uxService:UXService,
               private translate: TranslateService,
               private advancedPopup: AdvancedPopupController,
               private appServices: UXService) {
@@ -76,6 +77,10 @@ export class RegisterApplicationProfileRequestPage {
         }
       }
     }
+  }
+
+  ionViewDidEnter() {
+    this.uxService.makeAppVisible();
   }
 
   async acceptRequest() {

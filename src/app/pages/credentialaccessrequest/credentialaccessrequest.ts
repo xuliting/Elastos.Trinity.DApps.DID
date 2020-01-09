@@ -36,6 +36,7 @@ export class CredentialAccessRequestPage {
   constructor(private zone: NgZone,
               private didService: DIDService,
               private popup: PopupProvider,
+              private uxService: UXService,
               private authService: AuthService,
               private popupProvider: PopupProvider,
               private appServices: UXService) {
@@ -75,6 +76,10 @@ export class CredentialAccessRequestPage {
       console.log("Mandatory claims:", this.mandatoryItems)
       console.log("Optional claims:", this.optionalItems)
     });
+  }
+
+  ionViewDidEnter() {
+    this.uxService.makeAppVisible();
   }
 
   /**

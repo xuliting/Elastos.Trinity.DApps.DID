@@ -87,8 +87,6 @@ export class UXService {
             // Error while checking - fallback to default behaviour
             this.didService.displayDefaultScreen();
         });
-
-        appManager.setVisible("show", ()=>{}, (err)=>{});
     }
 
     showEntryScreen() {
@@ -119,6 +117,14 @@ export class UXService {
     minimize() {
         if (!BrowserSimulation.runningInBrowser())
             appManager.launcher();
+    }
+
+    /**
+     * As the app starts invisible, screens have to call this method when they are ready, so that
+     * user can actually see the app (but see it only when fully ready)
+     */
+    makeAppVisible() {
+        appManager.setVisible("show", ()=>{}, (err)=>{});
     }
 
     getLanguage() {

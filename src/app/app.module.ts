@@ -1,4 +1,4 @@
-import { NgModule, ErrorHandler } from '@angular/core';
+import { NgModule, ErrorHandler, Injectable } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RouteReuseStrategy } from '@angular/router';
@@ -48,6 +48,21 @@ import { PopupProvider } from './services/popup';
 import { ChooseDIDPage } from './pages/choosedid/choosedid';
 import { ShowQRCodeComponent } from './components/showqrcode/showqrcode.component';
 import { ProfileEntryPickerPage } from './pages/profileentrypicker/profileentrypicker';
+
+import * as Sentry from "@sentry/browser";
+
+Sentry.init({
+  dsn: "https://f563821bdc2546c3bf7357c997a78059@sentry.io/1874652"
+});
+
+@Injectable()
+export class SentryErrorHandler implements ErrorHandler {
+  constructor() {}
+  handleError(error) {
+    const eventId = Sentry.captureException(error.originalError || error);
+    //Sentry.showReportDialog({ eventId });
+  }
+}
 
 /** 通过类引用方式解析国家化文件 */
 export class CustomTranslateLoader implements TranslateLoader {
@@ -139,7 +154,7 @@ export function TranslateLoaderFactory() {
     Platform,
     WebView,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    {provide: ErrorHandler, useClass: ErrorHandler}
+    { provide: ErrorHandler, useClass: SentryErrorHandler }
   ]
 })
 export class AppModule {}

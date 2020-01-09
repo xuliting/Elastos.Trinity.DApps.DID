@@ -13,6 +13,7 @@ import { Util } from 'src/app/services/util';
 import { ModalController } from '@ionic/angular';
 import { ImportDIDSourceComponent, ImportDIDSource } from 'src/app/components/importdidsource/importdidsource.component';
 import { MnemonicPassCheckComponent } from 'src/app/components/mnemonicpasscheck/mnemonicpasscheck.component';
+import { UXService } from 'src/app/services/ux.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
 
@@ -31,11 +32,15 @@ export class NoIdentityPage {
     public passwordConfirmation: string = "";
 
     constructor(public route:ActivatedRoute, private native: Native, private didService: DIDService,
-                private modalCtrl: ModalController,
+                private modalCtrl: ModalController, private uxService: UXService,
                 private authService: AuthService, private advancedPopup: AdvancedPopupController, private translate: TranslateService) {
     this.route.queryParams.subscribe((data) => {
         if (!Util.isEmptyObject(data)) this.isfirst = false;
     });
+  }
+
+  ionViewDidEnter() {
+    this.uxService.makeAppVisible();
   }
 
     async createIdentity() {
