@@ -13,6 +13,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DIDSyncService } from 'src/app/services/didsync.service';
 import { DIDDocument } from 'src/app/model/diddocument.model';
 import { DIDURL } from 'src/app/model/didurl.model';
+import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
 
 type CredentialDisplayEntry = {
   credential: DIDPlugin.VerifiableCredential,
@@ -27,7 +28,7 @@ type CredentialDisplayEntry = {
 })
 export class CredentialListPage {
   didString: DIDPlugin.DIDString = "";
-  public credentials: DIDPlugin.VerifiableCredential[];
+  public credentials: VerifiableCredential[];
   public hasCredential: boolean = false;
   public profile: Profile = null;
   visibleData: CredentialDisplayEntry[];
@@ -82,7 +83,7 @@ export class CredentialListPage {
 
     // Sort credentials by title
     this.credentials.sort((c1, c2)=>{
-      if (c1.getFragment() > c2.getFragment())
+      if (c1.pluginVerifiableCredential.getFragment() > c2.pluginVerifiableCredential.getFragment())
         return 1;
       else 
         return -1;
@@ -108,14 +109,14 @@ export class CredentialListPage {
     for(let c of this.credentials) {
       if (this.credentialIsVisibleOnChain(c)) {
         this.visibleData.push({
-          credential: c,
+          credential: c.pluginVerifiableCredential,
           willingToBePubliclyVisible: true,
           willingToDelete: false
         })
       }
       else {
         this.invisibleData.push({
-          credential: c,
+          credential: c.pluginVerifiableCredential,
           willingToBePubliclyVisible: false,
           willingToDelete: false
         }) 
@@ -126,12 +127,12 @@ export class CredentialListPage {
   /**
    * Tells if a given credential is currently visible on chain or not (inside the DID document or not).
    */
-  credentialIsVisibleOnChain(credential: DIDPlugin.VerifiableCredential) {
+  credentialIsVisibleOnChain(credential: VerifiableCredential) {
     let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
     if (!currentDidDocument)
       return false;
       
-    let didDocumentCredential = currentDidDocument.getCredentialById(new DIDURL(credential.getId()));
+    let didDocumentCredential = currentDidDocument.getCredentialById(new DIDURL(credential.pluginVerifiableCredential.getId()));
     return didDocumentCredential != null;
   }
 
@@ -280,15 +281,15 @@ export class CredentialListPage {
 
     let relatedCredential = this.didService.getActiveDid().getCredentialById(new DIDURL(displayEntry.credential.getId()));
 
-    let existingCredential = await currentDidDocument.getCredentialById(new DIDURL(relatedCredential.getId()));
+    let existingCredential = await currentDidDocument.getCredentialById(new DIDURL(relatedCredential.pluginVerifiableCredential.getId()));
     if (this.editingVisibility && !existingCredential && displayEntry.willingToBePubliclyVisible) {
       // Credential doesn't exist in the did document yet but user wants to add it? Then add it.
-      await currentDidDocument.addCredential(relatedCredential, password);
+      await currentDidDocument.addCredential(relatedCredential.pluginVerifiableCredential, password);
       return true;
     }
     else if (this.editingVisibility && existingCredential && !displayEntry.willingToBePubliclyVisible) {
       // Credential exists but user wants to remove it from chain? Then delete it from the did document
-      await currentDidDocument.deleteCredential(relatedCredential, password);
+      await currentDidDocument.deleteCredential(relatedCredential.pluginVerifiableCredential, password);
       return true;
     }
 

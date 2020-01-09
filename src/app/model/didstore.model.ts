@@ -4,9 +4,8 @@ import { NewDID } from './newdid.model';
 import { DID } from './did.model';
 import { BrowserSimulation, SimulatedDID, SimulatedDIDStore, SimulatedDIDDocument } from '../services/browsersimulation';
 import { Config } from '../services/config';
-import { WrongPasswordException } from './exceptions/wrongpasswordexception.exception';
 import { DIDDocument } from './diddocument.model';
-import { DIDService } from '../services/did.service';
+import { DIDHelper } from '../helpers/did.helper';
 
 declare let didManager: DIDPlugin.DIDManager;
 declare let appManager: AppManagerPlugin.AppManager;
@@ -137,7 +136,7 @@ export class DIDStore {
         }
         catch (e) {
             console.error("Create DID exception", e);
-            throw DIDService.instance.reworkedDIDPluginException(e);
+            throw DIDHelper.reworkedDIDPluginException(e);
         }
 
         // Add DID to our memory model.

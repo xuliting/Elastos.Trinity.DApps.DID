@@ -37,6 +37,15 @@ export class DIDService {
         public native: Native) {
             console.log("DIDService created");
             DIDService.instance = this;
+
+            this.subscribeEvents();
+    }
+
+    private subscribeEvents() {
+      this.events.subscribe("did:namechanged", ()=>{
+        // Name profiel item was changed in a DID? Rebuild our DID menu entries
+        DIDService.instance.rebuildDidEntries();
+      });
     }
 
     public async displayDefaultScreen() {
@@ -327,20 +336,5 @@ export class DIDService {
         return key;
 
       return translated;
-    }
-
-    /**
-     * From a raw JS exception, try to extract more usable information and return clearer
-     * exception types such as WrongPasswordException.
-     */
-    reworkedDIDPluginException(e: DIDPluginException) {
-      if (!e || !e.message)
-        return e; // No more info - return the raw error.
-
-      if (e.message.includes("password"))
-        return new WrongPasswordException();
-        
-      // All other cases: return the raw error.
-      return e;
     }
 }

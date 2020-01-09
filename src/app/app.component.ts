@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { Events, Platform } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { TranslateService } from '@ngx-translate/core';
@@ -15,6 +15,7 @@ import { PopupProvider } from './services/popup';
 import { BasicCredentialsService } from './services/basiccredentials.service';
 import { TranslationService } from './services/translation.service';
 import { DIDSyncService } from './services/didsync.service';
+import { DIDEvents } from './services/events';
 
 @Component({
   selector: 'my-app',
@@ -22,7 +23,6 @@ import { DIDSyncService } from './services/didsync.service';
 })
 export class MyApp {
   constructor(
-    public event: Events,
     public platform: Platform,
     public zone: NgZone,
     public statusBar: StatusBar,
@@ -30,6 +30,7 @@ export class MyApp {
     public translate: TranslateService,
     private localStorage: LocalStorage,
     private native: Native,
+    private didEvents: DIDEvents,
     private popupProvider: PopupProvider,
     private didService: DIDService,
     private didSyncService: DIDSyncService,

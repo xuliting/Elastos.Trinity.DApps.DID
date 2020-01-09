@@ -9,6 +9,7 @@ import { Util } from '../../services/util';
 import { AuthService } from 'src/app/services/auth.service';
 import { WrongPasswordException } from 'src/app/model/exceptions/wrongpasswordexception.exception';
 import { BrowserSimulation } from 'src/app/services/browsersimulation';
+import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
 
 type ClaimRequest = {
   name: string,
@@ -26,7 +27,7 @@ type ClaimRequest = {
 })
 export class CredentialAccessRequestPage {
   requestDapp: any = null;
-  private credentials: DIDPlugin.VerifiableCredential[] = [];
+  private credentials: VerifiableCredential[] = [];
   private denyReason = '';
   public profile = new Profile(); // Empty profile waiting to get the real one.
   mandatoryItems: ClaimRequest[] = [];
@@ -109,7 +110,7 @@ export class CredentialAccessRequestPage {
 
       let credentialValue: string = null;
       if (relatedCredential)
-        credentialValue = this.getBasicProfileCredentialValue(relatedCredential)
+        credentialValue = this.getBasicProfileCredentialValue(relatedCredential.pluginVerifiableCredential)
 
       // Don't display optional items that user doesn't have.
       if (!relatedCredential && !claimIsRequired) 
@@ -118,7 +119,7 @@ export class CredentialAccessRequestPage {
       let claimRequest: ClaimRequest = {
         name: key,
         value: credentialValue,
-        credential: relatedCredential,
+        credential: relatedCredential.pluginVerifiableCredential,
         canBeDelivered: (relatedCredential != null),
         selected: true,
         reason: ""
@@ -155,9 +156,9 @@ export class CredentialAccessRequestPage {
    * 
    * key format: "my-key" (credential fragment)
    */
-  findCredential(key: string): DIDPlugin.VerifiableCredential {
+  findCredential(key: string): VerifiableCredential {
     return this.credentials.find((c)=>{
-      return c.getFragment() == key;
+      return c.pluginVerifiableCredential.getFragment() == key;
     })
   }
 

@@ -58,6 +58,13 @@ export class DIDSyncService {
         if (did)
           this.checkIfDIDDocumentNeedsToBePublished(did);
       });
+
+      this.events.subscribe("diddocument:locallymodified", (didString: DIDPlugin.DIDString)=>{
+        // Assume the modified did is the active one.
+        let did = this.didService.getActiveDid();
+
+        this.setDidDocumentNeedsToBePublished(did);
+      });
     }
 
     /**
@@ -168,6 +175,6 @@ export class DIDSyncService {
      * When a change in the DID Document is done in the app, we can force-set the "needs publish" value.
      */
     public setDidDocumentNeedsToBePublished(did: DID) {
-      this.needToPublishStatuses.set(did, true);
+      this.setPublicationStatus(did, true);
     }
 }

@@ -1,8 +1,10 @@
-import { Events } from '@ionic/angular';
 import { DIDURL } from './didurl.model';
 import { LocalStorage } from '../services/localstorage';
 import { WrongPasswordException } from './exceptions/wrongpasswordexception.exception';
-import { DIDService } from '../services/did.service';
+import { DIDSyncService } from '../services/didsync.service';
+import { DID } from './did.model';
+import { DIDHelper } from '../helpers/did.helper';
+import { DIDEvents } from '../services/events';
 
 export class DIDDocument {
     constructor(public pluginDidDocument: DIDPlugin.DIDDocument) {
@@ -23,7 +25,7 @@ export class DIDDocument {
                     resolve()
                 }, (err) => {
                     console.error("Add credential exception", err);
-                    reject(DIDService.instance.reworkedDIDPluginException(err));
+                    reject(DIDHelper.reworkedDIDPluginException(err));
                 },
             );
         });
@@ -40,7 +42,7 @@ export class DIDDocument {
                     resolve()
                 }, (err) => {
                     console.error("Delete credential exception", err);
-                    reject(DIDService.instance.reworkedDIDPluginException(err));
+                    reject(DIDHelper.reworkedDIDPluginException(err));
                 },
             );
         });

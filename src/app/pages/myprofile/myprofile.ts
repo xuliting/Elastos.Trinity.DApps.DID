@@ -275,14 +275,14 @@ export class MyProfilePage {
     let relatedCredential = this.didService.getActiveDid().getCredentialById(new DIDURL(displayEntry.credentialId));
     console.log("Related credential: ", relatedCredential);
     
-    let existingCredential = await currentDidDocument.getCredentialById(new DIDURL(relatedCredential.getId()));
+    let existingCredential = await currentDidDocument.getCredentialById(new DIDURL(relatedCredential.pluginVerifiableCredential.getId()));
     if (!existingCredential && displayEntry.willingToBePubliclyVisible) {
       // Credential doesn't exist in the did document yet but user wants to add it? Then add it.
-      await currentDidDocument.addCredential(relatedCredential, password);
+      await currentDidDocument.addCredential(relatedCredential.pluginVerifiableCredential, password);
     }
     else if (existingCredential && !displayEntry.willingToBePubliclyVisible) {
       // Credential exists but user wants to remove it from chain? Then delete it from the did document
-      await currentDidDocument.deleteCredential(relatedCredential, password);
+      await currentDidDocument.deleteCredential(relatedCredential.pluginVerifiableCredential, password);
     }
   }
 }

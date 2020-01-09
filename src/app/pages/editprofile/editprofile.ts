@@ -144,6 +144,7 @@ export class EditProfilePage {
 
         if (localDidDocumentHasChanged) {
           // DID Document was modified: ask user if he wants to publish his new did document version now or not.
+          this.events.publish('diddocument:changed');
           this.promptPublishDIDDocument();
         }
         else {
