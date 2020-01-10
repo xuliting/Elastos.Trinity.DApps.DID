@@ -35,6 +35,15 @@ export class Profile {
     }
   }
 
+  deleteEntry(entry: BasicCredentialEntry) {
+    let deletionIndex = this.entries.findIndex((e)=>{
+      return e.info.key == entry.info.key;
+    });
+    if (deletionIndex >= 0) {
+      this.entries.splice(deletionIndex, 1);
+    }
+  }
+
   /**
    * Convenience method to retrieve the "name" credential value.
    */
@@ -81,7 +90,7 @@ export class Profile {
    */
   isMale() {
     let genderEntry = this.getEntryByKey("gender");
-    return (genderEntry.value == "" || genderEntry.value == "male");
+    return (!genderEntry || genderEntry.value == "" || genderEntry.value == "male");
   }
 
   getDefaultProfilePicturePath() {

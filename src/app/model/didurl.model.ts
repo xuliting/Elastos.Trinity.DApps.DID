@@ -38,9 +38,6 @@ export class DIDURL {
 
     public matches(didUrlString: string): boolean {
         let comparedDidUrl = new DIDURL(didUrlString);
-
-        console.log("MATCHES?",comparedDidUrl.shortForm() , this.shortForm())
-
         return comparedDidUrl.shortForm() == this.shortForm();
     }
 

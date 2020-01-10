@@ -166,6 +166,36 @@ export class DID {
             console.log("Writing profile fields as credentials", newProfile);
 
             let localDidDocumentHasChanged = false;
+
+            // Delete all entries that were here before, and not any more in the new profile
+            let currentProfile = this.getBasicProfile();
+            for(let entry of currentProfile.entries) {
+                let entryExistingInNewProfile = newProfile.getEntryByKey(entry.info.key);
+                if (!entryExistingInNewProfile) {
+                    console.log("Deleting profile entry "+entry.info.key+" from current DID as it's not in the profile any more.");
+                    
+                    // Delete the credential
+                    let credentialId = new DIDURL("#"+entry.info.key);
+                    let existingCredential = this.getCredentialById(credentialId);
+                    if (existingCredential) {
+                        console.log("Deleting credential with id "+existingCredential.pluginVerifiableCredential.getId()+" as it's being deleted from user profile.");
+                        await this.deleteCredential(new DIDURL(existingCredential.pluginVerifiableCredential.getId()));
+                    }
+
+                    // Remove the info from the DID document, if any
+                    let currentDidDocument = this.getDIDDocument();
+                    if (currentDidDocument) {
+                        let documentCredential = currentDidDocument.getCredentialById(credentialId);
+                        if (documentCredential) {
+                            console.log("Deleting credential from local DID document");
+                            await currentDidDocument.deleteCredential(documentCredential, password);
+                            localDidDocumentHasChanged = true;
+                        }
+                    }
+                }
+            }
+
+            // Update or insert all entries existing in the new profile
             for(let entry of newProfile.entries) {
                 let props = {};
                 props[entry.info.key] = entry.value;

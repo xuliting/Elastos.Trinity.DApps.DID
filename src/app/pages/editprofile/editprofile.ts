@@ -245,4 +245,13 @@ export class EditProfilePage {
 
     modal.present();
   }
+
+  /**
+   * Removes an entry from the currently edited profile.
+   */
+  deleteProfileEntry(entry: BasicCredentialEntry, event: MouseEvent) {
+    event.stopImmediatePropagation();
+
+    this.profile.deleteEntry(entry);
+  }
 }

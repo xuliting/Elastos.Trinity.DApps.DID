@@ -105,6 +105,28 @@ ion-content {
                     --color:#CACCD0;
                     color:#CACCD0;
                 }
+
+                .deletion {
+                    pointer-events: all !important; // To get clicks on ion-label
+                    background: #FF4D4D;
+                    color: white;
+                    border-radius: 50%;
+                    width:20px;
+                    height:20px;
+                    font-weight: 700;
+                    font-size: 16px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin: 0;
+                    position: absolute;
+                    right:0;
+                    z-index:10; // To be above other default ion-item clickable items
+                }
+
+                .deletion-margin-right {
+                    margin-right:30px;
+                }
             }
         }
 
