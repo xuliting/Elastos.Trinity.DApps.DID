@@ -173,7 +173,7 @@ export class DID {
                 let entryExistingInNewProfile = newProfile.getEntryByKey(entry.info.key);
                 if (!entryExistingInNewProfile) {
                     console.log("Deleting profile entry "+entry.info.key+" from current DID as it's not in the profile any more.");
-                    
+
                     // Delete the credential
                     let credentialId = new DIDURL("#"+entry.info.key);
                     let existingCredential = this.getCredentialById(credentialId);
@@ -379,6 +379,18 @@ export class DID {
                 console.error("Create presentation exception", err);
                 reject(DIDHelper.reworkedDIDPluginException(err));
             });
+        });
+    }
+
+    public signData(data: string, storePass: string): Promise<string> {
+        return new Promise(async (resolve, reject)=>{
+            this.didDocument.pluginDidDocument.sign(storePass, data,
+                (ret) => {
+                    resolve(ret)
+                }, (err) => {
+                    reject(DIDHelper.reworkedDIDPluginException(err));
+                },
+            );
         });
     }
 

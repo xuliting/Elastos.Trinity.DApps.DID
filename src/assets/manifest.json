@@ -44,6 +44,9 @@
     },
     {
       "action": "registerapplicationprofile"
+    },
+    {
+      "action": "sign"
     }
   ],
   "background_color": "#4e8ef7",

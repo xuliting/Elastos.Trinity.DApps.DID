@@ -221,6 +221,22 @@ export class UXService {
                     this.showErrorAndExitFromIntent(intent);
                 }
                 break;
+            case "sign":
+                console.log("Received sign intent request");
+                if (selfUxService.checkSignIntentParams(intent)) {
+                    this.appIsLaunchingFromIntent = true;
+
+                    this.authService.chooseIdentity({
+                        redirectPath: "/signrequest"
+                    });
+                }
+                else {
+                    console.error("Missing or wrong intent parameters for "+intent.action);
+
+                    // Something wrong happened while trying to handle the intent: send intent response with error
+                    this.showErrorAndExitFromIntent(intent);
+                }
+                break;
         }
     }
 
@@ -301,6 +317,24 @@ export class UXService {
         Config.requestDapp.identifier = intent.params.identifier;
         Config.requestDapp.connectactiontitle = intent.params.connectactiontitle;
         Config.requestDapp.customcredentialtypes = intent.params.customcredentialtypes;
+        Config.requestDapp.allParams = intent.params;
+
+        return true;
+    }
+
+    checkSignIntentParams(intent: AppManagerPlugin.ReceivedIntent): boolean {
+        console.log("Checking intent parameters");
+
+        if (!this.checkGenericIntentParams(intent))
+            return false;
+
+        // Check and get specific parameters for this intent
+        if (!intent.params.data) {
+            console.error("Missing 'data'.");
+            return false;
+        }
+
+        // Config.requestDapp was already initialized earlier.
         Config.requestDapp.allParams = intent.params;
 
         return true;

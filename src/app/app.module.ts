@@ -50,6 +50,7 @@ import { ShowQRCodeComponent } from './components/showqrcode/showqrcode.componen
 import { ProfileEntryPickerPage } from './pages/profileentrypicker/profileentrypicker';
 
 import * as Sentry from "@sentry/browser";
+import { SignRequestPage } from './pages/signrequest/signrequest';
 
 Sentry.init({
   dsn: "https://f563821bdc2546c3bf7357c997a78059@sentry.io/1874652"
@@ -116,6 +117,7 @@ export function TranslateLoaderFactory() {
     NewPasswordSetPage,
     VerifyMnemonicsPage,
     RegisterApplicationProfileRequestPage,
+    SignRequestPage,
     DIDListPage,
     ChooseDIDPage,
     ProfileEntryPickerPage,

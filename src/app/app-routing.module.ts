@@ -18,6 +18,7 @@ import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequ
 import { DevPage } from './pages/devpage/devpage';
 import { DIDListPage } from './pages/didlist/didlist';
 import { ChooseDIDPage } from './pages/choosedid/choosedid';
+import { SignRequestPage } from './pages/signrequest/signrequest';
 
 const routes: Routes = [
   // { path: '', redirectTo: '', pathMatch: 'full' }, // No default route, services will decide this by themselves.
@@ -54,6 +55,7 @@ const routes: Routes = [
   // Intents
   { path: 'credaccessrequest', component: CredentialAccessRequestPage },
   { path: 'regappprofilerequest', component: RegisterApplicationProfileRequestPage },
+  { path: 'signrequest', component: SignRequestPage },
 ];
 
 @NgModule({
