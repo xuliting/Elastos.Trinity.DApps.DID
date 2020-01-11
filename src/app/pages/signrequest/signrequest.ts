@@ -70,10 +70,11 @@ export class SignRequestPage {
       let password = AuthService.instance.getCurrentUserPassword();
 
       let signature = await this.didService.getActiveDid().signData(this.requestDapp.allParams.data, password);
+      let publicKey = await this.didService.getActiveDid().getDIDDocument().getDefaultPublicKey();
 
       let response: SignIntentResponse = {
         signingdid: this.didService.getActiveDid().getDIDString(),
-        publickey: "Not implemented yet",
+        publickey: publicKey,
         signature: signature
       }
 

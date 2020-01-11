@@ -97,4 +97,18 @@ export class DIDDocument {
             );
         });
     }
+
+    getDefaultPublicKey(): Promise<string> {
+        return new Promise((resolve, reject)=>{
+            this.pluginDidDocument.getDefaultPublicKey((publicKey: DIDPlugin.PublicKey)=>{
+                publicKey.getPublicKeyBase58((key: string)=>{
+                    resolve(key);
+                }, (err)=>{
+                    reject(err);
+                })
+            }, (err)=>{
+                reject(err);
+            })
+        });
+    }
 }
