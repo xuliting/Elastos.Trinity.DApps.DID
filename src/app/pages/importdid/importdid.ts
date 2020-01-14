@@ -48,15 +48,19 @@ export class ImportDIDPage {
     return this.mnemonicWords.length == 12;
   }
 
-  async promptStorePassword(passphrase: string) {
+  async promptStorePassword() {
+    // First make sure that the provided mnemonic format is valid locally.
     this.mnemonicLanguage = this.getMnemonicLang();
     let mnemonicValid = await this.didService.isMnemonicValid(this.mnemonicLanguage, this.mnemonicSentence);
     if (!mnemonicValid) {
       this.popupProvider.ionicAlert("Mnemonic inValid", "Pls check the mnemonic... ");
       return;
     }
-    let passwordProvided = await this.authService.promptPasswordInContext(null, false);
-    if (passwordProvided) {
+
+    // Ask user for a new store password.
+    let storePassword = await this.authService.promptNewPassword();
+    if (storePassword) {
+      this.authService.saveCurrentUserPassword(null, storePassword);
       this.promptPassPhrase();
     }
     else {
