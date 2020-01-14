@@ -119,7 +119,7 @@ export class CredentialAccessRequestPage {
       let claimRequest: ClaimRequest = {
         name: key,
         value: credentialValue,
-        credential: relatedCredential.pluginVerifiableCredential,
+        credential: (relatedCredential?relatedCredential.pluginVerifiableCredential:null),
         canBeDelivered: (relatedCredential != null),
         selected: true,
         reason: ""

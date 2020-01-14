@@ -18,7 +18,7 @@ type RegAppProfileIntentParamLocalizedString = {
   lang: string,
   value: string
 }
-type RegAppProfileIntentParamActionTitle = string | RegAppProfileIntentParamLocalizedString;
+type RegAppProfileIntentParamActionTitle = string | RegAppProfileIntentParamLocalizedString[];
 
 type RegAppProfileIntentParamFlatClaim = {}; // "key": "value"
 
