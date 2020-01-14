@@ -66,7 +66,7 @@ export class NoIdentityPage {
     /**
      * Ask user which way he wants to use to import his DID
      */
-    async promptImportLocation() {    
+    async promptImportLocation() {
         this.didService.didBeingCreated = new NewDID();
 
         const modal = await this.modalCtrl.create({
@@ -81,7 +81,7 @@ export class NoIdentityPage {
             if (params && params.data) {
                 switch (params.data.source) {
                     case ImportDIDSource.ImportFromMnemonic:
-                        this.importFromMnemonic();
+                        this.importFromMnemonic('');
                         break;
                     case ImportDIDSource.ImportFromWalletApp:
                         this.importFromWalletApp();
@@ -92,10 +92,10 @@ export class NoIdentityPage {
         modal.present();
     }
 
-    importFromMnemonic() {
+    importFromMnemonic(mnemonic: string) {
         console.log('importIdentity');
         if (this.didService.getActiveDidStore() == null) {
-            this.native.go('/importdid');
+            this.native.go('/importdid', {mnemonic});
         } else {
             this.advancedPopup.create({
                 color:'#FF4D4D',
@@ -109,7 +109,7 @@ export class NoIdentityPage {
                     confirmAction: this.translate.instant("confirm"),
                     cancelAction: this.translate.instant("go-back"),
                     confirmCallback: async ()=>{
-                        this.native.go('/importdid');
+                        this.native.go('/importdid', {mnemonic});
                     }
                 }
             }).show();
@@ -117,18 +117,16 @@ export class NoIdentityPage {
     }
 
     importFromWalletApp() {
-        console.log("TODO: send intent to wallet app to get mnemonic");
-
-        this.native.toast("Importing mnemonic from the wallet app is not yet implemented, please hold on a few days.");
+        console.log("send intent to wallet app to get mnemonic");
 
         // Ask the wallet app to return wallet mnemonics
-        /* TODO appManager.sendIntent("elawalletmnemonicaccess", {}, {}, (response)=>{
+        appManager.sendIntent("elawalletmnemonicaccess", {}, {}, (response)=>{
             console.log("Got mnemonic from the wallet app");
-            console.log("TMP", response);
+            this.importFromMnemonic(response.result.mnemonic);
         }, (err)=>{
             console.error("Failed to get mnemonics from wallet app");
             this.native.toast("Failed to get mnemonics from the wallet app");
-        });*/
+        });
     }
 
     prevSlide(slider) {

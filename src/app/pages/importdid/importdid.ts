@@ -1,4 +1,5 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, NgZone, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NavController, IonInput, ModalController } from '@ionic/angular';
 
 import { DIDService } from '../../services/did.service';
@@ -9,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DIDStore } from 'src/app/model/didstore.model';
 import { MnemonicPassCheckComponent } from 'src/app/components/mnemonicpasscheck/mnemonicpasscheck.component';
 import { EmptyImportedDocumentComponent, EmptyImportedDocumentChoice } from 'src/app/components/emptyimporteddocument/emptyimporteddocument.component';
+import { Subscription } from 'rxjs';
 
 /**
  * Import algorithm:
@@ -26,12 +28,26 @@ import { EmptyImportedDocumentComponent, EmptyImportedDocumentChoice } from 'src
 export class ImportDIDPage {
   public mnemonicWords = new Array<String>()
   public mnemonicSentence: string = "";
-  //public mnemonicSentence: string = "income diesel latin coffee tourist kangaroo lumber great ill amazing say left"; // TMP TESTNET
+//   public mnemonicSentence: string = "income diesel latin coffee tourist kangaroo lumber great ill amazing say left"; // TMP TESTNET
   private mnemonicLanguage : DIDPlugin.MnemonicLanguage;
+  private paramsSubscription: Subscription;
+  public readonly = false; // set true if import mnemonic form wallet app
 
   @ViewChild('addMnemonicWordInput', { static:false }) addMnemonicWordInput: IonInput;
 
-  constructor(public navCtrl: NavController, private modalCtrl: ModalController, private native: Native, private didService: DIDService, private authService: AuthService, private popupProvider: PopupProvider) {
+  constructor(public activatedRoute: ActivatedRoute, public zone: NgZone, public navCtrl: NavController, private modalCtrl: ModalController, private native: Native, private didService: DIDService, private authService: AuthService, private popupProvider: PopupProvider) {
+    this.paramsSubscription = this.activatedRoute.queryParams.subscribe((data) => {
+        if (!Util.isEmptyObject(data) && !Util.isEmptyObject(data.mnemonic)) {
+            this.zone.run(() => {
+                this.mnemonicSentence = data.mnemonic;
+                this.onMnemonicSentenceChanged();
+                this.readonly = true;
+
+                // Unsubscribe to not receive params again if coming back from other screens.
+                this.paramsSubscription.unsubscribe();
+            });
+        }
+      });
   }
 
   onMnemonicSentenceChanged() {

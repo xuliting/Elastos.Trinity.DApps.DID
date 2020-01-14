@@ -1,9 +1,12 @@
 <div class="root-container">
     <header-bar title="Import a DID" [transparent]="false" [showBack]="true"></header-bar>
-  
-    <ion-content text-center>    
-      <div class="title">
+
+    <ion-content text-center>
+      <div *ngIf="!readonly" class="title">
         Start entering your 12 word mnemonic to restore your DID
+      </div>
+      <div *ngIf="readonly" class="title">
+        {{'import-from-wallet-app'|translate}}
       </div>
       <div class="mnemonics-box">
         <ion-grid class="ion-padding">
@@ -17,13 +20,13 @@
           </ion-row>
         </ion-grid>
       </div>
-  
-      <ion-input #addMnemonicWordInput placeholder="Your mnemonic sentence" [(ngModel)]="mnemonicSentence" (ionChange)="onMnemonicSentenceChanged()"></ion-input>
-  
-      <did-button class="main-button" (click)="promptStorePassword()" 
-        [title]="'import-my-did' | translate" 
+
+      <ion-input *ngIf="!readonly" #addMnemonicWordInput placeholder="Your mnemonic sentence" [(ngModel)]="mnemonicSentence" (ionChange)="onMnemonicSentenceChanged()"></ion-input>
+
+      <did-button class="main-button" (click)="promptStorePassword()"
+        [title]="'import-my-did' | translate"
         textsize="18px"
-        [bgcolor]="'var(--ion-color-primary)'" 
+        [bgcolor]="'var(--ion-color-primary)'"
         [bordercolor]="'var(--ion-color-primary)'"
         [shadow]="true" *ngIf="allWordsFilled()"></did-button>
     </ion-content>
