@@ -24,7 +24,7 @@ import { MyApp } from './app.component';
 import { ComponentsModule } from './components/components.module';
 
 import { DevPage } from './pages/devpage/devpage';
-import { AreaPage } from './pages/area/area';
+import { CountryPickerPage } from './pages/countrypicker/countrypicker';
 import { NoIdentityPage } from './pages/noidentity/noidentity';
 import { NewPasswordSetPage } from './pages/newpasswordset/newpasswordset';
 import { EditProfilePage } from './pages/editprofile/editprofile';
@@ -103,7 +103,7 @@ export function TranslateLoaderFactory() {
   declarations: [
     MyApp,
     DevPage,
-    AreaPage,
+    CountryPickerPage,
     BackupDIDPage,
     CredentialAccessRequestPage,
     CredentialListPage,

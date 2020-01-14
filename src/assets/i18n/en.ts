@@ -84,7 +84,7 @@ export const en = {
     'welcome-text-intro-3': 'First time?',
     'welcome-text-intro-4': 'Let\'s create a DID profile',
 
-    // screen: area
+    // screen: countrypicker
     'country': 'Country',
 
     // screen: password set

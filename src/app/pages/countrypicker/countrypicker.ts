@@ -5,11 +5,11 @@ import { Native } from '../../services/native';
 import { area } from '../../../assets/area/area';
 
 @Component({
-  selector: 'page-area',
-  templateUrl: 'area.html',
-  styleUrls: ['area.scss']
+  selector: 'page-countrypicker',
+  templateUrl: 'countrypicker.html',
+  styleUrls: ['countrypicker.scss']
 })
-export class AreaPage {
+export class CountryPickerPage {
   areaList: any;
   areaItem: any = null;
 

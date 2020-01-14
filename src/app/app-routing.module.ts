@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { NoPreloading, PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
-import { AreaPage } from './pages/area/area';
+import { CountryPickerPage } from './pages/countrypicker/countrypicker';
 import { NoIdentityPage } from './pages/noidentity/noidentity';
 import { NewPasswordSetPage } from './pages/newpasswordset/newpasswordset';
 import { EditProfilePage } from './pages/editprofile/editprofile';
@@ -23,7 +23,7 @@ import { SignRequestPage } from './pages/signrequest/signrequest';
 const routes: Routes = [
   // { path: '', redirectTo: '', pathMatch: 'full' }, // No default route, services will decide this by themselves.
   { path: 'devpage', component: DevPage },
-  { path: 'area', component: AreaPage },
+  { path: 'countrypicker', component: CountryPickerPage },
   { path: 'noidentity', component: NoIdentityPage },
   { path: 'newpasswordset', component: NewPasswordSetPage },
   { path: 'createidentity', component: EditProfilePage },
