@@ -98,14 +98,12 @@ export class DIDDocument {
         });
     }
 
-    getDefaultPublicKey(): Promise<string> {
+    getDefaultPublicKey(): Promise<DIDPlugin.Base58PublicKey> {
         return new Promise((resolve, reject)=>{
             this.pluginDidDocument.getDefaultPublicKey((publicKey: DIDPlugin.PublicKey)=>{
-                publicKey.getPublicKeyBase58((key: string)=>{
-                    resolve(key);
-                }, (err)=>{
-                    reject(err);
-                })
+                console.log(JSON.stringify(publicKey))
+                let base58Key = publicKey.getPublicKeyBase58();
+                resolve(base58Key);
             }, (err)=>{
                 reject(err);
             })

@@ -172,6 +172,10 @@ export class SimulatedDIDStore implements DIDPlugin.DIDStore {
     exportMnemonic(storepass: string, onSuccess: (mnemonic: string) => void, onError?: (err: any) => void) {
         simulated("exportMnemonic", "SimulatedDIDStore");
     }
+
+    changePassword(oldPassword: string, newPassword: string, onSuccess: () => void, onError?: (err: any) => void) {
+        simulated("changePassword", "SimulatedDIDStore");
+    }
 }
 
 export class SimulatedDID implements DIDPlugin.DID {
