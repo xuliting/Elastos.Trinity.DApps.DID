@@ -1,12 +1,11 @@
 import { Component, NgZone } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Events, NavController, IonInput, ModalController } from '@ionic/angular';
 
 import { Profile } from '../../model/profile.model';
 import { Native } from '../../services/native';
 import { Util } from '../../services/util';
 import { DIDService } from 'src/app/services/did.service';
-import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { WrongPasswordException } from 'src/app/model/exceptions/wrongpasswordexception.exception';
 import { PopupProvider } from 'src/app/services/popup';
@@ -26,11 +25,9 @@ import { DIDSyncService } from 'src/app/services/didsync.service';
 })
 export class EditProfilePage {
   public isEdit: boolean = false;
-  private paramsSubscription: Subscription;
-
   public profile: Profile;
 
-  constructor(public route: ActivatedRoute,
+  constructor(public router: Router,
               public zone: NgZone,
               public events: Events,
               public navCtrl: NavController,
@@ -42,29 +39,23 @@ export class EditProfilePage {
               private translate: TranslateService,
               private didSyncService: DIDSyncService,
               private native: Native) {
-    this.paramsSubscription = this.route.queryParams.subscribe((data) => {
-      console.log("Entering EditProfile page");
-
-      if (data['create'] == 'false') {
+    console.log("Entering EditProfile page");
+    const navigation = this.router.getCurrentNavigation();
+    if (!Util.isEmptyObject(navigation.extras.state) && (navigation.extras.state['create'] == false)) {
         console.log("Editing an existing profile");
 
         // Edition - We clone the received profile in case user wants to cancel editing.
         this.profile = Profile.fromProfile(this.didService.getActiveDid().getBasicProfile());
         this.isEdit = true;
-      }
-      else {
+    }
+    else {
         console.log("Editing a new profile");
 
         // Creation
         this.profile = Profile.createDefaultProfile();
-      }
-
-      // Unsubscribe to not receive params again when coming back from the "country selection" screen
-      // otherwise we would loose our UI state (text inputs).
-      this.paramsSubscription.unsubscribe();
-    });
+    }
   }
-  
+
   entryIsText(entry: BasicCredentialEntry): boolean {
     return entry.info.type == BasicCredentialInfoType.TEXT;
   }
@@ -88,7 +79,7 @@ export class EditProfilePage {
       });
       this.events.unsubscribe('selectarea');
     });
-    this.native.go("/area");
+    this.native.go('/countrypicker');
   }
 
   getDisplayableNation(countryAlpha3) {
@@ -130,7 +121,7 @@ export class EditProfilePage {
           // DID being created are NOT saved here.
           await this.native.showLoading('loading-msg');
           localDidDocumentHasChanged = await this.didService.getActiveDid().writeProfile(this.profile, AuthService.instance.getCurrentUserPassword())
-          
+
           this.native.hideLoading();
         }, ()=>{
           this.popupProvider.ionicAlert("DID error", "Sorry, we are unable to save your profile.");

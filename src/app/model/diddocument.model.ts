@@ -15,7 +15,7 @@ export class DIDDocument {
     }
 
     public addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
-        console.log("Adding credential with key "+credential.getId()+" into DIDDocument", credential);
+        console.log("Adding credential with key "+credential.getId()+" into DIDDocument", JSON.parse(JSON.stringify(credential)));
         return new Promise((resolve, reject)=>{
             this.pluginDidDocument.addCredential(
                 credential,
@@ -32,7 +32,7 @@ export class DIDDocument {
     }
 
     public deleteCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
-        console.log("Delete credential with key "+credential.getId()+" from the DIDDocument", credential);
+        console.log("Delete credential with key "+credential.getId()+" from the DIDDocument", JSON.parse(JSON.stringify(credential)));
         return new Promise((resolve, reject)=>{
             this.pluginDidDocument.deleteCredential(
                 credential,

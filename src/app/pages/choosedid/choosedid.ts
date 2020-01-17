@@ -1,13 +1,10 @@
 import { Component, NgZone } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Events, NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { Events } from '@ionic/angular';
 
-import { Config } from '../../services/config';
-import { Profile } from '../../model/profile.model';
+import { Util } from '../../services/util';
 import { Native } from '../../services/native';
 import { DIDEntry } from '../../model/didentry.model';
-import { Subscription } from 'rxjs';
-import { ChooseIdentityOptions } from 'src/app/services/auth.service';
 import { DIDService } from 'src/app/services/did.service';
 
 @Component({
@@ -17,22 +14,18 @@ import { DIDService } from 'src/app/services/did.service';
 })
 export class ChooseDIDPage {
   public didList: DIDEntry[];
-  private paramsSubscription: Subscription;
-  private redirectOptions: ChooseIdentityOptions = null;
+  private redirectOptions: any = null;
 
   constructor(private native: Native,
               public event: Events,
-              private activatedRoute: ActivatedRoute,
+              private router: Router,
               private didService: DIDService,
               public zone: NgZone) {
+    const navigation = this.router.getCurrentNavigation();
+    if (!Util.isEmptyObject(navigation.extras.state)) {
+      this.redirectOptions = navigation.extras.state;
+    }
 
-    this.paramsSubscription = this.activatedRoute.queryParams.subscribe((options: ChooseIdentityOptions) => {
-      this.redirectOptions = options;
-
-      // Unsubscribe to not receive params again if coming back from other screens.
-      this.paramsSubscription.unsubscribe();
-    });
-    
     this.init();
   }
 

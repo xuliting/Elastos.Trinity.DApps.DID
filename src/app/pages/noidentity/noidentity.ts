@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DrawerState } from 'ion-bottom-drawer';
 
@@ -31,17 +31,18 @@ export class NoIdentityPage {
     public password: string = "";
     public passwordConfirmation: string = "";
 
-    constructor(public route:ActivatedRoute, private native: Native, private didService: DIDService,
+    constructor(public router: Router, private native: Native, private didService: DIDService,
                 private modalCtrl: ModalController, private uxService: UXService,
                 private authService: AuthService, private advancedPopup: AdvancedPopupController, private translate: TranslateService) {
-    this.route.queryParams.subscribe((data) => {
-        if (!Util.isEmptyObject(data)) this.isfirst = false;
-    });
-  }
+        const navigation = this.router.getCurrentNavigation();
+        if (!Util.isEmptyObject(navigation.extras.state)) {
+            this.isfirst = false;
+        }
+    }
 
-  ionViewDidEnter() {
-    this.uxService.makeAppVisible();
-  }
+    ionViewDidEnter() {
+        this.uxService.makeAppVisible();
+    }
 
     async createIdentity() {
         this.didService.didBeingCreated = new NewDID();
@@ -73,10 +74,10 @@ export class NoIdentityPage {
             component: ImportDIDSourceComponent,
             componentProps: {
             },
-            cssClass:"create-password-modal"
+            cssClass: "create-password-modal"
         });
         modal.onDidDismiss().then((params) => {
-            console.log("params",params);
+            console.log("params", params);
 
             if (params && params.data) {
                 switch (params.data.source) {
@@ -95,10 +96,10 @@ export class NoIdentityPage {
     importFromMnemonic(mnemonic: string) {
         console.log('importIdentity');
         if (this.didService.getActiveDidStore() == null) {
-            this.native.go('/importdid', {mnemonic});
+            this.native.go('/importdid', { mnemonic });
         } else {
             this.advancedPopup.create({
-                color:'#FF4D4D',
+                color: '#FF4D4D',
                 info: {
                     picture: '/assets/images/Local_Data_Delete_Icon.svg',
                     title: this.translate.instant("deletion-popup-warning"),
@@ -108,8 +109,8 @@ export class NoIdentityPage {
                     title: this.translate.instant("import-did-popup-confirm-question"),
                     confirmAction: this.translate.instant("confirm"),
                     cancelAction: this.translate.instant("go-back"),
-                    confirmCallback: async ()=>{
-                        this.native.go('/importdid', {mnemonic});
+                    confirmCallback: async () => {
+                        this.native.go('/importdid', { mnemonic });
                     }
                 }
             }).show();
@@ -120,10 +121,10 @@ export class NoIdentityPage {
         console.log("send intent to wallet app to get mnemonic");
 
         // Ask the wallet app to return wallet mnemonics
-        appManager.sendIntent("elawalletmnemonicaccess", {}, {}, (response)=>{
+        appManager.sendIntent("elawalletmnemonicaccess", {}, {}, (response) => {
             console.log("Got mnemonic from the wallet app");
             this.importFromMnemonic(response.result.mnemonic);
-        }, (err)=>{
+        }, (err) => {
             console.error("Failed to get mnemonics from wallet app");
             this.native.toast("Failed to get mnemonics from the wallet app");
         });

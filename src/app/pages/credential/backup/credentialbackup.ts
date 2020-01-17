@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Native } from '../../../services/native';
+import { Util } from '../../../services/util';
 
 @Component({
   selector: 'page-credentialbackup',
@@ -11,14 +12,15 @@ import { Native } from '../../../services/native';
 export class CredentialBackupPage {
   public credentialString: any;
 
-  constructor(public route:ActivatedRoute, private native: Native) {
+  constructor(public router: Router, private native: Native) {
     this.init();
   }
 
   init() {
-    this.route.queryParams.subscribe((data) => {
-        this.credentialString = data["content"];
-    });
+    const navigation = this.router.getCurrentNavigation();
+    if (!Util.isEmptyObject(navigation.extras.state)) {
+        this.credentialString = navigation.extras.state["content"];
+    }
   }
 
   copyToClipboard() {

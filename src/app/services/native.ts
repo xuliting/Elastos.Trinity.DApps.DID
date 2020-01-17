@@ -63,20 +63,13 @@ export class Native {
       return this.clipboard.copy(text);
   }
 
+  // Sensitive data should not be passed through queryParams
   public go(page: any, options: any = {}) {
       console.log("NAV - Going to "+page);
       this.hideLoading();
       this.navCtrl.setDirection('forward');
-      this.router.navigate([page], { queryParams: options });
+      this.router.navigate([page], { state: options });
   }
-
-  // Sensitive data should not be passed through queryParams
-  public goWithState(page: any, options: any = {}) {
-    console.log("NAV - Going to "+page);
-    this.hideLoading();
-    this.navCtrl.setDirection('forward');
-    this.router.navigate([page], { state: options });
-}
 
   public pop() {
       this.navCtrl.pop();
@@ -86,7 +79,7 @@ export class Native {
     console.log("NAV - Setting root to "+page);
       this.hideLoading();
       this.navCtrl.setDirection('root');
-      this.router.navigate([page], { queryParams: options });
+      this.router.navigate([page], { state: options });
   }
 
   public getMnemonicLang(): number {

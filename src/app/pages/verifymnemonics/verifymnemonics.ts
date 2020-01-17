@@ -21,7 +21,7 @@ export class VerifyMnemonicsPage {
     selectedList: Array<string> = [];
     mnemonicStr: string;
 
-    constructor(public route: Router,
+    constructor(public router: Router,
                 public zone: NgZone,
                 private didService: DIDService,
                 private authService: AuthService,
@@ -30,11 +30,14 @@ export class VerifyMnemonicsPage {
     }
 
     init() {
-        this.mnemonicStr = this.native.clone(this.route.getCurrentNavigation().extras.state["mnemonicStr"]);
-        this.mnemonicList = this.mnemonicStr.split(" ").map((word)=>{
-            return {text: word, selected: false}
-        });
-        this.mnemonicList = this.mnemonicList.sort(function () { return 0.5 - Math.random() });
+        const navigation = this.router.getCurrentNavigation();
+        if (!Util.isEmptyObject(navigation.extras.state)) {
+            this.mnemonicStr = this.native.clone(navigation.extras.state["mnemonicStr"]);
+            this.mnemonicList = this.mnemonicStr.split(" ").map((word)=>{
+                return {text: word, selected: false}
+            });
+            this.mnemonicList = this.mnemonicList.sort(function () { return 0.5 - Math.random() });
+        }
     }
 
     public addButton(index: number, item: MnemonicWord): void {

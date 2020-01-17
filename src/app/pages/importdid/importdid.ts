@@ -1,5 +1,5 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { NavController, IonInput, ModalController } from '@ionic/angular';
 
 import { DIDService } from '../../services/did.service';
@@ -35,19 +35,17 @@ export class ImportDIDPage {
 
   @ViewChild('addMnemonicWordInput', { static:false }) addMnemonicWordInput: IonInput;
 
-  constructor(public activatedRoute: ActivatedRoute, public zone: NgZone, public navCtrl: NavController, private modalCtrl: ModalController, private native: Native, private didService: DIDService, private authService: AuthService, private popupProvider: PopupProvider) {
-    this.paramsSubscription = this.activatedRoute.queryParams.subscribe((data) => {
-        if (!Util.isEmptyObject(data) && !Util.isEmptyObject(data.mnemonic)) {
+  constructor(public router: Router, public zone: NgZone, public navCtrl: NavController, private modalCtrl: ModalController, private native: Native, private didService: DIDService, private authService: AuthService, private popupProvider: PopupProvider) {
+    const navigation = this.router.getCurrentNavigation();
+    if (!Util.isEmptyObject(navigation.extras.state)) {
+        if (!Util.isEmptyObject(navigation.extras.state.mnemonic)) {
             this.zone.run(() => {
-                this.mnemonicSentence = data.mnemonic;
+                this.mnemonicSentence = navigation.extras.state.mnemonic;
                 this.onMnemonicSentenceChanged();
                 this.readonly = true;
-
-                // Unsubscribe to not receive params again if coming back from other screens.
-                this.paramsSubscription.unsubscribe();
             });
         }
-      });
+      }
   }
 
   onMnemonicSentenceChanged() {
