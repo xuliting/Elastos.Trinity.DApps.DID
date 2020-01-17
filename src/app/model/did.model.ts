@@ -306,7 +306,6 @@ export class DID {
         console.log("Deleting credential from local model", this.credentials);
         let deletionIndex = this.credentials.findIndex((c)=> {
             let match = credentialDidUrl.matches(c.pluginVerifiableCredential.getId());
-            console.log(match)
             return match;
         });
         if (deletionIndex == -1) {
