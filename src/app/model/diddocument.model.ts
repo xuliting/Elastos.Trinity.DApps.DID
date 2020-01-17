@@ -93,7 +93,9 @@ export class DIDDocument {
         return new Promise((resolve, reject)=>{
             this.pluginDidDocument.publish(
                 storepass,
-                () => {resolve()}, (err) => {reject(err)},
+                () => {resolve()}, (err) => {
+                    reject(DIDHelper.reworkedDIDPluginException(err))
+                },
             );
         });
     }
