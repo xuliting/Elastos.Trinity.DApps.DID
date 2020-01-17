@@ -82,7 +82,7 @@ export class DID {
             try {
                 console.log("Asking DIDService to create the credential with id "+credentialId);
                 credential = await this.createPluginCredential(credentialId, types, 15, props, password);
-                console.log("Created credential:",credential);
+                console.log("Created credential:",JSON.parse(JSON.stringify(credential)));
             }
             catch (e) {
                 console.error("Create credential exception", e);
@@ -113,7 +113,7 @@ export class DID {
             return credentialId.matches(c.pluginVerifiableCredential.getId());
         });
     }
-  
+
     /**
      * Based on some predefined basic credentials (name, email...) we build a Profile structure
      * to ease profile editing on UI.
@@ -158,7 +158,7 @@ export class DID {
     /**
      * Overwrites profile info using a new profile. Each field info is updated
      * into its respective credential.
-     * 
+     *
      * Returns true if local did document has been modified, false otherwise.
      */
     public writeProfile(newProfile: Profile, password: string): Promise<boolean> {
@@ -207,13 +207,13 @@ export class DID {
                 }
 
                 try {
-                    // Update the DID Document in case it contains the credential. Then we will have to 
+                    // Update the DID Document in case it contains the credential. Then we will have to
                     // ask user if he wants to publish a new version of his did document on chain.
                     let currentDidDocument = this.getDIDDocument();
                     if (currentDidDocument) {
                         let documentCredential = currentDidDocument.getCredentialById(credentialId);
                         if (documentCredential) {
-                            // User's did document contains this credential being modified, so we updated the 
+                            // User's did document contains this credential being modified, so we updated the
                             // document.
                             console.log("Updating local DID document");
                             await currentDidDocument.updateCredential(documentCredential, password);
@@ -235,7 +235,7 @@ export class DID {
                     console.log("New credentials list:", JSON.parse(JSON.stringify(this.credentials)));
 
                     if (entry.info.key == "name") {
-                        // Rebuild DID list UI entries based in case the "special" profile field "name" 
+                        // Rebuild DID list UI entries based in case the "special" profile field "name"
                         // is modified.
                         DIDEvents.instance.events.publish("did:namechanged");
                     }
@@ -299,7 +299,7 @@ export class DID {
 
     public async deleteCredential(credentialDidUrl: DIDURL): Promise<boolean> {
         console.log("Asking DIDService to delete the credential "+credentialDidUrl);
-        
+
         await this.deletePluginCredential(credentialDidUrl);
 
         // Delete from our local model as well
@@ -317,7 +317,7 @@ export class DID {
 
         return true;
     }
- 
+
     private deletePluginCredential(didUrlString: DIDURL): Promise<any> {
         if (BrowserSimulation.runningInBrowser()) {//for test
             return new Promise((resolve, reject)=>{
@@ -337,7 +337,7 @@ export class DID {
     }
 
     private addPluginCredential(credential: DIDPlugin.VerifiableCredential): Promise<void> {
-        console.log("DIDService - storeCredential", this.getDIDString(), credential);
+        console.log("DIDService - storeCredential", this.getDIDString(), JSON.parse(JSON.stringify(credential)));
         return new Promise(async (resolve, reject)=>{
             console.log("DIDService - Calling real storeCredential");
             this.pluginDid.addCredential(

@@ -52,7 +52,7 @@ export class BackupDIDPage {
   nextClicked() {
     if (this.isCreation) {
       // Next button pressed: go to mnemonic verification screen.
-      this.native.go("/verifymnemonics", { mnemonicStr: this.didService.didBeingCreated.mnemonic});
+      this.native.goWithState("/verifymnemonics", { mnemonicStr: this.didService.didBeingCreated.mnemonic});
     }
     else {
       // TODO

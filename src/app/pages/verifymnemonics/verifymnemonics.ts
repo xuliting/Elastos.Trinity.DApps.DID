@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Native } from '../../services/native';
 import { Util } from '../../services/util';
@@ -21,7 +21,7 @@ export class VerifyMnemonicsPage {
     selectedList: Array<string> = [];
     mnemonicStr: string;
 
-    constructor(public route: ActivatedRoute,
+    constructor(public route: Router,
                 public zone: NgZone,
                 private didService: DIDService,
                 private authService: AuthService,
@@ -30,13 +30,11 @@ export class VerifyMnemonicsPage {
     }
 
     init() {
-        this.route.queryParams.subscribe((data) => {
-            this.mnemonicStr = this.native.clone(data["mnemonicStr"]);
-            this.mnemonicList = this.mnemonicStr.split(" ").map((word)=>{
-                return {text: word, selected: false}
-            });
-            this.mnemonicList = this.mnemonicList.sort(function () { return 0.5 - Math.random() });
+        this.mnemonicStr = this.native.clone(this.route.getCurrentNavigation().extras.state["mnemonicStr"]);
+        this.mnemonicList = this.mnemonicStr.split(" ").map((word)=>{
+            return {text: word, selected: false}
         });
+        this.mnemonicList = this.mnemonicList.sort(function () { return 0.5 - Math.random() });
     }
 
     public addButton(index: number, item: MnemonicWord): void {
@@ -71,7 +69,7 @@ export class VerifyMnemonicsPage {
     }
 
     allWordsMatch() {
-        //return true;// for test
+        // return true;// for test
         let selectComplete = this.selectedList.length === this.mnemonicList.length ? true : false;
         if (selectComplete) {
             let mn = "";

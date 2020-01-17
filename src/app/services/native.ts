@@ -70,6 +70,14 @@ export class Native {
       this.router.navigate([page], { queryParams: options });
   }
 
+  // Sensitive data should not be passed through queryParams
+  public goWithState(page: any, options: any = {}) {
+    console.log("NAV - Going to "+page);
+    this.hideLoading();
+    this.navCtrl.setDirection('forward');
+    this.router.navigate([page], { state: options });
+}
+
   public pop() {
       this.navCtrl.pop();
   }
