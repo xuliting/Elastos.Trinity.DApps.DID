@@ -43,7 +43,7 @@ export class CredentialAccessRequestPage {
               private appServices: UXService) {
   }
 
-  ionViewWillEnter() {    
+  ionViewWillEnter() {
     this.zone.run(() => {
       this.profile = this.didService.getActiveDidStore().getActiveDid().getBasicProfile();
       this.credentials = this.didService.getActiveDidStore().getActiveDid().credentials;
@@ -84,7 +84,7 @@ export class CredentialAccessRequestPage {
   }
 
   /**
-   * From the raw list of claims requested by the caller, we create our internal model 
+   * From the raw list of claims requested by the caller, we create our internal model
    * ready for UI.
    */
   organizeRequestedClaims() {
@@ -94,11 +94,11 @@ export class CredentialAccessRequestPage {
     // Split into mandatory and optional items
     for (let key of Object.keys(this.requestDapp.requestProfile)) {
       let claim = this.requestDapp.requestProfile[key];
-      
+
       let claimIsRequired = this.claimIsRequired(claim);
-      
+
       // TODO: For now we consider that 1 claim = 1 credential = 1 info inside. In the future we may
-      // have several info inside one credential, so even if the caller requests only one field from such 
+      // have several info inside one credential, so even if the caller requests only one field from such
       // credential we will have to display the WHOLE fields inside the credential on this credacess screen
       // so that users know which infos are really going to be shared (credentials can't be split).
 
@@ -113,7 +113,7 @@ export class CredentialAccessRequestPage {
         credentialValue = this.getBasicProfileCredentialValue(relatedCredential.pluginVerifiableCredential)
 
       // Don't display optional items that user doesn't have.
-      if (!relatedCredential && !claimIsRequired) 
+      if (!relatedCredential && !claimIsRequired)
         continue;
 
       let claimRequest: ClaimRequest = {
@@ -129,7 +129,7 @@ export class CredentialAccessRequestPage {
         this.mandatoryItems.push(claimRequest);
 
         // If at least one mandatory item is missing, we cannot complete the intent request.
-        if (relatedCredential == null) 
+        if (relatedCredential == null)
           this.canDeliver = false;
       }
       else
@@ -153,7 +153,7 @@ export class CredentialAccessRequestPage {
   /**
    * NOTE: For now we assume that the credential name (fragment) is the same as the requested claim value.
    * But this may not be tue in the future: we would have to search inside credential properties one by one.
-   * 
+   *
    * key format: "my-key" (credential fragment)
    */
   findCredential(key: string): VerifiableCredential {
@@ -187,7 +187,7 @@ export class CredentialAccessRequestPage {
     if (claimValue instanceof Object) {
       return claimValue.reason || null;
     }
-    
+
     return null;
   }
 
@@ -213,7 +213,7 @@ export class CredentialAccessRequestPage {
         selectedCredentials.push(item.credential);
     }
 
-    console.log(selectedCredentials);
+    console.log(JSON.parse(JSON.stringify(selectedCredentials)));
 
     return selectedCredentials;
   }
@@ -225,7 +225,7 @@ export class CredentialAccessRequestPage {
     AuthService.instance.checkPasswordThenExecute(async ()=>{
       let presentation = null;
       let currentDidString: string = this.didService.getActiveDid().getDIDString();
-      presentation = await this.didService.getActiveDid().createVerifiablePresentationFromCredentials(selectedCredentials, this.authService.getCurrentUserPassword());  
+      presentation = await this.didService.getActiveDid().createVerifiablePresentationFromCredentials(selectedCredentials, this.authService.getCurrentUserPassword());
       console.log("Created presentation:", presentation);
 
       console.log("Sending credaccess intent response for intent id "+this.requestDapp.intentId)
