@@ -29,6 +29,10 @@ export class DIDURL {
      * Converts did:elastos:abced#key into #key
      */
     public shortForm() {
+        // return didUrlString if starts with #
+        if (this.didUrlString.indexOf("#") == 0)
+            return this.didUrlString;
+
         return new URL(this.didUrlString).hash;
     }
 
