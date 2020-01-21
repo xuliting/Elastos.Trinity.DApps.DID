@@ -104,6 +104,7 @@ export const en = {
     'publish-popup-title': 'Publish Your Selected Visibility',
     'publish-popup-content': 'Information will be stored on the blockchain when you confirm and will stay there!',
     'publish-popup-confirm-question': 'Are you sure?',
+    'changepassword-success': 'Password changed successfully',
 
     // screen: edit profile
     'edit-profile': 'Edit profile',
@@ -150,6 +151,7 @@ export const en = {
     // component: createpassword
     'createpassword-intro': 'Let\'s get started with setting a password.',
     'passwords-dont-match': 'Passwords don\'t match.',
+    'changepassword-info' : 'Change password',
 
     // component: security check
     'security-check': 'Security check! Please type your app password',

@@ -30,7 +30,7 @@ export class AuthService {
      */
     needToPromptPassword(didStore: DIDStore): boolean {
         if (didStore.getId() == this.savedPasswordRelatedDIDStoreId && this.savedPassword != null) {
-            // We already know the password for current 
+            // We already know the password for current
             return false;
         }
 
@@ -87,13 +87,14 @@ export class AuthService {
         })
     }
 
-    public promptNewPassword(): Promise<string> {
+    public promptNewPassword(changePassword = false): Promise<string> {
         console.log("Asking for new user password ");
 
         return new Promise(async (resolve, reject)=>{
             const modal = await this.modalCtrl.create({
                 component: CreatePasswordComponent,
                 componentProps: {
+                    changePassword: changePassword
                 },
                 cssClass:"create-password-modal"
             });
@@ -140,7 +141,7 @@ export class AuthService {
                 passwordProvided = await this.promptPasswordInContext(this.didService.getActiveDidStore(), previousPasswordWasWrong);
                 // Password will be saved by the auth service.
             }
-        
+
             if (passwordProvided) {
                 writeActionCb().then(()=>{
                     resolve();

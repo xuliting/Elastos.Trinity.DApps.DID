@@ -104,6 +104,7 @@ export const fr = {
     'publish-popup-title': 'Publier Le Profil Public',
     'publish-popup-content': 'Les informations seront stockées sur la blockchain et resteront toujours visibles!',
     'publish-popup-confirm-question': 'Etes-vous sûr(e)?',
+    'changepassword-success': 'Le mot de passe a été modifié avec succès',
 
     // screen: edit profile
     'edit-profile': 'Editer le profil',
@@ -150,6 +151,7 @@ export const fr = {
     // component: createpassword
     'createpassword-intro': 'Commençons par définir un mot de passe.',
     'passwords-dont-match': 'Les mots de passe ne correspondent pas.',
+    'changepassword-info' : 'Changer le mot de passe',
 
     // component: security check
     'security-check': 'Veuillez saisir le mot de passe de l\'application',

@@ -104,6 +104,7 @@ export const zh = {
     'publish-popup-title': '发布您选择的公开档案',
     'publish-popup-content': '确认后信息将存储并保存在区块链上!',
     'publish-popup-confirm-question': '确定?',
+    'changepassword-success': '密码已成功修改',
 
     // screen: edit profile
     'edit-profile': '编辑信息',
@@ -150,6 +151,7 @@ export const zh = {
     // component: createpassword
     'createpassword-intro': '设置密码',
     'passwords-dont-match': '两次输入的密码不一致',
+    'changepassword-info' : '修改密码',
 
     // component: security check
     'security-check': '安全确认! Please type your app password',
@@ -169,7 +171,7 @@ export const zh = {
     // component: emptyimporteddocument
     'emptyimporteddocument-intro': 'We couldn\'t find any existing information to restore your profile. What would you like to do?',
     'create-an-empty-profile': 'Create an empty profile',
-    
+
     // loading
     'loading-msg': '加载中，请稍候',
 

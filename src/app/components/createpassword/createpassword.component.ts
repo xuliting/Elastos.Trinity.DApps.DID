@@ -13,12 +13,15 @@ export class CreatePasswordComponent implements OnInit {
 
   public password: string = "";
   public passwordConfirmation: string = "";
+  public changePassword: true;
+  public title = 'createpassword-intro';
 
-  constructor(public modalCtrl: ModalController, 
-              public native: Native) { 
+  constructor(public modalCtrl: ModalController,
+              public native: Native) {
   }
 
   ngOnInit() {
+      if (this.changePassword) this.title = 'changepassword-info';
   }
 
   ionViewDidEnter() {

@@ -17,7 +17,7 @@
                 <div class="name" *ngIf="profile">{{profile.getName()}}</div>
               </ion-col>
             </ion-row>
-            
+
             <ion-row>
               <ion-col>
                 <div class="actions">
@@ -26,7 +26,7 @@
                   <rounded-action-button title="edit-profile" image='assets/images/Edit_Simple_Icon.svg' (click)="editProfile()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
                   <rounded-action-button title="edit-visibility" image="assets/images/Visibility_Tick_Simple_Icon.svg" (click)="editVisibility()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
                   <!--<rounded-action-button title="backup" image='assets/images/Backup_Simple_Icon.svg' color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>-->
-                  <!--<rounded-action-button title="password" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>-->
+                  <rounded-action-button title="password" image="assets/images/Password_Simple_Icon.svg" (click)="changePassword()" color="var(--action-color)" imgcolor="#FFFFFF"></rounded-action-button>
                   <rounded-action-button title="delete-did" image="assets/images/Delete_Warning_Simple_Icon.svg" (click)="deleteDID()" color="#FF4D4D" imgcolor="#FFFFFF"></rounded-action-button>
                 </div>
               </ion-col>
@@ -64,10 +64,10 @@
 
             <ion-row [ngStyle]="{'visibility':(editingVisibility?'visible':'hidden')}">
               <ion-col class="ion-text-center">
-                  <did-button class="publish-button" (click)="publishVisibilityChanges()" 
-                    [title]="'publish-changes' | translate" 
+                  <did-button class="publish-button" (click)="publishVisibilityChanges()"
+                    [title]="'publish-changes' | translate"
                     [textcolor]="'#FFFFFF'"
-                    [bgcolor]="'var(--ion-color-primary)'" 
+                    [bgcolor]="'var(--ion-color-primary)'"
                     [bordercolor]="'var(--ion-color-primary)'"
                     [shadow]="true"></did-button>
               </ion-col>
@@ -75,7 +75,7 @@
           </ion-grid>
         </div>
       </div>
-    </ion-grid>     
+    </ion-grid>
   </ion-content>
 </div>
 

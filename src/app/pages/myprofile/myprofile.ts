@@ -1,21 +1,20 @@
 import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Events, ModalController } from '@ionic/angular';
-
-import { UXService } from '../../services/ux.service';
-import { Profile } from '../../model/profile.model';
-import { Native } from '../../services/native';
 import { TranslateService } from '@ngx-translate/core';
-import { ShowQRCodeComponent } from 'src/app/components/showqrcode/showqrcode.component';
-import { PopupProvider } from 'src/app/services/popup';
+
 import { AdvancedPopupController } from 'src/app/components/advanced-popup/advancedpopup.controller';
+import { ShowQRCodeComponent } from 'src/app/components/showqrcode/showqrcode.component';
+import { Profile } from '../../model/profile.model';
+import { DIDDocument } from 'src/app/model/diddocument.model';
+import { DIDURL } from 'src/app/model/didurl.model';
+import { DIDPublicationStatusEvent } from 'src/app/model/eventtypes.model';
+import { DIDHelper } from '../../helpers/did.helper';
+import { UXService } from '../../services/ux.service';
+import { Native } from '../../services/native';
 import { DIDService } from 'src/app/services/did.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DIDSyncService } from 'src/app/services/didsync.service';
-import { DIDPublicationStatusEvent } from 'src/app/model/eventtypes.model';
-import { DIDDocument } from 'src/app/model/diddocument.model';
-import { currentId } from 'async_hooks';
-import { DIDURL } from 'src/app/model/didurl.model';
 
 type ProfileDisplayEntry = {
   credentialId: string, // related credential id
@@ -42,7 +41,7 @@ export class MyProfilePage {
               public route:ActivatedRoute,
               public zone: NgZone,
               private advancedPopup: AdvancedPopupController,
-              private popupProvider: PopupProvider,
+              private authService: AuthService,
               private translate: TranslateService,
               private didService: DIDService,
               private didSyncService: DIDSyncService,
@@ -123,14 +122,14 @@ export class MyProfilePage {
 
   /**
    * Tells if a given profile key is currently visible on chain or not (inside the DID document or not).
-   * 
+   *
    * @param profileKey Credential key.
    */
   profileEntryIsVisibleOnChain(profileKey: string): boolean {
     let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
     if (!currentDidDocument)
       return false;
-      
+
     let credential = currentDidDocument.getCredentialById(new DIDURL("#"+profileKey));
     return credential != null;
   }
@@ -172,6 +171,40 @@ export class MyProfilePage {
    */
   editVisibility() {
     this.editingVisibility = !this.editingVisibility;
+  }
+
+  /**
+   * Change DIDStore password.
+   */
+  changePassword() {
+    let newStorePassword = '';
+    AuthService.instance.checkPasswordThenExecute(async ()=>{
+        let oldPassword = AuthService.instance.getCurrentUserPassword();
+
+        // Exit visibility edition
+        this.editingVisibility = false;
+
+        // set new password
+        if (newStorePassword === '') {
+            newStorePassword = await this.authService.promptNewPassword(true);
+            if (newStorePassword === null) {
+                return; // User cancel
+            }
+        }
+
+        // change password
+        await this.didService.getActiveDidStore().changePassword(oldPassword, newStorePassword).then(() => {
+            this.native.toast_trans('changepassword-success');
+        })
+        .catch ((error) => {
+            throw DIDHelper.reworkedDIDPluginException(error);
+        });
+      }, ()=>{
+        // Error - TODO feedback
+      }, ()=>{
+        // Password failed
+      },
+      true);
   }
 
   /**
@@ -253,7 +286,7 @@ export class MyProfilePage {
   private async updateDIDDocumentFromSelection(password: string) {
     let changeCount = 0;
     let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
-    
+
     for (let displayEntry of this.visibleData) {
       await this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
       changeCount++;
@@ -274,7 +307,7 @@ export class MyProfilePage {
     console.log("Updating document selection from entry ", currentDidDocument, displayEntry);
     let relatedCredential = this.didService.getActiveDid().getCredentialById(new DIDURL(displayEntry.credentialId));
     console.log("Related credential: ", relatedCredential);
-    
+
     let existingCredential = await currentDidDocument.getCredentialById(new DIDURL(relatedCredential.pluginVerifiableCredential.getId()));
     if (!existingCredential && displayEntry.willingToBePubliclyVisible) {
       // Credential doesn't exist in the did document yet but user wants to add it? Then add it.

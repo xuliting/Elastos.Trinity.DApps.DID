@@ -362,4 +362,14 @@ export class DIDStore {
             );
         });
     }
+
+    changePassword(oldPassword, newPassword): Promise<void> {
+        return new Promise((resolve, reject)=>{
+            this.pluginDidStore.changePassword(
+                oldPassword, newPassword,
+                () => {resolve()}, (err) => {reject(err)},
+            );
+        });
+    }
+
 }
