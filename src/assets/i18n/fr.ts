@@ -124,6 +124,11 @@ export const fr = {
     'optional-data-access': 'Informations optionnelles',
     'credaccess-information-missing': 'Au moins une information requise est manquante dans votre profil. Veuillez compléter votre profil et réessayer.',
 
+    // screen: credissue
+    'credential-import': 'Import de Référence',
+    'credential-import-from': 'Délivré par',
+    'credissue-intro': 'Vous allez ajouter une ou plusieurs information(s) délivrée(s) par un tiers à votre profil DID. Veuillez en vérifier le contenu.',
+
     // screen: did credentials
     'did-credentials': 'Références DID',
     'no-credential-yet': 'Il semblerait qu\il n\'y ait aucune référence pour l\'instant.',

@@ -124,6 +124,11 @@ export const en = {
     'optional-data-access': 'Optional Data Access',
     'credaccess-information-missing': 'At least one mandatory information is missing from your profile. Please complete your profile first and try again.',
 
+    // screen: credissue
+    'credential-import': 'Import Credential',
+    'credential-import-from': 'Delivered by',
+    'credissue-intro': 'You are about to add one or more credentials issued by a third party to your DID profile. Please carefully review the content.',
+
     // screen: did credentials
     'did-credentials': 'DID Credentials',
     'no-credential-yet': 'Seems like there is no credential yet.',

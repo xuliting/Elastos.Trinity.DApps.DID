@@ -205,6 +205,20 @@ export class UXService {
                     this.showErrorAndExitFromIntent(intent);
                 }
                 break;
+            case "credissue":
+                console.log("Received credential issue intent request");
+                if (selfUxService.checkCredIssueIntentParams(intent)) {
+                    this.appIsLaunchingFromIntent = true;
+
+                    // Don't choose a DID manually here, the credissue screen automatically finds this
+                    // for the target DID.
+                    this.native.go("/credissuerequest");
+                }
+                else {
+                    // Something wrong happened while trying to handle the intent: send intent response with error
+                    this.showErrorAndExitFromIntent(intent);
+                }
+                break;
             case "registerapplicationprofile":
                 console.log("Received register application profile intent request");
                 if (selfUxService.checkRegAppProfileIntentParams(intent)) {
@@ -270,6 +284,22 @@ export class UXService {
             intentId: intent.intentId,
             action: intent.action,
             requestProfile: intent.params.claims
+        }
+        return true;
+    }
+
+    checkCredIssueIntentParams(intent) {
+        console.log("Checking credissue intent parameters");
+        if (Util.isEmptyObject(intent.params) || Util.isEmptyObject(intent.params.issuedcredentials)) {
+            console.error("Invalid credissue parameters received. No params or empty credentials list.", intent.params);
+            return false;
+        }
+
+        Config.requestDapp = {
+            appPackageId: intent.from,
+            intentId: intent.intentId,
+            action: intent.action,
+            issuedCredentials: intent.params.issuedcredentials
         }
         return true;
     }

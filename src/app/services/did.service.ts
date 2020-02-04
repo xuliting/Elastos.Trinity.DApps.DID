@@ -236,6 +236,19 @@ export class DIDService {
     }
 
     /**
+     * Look for the given did string in the did entries
+     */
+    public async searchDIDEntry(didString: DIDPlugin.DIDString): Promise<DIDEntry> {
+      let entries = await this.localStorage.getDidEntries();
+      if (!entries)
+        return null;
+
+      return entries.find((e)=>{
+        e.didString == didString;
+      });
+    }
+
+    /**
      * Used after importing a DID store from chain in order to update our local storage list of DIDs.
      */
     public async rebuildDidEntries() {
@@ -331,8 +344,9 @@ export class DIDService {
      * always displaying credential keys to user, and instead, show him something nicer.
      */
     getUserFriendlyBasicProfileKeyName(key: string): string {
-      let translated = this.translate.instant("credential-info-type-"+key);
-      if (!translated || translated == "")
+      let translationKey = "credential-info-type-"+key;
+      let translated = this.translate.instant(translationKey);
+      if (!translated || translated == "" || translated == translationKey)
         return key;
 
       return translated;

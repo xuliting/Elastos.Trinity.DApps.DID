@@ -51,6 +51,7 @@ import { ProfileEntryPickerPage } from './pages/profileentrypicker/profileentryp
 
 import * as Sentry from "@sentry/browser";
 import { SignRequestPage } from './pages/signrequest/signrequest';
+import { CredentialIssueRequestPage } from './pages/credentialissuerequest/credentialissuerequest';
 
 Sentry.init({
   dsn: "https://f563821bdc2546c3bf7357c997a78059@sentry.io/1874652"
@@ -106,6 +107,7 @@ export function TranslateLoaderFactory() {
     CountryPickerPage,
     BackupDIDPage,
     CredentialAccessRequestPage,
+    CredentialIssueRequestPage,
     CredentialListPage,
     CredentialCreatePage,
     CredentialBackupPage,

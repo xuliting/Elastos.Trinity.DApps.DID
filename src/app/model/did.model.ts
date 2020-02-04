@@ -90,19 +90,24 @@ export class DID {
                 return;
             }
 
-            console.log("Asking DIDService to store the credential");
-            await this.addPluginCredential(credential);
-
-            console.log("Credential successfully added");
-
-            // Add the new credential to the memory model
-            this.credentials.push(new VerifiableCredential(credential));
-
-            // Notify listeners that a credential has been added
-            this.events.publish('did:credentialadded');
+            let vc = new VerifiableCredential(credential);
+            await this.addRawCredential(vc);
 
             resolve(credential);
         });
+    }
+
+    async addRawCredential(vc: VerifiableCredential) {
+        console.log("Asking DIDService to store the credential", vc);
+        await this.addPluginCredential(vc.pluginVerifiableCredential);
+
+        console.log("Credential successfully added");
+
+        // Add the new credential to the memory model
+        this.credentials.push(vc);
+
+        // Notify listeners that a credential has been added
+        this.events.publish('did:credentialadded');
     }
 
     getCredentialById(credentialId: DIDURL): VerifiableCredential {

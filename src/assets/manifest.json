@@ -43,6 +43,9 @@
       "action": "credaccess"
     },
     {
+      "action": "credissue"
+    },
+    {
       "action": "registerapplicationprofile"
     },
     {

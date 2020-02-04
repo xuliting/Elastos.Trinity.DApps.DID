@@ -124,6 +124,11 @@ export const zh = {
     'optional-data-access': '可选数据',
     'credaccess-information-missing': '您的个人资料中至少缺少一项必填信息。请先完成您的个人资料，然后重试。',
 
+    // screen: credissue
+    'credential-import': 'Import Credential',
+    'credential-import-from': 'Delivered by',
+    'credissue-intro': 'You are about to add one or more credentials issued by a third party to your DID profile. Please carefully review the content.',
+    
     // screen: did credentials
     'did-credentials': 'DID凭证',
     'no-credential-yet': '没有任何凭证',
