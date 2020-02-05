@@ -13,9 +13,6 @@ import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
 
 declare let didManager: DIDPlugin.DIDManager;
 
-// TODO: Show an error in case there is no credential provided.
-// TODO: Don't prompt user to choose a DID before coming here, we should automatically select it based on the DID targeted by the issuance, or show an error if no matching DID is found
-    // TODO (?): Check that the issued credential DIDs match the user DID.
 // TODO: Verify and show clear errors in case data is missing in credentials (expiration date, issuer, etc).
 // TODO: Resolve issuer's DID and try to display more user friendly information about the issuer
 // TODO: check if the credentials have not already been imported to avoid duplicates? (or update them if something has changed)

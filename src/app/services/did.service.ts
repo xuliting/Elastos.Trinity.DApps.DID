@@ -244,7 +244,7 @@ export class DIDService {
         return null;
 
       return entries.find((e)=>{
-        e.didString == didString;
+        return (e.didString == didString);
       });
     }
 
