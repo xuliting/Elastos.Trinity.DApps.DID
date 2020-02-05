@@ -8,6 +8,7 @@
   "description": "Manage your decentralized identity, choose personal information to share with others, using this DID DApp.",
   "start_url": "index.html",
   "type": "app",
+  "start_visible": "hide",
   "category": "communication",
   "icons": [
     {
@@ -31,7 +32,6 @@
     "Clipboard",
     "Device",
     "DIDPlugin",
-    "SplashScreen",
     "NetworkStatus",
     "File"
   ],
@@ -54,6 +54,5 @@
   ],
   "background_color": "#4e8ef7",
   "theme_display": "show",
-  "theme_color": "#4e8ef7",
-  "start_visible":"show"
+  "theme_color": "#4e8ef7"
 }
