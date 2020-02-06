@@ -154,7 +154,7 @@ export class EditProfilePage {
             await this.native.showLoading('loading-msg');
 
             // Creation mode but no need to create a did store
-            await this.didService.finalizeDidCreation();
+            await this.didService.finalizeDidCreation(this.authService.getCurrentUserPassword());
 
             this.native.hideLoading();
             this.native.go("/home/myprofile");

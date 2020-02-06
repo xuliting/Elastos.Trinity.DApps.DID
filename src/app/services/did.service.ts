@@ -202,8 +202,14 @@ export class DIDService {
     /**
      * Called at the end of the DID creation process to finalize a few things.
      */
-    public async finalizeDidCreation() {
+    public async finalizeDidCreation(storePass: string) {
       console.log("Finalizing DID creation");
+
+      // First, synchronize with chain to make sure we don't mess up with DID indexes. The DID SDK has to 
+      // create the new DID at the right location.
+      console.log("Synchronizing DID store before adding the new DID");
+      await this.getActiveDidStore().synchronize(storePass);
+      console.log("Synchronization completed");
 
       let createdDidString = await this.getActiveDidStore().addNewDidWithProfile(this.didBeingCreated);
       let name = this.didBeingCreated.profile.getEntryByKey("name").value;

@@ -60,7 +60,7 @@ export class VerifyMnemonicsPage {
         // Create a new identity, without any mnemonic passphrase, only a did store password.
         await this.didService.getActiveDidStore().createPrivateIdentity(null, this.didService.didBeingCreated.password, this.native.getMnemonicLang(), this.mnemonicStr);
         this.native.showLoading('loading-msg').then(() => {
-            this.didService.finalizeDidCreation().then(()=> {
+            this.didService.finalizeDidCreation(this.didService.didBeingCreated.password).then(()=> {
                 this.native.hideLoading();
                 // Save password for later use
                 this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), this.didService.didBeingCreated.password);
