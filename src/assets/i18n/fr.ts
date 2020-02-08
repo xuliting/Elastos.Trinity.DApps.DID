@@ -38,6 +38,10 @@ export const fr = {
     'text-pwd-validator': '8 symboles ou plus',
     'password-set': 'Mot de passe Défini!',
     'password': 'Password',
+    'activate-fingerprint-popup-title': 'Authentification par empreinte',
+    'activate-fingerprint-popup-content': 'Souhaitez-vous activer l\'authentificaiton par empreinte? Le mot de passe que vous venez de saisir sera utilisé.',
+    'activate-fingerprint-popup-confirm-question': 'Activer?',
+    'activate-fingerprint-activate': 'Activer',
 
     // Generic items
     'profile': 'Profil',
@@ -160,6 +164,9 @@ export const fr = {
 
     // component: security check
     'security-check': 'Veuillez saisir le mot de passe de l\'application',
+    'security-check-fingerprint': 'Veuillez vous authentifier',
+    'wrong-password': 'Mot de passe erroné, veuillez réessayer.',
+    'use-fingerprint-authentication': 'Auth. par empreinte',
 
     // component: importdidsource
     'importdidsource-intro': 'Comment voulez-vous importer votre DID?',

@@ -6,6 +6,7 @@ import { Util } from '../../services/util';
 import { Native } from '../../services/native';
 import { DIDEntry } from '../../model/didentry.model';
 import { DIDService } from 'src/app/services/did.service';
+import { UXService } from 'src/app/services/ux.service';
 
 @Component({
   selector: 'page-choosedid',
@@ -20,7 +21,8 @@ export class ChooseDIDPage {
               public event: Events,
               private router: Router,
               private didService: DIDService,
-              public zone: NgZone) {
+              public zone: NgZone,
+              private uxService: UXService) {
     const navigation = this.router.getCurrentNavigation();
     if (!Util.isEmptyObject(navigation.extras.state)) {
       this.redirectOptions = navigation.extras.state;
@@ -31,6 +33,10 @@ export class ChooseDIDPage {
 
   async init() {
     this.refreshStoreList();
+  }
+
+  ionViewDidEnter() {
+    this.uxService.makeAppVisible();
   }
 
   async refreshStoreList() {

@@ -10,6 +10,9 @@ import { DIDService } from './did.service';
 import { DIDStore } from '../model/didstore.model';
 import { WrongPasswordException } from '../model/exceptions/wrongpasswordexception.exception';
 import { MnemonicPassCheckComponent } from '../components/mnemonicpasscheck/mnemonicpasscheck.component';
+import { LocalStorage } from './localstorage';
+
+declare let fingerprintManager: FingerprintPlugin.FingerprintManager;
 
 @Injectable({
     providedIn: 'root'
@@ -21,7 +24,7 @@ export class AuthService {
     private savedPasswordRelatedDIDStoreId: string = null; // Store ID for which the user password was provided.
     private mnemonicPassphrase: string = null; // Temporary passphrase storage while importing fro mmnemonic with passphrase
 
-    constructor(public modalCtrl: ModalController, private native: Native, private didService: DIDService) {
+    constructor(public modalCtrl: ModalController, private native: Native, private didService: DIDService, private storage: LocalStorage) {
         AuthService.instance = this;
     }
 
@@ -132,12 +135,17 @@ export class AuthService {
         })
     }
 
-    public async checkPasswordThenExecute(writeActionCb: ()=>Promise<void>, onError: ()=>void, wrongPasswordCb: ()=>void, forcePasswordPrompt: boolean = false) {
+    public async checkPasswordThenExecute(writeActionCb: ()=>Promise<void>, onError: ()=>void, wrongPasswordCb: ()=>void, forcePasswordPrompt: boolean = false, previousPasswordWasWrong: boolean = false) {
         return new Promise(async (resolve, reject)=>{
+            if (previousPasswordWasWrong) {
+                // In case a typed password (or retrieved from fingerprint) was wrong, we deactivate fingeprint (if activated), to make sure user
+                // tries to type his password again and not use the saved one.
+                await this.deactivateFingerprintAuthentication(this.didService.getCurDidStoreId());
+            }
+
             // A write operation requires password. Make sure we have this in memory, or prompt user.
             let passwordProvided: boolean = true;
             if (forcePasswordPrompt || this.needToPromptPassword(this.didService.getActiveDidStore())) {
-                let previousPasswordWasWrong = forcePasswordPrompt;
                 passwordProvided = await this.promptPasswordInContext(this.didService.getActiveDidStore(), previousPasswordWasWrong);
                 // Password will be saved by the auth service.
             }
@@ -151,7 +159,7 @@ export class AuthService {
                         wrongPasswordCb();
 
                         // Wrong password provided - try again.
-                        await this.checkPasswordThenExecute(writeActionCb, onError, wrongPasswordCb, forcePasswordPrompt = true);
+                        await this.checkPasswordThenExecute(writeActionCb, onError, wrongPasswordCb, forcePasswordPrompt = true, previousPasswordWasWrong = true);
                     }
                     else {
                         onError();
@@ -205,6 +213,47 @@ export class AuthService {
             // Multiple DIDs: go to DID chooser screen
             this.native.go("/choosedid", opts);
         }
+    }
+
+    /**
+     * Activates fingerprint authentication instead of using a password.
+     * Password is saved for a given DID store, as later on, if we handle several did stores in the same app
+     * (several users), we will have to know for which of them this saved password is for.
+     */
+    async activateFingerprintAuthentication(didStoreId: string, password: string): Promise<boolean> {
+        console.log("Activating fingerprint authentication for did store id "+didStoreId);
+
+        // Ask the fingerprint plugin to save user's password
+        try {
+            await fingerprintManager.authenticateAndSavePassword(didStoreId, password);
+
+            // Password was securely saved. Now remember this user's choice in settings.
+            await this.storage.set("useFingerprintAuthentication-"+didStoreId, true);
+
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    }
+
+    async deactivateFingerprintAuthentication(didStoreId: string) {
+        await this.storage.set("useFingerprintAuthentication-"+didStoreId, false);
+    }
+
+    async authenticateByFingerprintAndGetPassword(didStoreId: string) {
+        // Ask the fingerprint plugin to authenticate and retrieve the password
+        try {
+            let password = await fingerprintManager.authenticateAndGetPassword(didStoreId);
+            return password;
+        }
+        catch (e) {
+            return null;
+        }
+    }
+
+    async fingerprintAuthenticationEnabled(didStoreId: string): Promise<boolean> {
+        return this.storage.get("useFingerprintAuthentication-"+didStoreId) || false;
     }
 }
 

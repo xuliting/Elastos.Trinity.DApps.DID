@@ -1,21 +1,38 @@
 <div class="container">
-  <p class="title">
+  <p class="title" *ngIf="!useFingerprintAuthentication">
     {{'security-check'|translate}}
   </p>
+  <p class="title" *ngIf="useFingerprintAuthentication">
+    {{'security-check-fingerprint'|translate}}
+  </p>
 
-  <div class="password-failed-info" *ngIf="previousPasswordWasWrong && password == ''">{{'wrong-password'|translate}}</div>
- 
-  <div [ngClass]="{'input-container':true, 'failed':(previousPasswordWasWrong && password == '')}">
-    <ion-input placeholder="{{ 'text-password-input' | translate }}" #pwd 
-              [(ngModel)]="password" 
-              type="password" ></ion-input>
+  <div *ngIf="!useFingerprintAuthentication">
+    <div class="password-failed-info" *ngIf="previousPasswordWasWrong && password == ''">{{'wrong-password'|translate}}</div>
+  
+    <ion-item lines="none" class="input-container-outer">
+      <div [ngClass]="{'input-container':true, 'failed':(previousPasswordWasWrong && password == '')}">
+        <ion-input placeholder="{{ 'text-password-input' | translate }}" #pwd 
+                  [(ngModel)]="password" 
+                  type="password" ></ion-input>
+      </div>
+      <ion-img slot="end" *ngIf="password != ''" src="assets/images/fingerprint-24px.svg" class="fingerprint-preview" (click)="promptFingerprintActivation()"></ion-img>
+    </ion-item>
+
+    <did-button class="main-button" (click)="submit()" 
+      [title]="'submit' | translate" 
+      [textcolor]="'#FFFFFF'"
+      textsize="16px"
+      [bgcolor]="'var(--ion-color-primary)'" 
+      [bordercolor]="'var(--ion-color-primary)'"
+      [shadow]="true"></did-button>
   </div>
+ 
+  <div *ngIf="useFingerprintAuthentication">
+    <ion-img src="assets/images/fingerprint-24px.svg" class="fingerprint-large text-align-center" (click)="promptFingerprintAuthentication()"></ion-img>
 
-  <did-button class="main-button" (click)="submit()" 
-    [title]="'submit' | translate" 
-    [textcolor]="'#FFFFFF'"
-    textsize="16px"
-    [bgcolor]="'var(--ion-color-primary)'" 
-    [bordercolor]="'var(--ion-color-primary)'"
-    [shadow]="true"></did-button>
+    <ion-item>
+      <ion-label>{{'use-fingerprint-authentication' | translate}}</ion-label>
+      <ion-toggle (ionChange)="disableFingerprintAuthentication()" checked="true"></ion-toggle>
+    </ion-item>
+  </div>
 </div>

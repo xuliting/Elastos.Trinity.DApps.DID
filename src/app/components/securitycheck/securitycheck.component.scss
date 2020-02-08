@@ -1,13 +1,16 @@
 .container {
     margin: 10px 30px;
 
+    .input-container-outer {
+        margin-bottom:10px;
+    }
+
     .input-container {
         background: #F1F3F7;
         border-radius: 20px;
         padding:2px;
         padding-left:10px;
         margin: 0 auto;
-        margin-bottom:10px;
         width:70vw;
     }
 
@@ -44,5 +47,14 @@
         display:block;
         margin:0 auto;
         margin-top:40px;
+    }
+
+    .fingerprint-preview {
+        height:24px;
+    }
+
+    .fingerprint-large {
+        height:60px;
+        margin-bottom:20px;
     }
 }

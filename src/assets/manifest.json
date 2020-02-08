@@ -33,7 +33,8 @@
     "Device",
     "DIDPlugin",
     "NetworkStatus",
-    "File"
+    "File",
+    "Fingerprint"
   ],
   "urls": [
     "https://sentry.io/*"

@@ -38,6 +38,10 @@ export const en = {
     'text-pwd-validator': 'must be 8 or more characters',
     'password-set': 'Password Set!',
     'password': 'Password',
+    'activate-fingerprint-popup-title': 'Fingerprint authentication',
+    'activate-fingerprint-popup-content': 'Do you want to enable fingerprint authentication? The password you\'ve just typed will be used.',
+    'activate-fingerprint-popup-confirm-question': 'Activate now?',
+    'activate-fingerprint-activate': 'Activate',
 
     // Generic items
     'profile': 'Profile',
@@ -160,7 +164,9 @@ export const en = {
 
     // component: security check
     'security-check': 'Security check! Please type your app password',
+    'security-check-fingerprint': 'Security check! Please authenticate',
     'wrong-password': 'Wrong password, please try again.',
+    'use-fingerprint-authentication': 'Use fingerprint',
 
     // component: importdidsource
     'importdidsource-intro': 'How would you like to import your DID?',

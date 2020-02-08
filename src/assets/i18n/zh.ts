@@ -38,6 +38,10 @@ export const zh = {
     'text-pwd-validator': '长度至少为8',
     'password-set': '设置密码!',
     'password': '密码',
+    'activate-fingerprint-popup-title': 'Fingerprint authentication',
+    'activate-fingerprint-popup-content': 'Do you want to enable fingerprint authentication? The password you\'ve just typed will be used.',
+    'activate-fingerprint-popup-confirm-question': 'Activate now?',
+    'activate-fingerprint-activate': 'Activate',
 
     // Generic items
     'profile': '档案',
@@ -128,7 +132,7 @@ export const zh = {
     'credential-import': 'Import Credential',
     'credential-import-from': 'Delivered by',
     'credissue-intro': 'You are about to add one or more credentials issued by a third party to your DID profile. Please carefully review the content.',
-    
+
     // screen: did credentials
     'did-credentials': 'DID凭证',
     'no-credential-yet': '没有任何凭证',
@@ -160,7 +164,9 @@ export const zh = {
 
     // component: security check
     'security-check': '安全确认! Please type your app password',
+    'security-check-fingerprint': 'Security check! Please authenticate',
     'wrong-password': '密码错误，请重试',
+    'use-fingerprint-authentication': 'Use fingerprint',
 
     // component: importdidsource
     'importdidsource-intro': 'How would you like to import your DID?',
