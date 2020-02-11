@@ -15,7 +15,7 @@ export const zh = {
     'edit-visibility': '编辑公开档案',
     'delete-credentials': '删除凭证',
     'publish': '发布',
-    'cancel': 'Cancel',
+    'cancel': '取消',
 
     // DID operations
     'create-my-did': '创建新的DID',
@@ -36,12 +36,12 @@ export const zh = {
     'import-password1-placeholder': '请设置密码',
     'import-password2-placeholder': '请再次输入密码',
     'text-pwd-validator': '长度至少为8',
-    'password-set': '设置密码!',
+    'password-set': '密码已设置!',
     'password': '密码',
-    'activate-fingerprint-popup-title': 'Fingerprint authentication',
-    'activate-fingerprint-popup-content': 'Do you want to enable fingerprint authentication? The password you\'ve just typed will be used.',
-    'activate-fingerprint-popup-confirm-question': 'Activate now?',
-    'activate-fingerprint-activate': 'Activate',
+    'activate-fingerprint-popup-title': '指纹登录',
+    'activate-fingerprint-popup-content': '需要启动指纹登录吗? 此指纹将关联你输入的密码。',
+    'activate-fingerprint-popup-confirm-question': '现在开启?',
+    'activate-fingerprint-activate': '启用指纹',
 
     // Generic items
     'profile': '档案',
@@ -112,7 +112,7 @@ export const zh = {
 
     // screen: edit profile
     'edit-profile': '编辑信息',
-    'edit-profile-intro': '您可以根据需要填写任意数量的内容。',
+    'edit-profile-intro': '您可以根据需要填写任意数量的内容',
     'name-is-required': '必须输入姓名',
     'name-is-missing': '至少需要提供姓名',
     'add-info': '添加信息',
@@ -142,7 +142,7 @@ export const zh = {
     'credential-deletion-popup-content': '所选凭证将在本地和区块链上永久删除。',
 
     // screen: verify mnemonic
-    'verification': '验证',
+    'verification': '验证助记词',
     'verify-title': '请选择您的助记词',
     'verify-subtitle': '需要进行此验证，以确保您正确保存了助记词。',
 
@@ -163,25 +163,25 @@ export const zh = {
     'changepassword-info' : '修改密码',
 
     // component: security check
-    'security-check': '安全确认! Please type your app password',
-    'security-check-fingerprint': 'Security check! Please authenticate',
+    'security-check': '安全确认! 请输入您的密码',
+    'security-check-fingerprint': '安全确认! 请验证',
     'wrong-password': '密码错误，请重试',
-    'use-fingerprint-authentication': 'Use fingerprint',
+    'use-fingerprint-authentication': '使用指纹',
 
     // component: importdidsource
-    'importdidsource-intro': 'How would you like to import your DID?',
-    'import-from-mnemonic': 'Type my mnemonic words',
-    'import-from-wallet-app': 'Import mnemonic from wallet app',
+    'importdidsource-intro': '如何导入您的DID?',
+    'import-from-mnemonic': '输入助记词',
+    'import-from-wallet-app': '从钱包应用导入助记词',
 
     // component: mnemonicpasscheck
-    'mnemonicpasscheck-question': 'Do you have a mnemonic passphrase?',
-    'have-passphrase': 'Yes, I will type it',
-    'dont-have-passphrase-dont-know': 'No I don\' have, or I don\'t know',
-    'mnemonicpassword-intro': 'Please type your mnemonic passphrase',
+    'mnemonicpasscheck-question': '助记词有密码?',
+    'have-passphrase': '有, 输入密码',
+    'dont-have-passphrase-dont-know': '没有密码, 或不确定',
+    'mnemonicpassword-intro': '请输入助记词密码',
 
     // component: emptyimporteddocument
-    'emptyimporteddocument-intro': 'We couldn\'t find any existing information to restore your profile. What would you like to do?',
-    'create-an-empty-profile': 'Create an empty profile',
+    'emptyimporteddocument-intro': '我们找不到任何现有的信息来恢复您的档案。您需要如何处理？',
+    'create-an-empty-profile': '创建空的档案',
 
     // loading
     'loading-msg': '加载中，请稍候',
