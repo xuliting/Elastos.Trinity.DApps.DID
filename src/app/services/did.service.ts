@@ -193,6 +193,8 @@ export class DIDService {
      * Called at the beginning of a new DID creation process.
      */
     public async addDidStore() {
+      console.log("Adding DID store");
+
       let didStore = await this.newDidStore();
 
       // Activate the DID store, without DID

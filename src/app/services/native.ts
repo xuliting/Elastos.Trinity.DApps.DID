@@ -1,5 +1,5 @@
 
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { ToastController, LoadingController, NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Clipboard } from '@ionic-native/clipboard/ngx';
@@ -20,6 +20,7 @@ export class Native {
       private translate: TranslateService,
       private loadingCtrl: LoadingController,
       private navCtrl: NavController,
+      private zone: NgZone,
       private router: Router) {
   }
 
@@ -65,10 +66,12 @@ export class Native {
 
   // Sensitive data should not be passed through queryParams
   public go(page: any, options: any = {}) {
-      console.log("NAV - Going to "+page);
-      this.hideLoading();
-      this.navCtrl.setDirection('forward');
-      this.router.navigate([page], { state: options });
+    console.log("NAV - Going to "+page);
+    this.zone.run(()=>{
+        this.hideLoading();
+        this.navCtrl.setDirection('forward');
+        this.router.navigate([page], { state: options });
+    });
   }
 
   public pop() {
@@ -77,9 +80,11 @@ export class Native {
 
   public setRootRouter(page: any,  options: any = {}) {
     console.log("NAV - Setting root to "+page);
-      this.hideLoading();
-      this.navCtrl.setDirection('root');
-      this.router.navigate([page], { state: options });
+      this.zone.run(()=>{
+        this.hideLoading();
+        this.navCtrl.setDirection('root');
+        this.router.navigate([page], { state: options });
+      });
   }
 
   public getMnemonicLang(): number {

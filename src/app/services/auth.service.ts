@@ -102,6 +102,8 @@ export class AuthService {
                 cssClass:"create-password-modal"
             });
             modal.onDidDismiss().then((params) => {
+                console.log("AuthService got new password");
+                
                 if (!params.data)
                     resolve(null);
                 else

@@ -57,8 +57,9 @@ export class CreatePasswordComponent implements OnInit {
       return;
 
     console.log("Password is ok, submitting to caller.");
+
     this.modalCtrl.dismiss({
       password: this.password
-    });
+    });    
   }
 }

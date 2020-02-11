@@ -20,7 +20,7 @@ import { DIDListPage } from './pages/didlist/didlist';
 import { ChooseDIDPage } from './pages/choosedid/choosedid';
 import { SignRequestPage } from './pages/signrequest/signrequest';
 import { CredentialIssueRequestPage } from './pages/credentialissuerequest/credentialissuerequest';
-
+ 
 const routes: Routes = [
   // { path: '', redirectTo: '', pathMatch: 'full' }, // No default route, services will decide this by themselves.
   { path: 'devpage', component: DevPage },
