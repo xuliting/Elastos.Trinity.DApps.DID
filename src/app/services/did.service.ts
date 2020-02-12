@@ -43,7 +43,7 @@ export class DIDService {
 
     private subscribeEvents() {
       this.events.subscribe("did:namechanged", ()=>{
-        // Name profiel item was changed in a DID? Rebuild our DID menu entries
+        // Name profile item was changed in a DID? Rebuild our DID menu entries
         DIDService.instance.rebuildDidEntries();
       });
     }
@@ -229,6 +229,13 @@ export class DIDService {
     private async addDidEntry(didEntry: DIDEntry) {
       console.log("Adding DID entry:", didEntry);
 
+      // Simpel check: make sure the DID entry doesn't already exist
+      let existingEntry = await this.searchDIDEntry(didEntry.didString);
+      if (existingEntry) {
+        console.log("Not adding DIDEntry because it already exists", didEntry);
+        return;
+      }
+
       let existingDidEntries = await this.getDidEntries();
       existingDidEntries.push(didEntry);
 
@@ -260,6 +267,8 @@ export class DIDService {
      * Used after importing a DID store from chain in order to update our local storage list of DIDs.
      */
     public async rebuildDidEntries() {
+      console.log("Rebuilding DID entries from store DIDs:", this.activeDidStore.dids);
+
       let entries: DIDEntry[] = [];
 
       for (let did of this.activeDidStore.dids) {

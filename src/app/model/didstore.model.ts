@@ -301,7 +301,7 @@ export class DIDStore {
                 this.pluginDidStore.newDid(
                     passphrase, hint,
                     (did) => {
-                        console.log("Created DID:", did);
+                        console.log("Created plugin DID:", did);
                         resolve(did)
                     },
                     (err) => {reject(err)},
