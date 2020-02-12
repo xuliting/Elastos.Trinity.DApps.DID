@@ -124,7 +124,8 @@ export class DID {
      * to ease profile editing on UI.
      */
     getBasicProfile() : Profile {
-        let profile = Profile.createDefaultProfile();
+        //let profile = Profile.createDefaultProfile();
+        let profile = new Profile();
 
         // We normally have one credential for each profile field
         this.credentials.map((cred)=>{

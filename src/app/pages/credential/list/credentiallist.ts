@@ -206,7 +206,7 @@ export class CredentialListPage {
    */
   isMale() {
     let genderEntry = this.profile.getEntryByKey("gender");
-    return (genderEntry.value == "" || genderEntry.value == "male")
+    return (!genderEntry || genderEntry.value == "" || genderEntry.value == "male")
   }
 
   saveVisibilityChanges() {
