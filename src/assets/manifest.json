@@ -1,59 +1,59 @@
 {
-  "id": "org.elastos.trinity.dapp.did",
-  "version": "1.0.5",
-  "version_code": 6,
-  "name": "DID",
-  "short_name": "DID",
-  "short_description": "Decentralized User Identity Management",
-  "description": "Manage your decentralized identity, choose personal information to share with others, using this DID DApp.",
-  "start_url": "index.html",
-  "type": "app",
-  "start_visible": "hide",
-  "category": "communication",
-  "icons": [
-    {
-      "src": "assets/images/logo.png",
-      "sizes": "512x512",
-      "type": "image/png"
+    "id": "org.elastos.trinity.dapp.did",
+    "version": "1.0.6",
+    "version_code": 7,
+    "name": "DID",
+    "short_name": "DID",
+    "short_description": "Decentralized User Identity Management",
+    "description": "Manage your decentralized identity, choose personal information to share with others, using this DID DApp.",
+    "start_url": "index.html",
+    "type": "app",
+    "start_visible": "hide",
+    "category": "communication",
+    "icons": [
+        {
+            "src": "assets/images/logo.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "assets/images/logo.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        }
+    ],
+    "author": {
+        "name": "Elastos Foundation",
+        "email": "contact@elastos.org",
+        "website": "https://www.elastos.org"
     },
-    {
-      "src": "assets/images/logo.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    }
-  ],
-  "author": {
-    "name": "Elastos Foundation",
-    "email": "contact@elastos.org",
-    "website": "https://www.elastos.org"
-  },
-  "default_locale": "en",
-  "plugins": [
-    "Clipboard",
-    "Device",
-    "DIDPlugin",
-    "NetworkStatus",
-    "File",
-    "Fingerprint"
-  ],
-  "urls": [
-    "https://sentry.io/*"
-  ],
-  "intent_filters": [
-    {
-      "action": "credaccess"
-    },
-    {
-      "action": "credissue"
-    },
-    {
-      "action": "registerapplicationprofile"
-    },
-    {
-      "action": "sign"
-    }
-  ],
-  "background_color": "#4e8ef7",
-  "theme_display": "show",
-  "theme_color": "#4e8ef7"
+    "default_locale": "en",
+    "plugins": [
+        "Clipboard",
+        "Device",
+        "DIDPlugin",
+        "NetworkStatus",
+        "File",
+        "Fingerprint"
+    ],
+    "urls": [
+        "https://sentry.io/*"
+    ],
+    "intent_filters": [
+        {
+            "action": "credaccess"
+        },
+        {
+            "action": "credissue"
+        },
+        {
+            "action": "registerapplicationprofile"
+        },
+        {
+            "action": "sign"
+        }
+    ],
+    "background_color": "#4e8ef7",
+    "theme_display": "show",
+    "theme_color": "#4e8ef7"
 }
