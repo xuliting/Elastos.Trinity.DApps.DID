@@ -6,6 +6,8 @@ import { BrowserSimulation, SimulatedDID, SimulatedDIDStore, SimulatedDIDDocumen
 import { Config } from '../services/config';
 import { DIDDocument } from './diddocument.model';
 import { DIDHelper } from '../helpers/did.helper';
+import { DIDService } from '../services/did.service';
+import { LocalStorage } from '../services/localstorage';
 
 declare let didManager: DIDPlugin.DIDManager;
 declare let appManager: AppManagerPlugin.AppManager;
@@ -102,9 +104,22 @@ export class DIDStore {
     protected async loadAllDids(pluginDids: DIDPlugin.DID[]) {
         this.dids = [];
         for(let pluginDid of pluginDids) {
-            let did = new DID(pluginDid, this.events);
-            await did.loadAll();
-            this.dids.push(did);
+            // Check if this DID was previously deleted. If so, don't load it as a usable DID.
+            // The reason why a deleted DID could be listed again by the DID plugin is if we call
+            // synchronize() (ex: before creating a new DID), then a published DID would be restored 
+            // locally by the SDK. As SDKs and ID chain are currently not able to deactivate DIDs, we then just
+            // "hide" this in app, not showing deleted DID even if they are re-synchronized from chain.
+            let didWasDeleted = await this.wasDIDDeleted(pluginDid.getDIDString())
+            if (!didWasDeleted) {
+                console.log("Loading DID "+pluginDid.getDIDString());
+
+                let did = new DID(pluginDid, this.events);
+                await did.loadAll();
+                this.dids.push(did);
+            }
+            else {
+                console.log("DID "+pluginDid.getDIDString()+" was listed by the DID plugin but deleted locally earlier. Skipping it.");
+            }
         }
         console.log("Loaded DIDs:", this.dids);
     }
@@ -164,9 +179,22 @@ export class DIDStore {
         let didIndex = this.dids.findIndex(d=>d==did);
         this.dids.splice(didIndex, 1);
 
+        // Mark as deleted in permanent storage
+        await this.markDIDAsDeleted(did.getDIDString());
+
         console.log("Deleted DID");
 
         await this.setActiveDid(null);
+    }
+
+    private async wasDIDDeleted(didString: DIDPlugin.DIDString): Promise<Boolean> {
+        let deleted = await LocalStorage.instance.get("deleted-did-"+didString) || false;
+        return deleted;
+    }
+
+    private async markDIDAsDeleted(didString: DIDPlugin.DIDString) {
+        console.log("Marking DID "+didString+" as deleted in storage");
+        await LocalStorage.instance.set("deleted-did-"+didString, true);
     }
 
     private initPluginDidStore(didStoreId: string): Promise<DIDPlugin.DIDStore> {
