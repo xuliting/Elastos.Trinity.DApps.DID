@@ -176,7 +176,7 @@ export const en = {
     // component: mnemonicpasscheck
     'mnemonicpasscheck-question': 'Do you have a mnemonic passphrase?',
     'have-passphrase': 'Yes, I will type it',
-    'dont-have-passphrase-dont-know': 'No I don\' have, or I don\'t know',
+    'dont-have-passphrase-dont-know': 'No I don\'t have, or I don\'t know',
     'mnemonicpassword-intro': 'Please type your mnemonic passphrase',
 
     // component: emptyimporteddocument
