@@ -11,6 +11,7 @@ import { DIDStore } from '../model/didstore.model';
 import { WrongPasswordException } from '../model/exceptions/wrongpasswordexception.exception';
 import { MnemonicPassCheckComponent } from '../components/mnemonicpasscheck/mnemonicpasscheck.component';
 import { LocalStorage } from './localstorage';
+import { PopupProvider } from './popup';
 
 declare let fingerprintManager: FingerprintPlugin.FingerprintManager;
 

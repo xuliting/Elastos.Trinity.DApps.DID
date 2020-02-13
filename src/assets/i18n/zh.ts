@@ -165,6 +165,7 @@ export const zh = {
     // component: security check
     'security-check': '安全确认! 请输入您的密码',
     'security-check-fingerprint': '安全确认! 请验证',
+    'security-check-fingerprint-do': 'Please touch your fingerprint sensor',
     'wrong-password': '密码错误，请重试',
     'use-fingerprint-authentication': '使用指纹',
 

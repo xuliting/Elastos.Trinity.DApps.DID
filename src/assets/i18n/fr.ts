@@ -165,6 +165,7 @@ export const fr = {
     // component: security check
     'security-check': 'Veuillez saisir le mot de passe de l\'application',
     'security-check-fingerprint': 'Veuillez vous authentifier',
+    'security-check-fingerprint-do': 'Veuillez toucher le capteur d\'empreintes',
     'wrong-password': 'Mot de passe erroné, veuillez réessayer.',
     'use-fingerprint-authentication': 'Auth. par empreinte',
 

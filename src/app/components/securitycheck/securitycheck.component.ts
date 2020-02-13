@@ -18,6 +18,7 @@ export class SecurityCheckComponent implements OnInit {
   public password: string = "";
   public previousPasswordWasWrong: boolean = false;
   public useFingerprintAuthentication: boolean = false;
+  public fingerprintPluginAuthenticationOnGoing: boolean = false;
 
   constructor(public modalCtrl: ModalController, 
               public native: Native,
@@ -68,23 +69,38 @@ export class SecurityCheckComponent implements OnInit {
           confirmAction: this.translate.instant("activate-fingerprint-activate"),
           cancelAction: this.translate.instant("go-back"),
           confirmCallback: async ()=>{
+            this.fingerprintPluginAuthenticationOnGoing = true;
+
             // User agreed to activate fingerprint authentication. We ask the auth service to 
             // save the typed password securely using the fingerprint.
             let couldActivate = await this.authService.activateFingerprintAuthentication(this.didService.getCurDidStoreId(), this.password);
             this.useFingerprintAuthentication = couldActivate;
 
-            // Right after activation, submit the typed password as password to use.
-            this.submit();
+            if (couldActivate) {
+              this.fingerprintPluginAuthenticationOnGoing = false;
+
+              // Right after activation, submit the typed password as password to use.
+              this.submit();
+            }
+            else {
+              // Failed to activate
+            }
           }
       }
     }).show();
   }
 
   async promptFingerprintAuthentication() {
+    this.fingerprintPluginAuthenticationOnGoing = true;
     this.password = await this.authService.authenticateByFingerprintAndGetPassword(this.didService.getCurDidStoreId());
     if (this.password) {
       // Get a password -> submit this password.
       this.submit();
+    }
+    else {
+      // Only change UI if fingerprint prompt was cancelled or errored, to avoid UI glitch
+      // while the password popup closes.
+      this.fingerprintPluginAuthenticationOnGoing = false;
     }
   }
 

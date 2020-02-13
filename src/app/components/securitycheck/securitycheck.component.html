@@ -2,8 +2,11 @@
   <p class="title" *ngIf="!useFingerprintAuthentication">
     {{'security-check'|translate}}
   </p>
-  <p class="title" *ngIf="useFingerprintAuthentication">
+  <p class="title" *ngIf="useFingerprintAuthentication && !fingerprintPluginAuthenticationOnGoing">
     {{'security-check-fingerprint'|translate}}
+  </p>
+  <p class="title" *ngIf="fingerprintPluginAuthenticationOnGoing">
+    {{'security-check-fingerprint-do'|translate}}
   </p>
 
   <div *ngIf="!useFingerprintAuthentication">
@@ -27,12 +30,16 @@
       [shadow]="true"></did-button>
   </div>
  
-  <div *ngIf="useFingerprintAuthentication">
+  <div *ngIf="useFingerprintAuthentication && !fingerprintPluginAuthenticationOnGoing">
     <ion-img src="assets/images/fingerprint-24px.svg" class="fingerprint-large text-align-center" (click)="promptFingerprintAuthentication()"></ion-img>
 
     <ion-item>
       <ion-label>{{'use-fingerprint-authentication' | translate}}</ion-label>
       <ion-toggle (ionChange)="disableFingerprintAuthentication()" checked="true"></ion-toggle>
     </ion-item>
+  </div>
+
+  <div *ngIf="fingerprintPluginAuthenticationOnGoing">
+    <ion-img src="assets/images/fingerprint-24px.svg" class="fingerprint-ongoing text-align-center"></ion-img>
   </div>
 </div>
