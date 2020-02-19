@@ -39,7 +39,7 @@ export const zh = {
     'password-set': '密码已设置!',
     'password': '密码',
     'activate-fingerprint-popup-title': '指纹登录',
-    'activate-fingerprint-popup-content': '需要启动指纹登录吗? 此指纹将关联你输入的密码。',
+    'activate-fingerprint-popup-content': '是否启动指纹登录? 此指纹将关联你输入的密码。',
     'activate-fingerprint-popup-confirm-question': '现在开启?',
     'activate-fingerprint-activate': '启用指纹',
 
@@ -83,7 +83,7 @@ export const zh = {
     // screen: noidentity
     'welcome': '欢迎',
     'elastos-did-portfolio': 'elastOS DID 档案中心',
-    'welcome-text-intro-1': '管理您的去中心化的身份并与只有您允许的朋友和企业分享。',
+    'welcome-text-intro-1': '管理您去中心化的身份，其他程序必须经过您的授权才能访问此信息。',
     'welcome-text-intro-2': '在elastOS里拥有自己的身份!',
     'welcome-text-intro-3': '首次使用?',
     'welcome-text-intro-4': '开始创建 DID 档案',
@@ -112,7 +112,7 @@ export const zh = {
 
     // screen: edit profile
     'edit-profile': '编辑信息',
-    'edit-profile-intro': '您可以根据需要填写任意数量的内容',
+    'edit-profile-intro': '您可以根据需要添加任意数量的内容',
     'name-is-required': '必须输入姓名',
     'name-is-missing': '至少需要提供姓名',
     'add-info': '添加信息',
@@ -126,7 +126,7 @@ export const zh = {
     'credaccess-intro': '要求提供信息<br/>请查看以下数据项。',
     'mandatory-data-access': '必须数据',
     'optional-data-access': '可选数据',
-    'credaccess-information-missing': '您的个人资料中至少缺少一项必填信息。请先完成您的个人资料，然后重试。',
+    'credaccess-information-missing': '您的个人资料中缺少必填信息。请先完成您的个人资料，然后重试。',
 
     // screen: credissue
     'credential-import': 'Import Credential',
@@ -170,24 +170,24 @@ export const zh = {
     'use-fingerprint-authentication': '使用指纹',
 
     // component: importdidsource
-    'importdidsource-intro': '如何导入您的DID?',
+    'importdidsource-intro': '请选择导入DID的方式?',
     'import-from-mnemonic': '输入助记词',
     'import-from-wallet-app': '从钱包应用导入助记词',
 
     // component: mnemonicpasscheck
-    'mnemonicpasscheck-question': '助记词有密码?',
-    'have-passphrase': '有, 输入密码',
-    'dont-have-passphrase-dont-know': '没有密码, 或不确定',
+    'mnemonicpasscheck-question': '是否有助记词密码?',
+    'have-passphrase': '有',
+    'dont-have-passphrase-dont-know': '没有',
     'mnemonicpassword-intro': '请输入助记词密码',
 
     // component: emptyimporteddocument
-    'emptyimporteddocument-intro': '我们找不到任何现有的信息来恢复您的档案。您需要如何处理？',
-    'create-an-empty-profile': '创建空的档案',
+    'emptyimporteddocument-intro': 'ID 链上未找到相关档案。是否新建档案？',
+    'create-an-empty-profile': '新建档案',
 
     // loading
     'loading-msg': '加载中，请稍候',
 
     // id transaction
-    'publish-success': '您公开的身份信息已发送到ID链。请稍候几分钟，以便实时查看您的更改。',
+    'publish-success': '您公开的身份信息已发送到ID链。',
     'publish-error': '抱歉，暂时无法发布您公开的身份信息。请稍后重试。',
 };

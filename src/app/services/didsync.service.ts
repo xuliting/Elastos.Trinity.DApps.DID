@@ -51,8 +51,8 @@ export class DIDSyncService {
         this.onDIDDocumentPublishResponse(result);
       });
 
-      this.events.subscribe("did:didchanged", (data: any)=>{
-        console.log("DID Sync service got did changed event", data);
+      this.events.subscribe("did:didchanged", ()=>{
+        console.log("DID Sync service got did changed event");
         // Every time a DID has changed we check its publish status
         let did = this.didService.getActiveDid();
         if (did)

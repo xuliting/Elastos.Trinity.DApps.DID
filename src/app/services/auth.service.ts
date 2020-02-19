@@ -104,7 +104,7 @@ export class AuthService {
             });
             modal.onDidDismiss().then((params) => {
                 console.log("AuthService got new password");
-                
+
                 if (!params.data)
                     resolve(null);
                 else
@@ -160,9 +160,9 @@ export class AuthService {
                     console.error(e);
                     if (e instanceof WrongPasswordException) {
                         wrongPasswordCb();
-
                         // Wrong password provided - try again.
                         await this.checkPasswordThenExecute(writeActionCb, onError, wrongPasswordCb, forcePasswordPrompt = true, previousPasswordWasWrong = true);
+                        resolve();
                     }
                     else {
                         onError();
