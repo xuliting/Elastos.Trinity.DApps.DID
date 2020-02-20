@@ -18,7 +18,8 @@ import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
 type CredentialDisplayEntry = {
   credential: DIDPlugin.VerifiableCredential,
   willingToBePubliclyVisible: boolean,
-  willingToDelete: boolean
+  willingToDelete: boolean,
+  canDelete: boolean
 }
 
 @Component({
@@ -85,7 +86,7 @@ export class CredentialListPage {
     this.credentials.sort((c1, c2)=>{
       if (c1.pluginVerifiableCredential.getFragment() > c2.pluginVerifiableCredential.getFragment())
         return 1;
-      else 
+      else
         return -1;
     });
 
@@ -98,6 +99,8 @@ export class CredentialListPage {
     this.deletionMode = false;
   }
 
+
+
   /**
    * Convenience conversion to display credential data on UI.
    */
@@ -107,19 +110,22 @@ export class CredentialListPage {
     this.invisibleData = [];
 
     for(let c of this.credentials) {
+      let canDelete = this.credentialIsCanDelete(c);
       if (this.credentialIsVisibleOnChain(c)) {
         this.visibleData.push({
           credential: c.pluginVerifiableCredential,
           willingToBePubliclyVisible: true,
-          willingToDelete: false
+          willingToDelete: false,
+          canDelete: canDelete
         })
       }
       else {
         this.invisibleData.push({
           credential: c.pluginVerifiableCredential,
           willingToBePubliclyVisible: false,
-          willingToDelete: false
-        }) 
+          willingToDelete: false,
+          canDelete: canDelete
+        })
       }
     }
   }
@@ -131,9 +137,18 @@ export class CredentialListPage {
     let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
     if (!currentDidDocument)
       return false;
-      
+
     let didDocumentCredential = currentDidDocument.getCredentialById(new DIDURL(credential.pluginVerifiableCredential.getId()));
     return didDocumentCredential != null;
+  }
+
+  /**
+   * The name credential can not be deleted.
+   */
+  credentialIsCanDelete(credential: VerifiableCredential) {
+    let fragment = credential.pluginVerifiableCredential.getFragment();
+    if (fragment === 'name') return false;
+    else return true;
   }
 
   /**
@@ -163,7 +178,7 @@ export class CredentialListPage {
     let fragment = entry.credential.getFragment();
     let translationKey = "credential-info-type-"+fragment;
     let translated = this.translate.instant(translationKey);
-   
+
     if (!translated || translated == "" || translated == translationKey)
       return fragment;
 
@@ -202,7 +217,7 @@ export class CredentialListPage {
   }
 
   /**
-   * Tells if gender in current profile is a male 
+   * Tells if gender in current profile is a male
    */
   isMale() {
     let genderEntry = this.profile.getEntryByKey("gender");
@@ -254,7 +269,7 @@ export class CredentialListPage {
     let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
 
     console.log("Updating DID document from selection");
-    
+
     for (let displayEntry of this.visibleData) {
       let somethingChanged = await this.updateDIDDocumentFromSelectionEntry(currentDidDocument, displayEntry, password);
       changeCount += (somethingChanged?1:0);
@@ -297,7 +312,7 @@ export class CredentialListPage {
   }
 
   /**
-   * Ask user if he really wants to proceed to deletion of selected credentials, then delete if 
+   * Ask user if he really wants to proceed to deletion of selected credentials, then delete if
    * agreed.
    */
   deleteSelectedCredentials(password) {
@@ -312,7 +327,7 @@ export class CredentialListPage {
           title: this.translate.instant("deletion-popup-confirm-question"),
           confirmAction: this.translate.instant("confirm"),
           cancelAction: this.translate.instant("go-back"),
-          
+
           confirmCallback: async ()=>{
             console.log("Deletion confirmed by user");
             this.deleteSelectedCredentialsReal();
@@ -326,7 +341,7 @@ export class CredentialListPage {
       let password = AuthService.instance.getCurrentUserPassword();
 
       let currentDidDocument = this.didService.getActiveDid().getDIDDocument();
-    
+
       let documentChangeCount = 0;
 
       for (let entry of this.visibleData) {
@@ -342,7 +357,7 @@ export class CredentialListPage {
           documentChangeCount += (didDocumentHasChanged?1:0);
         }
       }
-    
+
       // Prompt user to publish his DID document (he can skip this)
       if (documentChangeCount > 0) {
         await this.promptPublishVisibilityChanges(password);

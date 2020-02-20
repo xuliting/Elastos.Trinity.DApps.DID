@@ -72,8 +72,7 @@ export class DIDSyncService {
      * sidechain.
      */
     public async publishActiveDIDDIDDocument(password: string) {
-      // Send the publish request but don't wait here. We will receive an event later.
-      this.didService.getActiveDidStore().getActiveDid().getDIDDocument().publish(password);
+        await this.didService.getActiveDidStore().getActiveDid().getDIDDocument().publish(password);
     }
 
     private onDIDDocumentPublishResponse(result: DIDDocumentPublishEvent) {
