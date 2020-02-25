@@ -39,7 +39,7 @@ export const zh = {
     'password-set': '密码已设置!',
     'password': '密码',
     'activate-fingerprint-popup-title': '指纹登录',
-    'activate-fingerprint-popup-content': '是否启动指纹登录? 此指纹将关联你输入的密码。',
+    'activate-fingerprint-popup-content': '是否启动指纹登录? 此指纹将关联您输入的密码。',
     'activate-fingerprint-popup-confirm-question': '现在开启?',
     'activate-fingerprint-activate': '启用指纹',
 
@@ -165,7 +165,7 @@ export const zh = {
     // component: security check
     'security-check': '安全确认! 请输入您的密码',
     'security-check-fingerprint': '安全确认! 请验证',
-    'security-check-fingerprint-do': 'Please touch your fingerprint sensor',
+    'security-check-fingerprint-do': '请验证指纹',
     'wrong-password': '密码错误，请重试',
     'use-fingerprint-authentication': '使用指纹',
 
