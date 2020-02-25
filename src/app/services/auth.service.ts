@@ -1,17 +1,14 @@
 
 import { Injectable } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { SecurityCheckComponent } from '../components/securitycheck/securitycheck.component';
-import { Config } from './config';
-import { UXService } from './ux.service';
-import { Native } from './native';
 import { CreatePasswordComponent } from '../components/createpassword/createpassword.component';
-import { DIDService } from './did.service';
-import { DIDStore } from '../model/didstore.model';
-import { WrongPasswordException } from '../model/exceptions/wrongpasswordexception.exception';
+import { SecurityCheckComponent } from '../components/securitycheck/securitycheck.component';
 import { MnemonicPassCheckComponent } from '../components/mnemonicpasscheck/mnemonicpasscheck.component';
+import { WrongPasswordException } from '../model/exceptions/wrongpasswordexception.exception';
+import { DIDStore } from '../model/didstore.model';
+import { DIDService } from './did.service';
 import { LocalStorage } from './localstorage';
-import { PopupProvider } from './popup';
+import { Native } from './native';
 
 declare let fingerprintManager: FingerprintPlugin.FingerprintManager;
 
@@ -232,7 +229,6 @@ export class AuthService {
 
             // Password was securely saved. Now remember this user's choice in settings.
             await this.storage.set("useFingerprintAuthentication-"+didStoreId, true);
-
             return true;
         }
         catch (e) {
@@ -257,6 +253,16 @@ export class AuthService {
 
     async fingerprintAuthenticationEnabled(didStoreId: string): Promise<boolean> {
         return this.storage.get("useFingerprintAuthentication-"+didStoreId) || false;
+    }
+
+    async fingerprintIsAvailable() {
+        try {
+            let isAvailable = await fingerprintManager.isAvailable();
+            return isAvailable != FingerprintPlugin.BiometricType.BIOMETRIC_TYPE_NONE;
+        }
+        catch (e) {
+            return false
+        }
     }
 }
 

@@ -19,20 +19,23 @@ export class SecurityCheckComponent implements OnInit {
   public previousPasswordWasWrong: boolean = false;
   public useFingerprintAuthentication: boolean = false;
   public fingerprintPluginAuthenticationOnGoing: boolean = false;
+  public fingerprintAuthenticationIsAvailable: boolean = false;
 
-  constructor(public modalCtrl: ModalController, 
+  constructor(public modalCtrl: ModalController,
               public native: Native,
               private advancedPopup: AdvancedPopupController,
               private translate: TranslateService,
               private authService: AuthService,
-              private didService: DIDService) { 
+              private didService: DIDService) {
   }
 
   ngOnInit() {
+
   }
 
   async ionViewWillEnter() {
-    if (!this.previousPasswordWasWrong)
+    this.fingerprintAuthenticationIsAvailable = await this.authService.fingerprintIsAvailable();
+    if (!this.previousPasswordWasWrong && this.fingerprintAuthenticationIsAvailable)
       this.useFingerprintAuthentication = await this.authService.fingerprintAuthenticationEnabled(this.didService.getCurDidStoreId());
     else {
       // In case previous authentication attempt was wrong, stop using fingerprint. Maybe user provided a wrong
@@ -71,7 +74,7 @@ export class SecurityCheckComponent implements OnInit {
           confirmCallback: async ()=>{
             this.fingerprintPluginAuthenticationOnGoing = true;
 
-            // User agreed to activate fingerprint authentication. We ask the auth service to 
+            // User agreed to activate fingerprint authentication. We ask the auth service to
             // save the typed password securely using the fingerprint.
             let couldActivate = await this.authService.activateFingerprintAuthentication(this.didService.getCurDidStoreId(), this.password);
             this.useFingerprintAuthentication = couldActivate;
@@ -108,5 +111,9 @@ export class SecurityCheckComponent implements OnInit {
     this.useFingerprintAuthentication = false;
 
     await this.authService.deactivateFingerprintAuthentication(this.didService.getCurDidStoreId());
+  }
+
+  canPromptFingerprint() {
+     return (this.password != "") && this.fingerprintAuthenticationIsAvailable;
   }
 }
