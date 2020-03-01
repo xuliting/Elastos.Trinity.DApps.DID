@@ -123,7 +123,9 @@ export class NoIdentityPage {
         // Ask the wallet app to return wallet mnemonics
         appManager.sendIntent("elawalletmnemonicaccess", {}, {}, (response) => {
             console.log("Got mnemonic from the wallet app");
-            this.importFromMnemonic(response.result.mnemonic);
+            if (!Util.isEmptyObject(response.result.mnemonic)) {
+                this.importFromMnemonic(response.result.mnemonic);
+            }
         }, (err) => {
             console.error("Failed to get mnemonics from wallet app");
             this.native.toast("Failed to get mnemonics from the wallet app");
