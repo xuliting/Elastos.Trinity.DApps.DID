@@ -34,7 +34,7 @@
         "DIDPlugin",
         "NetworkStatus",
         "File",
-        "Fingerprint"
+        "FingerprintPlugin"
     ],
     "urls": [
         "https://sentry.io/*"
