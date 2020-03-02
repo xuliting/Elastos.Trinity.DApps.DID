@@ -257,8 +257,8 @@ export class AuthService {
 
     async fingerprintIsAvailable() {
         try {
-            let isAvailable = await fingerprintManager.isAvailable();
-            return isAvailable != FingerprintPlugin.BiometricType.BIOMETRIC_TYPE_NONE;
+            let isAvailable = await fingerprintManager.isBiometricAuthenticationMethodAvailable();
+            return isAvailable;
         }
         catch (e) {
             return false
