@@ -169,6 +169,11 @@ export const fr = {
     'wrong-password': 'Mot de passe erroné, veuillez réessayer.',
     'use-fingerprint-authentication': 'Auth. par empreinte',
 
+    // component: disabl biometric prompt
+    'disablebiometricprompt-intro': 'Revenir au mot de passe?',
+    'keep-using-biometric-auth': 'Continuer à utiliser empreinte / visage',
+    'type-my-password': 'Saisir mon mot de passe',
+
     // component: importdidsource
     'importdidsource-intro': 'Comment voulez-vous importer votre DID?',
     'import-from-mnemonic': 'Saisir mon mnémonique',

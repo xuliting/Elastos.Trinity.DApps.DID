@@ -9,6 +9,7 @@ import { DIDStore } from '../model/didstore.model';
 import { DIDService } from './did.service';
 import { LocalStorage } from './localstorage';
 import { Native } from './native';
+import { DisableBiometricPromptComponent, DisableBiometricPromptChoice } from '../components/disablebiometricprompt/disablebiometricprompt.component';
 
 declare let fingerprintManager: FingerprintPlugin.FingerprintManager;
 
@@ -60,24 +61,78 @@ export class AuthService {
     }
 
     /**
-     * Ask user to provide his password
+     * Ask user to provide his password. If biometric auth is enabled, we don't show any popup and let the 
+     * fingerprint plugin show its UI. 
      */
     async promptPasswordInContext(forDidStore: DIDStore, previousPasswordWasWrong: boolean = false): Promise<boolean> {
         console.log("Asking for user password ", previousPasswordWasWrong);
 
         return new Promise(async (resolve, reject)=>{
+            let biometricAuthEnabled = await this.fingerprintAuthenticationEnabled(forDidStore.getId());
+
+            if (!biometricAuthEnabled) {
+                // User has to provide a password, so we show the appropriate dialog
+                const modal = await this.modalCtrl.create({
+                    component: SecurityCheckComponent,
+                    componentProps: {
+                        didStoreId: forDidStore,
+                        previousPasswordWasWrong: previousPasswordWasWrong
+                    },
+                    cssClass:"security-check-modal"
+                });
+                modal.onDidDismiss().then((params) => {
+                    if (params.data && params.data.password) {
+                        this.saveCurrentUserPassword(forDidStore, params.data.password);
+                        resolve(true);
+                    }
+                    else {
+                        // Cancelled.
+                        resolve(false);
+                    }
+                });
+                modal.present();
+            }
+            else {
+                // Biometric auth enable, directly request the fingerprint plugin
+                let password = await this.authenticateByFingerprintAndGetPassword(forDidStore.getId());
+                if (password) {
+                    this.saveCurrentUserPassword(forDidStore, password);
+                    resolve(true);
+                }
+                else {
+                    // Cancelled or auth error
+                    console.log("Biometric authentication cancelled. Asking user to switch back to password auth.");
+                    this.promptDisableBiometricAuth(forDidStore).then((ret)=>{
+                        resolve(ret);
+                    })
+                }
+            }
+        })
+    }
+
+    private async promptDisableBiometricAuth(forDidStore: DIDStore): Promise<boolean> {
+        return new Promise(async (resolve, reject)=>{
             const modal = await this.modalCtrl.create({
-                component: SecurityCheckComponent,
-                componentProps: {
-                    didStoreId: forDidStore,
-                    previousPasswordWasWrong: previousPasswordWasWrong
-                },
+                component: DisableBiometricPromptComponent,
                 cssClass:"security-check-modal"
             });
-            modal.onDidDismiss().then((params) => {
-                if (params.data && params.data.password) {
-                    this.saveCurrentUserPassword(forDidStore, params.data.password);
-                    resolve(true);
+            modal.onDidDismiss().then(async (params) => {
+                if (params && params.data && params.data.action) {
+                    let action = params.data.action as DisableBiometricPromptChoice;
+                    if (action == DisableBiometricPromptChoice.KeepUsingBiometricAuth) {
+                        // Just dismiss, nothing else to do
+                        resolve(false)
+                    }
+                    else if (action == DisableBiometricPromptChoice.SwitchBackToPasswordAuth) {
+                        // Toggle to manual password input
+                        await this.deactivateFingerprintAuthentication(forDidStore.getId());
+                        this.promptPasswordInContext(forDidStore, false).then((ret)=>{
+                            resolve(ret);
+                        })
+                    }
+                    else {
+                        resolve(false);
+                    }
                 }
                 else {
                     // Cancelled.
@@ -85,7 +140,7 @@ export class AuthService {
                 }
             });
             modal.present();
-        })
+        });
     }
 
     public promptNewPassword(changePassword = false): Promise<string> {

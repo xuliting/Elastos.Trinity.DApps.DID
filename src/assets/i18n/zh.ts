@@ -169,6 +169,11 @@ export const zh = {
     'wrong-password': '密码错误，请重试',
     'use-fingerprint-authentication': '使用指纹',
 
+    // component: disabl biometric prompt
+    'disablebiometricprompt-intro': 'Switch back to password authentication?',
+    'keep-using-biometric-auth': 'Keep using fingerprint / face',
+    'type-my-password': 'Type my password',
+
     // component: importdidsource
     'importdidsource-intro': '请选择导入DID的方式?',
     'import-from-mnemonic': '输入助记词',

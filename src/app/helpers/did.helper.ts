@@ -12,7 +12,8 @@ export class DIDHelper {
           return e; // No more info - return the raw error.
         }
   
-        if (e.message.includes("password") || e.message.includes("WrongPasswordException"))
+        // TODO: Add error code enum in DID Plugin typings and don't hardcode code values here.
+        if (e.code == 10016|| e.message.includes("password") || e.message.includes("WrongPasswordException"))
           return new WrongPasswordException();
           
         // All other cases: return the raw error.

@@ -42,6 +42,7 @@ import { DIDListPage } from './pages/didlist/didlist';
 
 import { SecurityCheckComponent } from './components/securitycheck/securitycheck.component';
 import { CreatePasswordComponent } from './components/createpassword/createpassword.component';
+import { DisableBiometricPromptComponent } from './components/disablebiometricprompt/disablebiometricprompt.component';
 
 import { LocalStorage } from './services/localstorage';
 import { PopupProvider } from './services/popup';
@@ -156,7 +157,8 @@ export function TranslateLoaderFactory() {
     SecurityCheckComponent,
     CreatePasswordComponent,
     ShowQRCodeComponent,
-    ProfileEntryPickerPage
+    ProfileEntryPickerPage,
+    DisableBiometricPromptComponent
   ],
   providers: [
     Clipboard,

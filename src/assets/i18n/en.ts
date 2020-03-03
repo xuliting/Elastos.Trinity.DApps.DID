@@ -169,6 +169,11 @@ export const en = {
     'wrong-password': 'Wrong password, please try again.',
     'use-fingerprint-authentication': 'Use fingerprint',
 
+    // component: disabl biometric prompt
+    'disablebiometricprompt-intro': 'Switch back to password authentication?',
+    'keep-using-biometric-auth': 'Keep using fingerprint / face',
+    'type-my-password': 'Type my password',
+
     // component: importdidsource
     'importdidsource-intro': 'How would you like to import your DID?',
     'import-from-mnemonic': 'Type my mnemonic words',

@@ -20,6 +20,7 @@ import { AdvancedPopupComponent } from './advanced-popup/advancedpopup.component
 import { MnemonicPassCheckComponent } from './mnemonicpasscheck/mnemonicpasscheck.component';
 import { ImportDIDSourceComponent } from './importdidsource/importdidsource.component';
 import { EmptyImportedDocumentComponent } from './emptyimporteddocument/emptyimporteddocument.component';
+import { DisableBiometricPromptComponent } from './disablebiometricprompt/disablebiometricprompt.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { EmptyImportedDocumentComponent } from './emptyimporteddocument/emptyimp
     MnemonicPassCheckComponent,
     ImportDIDSourceComponent,
     EmptyImportedDocumentComponent,
+    DisableBiometricPromptComponent
   ],
   imports: [
     CommonModule,
@@ -61,6 +63,7 @@ import { EmptyImportedDocumentComponent } from './emptyimporteddocument/emptyimp
     MnemonicPassCheckComponent,
     ImportDIDSourceComponent,
     EmptyImportedDocumentComponent,
+    DisableBiometricPromptComponent
   ],
   providers: [
     AdvancedPopupController
