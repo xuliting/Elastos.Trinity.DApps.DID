@@ -222,7 +222,7 @@ export class DID {
                             // User's did document contains this credential being modified, so we updated the
                             // document.
                             console.log("Updating local DID document");
-                            await currentDidDocument.updateCredential(documentCredential, password);
+                            await currentDidDocument.updateOrAddCredential(documentCredential, password);
                             localDidDocumentHasChanged = true;
                         }
                     }

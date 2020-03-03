@@ -16,6 +16,7 @@ export class DIDDocument {
 
     public addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
         console.log("Adding credential with key "+credential.getId()+" into DIDDocument", JSON.parse(JSON.stringify(credential)));
+        
         return new Promise((resolve, reject)=>{
             this.pluginDidDocument.addCredential(
                 credential,
@@ -48,8 +49,14 @@ export class DIDDocument {
         });
     }
 
-    public async updateCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
-        await this.deleteCredential(credential, storePass);
+    /**
+     * Convenient way to add a credential if not existing, and update it if existing
+     */
+    public async updateOrAddCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
+        if (this.getCredentialById(new DIDURL(credential.getId()))) {
+            // Already exists? Delete it first
+            await this.deleteCredential(credential, storePass);
+        }
         await this.addCredential(credential, storePass);
     }
 

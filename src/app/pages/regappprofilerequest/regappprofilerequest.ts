@@ -9,7 +9,8 @@ import { AdvancedPopupController } from 'src/app/components/advanced-popup/advan
 import { TranslateService } from '@ngx-translate/core';
 import { DIDURL } from 'src/app/model/didurl.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { resolve } from 'url';
+import { Events } from '@ionic/angular';
+import { DIDDocumentPublishEvent } from 'src/app/model/eventtypes.model';
 
 // TODO: Show credential(s) content that will be created to the user. He needs to make sure for example
 // that no shared credential will overwrite existing ones like "name" or "email"...
@@ -50,6 +51,7 @@ export class RegisterApplicationProfileRequestPage {
   constructor(private zone: NgZone,
               private didService: DIDService,
               private popup: PopupProvider,
+              private events: Events,
               private uxService:UXService,
               private translate: TranslateService,
               private advancedPopup: AdvancedPopupController,
@@ -81,6 +83,15 @@ export class RegisterApplicationProfileRequestPage {
 
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
+
+    // Listen to publication result event to know when the wallet app returns from the "didtransaction" intent
+    // request initiated by publish() on a did document.
+    this.events.subscribe("diddocument:publishresultpopupclosed", (result: DIDDocumentPublishEvent)=>{
+      console.log("diddocument:publishresultpopupclosed event received in regappprofile request", result);
+      if (result.published) {
+        this.sendIntentResponse();
+      }
+    });
   }
 
   async acceptRequest() {
@@ -96,8 +107,6 @@ export class RegisterApplicationProfileRequestPage {
 
       // If asked by user, add credentials to the did document and send intent to save the DID document on chain (if user checked the box)
       await this.publishOnChainIfNeeded(password);
-
-      this.sendIntentResponse();
     }, ()=>{
       // Error
     }, ()=>{
@@ -142,7 +151,7 @@ export class RegisterApplicationProfileRequestPage {
   sendIntentResponse() {
     // Send the intent response as everything is completed
     this.appServices.sendIntentResponse("registerapplicationprofile", {}, this.requestDapp.intentId)
-    // TMP this.appServices.close();
+    this.appServices.close();
   }
 
   async createMainApplicationProfileCredential(password: string) {
@@ -180,7 +189,7 @@ export class RegisterApplicationProfileRequestPage {
     let createdCredential = await this.didService.getActiveDid().addCredential(credentialId, props, password, customCredentialTypes);
 
     // Add this credential to the DID document.
-    await this.didService.getActiveDid().getDIDDocument().addCredential(createdCredential, password);
+    await this.didService.getActiveDid().getDIDDocument().updateOrAddCredential(createdCredential, password);
 
     console.warn("diddoc after main app profile added:", this.didService.getActiveDid().getDIDDocument());
   }
@@ -198,7 +207,7 @@ export class RegisterApplicationProfileRequestPage {
         let createdCredential = await this.didService.getActiveDid().addCredential(credentialId, {key:value}, password);
 
         // Add this credential to the DID document.
-        await this.didService.getActiveDid().getDIDDocument().addCredential(createdCredential, password);
+        await this.didService.getActiveDid().getDIDDocument().updateOrAddCredential(createdCredential, password);
 
         console.warn("diddoc after shared claim added:", this.didService.getActiveDid().getDIDDocument());
       });

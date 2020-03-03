@@ -78,14 +78,18 @@ export class DIDSyncService {
     private onDIDDocumentPublishResponse(result: DIDDocumentPublishEvent) {
         if (result.published) {
             console.log("PUBLISHED !")
-            this.popupProvider.ionicAlert('publish-success');
+            this.popupProvider.ionicAlert('publish-success').then(()=>{
+              this.events.publish("diddocument:publishresultpopupclosed", result);
+            });
         }
         else if (result.cancelled) {
             console.log("CANCELLED");
         }
         else if (result.error) {
             console.error("ERROR")
-            this.popupProvider.ionicAlert('publish-error');
+            this.popupProvider.ionicAlert('publish-error').then(()=>{
+              this.events.publish("diddocument:publishresultpopupclosed", result);
+            });
         }
 
         // TODO: user feedback + update UI status (no need to sync any more)
