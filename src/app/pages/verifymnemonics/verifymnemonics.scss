@@ -1,3 +1,5 @@
+@import "src/app/functions.scss";
+
 .root-container {
     background: rgb(101,97,251);
     background: linear-gradient(0deg, rgba(101,97,251,1) 0%, rgba(150,147,255,1) 100%);
@@ -9,34 +11,34 @@ ion-content {
 
 .title {
     font-weight:700;
-    font-size:18px;
+    font-size:px2rem(80px);
     margin-left:30px;
     margin-right:30px;
-    margin-top:10px;
+    margin-top:px2rem(20px);
 }
 .subtitle {
     font-weight:500;
     font-size:12px;
     margin-left:30px;
     margin-right:30px;
-    margin-bottom:30px;
+    margin-bottom:px2rem(30px);
 }
 
 .mnemonics-box {
     background: white;
-    margin: 20px;
-    border-radius: 20px;
+    margin: px2rem(40px);
+    border-radius: px2rem(80px);
 }
 
 .enter-mnemonic-box {
     .title {
         font-weight: 600;
         font-size:12px;
-        margin-bottom:10px;
+        margin-bottom:px2rem(10px);
         color:black;
     }
 }
- 
+
 .main-button {
     display: inline-block;
     width:70vw;
@@ -49,11 +51,11 @@ ion-content {
 .unselected-word {
     display:block;
     background:#6561FB;
-    padding:4px;
-    border-radius: 10px;
+    padding:px2rem(10px);
+    border-radius: px2rem(40px);
     color:white;
-    margin-right:6px;
-    margin-bottom:6px;
+    margin-right:px2rem(6px);
+    margin-bottom:px2rem(2px);
     font-weight:500;
-    font-size:14px;
+    font-size:px2rem(60px);
 }

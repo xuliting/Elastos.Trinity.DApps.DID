@@ -3,7 +3,7 @@
 
   <ion-content class="ion-text-center">
     <div class="mnemonics-box">
-      <ion-grid class="ion-padding">
+      <ion-grid class= "ion-margin">
         <ion-row *ngFor="let i of [1,3,5,7,9,11]">
           <ion-col size="6">
             <verify-mnemonic-word [index]="i" [word]="selectedList[i-1]"></verify-mnemonic-word>
@@ -34,9 +34,9 @@
       </span>
     </div>
 
-    <did-button class="main-button" (click)="nextClicked()" 
-      [title]="'create-my-did' | translate" 
-      [bgcolor]="'rgba(0,0,0,0)'" 
+    <did-button class="main-button" (click)="nextClicked()"
+      [title]="'create-my-did' | translate"
+      [bgcolor]="'rgba(0,0,0,0)'"
       [bordercolor]="'#FFFFFF'"
       [shadow]="false" *ngIf="allWordsMatch()"></did-button>
   </ion-content>
