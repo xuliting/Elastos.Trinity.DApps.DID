@@ -17,6 +17,8 @@ import { TranslationService } from './services/translation.service';
 import { DIDSyncService } from './services/didsync.service';
 import { DIDEvents } from './services/events';
 
+declare let appManager: AppManagerPlugin.AppManager;
+
 @Component({
   selector: 'my-app',
   templateUrl: 'app.html'
@@ -53,6 +55,10 @@ export class MyApp {
 
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+
+      /*appManager.getTitleBar().setBackgroundColor("#FFFFFF");
+      appManager.getTitleBar().setForegroundMode(AppManagerPlugin.TitleBarForegroundMode.DARK);
+      appManager.getTitleBar().setTitle("My Profile");*/
 
       // Call this after the DID store manager is initialized
       this.uxService.init();
