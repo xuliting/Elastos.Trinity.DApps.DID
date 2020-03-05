@@ -170,9 +170,9 @@ export const zh = {
     'use-fingerprint-authentication': '使用指纹',
 
     // component: disabl biometric prompt
-    'disablebiometricprompt-intro': 'Switch back to password authentication?',
-    'keep-using-biometric-auth': 'Keep using fingerprint / face',
-    'type-my-password': 'Type my password',
+    'disablebiometricprompt-intro': '使用密码登录?',
+    'keep-using-biometric-auth': '继续使用指纹/面部识别',
+    'type-my-password': '输入密码',
 
     // component: importdidsource
     'importdidsource-intro': '请选择导入DID的方式?',
