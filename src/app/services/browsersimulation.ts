@@ -176,6 +176,10 @@ export class SimulatedDIDStore implements DIDPlugin.DIDStore {
     changePassword(oldPassword: string, newPassword: string, onSuccess: () => void, onError?: (err: any) => void) {
         simulated("changePassword", "SimulatedDIDStore");
     }
+
+    setTransactionResult(txID: string, onSuccess: () => void, onError?: (err: any) => void) {
+        simulated("setTransactionResult", "SimulatedDIDStore");
+    }
 }
 
 export class SimulatedDID implements DIDPlugin.DID {
