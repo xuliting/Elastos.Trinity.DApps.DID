@@ -36,6 +36,11 @@ ion-slides {
 
 ion-slide {
     height:80vh;
+    width: 100% !important;
+}
+
+.swiper-wrapper{
+    width: min-content!important;
 }
 
 ion-slide {
