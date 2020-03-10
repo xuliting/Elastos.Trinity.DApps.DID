@@ -5,11 +5,11 @@ import { DIDService } from '../../services/did.service';
 import { Profile } from '../../model/profile.model';
 import { UXService } from '../../services/ux.service';
 import { PopupProvider } from '../../services/popup';
-import { Util } from '../../services/util';
 import { AuthService } from 'src/app/services/auth.service';
-import { WrongPasswordException } from 'src/app/model/exceptions/wrongpasswordexception.exception';
 import { BrowserSimulation } from 'src/app/services/browsersimulation';
 import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
+
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 type ClaimRequest = {
   name: string,
@@ -41,9 +41,13 @@ export class CredentialAccessRequestPage {
               private authService: AuthService,
               private popupProvider: PopupProvider,
               private appServices: UXService) {
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
   }
 
   ionViewWillEnter() {
+    this.mandatoryItems = [];
+    this.optionalItems = [];
+
     this.zone.run(() => {
       this.profile = this.didService.getActiveDidStore().getActiveDid().getBasicProfile();
       this.credentials = this.didService.getActiveDidStore().getActiveDid().credentials;
