@@ -199,12 +199,47 @@ export class MyProfilePage {
         .catch ((error) => {
             throw DIDHelper.reworkedDIDPluginException(error);
         });
+
+        let useFingerprintAuthentication = await this.authService.fingerprintAuthenticationEnabled(this.didService.getCurDidStoreId());
+        if (useFingerprintAuthentication) {
+            await this.authService.deactivateFingerprintAuthentication(this.didService.getCurDidStoreId());
+            await this.promptFingerprintActivation(newStorePassword);
+        }
       }, ()=>{
         // Error - TODO feedback
       }, ()=>{
         // Password failed
       },
       true);
+  }
+
+  promptFingerprintActivation(password: string) {
+    this.advancedPopup.create({
+      color:'var(--ion-color-primary)',
+      info: {
+          picture: '/assets/images/Visibility_Icon.svg',
+          title: this.translate.instant("activate-fingerprint-popup-title"),
+          content: this.translate.instant("activate-fingerprint-popup-content")
+      },
+      prompt: {
+          title: this.translate.instant("activate-fingerprint-popup-confirm-question"),
+          confirmAction: this.translate.instant("activate-fingerprint-activate"),
+          cancelAction: this.translate.instant("go-back"),
+          confirmCallback: async ()=>{
+
+            // User agreed to activate fingerprint authentication. We ask the auth service to
+            // save the typed password securely using the fingerprint.
+            let couldActivate = await this.authService.activateFingerprintAuthentication(this.didService.getCurDidStoreId(), password);
+            if (couldActivate) {
+
+              // Right after activation, submit the typed password as password to use.
+            }
+            else {
+              // Failed to activate
+            }
+          },
+        }
+    }).show();
   }
 
   /**
