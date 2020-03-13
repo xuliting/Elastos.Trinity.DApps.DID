@@ -12,6 +12,7 @@ import { BrowserSimulation } from 'src/app/services/browsersimulation';
 import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
 
 declare let didManager: DIDPlugin.DIDManager;
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 // TODO: Verify and show clear errors in case data is missing in credentials (expiration date, issuer, etc).
 // TODO: Resolve issuer's DID and try to display more user friendly information about the issuer
@@ -90,6 +91,7 @@ export class CredentialIssueRequestPage {
 
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
   }
 
   /**

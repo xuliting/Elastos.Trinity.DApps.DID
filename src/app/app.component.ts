@@ -17,8 +17,6 @@ import { TranslationService } from './services/translation.service';
 import { DIDSyncService } from './services/didsync.service';
 import { DIDEvents } from './services/events';
 
-declare let appManager: AppManagerPlugin.AppManager;
-
 @Component({
   selector: 'my-app',
   templateUrl: 'app.html'

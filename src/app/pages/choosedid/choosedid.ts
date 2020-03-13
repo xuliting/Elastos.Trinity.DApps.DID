@@ -8,6 +8,8 @@ import { DIDEntry } from '../../model/didentry.model';
 import { DIDService } from 'src/app/services/did.service';
 import { UXService } from 'src/app/services/ux.service';
 
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
+
 @Component({
   selector: 'page-choosedid',
   templateUrl: 'choosedid.html',
@@ -37,6 +39,7 @@ export class ChooseDIDPage {
 
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
   }
 
   async refreshStoreList() {

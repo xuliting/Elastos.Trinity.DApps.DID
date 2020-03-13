@@ -11,6 +11,8 @@ import { DIDService } from './did.service';
 import { PopupProvider } from './popup';
 
 declare let appManager: AppManagerPlugin.AppManager;
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
+
 let selfUxService: UXService = null;
 
 enum MessageType {
@@ -124,7 +126,9 @@ export class UXService {
      * user can actually see the app (but see it only when fully ready)
      */
     makeAppVisible() {
-        appManager.setVisible("show", ()=>{}, (err)=>{});
+        appManager.setVisible("show");
+        titleBarManager.setBackgroundColor("#FFFFFF");
+        titleBarManager.setForegroundMode(TitleBarPlugin.TitleBarForegroundMode.DARK);    
     }
 
     getLanguage() {

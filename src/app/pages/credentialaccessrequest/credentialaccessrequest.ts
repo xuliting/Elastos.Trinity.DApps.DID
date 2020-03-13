@@ -41,7 +41,6 @@ export class CredentialAccessRequestPage {
               private authService: AuthService,
               private popupProvider: PopupProvider,
               private appServices: UXService) {
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
   }
 
   ionViewWillEnter() {
@@ -85,6 +84,8 @@ export class CredentialAccessRequestPage {
 
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
+
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
   }
 
   /**

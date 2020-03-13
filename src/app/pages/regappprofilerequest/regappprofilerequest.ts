@@ -15,6 +15,8 @@ import { DIDDocumentPublishEvent } from 'src/app/model/eventtypes.model';
 // TODO: Show credential(s) content that will be created to the user. He needs to make sure for example
 // that no shared credential will overwrite existing ones like "name" or "email"...
 
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
+
 type RegAppProfileIntentParamLocalizedString = {
   lang: string,
   value: string
@@ -83,6 +85,7 @@ export class RegisterApplicationProfileRequestPage {
 
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
 
     // Listen to publication result event to know when the wallet app returns from the "didtransaction" intent
     // request initiated by publish() on a did document.

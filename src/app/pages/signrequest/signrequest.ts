@@ -11,6 +11,8 @@ import { DIDURL } from 'src/app/model/didurl.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { resolve } from 'url';
 
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
+
 type SignIntentParams = {
   data: string
 }
@@ -60,6 +62,7 @@ export class SignRequestPage {
 
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
   }
 
   async acceptRequest() {
