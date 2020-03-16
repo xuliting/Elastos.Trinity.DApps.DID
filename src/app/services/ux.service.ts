@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Platform } from '@ionic/angular';
 import { Native } from './native';
@@ -36,6 +36,7 @@ export class UXService {
 
     constructor(public translate: TranslateService,
         private platform: Platform,
+        private zone: NgZone,
         private native: Native,
         private popup: PopupProvider,
         private didService: DIDService,
@@ -128,7 +129,7 @@ export class UXService {
     makeAppVisible() {
         appManager.setVisible("show");
         titleBarManager.setBackgroundColor("#FFFFFF");
-        titleBarManager.setForegroundMode(TitleBarPlugin.TitleBarForegroundMode.DARK);    
+        titleBarManager.setForegroundMode(TitleBarPlugin.TitleBarForegroundMode.DARK);
     }
 
     getLanguage() {
@@ -142,15 +143,17 @@ export class UXService {
     setCurLang(lang: string) {
         console.log("Setting current language to "+lang);
 
-        // Setting UI/translations language
-        this.translate.use(lang);
+        this.zone.run(()=>{
+            // Setting UI/translations language
+            this.translate.use(lang);
+        });
 
         // Settings DID SDK language
-        if (lang == 'en') {
+        if (lang === 'en') {
             this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.ENGLISH);
-        } else if (lang == "zh") {
+        } else if (lang === 'zh') {
             this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.CHINESE_SIMPLIFIED);
-        } else if (lang == "fr") {
+        } else if (lang === 'fr') {
             this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.FRENCH);
         } else {
             this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.ENGLISH);
