@@ -281,8 +281,8 @@ export class UXService {
 
     checkCredAccessIntentParams(intent) {
         console.log("Checking credaccess intent parameters");
-        if (Util.isEmptyObject(intent.params) || Util.isEmptyObject(intent.params.claims)) {
-            console.error("Invalid credaccess parameters received. No params or empty claims.", intent.params);
+        if (Util.isEmptyObject(intent.params)) {
+            console.error("Invalid credaccess parameters received. No params.", intent.params);
             return false;
         }
 
@@ -290,7 +290,7 @@ export class UXService {
             appPackageId: intent.from,
             intentId: intent.intentId,
             action: intent.action,
-            requestProfile: intent.params.claims
+            requestProfile: intent.params.claims || [] // We are allowed to request no claim except the DID itself
         }
         return true;
     }
