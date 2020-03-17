@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DrawerState } from 'ion-bottom-drawer';
@@ -10,7 +10,7 @@ import { DIDService } from 'src/app/services/did.service';
 import { Native } from 'src/app/services/native';
 import { Styling } from 'src/app/services/styling';
 import { Util } from 'src/app/services/util';
-import { ModalController } from '@ionic/angular';
+import { ModalController, IonSlides, Platform } from '@ionic/angular';
 import { ImportDIDSourceComponent, ImportDIDSource } from 'src/app/components/importdidsource/importdidsource.component';
 import { MnemonicPassCheckComponent } from 'src/app/components/mnemonicpasscheck/mnemonicpasscheck.component';
 import { UXService } from 'src/app/services/ux.service';
@@ -23,6 +23,17 @@ declare let appManager: AppManagerPlugin.AppManager;
     styleUrls: ['noidentity.scss']
 })
 export class NoIdentityPage {
+
+    @ViewChild(IonSlides, {static:false}) private slide: IonSlides;
+
+    hidden = true;
+    // slider
+    slideOpts = {
+        initialSlide: 0,
+        speed: 400,
+        init:false
+    };
+
     public isfirst: boolean = true;
     public styling = Styling;
     public passwordSheetState = DrawerState.Bottom;
@@ -31,17 +42,44 @@ export class NoIdentityPage {
     public password: string = "";
     public passwordConfirmation: string = "";
 
-    constructor(public router: Router, private native: Native, private didService: DIDService,
-                private modalCtrl: ModalController, private uxService: UXService,
-                private authService: AuthService, private advancedPopup: AdvancedPopupController, private translate: TranslateService) {
+    constructor(public router: Router,
+                private platform: Platform,
+                private modalCtrl: ModalController,
+                private advancedPopup: AdvancedPopupController,
+                private authService: AuthService,
+                private didService: DIDService,
+                private native: Native,
+                private uxService: UXService,
+                private translate: TranslateService) {
         const navigation = this.router.getCurrentNavigation();
         if (!Util.isEmptyObject(navigation.extras.state)) {
             this.isfirst = false;
         }
     }
 
-    ionViewDidEnter() {
+    ionViewWillEnter() {
         this.uxService.makeAppVisible();
+    }
+
+    ionViewDidEnter() {
+        // Dirty hack because on iOS we are currently unable to understand why the
+        // ion-slides width is sometimes wrong when an app starts. Waiting a few
+        // seconds (DOM fully rendered once...?) seems to solve this problem.
+        if (this.platform.platforms().indexOf('ios') >= 0) {
+            setTimeout(()=>{
+                this.showSlider();
+            }, 3000)
+        }
+        else {
+            this.showSlider();
+        }
+    }
+
+    showSlider() {
+        this.hidden = false
+        this.slide.getSwiper().then((swiper)=>{
+            swiper.init();
+        })
     }
 
     async createIdentity() {

@@ -5,7 +5,10 @@
     <div class="ion-padding ion-text-center">
       <ion-slides
         #slide
-        pager="true">
+        pager="true"
+        [options]="slideOpts"
+        [class.hidden]="hidden"
+      >
         <ion-slide class="ion-padding">
           <div class="left-arrow invisible" (click)="prevSlide(slide)">
             <ion-icon name="arrow-round-backward"></ion-icon>
