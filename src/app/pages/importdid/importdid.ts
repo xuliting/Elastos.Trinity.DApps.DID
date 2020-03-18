@@ -10,7 +10,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DIDStore } from 'src/app/model/didstore.model';
 import { MnemonicPassCheckComponent } from 'src/app/components/mnemonicpasscheck/mnemonicpasscheck.component';
 import { EmptyImportedDocumentComponent, EmptyImportedDocumentChoice } from 'src/app/components/emptyimporteddocument/emptyimporteddocument.component';
-import { Subscription } from 'rxjs';
 
 /**
  * Import algorithm:
@@ -30,7 +29,6 @@ export class ImportDIDPage {
   public mnemonicSentence: string = "";
 //   public mnemonicSentence: string = "income diesel latin coffee tourist kangaroo lumber great ill amazing say left"; // TMP TESTNET
   private mnemonicLanguage : DIDPlugin.MnemonicLanguage;
-  private paramsSubscription: Subscription;
   public readonly = false; // set true if import mnemonic form wallet app
 
   @ViewChild('addMnemonicWordInput', { static:false }) addMnemonicWordInput: IonInput;
@@ -54,8 +52,21 @@ export class ImportDIDPage {
 
     this.mnemonicSentence = this.mnemonicSentence.toLowerCase();
 
+    this.mnemonicLanguage = this.getMnemonicLang();
     // Rebuild words based on typed sentence
-    this.mnemonicWords = this.mnemonicSentence.trim().split(" ");
+    if (this.mnemonicLanguage === DIDPlugin.MnemonicLanguage.CHINESE_SIMPLIFIED) {
+        this.getMnemonicWordsFromChinese();
+    }
+    else {
+        this.mnemonicWords = this.mnemonicSentence.trim().split(" ");
+    }
+  }
+
+  getMnemonicWordsFromChinese() {
+    this.mnemonicSentence = this.mnemonicSentence.trim().replace(/ /g, '');
+    for (let i =0;i < this.mnemonicSentence.length; i++) {
+        this.mnemonicWords.push(this.mnemonicSentence[i]);
+    }
   }
 
   allWordsFilled(): boolean {
@@ -192,8 +203,9 @@ export class ImportDIDPage {
   }
 
   getMnemonicLang(): DIDPlugin.MnemonicLanguage {
-    if (Util.english(this.mnemonicWords[0])) return DIDPlugin.MnemonicLanguage.ENGLISH;
-    if (Util.chinese(this.mnemonicWords[0])) return DIDPlugin.MnemonicLanguage.CHINESE_SIMPLIFIED;
+    let mnemonicSentenceTemp = this.mnemonicSentence.trim();
+    if (Util.english(mnemonicSentenceTemp[0])) return DIDPlugin.MnemonicLanguage.ENGLISH;
+    if (Util.chinese(mnemonicSentenceTemp[0])) return DIDPlugin.MnemonicLanguage.CHINESE_SIMPLIFIED;
     // TODO
     return this.native.getMnemonicLang();
   }
