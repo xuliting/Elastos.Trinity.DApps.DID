@@ -59,7 +59,11 @@ export class ImportDIDPage {
     }
     else {
         this.mnemonicWords = this.mnemonicSentence.trim().split(" ");
+        this.mnemonicWords = this.mnemonicWords.filter(item => item !== '');
     }
+
+    // only one space between word
+    this.mnemonicSentence = this.mnemonicWords.join(' ');
   }
 
   getMnemonicWordsFromChinese() {
