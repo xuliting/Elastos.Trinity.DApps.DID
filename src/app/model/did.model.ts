@@ -81,7 +81,8 @@ export class DID {
             let credential: DIDPlugin.VerifiableCredential = null;
             try {
                 console.log("Asking DIDService to create the credential with id "+credentialId);
-                credential = await this.createPluginCredential(credentialId, types, 15, props, password);
+                // the max validity days is 5*365 (5 years).
+                credential = await this.createPluginCredential(credentialId, types, 5*365, props, password);
                 console.log("Created credential:",JSON.parse(JSON.stringify(credential)));
             }
             catch (e) {
@@ -294,10 +295,10 @@ export class DID {
         return false;
     }
 
-    private createPluginCredential(credentialId: DIDURL, type, expirationDate, properties, passphrase): Promise<DIDPlugin.VerifiableCredential> {
+    private createPluginCredential(credentialId: DIDURL, type, validityDays, properties, passphrase): Promise<DIDPlugin.VerifiableCredential> {
         return new Promise(async (resolve, reject)=>{
             this.pluginDid.issueCredential(
-                this.getDIDString(), credentialId.toString(), type, expirationDate, properties, passphrase,
+                this.getDIDString(), credentialId.toString(), type, validityDays, properties, passphrase,
                 (ret) => {resolve(ret)}, (err) => {reject(err)},
             );
         });
