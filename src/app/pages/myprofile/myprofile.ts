@@ -16,6 +16,8 @@ import { DIDService } from 'src/app/services/did.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DIDSyncService } from 'src/app/services/didsync.service';
 
+declare let appManager: AppManagerPlugin.AppManager;
+
 type ProfileDisplayEntry = {
   credentialId: string, // related credential id
   label: string,         // "title" to display
@@ -159,6 +161,19 @@ export class MyProfilePage {
     modal.onDidDismiss().then((params) => {
     });
     modal.present();
+  }
+
+  /**
+   * Generates a share intent that shares a "addfriend" url, so that friends can easily add the current user
+   * as a global trinity friend
+   */
+  shareIdentity() {
+    let addFriendUrl = "https://scheme.elastos.org/addfriend?did="+this.didString;
+
+    appManager.sendIntent("share", {
+      title: this.translate.instant("share-add-me-as-friend"),
+      url: addFriendUrl,
+    });
   }
 
   editProfile() {

@@ -16,6 +16,7 @@ export const en = {
     'delete-credentials': 'Delete credentials',
     'publish': 'Publish',
     'cancel': 'Cancel',
+    'share': 'Share',
 
     // DID operations
     'create-my-did': 'Create my DID',
@@ -109,6 +110,7 @@ export const en = {
     'publish-popup-content': 'Information will be stored on the blockchain when you confirm and will stay there!',
     'publish-popup-confirm-question': 'Are you sure?',
     'changepassword-success': 'Password changed successfully',
+    'share-add-me-as-friend': 'Add me as a friend in elastOS',
 
     // screen: edit profile
     'edit-profile': 'Edit profile',

@@ -16,6 +16,7 @@ export const zh = {
     'delete-credentials': '删除凭证',
     'publish': '发布',
     'cancel': '取消',
+    'share': 'Share',
 
     // DID operations
     'create-my-did': '创建新的DID',
@@ -109,6 +110,7 @@ export const zh = {
     'publish-popup-content': '确认后信息将存储并保存在区块链上!',
     'publish-popup-confirm-question': '确定?',
     'changepassword-success': '密码已成功修改',
+    'share-add-me-as-friend': 'Add me as a friend in elastOS',
 
     // screen: edit profile
     'edit-profile': '编辑信息',
