@@ -172,7 +172,7 @@ export class MyProfilePage {
 
     appManager.sendIntent("share", {
       title: this.translate.instant("share-add-me-as-friend"),
-      url: addFriendUrl,
+      url: encodeURIComponent(addFriendUrl),
     });
   }
 
