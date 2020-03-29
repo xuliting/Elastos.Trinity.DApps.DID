@@ -15,6 +15,8 @@ import { DIDDocument } from 'src/app/model/diddocument.model';
 import { DIDURL } from 'src/app/model/didurl.model';
 import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
 
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
+
 type CredentialDisplayEntry = {
   credential: DIDPlugin.VerifiableCredential,
   willingToBePubliclyVisible: boolean,
@@ -91,6 +93,10 @@ export class CredentialListPage {
     });
 
     this.buildDisplayEntries();
+  }
+
+  ionViewWillEnter() {
+    titleBarManager.setTitle(this.translate.instant('did-credentials'));
   }
 
   ionViewDidLeave() {

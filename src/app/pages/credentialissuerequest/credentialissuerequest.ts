@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { WrongPasswordException } from 'src/app/model/exceptions/wrongpasswordexception.exception';
 import { BrowserSimulation } from 'src/app/services/browsersimulation';
 import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
+import { TranslateService } from '@ngx-translate/core';
 
 declare let didManager: DIDPlugin.DIDManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -45,16 +46,22 @@ export class CredentialIssueRequestPage {
   displayableCredentials: IssuedCredential[] = []; // Displayable reworked matarial
   preliminaryChecksCompleted: boolean = false;
 
-  constructor(private zone: NgZone,
-              private didService: DIDService,
-              private popup: PopupProvider,
-              private uxService: UXService,
-              private authService: AuthService,
-              private popupProvider: PopupProvider,
-              private appServices: UXService) {
+  constructor(
+    private zone: NgZone,
+    private didService: DIDService,
+    private popup: PopupProvider,
+    private uxService: UXService,
+    private authService: AuthService,
+    private popupProvider: PopupProvider,
+    private appServices: UXService,
+    private translate: TranslateService
+  ) {
   }
 
   ionViewWillEnter() {
+    titleBarManager.setTitle(this.translate.instant('credential-import'));
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
+
     this.zone.run(async () => {
       if (!BrowserSimulation.runningInBrowser()) {
         this.requestDapp = Config.requestDapp;
@@ -91,7 +98,6 @@ export class CredentialIssueRequestPage {
 
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
   }
 
   /**
@@ -168,7 +174,7 @@ export class CredentialIssueRequestPage {
   }
 
   async acceptRequest() {
-    // Save the credentials to user's DID. 
+    // Save the credentials to user's DID.
     // NOTE: For now we save all credentials, we can't select them individually.
     AuthService.instance.checkPasswordThenExecute(async ()=>{
       for (let displayableCredential of this.displayableCredentials) {
@@ -180,7 +186,7 @@ export class CredentialIssueRequestPage {
       this.popup.ionicAlert("Credential imported", "Great, the credential has been added to your DID profile.", "Done").then(()=>{
         console.log("Sending credissue intent response for intent id "+this.requestDapp.intentId)
         this.appServices.sendIntentResponse("credissue", {}, this.requestDapp.intentId)
-        this.appServices.close();  
+        this.appServices.close();
       })
     }, ()=>{
       // Error

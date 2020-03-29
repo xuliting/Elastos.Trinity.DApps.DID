@@ -8,6 +8,7 @@ import { PopupProvider } from '../../services/popup';
 import { AuthService } from 'src/app/services/auth.service';
 import { BrowserSimulation } from 'src/app/services/browsersimulation';
 import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
+import { TranslateService } from '@ngx-translate/core';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -34,16 +35,21 @@ export class CredentialAccessRequestPage {
   optionalItems: ClaimRequest[] = [];
   canDeliver: boolean = true;
 
-  constructor(private zone: NgZone,
-              private didService: DIDService,
-              private popup: PopupProvider,
-              private uxService: UXService,
-              private authService: AuthService,
-              private popupProvider: PopupProvider,
-              private appServices: UXService) {
+  constructor(
+    private zone: NgZone,
+    private didService: DIDService,
+    private popup: PopupProvider,
+    private uxService: UXService,
+    private authService: AuthService,
+    private popupProvider: PopupProvider,
+    private appServices: UXService,
+    private translate: TranslateService
+  ) {
   }
 
   ionViewWillEnter() {
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
+    titleBarManager.setTitle(this.translate.instant('data-access'));
     this.mandatoryItems = [];
     this.optionalItems = [];
 
@@ -84,8 +90,6 @@ export class CredentialAccessRequestPage {
 
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
-
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
   }
 
   /**

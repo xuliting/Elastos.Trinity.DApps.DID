@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 
 import { Native } from '../../../services/native';
 import { Util } from '../../../services/util';
+import { TranslateService } from '@ngx-translate/core';
+
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 @Component({
   selector: 'page-credentialbackup',
@@ -12,8 +15,12 @@ import { Util } from '../../../services/util';
 export class CredentialBackupPage {
   public credentialString: any;
 
-  constructor(public router: Router, private native: Native) {
+  constructor(public router: Router, private native: Native, private translate: TranslateService) {
     this.init();
+  }
+
+  ionViewWillEnter() {
+    titleBarManager.setTitle(this.translate.instant('backup-credentials'));
   }
 
   init() {

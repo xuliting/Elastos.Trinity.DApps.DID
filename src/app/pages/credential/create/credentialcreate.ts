@@ -5,6 +5,9 @@ import { Config } from '../../../services/config';
 import { Native } from '../../../services/native';
 import { DIDService } from 'src/app/services/did.service';
 import { DIDURL } from 'src/app/model/didurl.model';
+import { TranslateService } from '@ngx-translate/core';
+
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 @Component({
   selector: 'page-credentialcreate',
@@ -17,8 +20,17 @@ export class CredentialCreatePage {
   remark: String = "";
   profile:any = {};
 
-  constructor(public route:ActivatedRoute, private didService: DIDService, private native: Native) {
+  constructor(
+    public route: ActivatedRoute,
+    private didService: DIDService,
+    private native: Native,
+    private translate: TranslateService
+  ) {
     this.init();
+  }
+
+  ionViewWillEnter() {
+    titleBarManager.setTitle(this.translate.instant('create-credentials'));
   }
 
   init() {

@@ -8,6 +8,9 @@ import { Native } from '../../services/native';
 import { DIDStore } from 'src/app/model/didstore.model';
 import { DIDService } from 'src/app/services/did.service';
 import { DIDEntry } from '../../model/didentry.model';
+import { TranslateService } from '@ngx-translate/core';
+
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 @Component({
   selector: 'page-didlist',
@@ -18,10 +21,13 @@ export class DIDListPage {
   public didList: DIDEntry[];
   public activeProfile: Profile = null;
 
-  constructor(private native: Native,
-              public event: Events,
-              private didService: DIDService,
-              public zone: NgZone) {
+  constructor(
+    private native: Native,
+    public event: Events,
+    private didService: DIDService,
+    public zone: NgZone,
+    private translate: TranslateService
+  ) {
     this.init();
   }
 
@@ -33,6 +39,11 @@ export class DIDListPage {
         this.refreshActiveProfile();
       });
     });
+  }
+
+  ionViewWillEnter() {
+    titleBarManager.setTitle(this.translate.instant('did-portfolio'));
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
   }
 
   ngOnDestroy() {

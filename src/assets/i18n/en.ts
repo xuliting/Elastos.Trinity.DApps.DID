@@ -97,7 +97,7 @@ export const en = {
 
     // screen: my profile
     'no-picture-placeholder': 'Profile<br/>Picture',
-    'my-profile': 'My profile',
+    'my-profile': 'My Profile',
     'qr-code': 'QR code',
     'delete-did': 'Delete DID',
     'my-visible-data': 'My Visible Data',
@@ -113,7 +113,7 @@ export const en = {
     'share-add-me-as-friend': 'Add me as a friend in elastOS',
 
     // screen: edit profile
-    'edit-profile': 'Edit profile',
+    'edit-profile': 'Edit Profile',
     'edit-profile-intro': 'You can fill in as much or as little as you would like.',
     'name-is-required': 'Name is required.',
     'name-is-missing': 'Please at least provide your name',
@@ -137,6 +137,8 @@ export const en = {
 
     // screen: did credentials
     'did-credentials': 'DID Credentials',
+    'backup-credentials': 'Backup Credentials',
+    'create-credentials': 'Add Credentials',
     'no-credential-yet': 'Seems like there is no credential yet.',
     'issuer': 'Issuer',
     'information-it-contains': 'Information it contains',

@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { DIDService } from '../../services/did.service';
 import { Native } from '../../services/native';
 import { Util } from '../../services/util';
+import { TranslateService } from '@ngx-translate/core';
+
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 @Component({
     selector: 'page-backupdid',
@@ -14,7 +17,12 @@ export class BackupDIDPage {
     public mnemonicList: string[] = [];
     public isCreation = false;
 
-    constructor(private native: Native, private didService: DIDService, public router: Router) {
+    constructor(
+      private native: Native,
+      private didService: DIDService,
+      public router: Router,
+      private translate: TranslateService
+    ) {
         console.log("Entering BackupDID page");
         const navigation = this.router.getCurrentNavigation();
         if (!Util.isEmptyObject(navigation.extras.state) && (navigation.extras.state['create'] == false)) {
@@ -31,6 +39,11 @@ export class BackupDIDPage {
             this.isCreation = true;
             this.generateMnemonic();
         }
+    }
+
+    ionViewWillEnter() {
+      titleBarManager.setTitle('Mnemonic');
+      titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
     }
 
     generateMnemonic() {

@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Platform } from '@ionic/angular';
+import { Platform, NavController } from '@ionic/angular';
 import { Native } from './native';
 
 import { Config } from './config';
@@ -9,6 +9,7 @@ import { BrowserSimulation } from './browsersimulation';
 import { AuthService } from './auth.service';
 import { DIDService } from './did.service';
 import { PopupProvider } from './popup';
+import { Router } from '@angular/router';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -34,13 +35,17 @@ export class UXService {
     private isReceiveIntentReady = false;
     private appIsLaunchingFromIntent = false; // Is the app starting because of an intent request?
 
-    constructor(public translate: TranslateService,
+    constructor(
+        public translate: TranslateService,
         private platform: Platform,
         private zone: NgZone,
         private native: Native,
         private popup: PopupProvider,
         private didService: DIDService,
-        private authService: AuthService) {
+        private authService: AuthService,
+        private navCtrl: NavController,
+        private router: Router,
+    ) {
         selfUxService = this;
         UXService.instance = this;
     }
@@ -176,11 +181,16 @@ export class UXService {
         }
     }
 
-    onReceive(ret) {
+    onReceive = (ret) => {
+        console.log('onReceive', ret);
         var params: any = ret.message;
-        if (typeof (params) == "string") {
+      /*   if (typeof (params) == "string") {
+          try {
             params = JSON.parse(params);
-        }
+          } catch (e) {
+              console.log('Params are not JSON format: ', params);
+          }
+        } */
         switch (ret.type) {
             case MessageType.IN_REFRESH:
                 switch (params.action) {
@@ -191,6 +201,12 @@ export class UXService {
                 break;
             case MessageType.EX_INSTALL:
                 break;
+            case MessageType.INTERNAL:
+                switch (ret.message) {
+                    case 'navback':
+                        this.navCtrl.back();
+                }
+                    break;
         }
     }
 

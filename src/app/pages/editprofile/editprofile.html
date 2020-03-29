@@ -1,7 +1,5 @@
 <div class="root-container">
-  <header-bar title="edit-profile" [showBack]="true" [transparent]="false"></header-bar>
-
-  <ion-content>  
+  <ion-content>
     <ion-grid class="ion-text-center ion-no-padding">
       <ion-row *ngIf="!isEdit">
         <ion-col class="ion-text-center ion-padding">
@@ -15,9 +13,9 @@
       </ion-row>
       <ion-row class="ion-padding">
         <ion-col class="ion-align-self-center">
-          <did-button class="secondary-button" (click)="next()" 
-            [title]="'save-profile' | translate" 
-            [bgcolor]="'rgba(0,0,0,0)'" 
+          <did-button class="secondary-button" (click)="next()"
+            [title]="'save-profile' | translate"
+            [bgcolor]="'rgba(0,0,0,0)'"
             [bordercolor]="'#FFFFFF'"
             [shadow]="false"></did-button>
         </ion-col>
@@ -34,19 +32,19 @@
             <ion-item *ngFor="let entry of profile.entries">
               <!-- String credential type -->
               <ion-item lines="none" class="item" *ngIf="entry.info.isText()">
-                <ion-label>{{'credential-info-type-'+entry.info.key | translate}}</ion-label> 
+                <ion-label>{{'credential-info-type-'+entry.info.key | translate}}</ion-label>
                 <ion-input [placeholder]="'enter-here'|translate" [(ngModel)]="entry.value" class="ion-text-right deletion-margin-right" (keyup)="maybeMoveFocus(emailInput, $event)"></ion-input>
                 <ion-label class="deletion" (click)="deleteProfileEntry(entry, $event)"><ion-icon name="remove"></ion-icon></ion-label>
               </ion-item>
               <!-- Email credential type -->
               <ion-item lines="none" class="item" *ngIf="entry.info.isEmail()">
-                <ion-label>{{'credential-info-type-'+entry.info.key | translate}}</ion-label> 
+                <ion-label>{{'credential-info-type-'+entry.info.key | translate}}</ion-label>
                 <ion-input [placeholder]="'enter-here'|translate" [(ngModel)]="entry.value" type="email" pattern="email" class="ion-text-right deletion-margin-right" (keyup)="maybeMoveFocus(telInput, $event)"></ion-input>
                 <ion-label class="deletion" (click)="deleteProfileEntry(entry, $event)"><ion-icon name="remove"></ion-icon></ion-label>
               </ion-item>
               <!-- Phone number credential type -->
               <ion-item lines="none" class="item" *ngIf="entry.info.isPhoneNumber()">
-                <ion-label>{{'credential-info-type-'+entry.info.key | translate}}</ion-label> 
+                <ion-label>{{'credential-info-type-'+entry.info.key | translate}}</ion-label>
                 <ion-input [placeholder]="'enter-here'|translate" [(ngModel)]="entry.value" type="tel" class="ion-text-right deletion-margin-right" (keyup)="maybeClearFocus(telInput, $event)"></ion-input>
                 <ion-label class="deletion" (click)="deleteProfileEntry(entry, $event)"><ion-icon name="remove"></ion-icon></ion-label>
               </ion-item>

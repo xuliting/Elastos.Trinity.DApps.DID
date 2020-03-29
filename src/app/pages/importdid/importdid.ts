@@ -10,6 +10,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DIDStore } from 'src/app/model/didstore.model';
 import { MnemonicPassCheckComponent } from 'src/app/components/mnemonicpasscheck/mnemonicpasscheck.component';
 import { EmptyImportedDocumentComponent, EmptyImportedDocumentChoice } from 'src/app/components/emptyimporteddocument/emptyimporteddocument.component';
+import { TranslateService } from '@ngx-translate/core';
+
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 /**
  * Import algorithm:
@@ -33,7 +36,17 @@ export class ImportDIDPage {
 
   @ViewChild('addMnemonicWordInput', { static:false }) addMnemonicWordInput: IonInput;
 
-  constructor(public router: Router, public zone: NgZone, public navCtrl: NavController, private modalCtrl: ModalController, private native: Native, private didService: DIDService, private authService: AuthService, private popupProvider: PopupProvider) {
+  constructor(
+    public router: Router,
+    public zone: NgZone,
+    public navCtrl: NavController,
+    private modalCtrl: ModalController,
+    private native: Native,
+    private didService: DIDService,
+    private authService: AuthService,
+    private popupProvider: PopupProvider,
+    private translate: TranslateService
+  ) {
     const navigation = this.router.getCurrentNavigation();
     if (!Util.isEmptyObject(navigation.extras.state)) {
         if (!Util.isEmptyObject(navigation.extras.state.mnemonic)) {
@@ -44,6 +57,11 @@ export class ImportDIDPage {
             });
         }
       }
+  }
+
+  ionViewWillEnter() {
+    titleBarManager.setTitle(this.translate.instant('import-my-did'));
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
   }
 
   onMnemonicSentenceChanged() {

@@ -3,8 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 
 import { Native } from '../../services/native';
 import { Util } from '../../services/util';
+import { TranslateService } from '@ngx-translate/core';
 
 declare let appManager: AppManagerPlugin.AppManager;
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 @Component({
   selector: 'page-devpage',
@@ -14,7 +16,12 @@ declare let appManager: AppManagerPlugin.AppManager;
 export class DevPage {
   public isfirst: boolean = true;
 
-  constructor(private native: Native) {
+  constructor(private native: Native, private translate: TranslateService) {
+  }
+
+  ionViewWillEnter() {
+    titleBarManager.setTitle('Internal Tests');
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
   }
 
   registerAppProfileIntent() {

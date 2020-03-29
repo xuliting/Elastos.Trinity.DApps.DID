@@ -17,6 +17,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DIDSyncService } from 'src/app/services/didsync.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 type ProfileDisplayEntry = {
   credentialId: string, // related credential id
@@ -90,6 +91,11 @@ export class MyProfilePage {
   ionViewDidLeave() {
     // Restore some UI state in case we just go refreshed
     this.editingVisibility = false;
+  }
+
+  ionViewWillEnter() {
+    titleBarManager.setTitle(this.translate.instant('my-profile'));
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
   }
 
   ionViewDidEnter() {

@@ -1,13 +1,9 @@
 <div class="root-container">
-  <header-bar title="my-profile" [transparent]="false"></header-bar>
 
   <ion-content no-bounce>
     <ion-grid class="ion-no-padding">
       <div class="profile-container">
         <div class="profile-picture">
-          <div class="no-picture">
-            {{'no-picture-placeholder'|translate}}
-          </div>
           <img [src]="profile.getDefaultProfilePicturePath()">
         </div>
         <div class="profile-items">

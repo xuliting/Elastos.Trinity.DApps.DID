@@ -18,6 +18,8 @@ import { AdvancedPopupController } from 'src/app/components/advanced-popup/advan
 import { TranslateService } from '@ngx-translate/core';
 import { DIDSyncService } from 'src/app/services/didsync.service';
 
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
+
 @Component({
   selector: 'page-editprofile',
   templateUrl: 'editprofile.html',
@@ -54,6 +56,12 @@ export class EditProfilePage {
         // Creation
         this.profile = Profile.createDefaultProfile();
     }
+  }
+
+  ionViewWillEnter() {
+    // titleBarManager.setTitle(this.translate.instant('edit-profile'));
+    titleBarManager.setTitle(this.translate.instant('my-profile'));
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
   }
 
   entryIsText(entry: BasicCredentialEntry): boolean {

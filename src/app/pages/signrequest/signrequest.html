@@ -1,5 +1,5 @@
 <div class="root-container">
-  <header-bar title="Sign" [showBack]="false" [showClose]="true" [showMinimize]="false" (onClose)="rejectRequest()"></header-bar>
+  <header-bar title="" [showBack]="false" [showClose]="true" [showMinimize]="false" (onClose)="rejectRequest()"></header-bar>
 
   <ion-content>
     <div *ngIf="requestDapp">
@@ -23,12 +23,12 @@
       </div>
     </div>
 
-    <did-button class="main-button" (click)="acceptRequest()" 
-        [title]="'accept' | translate" 
-        [bgcolor]="'var(--ion-color-primary)'" 
+    <did-button class="main-button" (click)="acceptRequest()"
+        [title]="'accept' | translate"
+        [bgcolor]="'var(--ion-color-primary)'"
         [bordercolor]="'var(--ion-color-primary)'"
         [shadow]="true"></did-button>
-    
+
   </ion-content>
 </div>
 

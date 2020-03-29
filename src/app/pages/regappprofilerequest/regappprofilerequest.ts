@@ -50,17 +50,22 @@ export class RegisterApplicationProfileRequestPage {
 
   public shouldPublishOnSidechain: boolean = true;
 
-  constructor(private zone: NgZone,
-              private didService: DIDService,
-              private popup: PopupProvider,
-              private events: Events,
-              private uxService:UXService,
-              private translate: TranslateService,
-              private advancedPopup: AdvancedPopupController,
-              private appServices: UXService) {
+  constructor(
+    private zone: NgZone,
+    private didService: DIDService,
+    private popup: PopupProvider,
+    private events: Events,
+    private uxService:UXService,
+    private translate: TranslateService,
+    private advancedPopup: AdvancedPopupController,
+    private appServices: UXService
+  ) {
   }
 
   ionViewWillEnter() {
+    titleBarManager.setTitle('Application Profile');
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
+
     if (!BrowserSimulation.runningInBrowser()) {
       this.requestDapp = Config.requestDapp;
     }
@@ -85,7 +90,6 @@ export class RegisterApplicationProfileRequestPage {
 
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
 
     // Listen to publication result event to know when the wallet app returns from the "didtransaction" intent
     // request initiated by publish() on a did document.
@@ -186,7 +190,7 @@ export class RegisterApplicationProfileRequestPage {
     props["action"] = this.requestDapp.allParams.connectactiontitle;
     props["apppackage"] = this.requestDapp.appPackageId;
     props["apptype"] = "elastosbrowser";
-    
+
     // Create and append the new ApplicationProfileCredential credential to the local store.
     let credentialId = new DIDURL("#"+credentialTitle);
     let createdCredential = await this.didService.getActiveDid().addCredential(credentialId, props, password, customCredentialTypes);

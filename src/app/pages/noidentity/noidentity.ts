@@ -16,6 +16,7 @@ import { MnemonicPassCheckComponent } from 'src/app/components/mnemonicpasscheck
 import { UXService } from 'src/app/services/ux.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 @Component({
     selector: 'page-noidentity',
@@ -59,6 +60,8 @@ export class NoIdentityPage {
 
     ionViewWillEnter() {
         this.uxService.makeAppVisible();
+        titleBarManager.setTitle('DID');
+        titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
     }
 
     ionViewDidEnter() {
@@ -79,7 +82,7 @@ export class NoIdentityPage {
         this.hidden = false
         this.slide.getSwiper().then((swiper)=>{
             swiper.init();
-        })
+        });
     }
 
     async createIdentity() {

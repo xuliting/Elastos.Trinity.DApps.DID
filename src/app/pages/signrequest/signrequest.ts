@@ -35,16 +35,21 @@ export class SignRequestPage {
     allParams: SignIntentParams
   } = null;
 
-  constructor(private zone: NgZone,
-              private didService: DIDService,
-              private popup: PopupProvider,
-              private uxService:UXService,
-              private translate: TranslateService,
-              private advancedPopup: AdvancedPopupController,
-              private appServices: UXService) {
+  constructor(
+    private zone: NgZone,
+    private didService: DIDService,
+    private popup: PopupProvider,
+    private uxService:UXService,
+    private translate: TranslateService,
+    private advancedPopup: AdvancedPopupController,
+    private appServices: UXService
+  ) {
   }
 
   ionViewWillEnter() {
+    titleBarManager.setTitle('Sign');
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
+
     if (!BrowserSimulation.runningInBrowser()) {
       this.requestDapp = Config.requestDapp;
     }
@@ -62,7 +67,6 @@ export class SignRequestPage {
 
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
   }
 
   async acceptRequest() {

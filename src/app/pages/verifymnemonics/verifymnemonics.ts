@@ -5,6 +5,9 @@ import { Native } from '../../services/native';
 import { Util } from '../../services/util';
 import { DIDService } from 'src/app/services/did.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { TranslateService } from '@ngx-translate/core';
+
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 type MnemonicWord = {
     text: string;
@@ -25,8 +28,15 @@ export class VerifyMnemonicsPage {
                 public zone: NgZone,
                 private didService: DIDService,
                 private authService: AuthService,
-                private native: Native) {
+                private native: Native,
+                private translate: TranslateService
+                ) {
         this.init();
+    }
+
+    ionViewWillEnter() {
+      titleBarManager.setTitle(this.translate.instant('verification'));
+      titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
     }
 
     init() {

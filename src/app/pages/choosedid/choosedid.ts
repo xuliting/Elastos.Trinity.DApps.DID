@@ -7,6 +7,7 @@ import { Native } from '../../services/native';
 import { DIDEntry } from '../../model/didentry.model';
 import { DIDService } from 'src/app/services/did.service';
 import { UXService } from 'src/app/services/ux.service';
+import { TranslateService } from '@ngx-translate/core';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -15,16 +16,20 @@ declare let titleBarManager: TitleBarPlugin.TitleBarManager;
   templateUrl: 'choosedid.html',
   styleUrls: ['choosedid.scss']
 })
+
 export class ChooseDIDPage {
   public didList: DIDEntry[];
   private redirectOptions: any = null;
 
-  constructor(private native: Native,
-              public event: Events,
-              private router: Router,
-              private didService: DIDService,
-              public zone: NgZone,
-              private uxService: UXService) {
+  constructor(
+    private native: Native,
+    public event: Events,
+    private router: Router,
+    private didService: DIDService,
+    public zone: NgZone,
+    private uxService: UXService,
+    private translate: TranslateService
+  ) {
     const navigation = this.router.getCurrentNavigation();
     if (!Util.isEmptyObject(navigation.extras.state)) {
       this.redirectOptions = navigation.extras.state;
@@ -37,9 +42,13 @@ export class ChooseDIDPage {
     this.refreshStoreList();
   }
 
+  ionViewWillEnter() {
+    titleBarManager.setTitle(this.translate.instant('choose-did'));
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
+  }
+
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
   }
 
   async refreshStoreList() {
