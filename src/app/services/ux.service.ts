@@ -195,7 +195,7 @@ export class UXService {
             case MessageType.IN_REFRESH:
                 switch (params.action) {
                     case "currentLocaleChanged":
-                        selfUxService.setCurLang(params.code);
+                        selfUxService.setCurLang(params.data);
                         break;
                 }
                 break;
