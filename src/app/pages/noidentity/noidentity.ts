@@ -60,7 +60,7 @@ export class NoIdentityPage {
 
     ionViewWillEnter() {
         this.uxService.makeAppVisible();
-        titleBarManager.setTitle('DID');
+        titleBarManager.setTitle('Identity');
         if(this.isfirst) {
           titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
         } else {
