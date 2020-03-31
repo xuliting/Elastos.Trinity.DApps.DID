@@ -184,13 +184,13 @@ export class UXService {
     onReceive = (ret) => {
         console.log('onReceive', ret);
         var params: any = ret.message;
-      /*   if (typeof (params) == "string") {
-          try {
-            params = JSON.parse(params);
-          } catch (e) {
-              console.log('Params are not JSON format: ', params);
-          }
-        } */
+        if (typeof (params) == "string") {
+            try {
+                params = JSON.parse(params);
+            } catch (e) {
+                console.log('Params are not JSON format: ', params);
+            }
+        }
         switch (ret.type) {
             case MessageType.IN_REFRESH:
                 switch (params.action) {
