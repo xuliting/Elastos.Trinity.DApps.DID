@@ -61,7 +61,11 @@ export class NoIdentityPage {
     ionViewWillEnter() {
         this.uxService.makeAppVisible();
         titleBarManager.setTitle('DID');
-        titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
+        if(this.isfirst) {
+          titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
+        } else {
+          titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
+        }
     }
 
     ionViewDidEnter() {
