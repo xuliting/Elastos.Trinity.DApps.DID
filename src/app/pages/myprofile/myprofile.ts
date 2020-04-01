@@ -33,7 +33,7 @@ type ProfileDisplayEntry = {
 })
 export class MyProfilePage {
   public creatingIdentity: boolean = false;
-  public didString: String = "";
+  public didString: string = "";
   public profile: Profile;
   visibleData: ProfileDisplayEntry[];
   invisibleData: ProfileDisplayEntry[];
@@ -174,11 +174,11 @@ export class MyProfilePage {
    * as a global trinity friend
    */
   shareIdentity() {
-    let addFriendUrl = "https://scheme.elastos.org/addfriend?did="+this.didString;
+    let addFriendUrl = "https://scheme.elastos.org/addfriend?did="+encodeURIComponent(this.didString);
 
     appManager.sendIntent("share", {
       title: this.translate.instant("share-add-me-as-friend"),
-      url: encodeURIComponent(addFriendUrl),
+      url: addFriendUrl,
     });
   }
 
