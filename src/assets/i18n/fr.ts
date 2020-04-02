@@ -19,14 +19,14 @@ export const fr = {
     'share': 'Partager',
 
     // DID operations
-    'create-my-did': 'Créer mon DID',
-    'import-my-did': 'Importer mon DID',
+    'create-my-did': 'Créer mon Identité',
+    'import-my-did': 'Importer mon Identité',
     'create-profile': 'Créer un Profil',
-    'create-new-did-profile': 'Créer un Nouveau Profil',
-    'import-did-profile': 'Importer un Profil',
-    'import-did-popup-content': 'Importer un DID écrasera tout DID existant actuellement.',
+    'create-new-did-profile': "Créer un Nouveau Profil d'identité",
+    'import-did-profile': "Importer un Profil d'identité",
+    'import-did-popup-content': 'Importer une identité écrasera tout identité existant actuellement.',
     'import-did-popup-confirm-question': 'Etes-vous sûr(e)?',
-    'add-new-did-profile': 'Ajouter un Nouveau Profil',
+    'add-new-did-profile': "Ajouter un Nouveau Profil d'identité",
     'save-profile': 'Enregistrer le profil',
 
     // Passwords
@@ -52,7 +52,7 @@ export const fr = {
     'missing': 'Manquant',
 
     // Profile fields
-    'credential-info-type-did': 'DID',
+    'credential-info-type-did': 'Identité',
     'credential-info-type-name': 'Nom',
     'credential-info-type-email': 'Email',
     'credential-info-type-birthDate': 'Date de naissance',
@@ -70,7 +70,7 @@ export const fr = {
     'credential-info-type-weibo': 'Weibo',
     'male': 'Homme',
     'female': 'Femme',
-    'your-did': 'Votre DID',
+    'your-did': 'Votre Identité',
 
     // Error messages
     'text-request-fail': 'request fail',
@@ -83,11 +83,11 @@ export const fr = {
 
     // screen: noidentity
     'welcome': 'Bienvenue',
-    'elastos-did-portfolio': 'Portefeuille DID d\'elastOS',
+    'elastos-did-portfolio': "Identités d'élastos",
     'welcome-text-intro-1': 'Gérer vos identités décentralisées et partagez-les uniquement avec qui vous le voulez.',
     'welcome-text-intro-2': 'Vos identités sous votre contrôle avec elastOS!',
     'welcome-text-intro-3': 'Première fois?',
-    'welcome-text-intro-4': 'Créons un profil DID!',
+    'welcome-text-intro-4': "Créons un profil d'identité!",
 
     // screen: area
     'country': 'Pays',
@@ -99,7 +99,7 @@ export const fr = {
     'no-picture-placeholder': 'Photo de<br/>Profil',
     'my-profile': 'Mon profil',
     'qr-code': 'QR code',
-    'delete-did': 'Supprimer le DID',
+    'delete-did': "Supprimer l'identité",
     'my-visible-data': 'Mes Données Visibles',
     'my-hidden-data': 'Mes Données Cachées',
     'deletion-popup-warning': 'Attention!',
@@ -120,7 +120,7 @@ export const fr = {
     'add-info': 'Ajouter une info',
 
     // screen: did list
-    'did-portfolio': 'Portefeuille DID',
+    'did-portfolio': 'Identités',
 
     // screen: credaccess
     'data-access': 'Accès aux données',
@@ -133,10 +133,10 @@ export const fr = {
     // screen: credissue
     'credential-import': 'Import de Référence',
     'credential-import-from': 'Délivré par',
-    'credissue-intro': 'Vous allez ajouter une ou plusieurs information(s) délivrée(s) par un tiers à votre profil DID. Veuillez en vérifier le contenu.',
+    'credissue-intro': "Vous allez ajouter une ou plusieurs information(s) délivrée(s) par un tiers à votre profil d'identité. Veuillez en vérifier le contenu.",
 
     // screen: did credentials
-    'did-credentials': 'Références DID',
+    'did-credentials': "Référence d'identité",
     'no-credential-yet': 'Il semblerait qu\il n\'y ait aucune référence pour l\'instant.',
     'issuer': 'Délivré par',
     'information-it-contains': 'Information contenue',
@@ -177,7 +177,7 @@ export const fr = {
     'type-my-password': 'Saisir mon mot de passe',
 
     // component: importdidsource
-    'importdidsource-intro': 'Comment voulez-vous importer votre DID?',
+    'importdidsource-intro': 'Comment voulez-vous importer votre identité?',
     'import-from-mnemonic': 'Saisir mon mnémonique',
     'import-from-wallet-app': 'Importer depuis l\'app Wallet',
 
@@ -195,7 +195,7 @@ export const fr = {
     'loading-msg': 'Veuillez patienter',
 
     // id transaction
-    'publish-success': 'Vos informations publiques ont été envoyées à la chaîne publique DID. Veuillez patienter un moment pour que vos changements soient actifs.',
+    'publish-success': "Vos informations publiques ont été envoyées à la chaîne d'identité publique. Veuillez patienter un moment pour que vos changements soient actifs.",
     'publish-error': 'Vos informations publiques n\'ont pas pu être publiées pour l\'instant. Veuillez réessayer dans un moment.',
 };
 

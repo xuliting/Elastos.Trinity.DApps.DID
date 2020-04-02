@@ -19,14 +19,14 @@ export const en = {
     'share': 'Share',
 
     // DID operations
-    'create-my-did': 'Create my DID',
-    'import-my-did': 'Import my DID',
+    'create-my-did': 'Create my Identity',
+    'import-my-did': 'Import my Identity',
     'create-profile': 'Create Profile',
-    'create-new-did-profile': 'Create New DID Profile',
-    'import-did-profile': 'Import DID Profile',
-    'import-did-popup-content': 'Import DID will overwrite existing DID store',
+    'create-new-did-profile': 'Create New Identity Profile',
+    'import-did-profile': 'Import Identity Profile',
+    'import-did-popup-content': 'Importing Identity will overwrite existing Identity store',
     'import-did-popup-confirm-question': 'Are you sure?',
-    'add-new-did-profile': 'Add New DID Profile',
+    'add-new-did-profile': 'Add New Identity Profile',
     'save-profile': 'Save profile',
 
     // Passwords
@@ -46,13 +46,13 @@ export const en = {
 
     // Generic items
     'profile': 'Profile',
-    'portfolio': 'Portfolio',
+    'portfolio': 'Identities',
     'credentials': 'Credentials',
     'settings': 'Settings',
     'missing': 'Missing',
 
     // Profile fields
-    'credential-info-type-did': 'DID',
+    'credential-info-type-did': 'Identity',
     'credential-info-type-name': 'Name',
     'credential-info-type-email': 'Email',
     'credential-info-type-birthDate': 'Birth date',
@@ -70,7 +70,7 @@ export const en = {
     'credential-info-type-weibo': 'Weibo',
     'male': 'Male',
     'female': 'Female',
-    'your-did': 'Your DID',
+    'your-did': 'Your Identity',
 
     // Error messages
     'text-request-fail': 'request fail',
@@ -83,11 +83,11 @@ export const en = {
 
     // screen: noidentity
     'welcome': 'Welcome',
-    'elastos-did-portfolio': 'elastOS DID Portfolio',
+    'elastos-did-portfolio': 'elastOS Identities',
     'welcome-text-intro-1': 'Manage your decentralized identities and share with friends and business that only you allow.',
     'welcome-text-intro-2': 'Own your identity on elastOS!',
     'welcome-text-intro-3': 'First time?',
-    'welcome-text-intro-4': 'Let\'s create a DID profile',
+    'welcome-text-intro-4': 'Let\'s create an Identity Profile',
 
     // screen: countrypicker
     'country': 'Country',
@@ -99,7 +99,7 @@ export const en = {
     'no-picture-placeholder': 'Profile<br/>Picture',
     'my-profile': 'My Profile',
     'qr-code': 'QR code',
-    'delete-did': 'Delete DID',
+    'delete-did': 'Delete Identity',
     'my-visible-data': 'My Visible Data',
     'my-hidden-data': 'My Hidden Data',
     'deletion-popup-warning': 'Warning!',
@@ -120,7 +120,7 @@ export const en = {
     'add-info': 'Add info',
 
     // screen: did list
-    'did-portfolio': 'DID Portfolio',
+    'did-portfolio': 'Identities',
 
     // screen: credaccess
     'data-access': 'Data access',
@@ -133,10 +133,10 @@ export const en = {
     // screen: credissue
     'credential-import': 'Import Credential',
     'credential-import-from': 'Delivered by',
-    'credissue-intro': 'You are about to add one or more credentials issued by a third party to your DID profile. Please carefully review the content.',
+    'credissue-intro': 'You are about to add one or more credentials issued by a third party to your Identity profile. Please carefully review the content.',
 
     // screen: did credentials
-    'did-credentials': 'DID Credentials',
+    'did-credentials': 'Identity Credentials',
     'backup-credentials': 'Backup Credentials',
     'create-credentials': 'Add Credentials',
     'no-credential-yet': 'Seems like there is no credential yet.',
@@ -151,8 +151,8 @@ export const en = {
     'verify-subtitle': 'This verification is needed to make sure that your correctly saved your mnemonics.',
 
     // screen: choose did
-    'choose-did': 'Choose DID',
-    'choose-did-intro': 'Please select the DID Profile you want to use for this action',
+    'choose-did': 'Choose Identity',
+    'choose-did-intro': 'Please select the Identity you want to use for this action',
 
     ////////////////////////////////////////////////////
     //////////////// COMPONENT SPECIFIC ////////////////
@@ -179,7 +179,7 @@ export const en = {
     'type-my-password': 'Type my password',
 
     // component: importdidsource
-    'importdidsource-intro': 'How would you like to import your DID?',
+    'importdidsource-intro': 'How would you like to import your Identity?',
     'import-from-mnemonic': 'Type my mnemonic words',
     'import-from-wallet-app': 'Import mnemonic from wallet app',
 
