@@ -158,7 +158,7 @@ export class ImportDIDPage {
     didStore.synchronize(storePass).then(async ()=>{
       console.log('Synchronization success. Now loading DID store information');
 
-      await didStore.loadAll(didStore.getId());
+      await didStore.loadAll(didStore.getId(), true);
 
       this.native.hideLoading();
 

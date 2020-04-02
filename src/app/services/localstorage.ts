@@ -48,7 +48,7 @@ export class LocalStorage {
         });
     }
 
-    private remove(key: string): any {
+    public remove(key: string): any {
         return this.storage.remove(key);
     }
 
