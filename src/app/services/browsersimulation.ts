@@ -304,6 +304,31 @@ export class SimulatedDIDDocument implements DIDPlugin.DIDDocument {
         simulated("getDefaultPublicKey", "SimulatedDIDDocument");
     }
 
+    getServicesCount(): Number {
+        simulated("getServicesCount", "SimulatedDIDDocument");
+        return 0;
+    }
+
+    getService(didUrl: string): DIDPlugin.Service {
+        simulated("getService", "SimulatedDIDDocument");
+        return null;
+    }
+
+    getServices(): DIDPlugin.Service[] {
+        simulated("getServices", "SimulatedDIDDocument");
+        return null;
+    }
+
+    addService(service: DIDPlugin.Service, storePass: string, onSuccess?: () => void, onError?: (err: any) => void) {
+        simulated("addServices", "SimulatedDIDDocument");
+        return null;
+    }
+
+    removeService(didUrl: string, storePass: string, onSuccess?: () => void, onError?: (err: any) => void) {
+        simulated("removeServices", "SimulatedDIDDocument");
+        return null;
+    }
+
     addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string, onSuccess?: (d: any) => void, onError?: (err: any) => void) {
         simulated("addCredential", "SimulatedDIDDocument");
     }
