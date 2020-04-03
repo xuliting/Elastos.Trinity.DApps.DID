@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
-import { Events, ModalController, NavParams } from '@ionic/angular';
+import { ModalController, NavParams } from '@ionic/angular';
 
-import { Native } from '../../services/native';
-import { area } from '../../../assets/area/area';
 import { BasicCredentialInfo } from 'src/app/model/basiccredentialinfo.model';
-import { DIDService } from 'src/app/services/did.service';
 import { BasicCredentialsService } from 'src/app/services/basiccredentials.service';
 
 @Component({
@@ -29,5 +26,9 @@ export class ProfileEntryPickerPage {
     this.modalCtrl.dismiss({
       pickedItem: item
     })
+  }
+
+  close() {
+    this.modalCtrl.dismiss(null);
   }
 }
