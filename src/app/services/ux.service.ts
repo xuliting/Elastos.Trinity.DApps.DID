@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Platform, NavController } from '@ionic/angular';
+import { Platform, ModalController, NavController } from '@ionic/angular';
 import { Native } from './native';
 
 import { Config } from './config';
@@ -43,6 +43,7 @@ export class UXService {
         private popup: PopupProvider,
         private didService: DIDService,
         private authService: AuthService,
+        private modalCtrl: ModalController,
         private navCtrl: NavController,
         private router: Router,
     ) {
@@ -204,10 +205,23 @@ export class UXService {
             case MessageType.INTERNAL:
                 switch (ret.message) {
                     case 'navback':
-                        this.navCtrl.back();
+                        this.titlebarBackButtonHandle();
+                        break;
                 }
-                    break;
+                break;
         }
+    }
+
+    async titlebarBackButtonHandle() {
+        // to check alert, action, popover, menu ?
+        // ...
+        const modal = await this.modalCtrl.getTop();
+        if (modal) {
+            modal.dismiss();
+            return;
+        }
+
+        this.navCtrl.back();
     }
 
     onReceiveIntent(intent: AppManagerPlugin.ReceivedIntent) {
