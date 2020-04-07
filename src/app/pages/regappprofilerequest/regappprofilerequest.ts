@@ -29,9 +29,7 @@ type RegAppProfileIntentParams = {
     identifier: string,
     connectactiontitle: RegAppProfileIntentParamActionTitle
     customcredentialtypes: string[],
-    sharedclaims: RegAppProfileIntentParamFlatClaim[],
-    cust1:"",
-    cust2:""
+    sharedclaims: RegAppProfileIntentParamFlatClaim[]
 }
 
 @Component({
@@ -67,7 +65,17 @@ export class RegisterApplicationProfileRequestPage {
     titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
 
     if (!BrowserSimulation.runningInBrowser()) {
+      console.log("Received request data:", Config.requestDapp);
       this.requestDapp = Config.requestDapp;
+
+      // Fix missing or wrong values, just in case
+      if (!this.requestDapp.allParams.customcredentialtypes)
+        this.requestDapp.allParams.customcredentialtypes = [];
+      
+      if (!this.requestDapp.allParams.sharedclaims)
+        this.requestDapp.allParams.sharedclaims = [];
+
+      console.log("Modified request data:", this.requestDapp);
     }
     else {
       // Simulation - in browser
@@ -80,11 +88,10 @@ export class RegisterApplicationProfileRequestPage {
           customcredentialtypes: [],
           sharedclaims:[
             {name: "Updated Ben"}
-          ],
-          cust1:"",
-          cust2:""
+          ]
         }
-      }
+      };
+      (this.requestDapp.allParams as any).customParam1 = "";
     }
   }
 
@@ -190,6 +197,8 @@ export class RegisterApplicationProfileRequestPage {
     props["action"] = this.requestDapp.allParams.connectactiontitle;
     props["apppackage"] = this.requestDapp.appPackageId;
     props["apptype"] = "elastosbrowser";
+
+    console.log("Credential properties:", props);
 
     // Create and append the new ApplicationProfileCredential credential to the local store.
     let credentialId = new DIDURL("#"+credentialTitle);
