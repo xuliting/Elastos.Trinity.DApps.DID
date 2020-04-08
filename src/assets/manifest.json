@@ -51,6 +51,12 @@
         },
         {
             "action": "sign"
+        },
+        {
+            "action": "createdid"
+        },  
+        {
+            "action": "importmnemonic"
         }
     ],
     "background_color": "#4e8ef7",

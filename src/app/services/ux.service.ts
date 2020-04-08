@@ -214,6 +214,20 @@ export class UXService {
         console.log("Intent received", intent);
 
         switch (intent.action) {
+            case "createdid":
+                console.log("Received create did intent request");
+                if (selfUxService.checkCreateDIDIntentParams(intent)) {
+                    this.appIsLaunchingFromIntent = true;
+
+                    this.authService.chooseIdentity({
+                        redirectPath: "/importdid"
+                    });
+                }
+                else {
+                    // Something wrong happened while trying to handle the intent: send intent response with error
+                    this.showErrorAndExitFromIntent(intent);
+                }
+                break;
             case "credaccess":
                 console.log("Received credential access intent request");
                 if (selfUxService.checkCredAccessIntentParams(intent)) {
@@ -386,6 +400,20 @@ export class UXService {
             console.error("Missing 'data'.");
             return false;
         }
+
+        // Config.requestDapp was already initialized earlier.
+        Config.requestDapp.allParams = intent.params;
+
+        return true;
+    }
+
+    checkCreateDIDIntentParams(intent: AppManagerPlugin.ReceivedIntent): boolean {
+        console.log("Checking intent parameters");
+
+        if (!this.checkGenericIntentParams(intent))
+            return false;
+
+        // Nothing specific to do yet
 
         // Config.requestDapp was already initialized earlier.
         Config.requestDapp.allParams = intent.params;
