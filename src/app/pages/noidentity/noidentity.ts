@@ -13,7 +13,7 @@ import { Util } from 'src/app/services/util';
 import { ModalController, IonSlides, Platform } from '@ionic/angular';
 import { ImportDIDSourceComponent, ImportDIDSource } from 'src/app/components/importdidsource/importdidsource.component';
 import { MnemonicPassCheckComponent } from 'src/app/components/mnemonicpasscheck/mnemonicpasscheck.component';
-import { UXService } from 'src/app/services/ux.service';
+import { UXService, DIDCreationMode } from 'src/app/services/ux.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -92,10 +92,24 @@ export class NoIdentityPage {
     async createIdentity() {
         this.didService.didBeingCreated = new NewDID();
 
+        if (this.uxService.onGoingDidCreationMode = DIDCreationMode.NEW_DID_TO_NEW_STORE) {
+            // Need to create a new DID store with a password
+            this.password = await this.authService.promptNewPassword();
+            if (this.password != null) {
+                this.didService.didBeingCreated.password = this.password;
+                await this.didService.addDidStore();
+                this.native.go('/newpasswordset');
+            }
+        }
+        else if (this.uxService.onGoingDidCreationMode = DIDCreationMode.IMPORT_MNEMONIC) {
+            // TODO: CHECK THIS
+            this.native.go('/importdid');
+        }
+
         // If there is an already active DID store, we don't need to create a new password to
         // create a new DID Store. We will only prompt user password for the existing DID store later
         // in the UI flow.
-        if (this.didService.getActiveDidStore() != null) {
+        /* TODO if (this.didService.getActiveDidStore() != null) {
             this.native.go('/editprofile');
         }
         else {
@@ -106,7 +120,7 @@ export class NoIdentityPage {
                 await this.didService.addDidStore();
                 this.native.go('/newpasswordset');
             }
-        }
+        }*/
     }
 
     /**

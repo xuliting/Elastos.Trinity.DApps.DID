@@ -396,7 +396,9 @@ export class DIDStore {
         return new Promise((resolve, reject)=>{
             this.pluginDidStore.synchronize(
                 storepass,
-                () => {resolve()}, (err) => {reject(err)},
+                () => {resolve()}, (err) => {
+                    reject(DIDHelper.reworkedDIDPluginException(err))
+                },
             );
         });
     }

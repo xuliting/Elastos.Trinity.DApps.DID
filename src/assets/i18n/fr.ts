@@ -83,7 +83,7 @@ export const fr = {
 
     // screen: noidentity
     'welcome': 'Bienvenue',
-    'elastos-did-portfolio': "Identités d'élastos",
+    'elastos-did-portfolio': "Identités elastOS",
     'welcome-text-intro-1': 'Gérer vos identités décentralisées et partagez-les uniquement avec qui vous le voulez.',
     'welcome-text-intro-2': 'Vos identités sous votre contrôle avec elastOS!',
     'welcome-text-intro-3': 'Première fois?',
@@ -144,7 +144,7 @@ export const fr = {
     'credential-deletion-popup-content': 'Les références sélectionnées vont être définitivement supprimées de votre appareil et de la chaîne de bloc.',
 
     // screen: verify mnemonic
-    'verification': 'V"rification',
+    'verification': 'Vérification',
     'verify-title': 'Sélectionnez les mots de votre mnémonique',
     'verify-subtitle': 'Cette vérification est nécessaire pour verifier que vous avez bien enregistré votre mnémonique.',
 

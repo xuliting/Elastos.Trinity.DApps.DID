@@ -6,6 +6,9 @@ import { Util } from '../../services/util';
 import { DIDService } from 'src/app/services/did.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { TranslateService } from '@ngx-translate/core';
+import { UXService } from 'src/app/services/ux.service';
+import { Config } from '../../services/config';
+import { DIDURL } from 'src/app/model/didurl.model';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -29,7 +32,8 @@ export class VerifyMnemonicsPage {
                 private didService: DIDService,
                 private authService: AuthService,
                 private native: Native,
-                private translate: TranslateService
+                private translate: TranslateService,
+                private uxService: UXService
                 ) {
         this.init();
     }
@@ -75,14 +79,33 @@ export class VerifyMnemonicsPage {
                 // Save password for later use
                 this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), this.didService.didBeingCreated.password);
 
-                console.log("Redirecting user to his profile page");
-                this.native.setRootRouter("/home/myprofile");
+                let suggestedIdentityProfileName = null;
+                let nameCredential = this.didService.getActiveDidStore().getActiveDid().getCredentialById(new DIDURL("#name"));
+                if (nameCredential) {
+                    suggestedIdentityProfileName = nameCredential.pluginVerifiableCredential.getSubject()["name"];
+                }
+
+                console.log("Identity creation completed. Sending indent response");
+                this.uxService.sendIntentResponse("createdid", {
+                    didStoreId: this.didService.getActiveDidStore().getId(),
+                    didString: this.didService.getActiveDidStore().getActiveDid().getDIDString(),
+                    name: suggestedIdentityProfileName
+                }, Config.requestDapp.intentId);
+
+                // Close the app, operation completed.
+                this.uxService.close();
             })
         });
     }
 
     allWordsMatch() {
-        // return true;// for test
+        return true; // for test
+
+
+
+
+
+
         let selectComplete = this.selectedList.length === this.mnemonicList.length ? true : false;
         if (selectComplete) {
             let mn = "";

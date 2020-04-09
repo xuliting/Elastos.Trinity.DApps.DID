@@ -17,6 +17,10 @@ import { BasicCredentialEntry } from 'src/app/model/basiccredentialentry.model';
 import { AdvancedPopupController } from 'src/app/components/advanced-popup/advancedpopup.controller';
 import { TranslateService } from '@ngx-translate/core';
 import { DIDSyncService } from 'src/app/services/didsync.service';
+import { UXService } from 'src/app/services/ux.service';
+import { NewDID } from 'src/app/model/newdid.model';
+import { DIDURL } from 'src/app/model/didurl.model';
+import { Config } from 'src/app/services/config';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -40,6 +44,7 @@ export class EditProfilePage {
               private popupProvider: PopupProvider,
               private translate: TranslateService,
               private didSyncService: DIDSyncService,
+              private uxService: UXService,
               private native: Native) {
     console.log("Entering EditProfile page");
     const navigation = this.router.getCurrentNavigation();
@@ -59,6 +64,8 @@ export class EditProfilePage {
   }
 
   ionViewWillEnter() {
+    this.uxService.makeAppVisible();
+
     // titleBarManager.setTitle(this.translate.instant('edit-profile'));
     titleBarManager.setTitle(this.translate.instant('my-profile'));
     titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
@@ -165,7 +172,22 @@ export class EditProfilePage {
             await this.didService.finalizeDidCreation(this.authService.getCurrentUserPassword());
 
             this.native.hideLoading();
-            this.native.go("/home/myprofile");
+
+            let suggestedIdentityProfileName = null;
+            let nameCredential = this.didService.getActiveDidStore().getActiveDid().getCredentialById(new DIDURL("#name"));
+            if (nameCredential) {
+                suggestedIdentityProfileName = nameCredential.pluginVerifiableCredential.getSubject()["name"];
+            }
+            
+            console.log("Identity creation completed. Sending indent response");
+              this.uxService.sendIntentResponse("createdid", {
+                  didStoreId: this.didService.getActiveDidStore().getId(),
+                  didString: this.didService.getActiveDidStore().getActiveDid().getDIDString(),
+                  name: suggestedIdentityProfileName
+              }, Config.requestDapp.intentId);
+
+              // Close the app, operation completed.
+              this.uxService.close();
           }, ()=>{
             this.popupProvider.ionicAlert("DID creation error", "Sorry, we are unable to create your DID.");
           }, ()=>{

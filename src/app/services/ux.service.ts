@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { DIDService } from './did.service';
 import { PopupProvider } from './popup';
 import { Router } from '@angular/router';
+import { NewDID } from '../model/newdid.model';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -27,6 +28,15 @@ enum MessageType {
     EX_RETURN = 14,
 };
 
+export enum DIDCreationMode {
+    /** Add a new DID in an existing DID store (same mnemonic) */
+    NEW_DID_TO_EXISTING_STORE,
+    /** Add a new DID in a new DID store (new mnemonic) */
+    NEW_DID_TO_NEW_STORE,
+    /** Import all published DIDs from a saved mnemonic */
+    IMPORT_MNEMONIC
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -34,6 +44,7 @@ export class UXService {
     public static instance: UXService = null;
     private isReceiveIntentReady = false;
     private appIsLaunchingFromIntent = false; // Is the app starting because of an intent request?
+    public onGoingDidCreationMode: DIDCreationMode = null; // After opening from a createdid or importmnemonic intent, this defines how to create the DID
 
     constructor(
         public translate: TranslateService,
@@ -210,7 +221,7 @@ export class UXService {
         }
     }
 
-    onReceiveIntent(intent: AppManagerPlugin.ReceivedIntent) {
+    async onReceiveIntent(intent: AppManagerPlugin.ReceivedIntent) {
         console.log("Intent received", intent);
 
         switch (intent.action) {
@@ -219,9 +230,45 @@ export class UXService {
                 if (selfUxService.checkCreateDIDIntentParams(intent)) {
                     this.appIsLaunchingFromIntent = true;
 
-                    this.authService.chooseIdentity({
-                        redirectPath: "/importdid"
-                    });
+                    if (intent.params.didStoreId) {
+                        let didStoreId = intent.params.didStoreId;
+
+                        // If a DID store ID is provided and defined, we create a new DID in that store.
+                        this.onGoingDidCreationMode = DIDCreationMode.NEW_DID_TO_EXISTING_STORE;
+                        this.didService.didBeingCreated = new NewDID();
+
+                        // First, try to load the given DID store
+                        try {
+                            await this.didService.activateDidStore(didStoreId);
+
+                            // Even if the DID store ID doesn't exist, a store can be "activated". What we need to ensure
+                            // is that this store has a private identity set, meaning that is has actually been created earlier.
+                            // If it doesn't, this means we don't have such store ID on the device.
+                            let hasPrivateIdentity = await this.didService.getActiveDidStore().hasPrivateIdentity();
+                            if (hasPrivateIdentity) {
+                                this.native.go('/editprofile', {create: true});
+                            }
+                            else {
+                                this.sendIntentResponse(intent.action, {
+                                    error: "No DID store found for ID "+didStoreId
+                                }, intent.intentId);
+                                this.close();
+                            }
+                        }
+                        catch (e) {
+                            // Not able to activate the given DID store - maybe it doesn't exist.
+                            // So we return an error.
+                            this.sendIntentResponse(intent.action, {
+                                error: "No DID store found for ID "+didStoreId
+                            }, intent.intentId);
+                            this.close();
+                        }
+                    }
+                    else {
+                        // No did store provided, so we create a new mnemonic first then a DID inside.
+                        this.onGoingDidCreationMode = DIDCreationMode.NEW_DID_TO_NEW_STORE;
+                        this.native.go('/noidentity');
+                    }
                 }
                 else {
                     // Something wrong happened while trying to handle the intent: send intent response with error
