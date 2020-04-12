@@ -16,6 +16,7 @@ import { DIDPluginException } from '../model/exceptions/didplugin.exception';
 
 declare let didManager: DIDPlugin.DIDManager;
 declare let appManager: AppManagerPlugin.AppManager;
+declare let didSessionManager: DIDSessionManagerPlugin.DIDSessionManager;
 
 @Injectable({
     providedIn: 'root'
@@ -47,7 +48,7 @@ export class DIDService {
         DIDService.instance.rebuildDidEntries();
       });
     }
-
+    
     public async displayDefaultScreen() {
         let didStoreId = await this.localStorage.getCurrentDidStoreId();
         let didString = await this.localStorage.getCurrentDid();
@@ -58,6 +59,16 @@ export class DIDService {
             this.showDid(didStoreId, didString);
         else
             this.handleNull();
+    }
+
+    /**
+     * Loads the global system identity.
+     */
+    public async loadGlobalIdentity() {
+      let signedInIdentity = await didSessionManager.getSignedInIdentity();
+
+      // Activate the DID store, and the DID
+      await this.activateDid(signedInIdentity.didStoreId, signedInIdentity.didString);
     }
 
     /**
@@ -161,9 +172,8 @@ export class DIDService {
           else {
               // Oops, no active DID...
               console.warn("No active DID in this store!");
-              this.native.setRootRouter('/choosedid');
+              throw Error("No active DID in this store!");
           }
-        //this.native.setRootRouter('/choosedid');
         //this.native.setRootRouter('/home/didsettings');
         //this.native.setRootRouter('/newpasswordset');
         //this.native.setRootRouter('/noidentity');

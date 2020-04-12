@@ -17,9 +17,9 @@ import { CredentialBackupPage } from './pages/credential/backup/credentialbackup
 import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequest/regappprofilerequest';
 import { DevPage } from './pages/devpage/devpage';
 import { DIDListPage } from './pages/didlist/didlist';
-import { ChooseDIDPage } from './pages/choosedid/choosedid';
 import { SignRequestPage } from './pages/signrequest/signrequest';
 import { CredentialIssueRequestPage } from './pages/credentialissuerequest/credentialissuerequest';
+import { DeleteDIDPage } from './pages/deletedid/deletedid';
  
 const routes: Routes = [
   // { path: '', redirectTo: '', pathMatch: 'full' }, // No default route, services will decide this by themselves.
@@ -48,10 +48,10 @@ const routes: Routes = [
   // { path: 'myprofile', component: MyProfilePage },
   { path: 'importdid', component: ImportDIDPage },
   { path: 'backupdid', component: BackupDIDPage },
+  { path: 'deletedid', component: DeleteDIDPage },
   { path: 'verifymnemonics', component: VerifyMnemonicsPage },
   { path: 'credentialcreate', component: CredentialCreatePage },
   { path: 'credentialbackup', component: CredentialBackupPage },
-  { path: 'choosedid', component: ChooseDIDPage },
 
   // Intents
   { path: 'credaccessrequest', component: CredentialAccessRequestPage },

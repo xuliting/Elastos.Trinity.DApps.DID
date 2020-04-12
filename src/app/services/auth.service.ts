@@ -235,41 +235,7 @@ export class AuthService {
     getMnemonicPassphrase(): string {
         return this.mnemonicPassphrase;
     }
-
-    /**
-     * This method lets user choose a DID before going to another screen.
-     * If there is only one identity, it will be selected and activated by default.
-     * If multiple identities, it goes to the ID chooser screen first before redirecting to the originally
-     * requested screen.
-     */
-    public async chooseIdentity(opts: ChooseIdentityOptions) {
-        console.log("ChooseIdentity: checking");
-
-        let didEntries = await this.didService.getDidEntries();
-
-        if (!didEntries || didEntries.length == 0) {
-            console.log("ChooseIdentity: no DID exists, redirecting to ID creation");
-
-            // No identity? Ask user to create one.
-            this.didService.displayDefaultScreen();
-
-            // TODO: REDIRECT TO THE INTENT AFTER ID CREATION
-        }
-        else if (didEntries.length == 1) {
-            console.log("ChooseIdentity: only one DID exists, redirecting to the target screen directly");
-
-            // Only one identity? Then use this one directly.
-            await this.didService.activateSavedDid();
-            this.native.go(opts.redirectPath);
-        }
-        else {
-            console.log("ChooseIdentity: multiple DID exist, redirecting to the DID chooser screen");
-
-            // Multiple DIDs: go to DID chooser screen
-            this.native.go("/choosedid", opts);
-        }
-    }
-
+    
     /**
      * Activates fingerprint authentication instead of using a password.
      * Password is saved for a given DID store, as later on, if we handle several did stores in the same app

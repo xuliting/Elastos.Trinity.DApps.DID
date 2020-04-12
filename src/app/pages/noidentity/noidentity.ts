@@ -92,7 +92,7 @@ export class NoIdentityPage {
     async createIdentity() {
         this.didService.didBeingCreated = new NewDID();
 
-        if (this.uxService.onGoingDidCreationMode = DIDCreationMode.NEW_DID_TO_NEW_STORE) {
+        if (this.uxService.onGoingDidCreationMode == DIDCreationMode.NEW_DID_TO_NEW_STORE) {
             // Need to create a new DID store with a password
             this.password = await this.authService.promptNewPassword();
             if (this.password != null) {
@@ -101,7 +101,7 @@ export class NoIdentityPage {
                 this.native.go('/newpasswordset');
             }
         }
-        else if (this.uxService.onGoingDidCreationMode = DIDCreationMode.IMPORT_MNEMONIC) {
+        else if (this.uxService.onGoingDidCreationMode == DIDCreationMode.IMPORT_MNEMONIC) {
             // TODO: CHECK THIS
             this.native.go('/importdid');
         }

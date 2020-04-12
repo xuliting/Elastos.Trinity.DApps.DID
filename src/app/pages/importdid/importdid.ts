@@ -11,6 +11,9 @@ import { DIDStore } from 'src/app/model/didstore.model';
 import { MnemonicPassCheckComponent } from 'src/app/components/mnemonicpasscheck/mnemonicpasscheck.component';
 import { EmptyImportedDocumentComponent, EmptyImportedDocumentChoice } from 'src/app/components/emptyimporteddocument/emptyimporteddocument.component';
 import { TranslateService } from '@ngx-translate/core';
+import { UXService } from 'src/app/services/ux.service';
+import { Config } from 'src/app/services/config';
+import { DIDURL } from 'src/app/model/didurl.model';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -45,6 +48,7 @@ export class ImportDIDPage {
     private didService: DIDService,
     private authService: AuthService,
     private popupProvider: PopupProvider,
+    private uxService:UXService,
     private translate: TranslateService
   ) {
     const navigation = this.router.getCurrentNavigation();
@@ -162,29 +166,38 @@ export class ImportDIDPage {
 
       this.native.hideLoading();
 
-      if (didStore.dids.length > 0) {
-        console.log("Synchronized and loaded "+didStore.dids.length+" from chain");
+      console.log("Synchronized and loaded "+didStore.dids.length+" from chain");
 
-        // Now that we could correctly retrieve DID data, we can active this new store. Not before.
-        this.didService.activateDidStore(didStore.getId());
+      // Now that we could correctly retrieve DID data, we can active this new store. Not before.
+      await this.didService.activateDidStore(didStore.getId());
 
-        // Save password for later use
-        this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), storePass);
+      // Rebuild DID list UI entries based on imported DIDs (and their names)
+      await this.didService.rebuildDidEntries();
 
-        // Last DID on the list as default DID ("last" because that's probably the most recently created)
-        let didToActivate = didStore.dids[didStore.dids.length-1];
-        console.log("Activating the last DID in the list", didToActivate);
-        await this.didService.activateDid(didStore.getId(), didToActivate.getDIDString());
+      // Build response object, including the create store ID and a list of did string / suggest name
+      let response = {
+        didStoreId: this.didService.getActiveDidStore().getId(),
+        dids: []
+      };
 
-        // Rebuild DID list UI entries based on imported DIDs (and their names)
-        await this.didService.rebuildDidEntries();
-
-        console.log("Redirecting user to his profile page");
-        this.native.go("/home/myprofile", {create:false});
+      for (let did of didStore.dids) {
+        let suggestedIdentityProfileName = null;
+        let nameCredential = did.getCredentialById(new DIDURL("#name"));
+        if (nameCredential) {
+            suggestedIdentityProfileName = nameCredential.pluginVerifiableCredential.getSubject()["name"];
+        }
+        
+        response.dids.push({
+          didString: did.getDIDString(),
+          name: suggestedIdentityProfileName
+        });
       }
-      else {
-        this.handleEmptyDIDDocumentResolved(didStore, storePass);
-      }
+
+      console.log("Mnemonic import completed. Sending indent response");
+      this.uxService.sendIntentResponse("importmnemonic", response, Config.requestDapp.intentId);
+
+      // Close the app, operation completed.
+      this.uxService.close();
     })
     .catch( (e)=> {
       this.native.hideLoading();
@@ -192,36 +205,6 @@ export class ImportDIDPage {
       this.popupProvider.ionicAlert("Store load error", "Sorry, we were unable to load your DID store... " + e);
       // TODO: delete temporary didstore
     });
-  }
-
-  /**
-   * Called when a mnemonic synchronization was successful but returned an empty document.
-   * This could mean 2 things:
-   * - Either the user typed a wrong passphrase (so the generated keypair is wrong)
-   * - Or user never published anything with this mnemonic (In which case we ask him if he is ok to create a new empty profile).
-   */
-  async handleEmptyDIDDocumentResolved(didStore: DIDStore, storePass: string) {
-    const modal = await this.modalCtrl.create({
-      component: EmptyImportedDocumentComponent,
-      componentProps: {
-      },
-      cssClass:"create-password-modal"
-    });
-    modal.onDidDismiss().then(async (params) => {
-       if (params && params.data && params.data.action == EmptyImportedDocumentChoice.CreateNewProfile) {
-        // User wants to use the provided mnemonic and create a first DID inside, let's do this
-        await this.didService.activateDidStore(didStore.getId());
-
-        // Save password for later use
-        this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), storePass);
-
-        this.native.go("/editprofile", {create:true});
-       }
-       else {
-         // Do nothing - cancelled flow, user can go back or try again.
-       }
-    });
-    modal.present();
   }
 
   getMnemonicLang(): DIDPlugin.MnemonicLanguage {

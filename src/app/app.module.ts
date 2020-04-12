@@ -46,13 +46,13 @@ import { DisableBiometricPromptComponent } from './components/disablebiometricpr
 
 import { LocalStorage } from './services/localstorage';
 import { PopupProvider } from './services/popup';
-import { ChooseDIDPage } from './pages/choosedid/choosedid';
 import { ShowQRCodeComponent } from './components/showqrcode/showqrcode.component';
 import { ProfileEntryPickerPage } from './pages/profileentrypicker/profileentrypicker';
 
 import * as Sentry from "@sentry/browser";
 import { SignRequestPage } from './pages/signrequest/signrequest';
 import { CredentialIssueRequestPage } from './pages/credentialissuerequest/credentialissuerequest';
+import { DeleteDIDPage } from './pages/deletedid/deletedid';
 
 Sentry.init({
   dsn: "https://f563821bdc2546c3bf7357c997a78059@sentry.io/1874652"
@@ -122,8 +122,8 @@ export function TranslateLoaderFactory() {
     RegisterApplicationProfileRequestPage,
     SignRequestPage,
     DIDListPage,
-    ChooseDIDPage,
     ProfileEntryPickerPage,
+    DeleteDIDPage
   ],
   imports: [
     CommonModule,

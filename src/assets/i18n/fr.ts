@@ -22,11 +22,11 @@ export const fr = {
     'create-my-did': 'Créer mon Identité',
     'import-my-did': 'Importer mon Identité',
     'create-profile': 'Créer un Profil',
-    'create-new-did-profile': "Créer un Nouveau Profil d'identité",
-    'import-did-profile': "Importer un Profil d'identité",
+    'create-new-did-profile': "Créer un nouveau profil",
+    'import-did-profile': "Importer un profil",
     'import-did-popup-content': 'Importer une identité écrasera tout identité existant actuellement.',
     'import-did-popup-confirm-question': 'Etes-vous sûr(e)?',
-    'add-new-did-profile': "Ajouter un Nouveau Profil d'identité",
+    'add-new-did-profile': "Ajouter un nouveau profil",
     'save-profile': 'Enregistrer le profil',
 
     // Passwords
@@ -87,7 +87,7 @@ export const fr = {
     'welcome-text-intro-1': 'Gérer vos identités décentralisées et partagez-les uniquement avec qui vous le voulez.',
     'welcome-text-intro-2': 'Vos identités sous votre contrôle avec elastOS!',
     'welcome-text-intro-3': 'Première fois?',
-    'welcome-text-intro-4': "Créons un profil d'identité!",
+    'welcome-text-intro-4': "Créons une identité!",
 
     // screen: area
     'country': 'Pays',

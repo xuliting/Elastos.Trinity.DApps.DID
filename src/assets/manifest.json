@@ -34,7 +34,8 @@
         "DIDPlugin",
         "NetworkStatus",
         "File",
-        "FingerprintPlugin"
+        "FingerprintPlugin",
+        "DIDSessionManagerPlugin"
     ],
     "urls": [
         "https://sentry.io/*"
@@ -57,6 +58,9 @@
         },  
         {
             "action": "importmnemonic"
+        },
+        {
+            "action": "deletedid"
         }
     ],
     "background_color": "#4e8ef7",
