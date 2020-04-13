@@ -16,7 +16,6 @@ import { CredentialCreatePage } from './pages/credential/create/credentialcreate
 import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
 import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequest/regappprofilerequest';
 import { DevPage } from './pages/devpage/devpage';
-import { DIDListPage } from './pages/didlist/didlist';
 import { SignRequestPage } from './pages/signrequest/signrequest';
 import { CredentialIssueRequestPage } from './pages/credentialissuerequest/credentialissuerequest';
 import { DeleteDIDPage } from './pages/deletedid/deletedid';
@@ -36,9 +35,6 @@ const routes: Routes = [
       // 1st Tab
       {
         path: 'myprofile', component: MyProfilePage
-      },
-      {
-        path: 'didlist', component: DIDListPage
       },
       {
         path: 'credentiallist', component: CredentialListPage

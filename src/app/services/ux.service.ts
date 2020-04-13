@@ -398,7 +398,17 @@ export class UXService {
     }
 
     private async handleDeleteDIDIntent(intent: AppManagerPlugin.ReceivedIntent) {
-        this.native.go('/deletedid');
+        // Activate the DID to be deleted. If this fails, directly return an error.
+        let couldActivate = await this.didService.activateDid(intent.params.didStoreId, intent.params.didString);
+        if (!couldActivate) {
+            this.sendIntentResponse(intent.action, {
+                error: "No DID store or did object found for DID "+intent.params.didString
+            }, intent.intentId);
+            this.close();
+        }
+        else {
+            this.native.go('/deletedid');
+        }
     }
 
     async showErrorAndExitFromIntent(intent: AppManagerPlugin.ReceivedIntent) {

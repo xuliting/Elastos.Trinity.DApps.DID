@@ -130,7 +130,7 @@ export class DIDService {
               resolve(false);
               return;
           }
-
+ 
           let couldActivateStore = await this.activateDidStore(storeId);
           if (!couldActivateStore) {
               resolve(false);

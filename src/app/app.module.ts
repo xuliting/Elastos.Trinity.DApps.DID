@@ -38,7 +38,6 @@ import { CredentialListPage } from './pages/credential/list/credentiallist';
 import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
 import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
 import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequest/regappprofilerequest';
-import { DIDListPage } from './pages/didlist/didlist';
 
 import { SecurityCheckComponent } from './components/securitycheck/securitycheck.component';
 import { CreatePasswordComponent } from './components/createpassword/createpassword.component';
@@ -121,7 +120,6 @@ export function TranslateLoaderFactory() {
     VerifyMnemonicsPage,
     RegisterApplicationProfileRequestPage,
     SignRequestPage,
-    DIDListPage,
     ProfileEntryPickerPage,
     DeleteDIDPage
   ],
