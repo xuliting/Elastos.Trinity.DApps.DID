@@ -137,7 +137,7 @@ export class ImportDIDPage {
         this.mnemonicLanguage = this.getMnemonicLang();
         let mnemonicValid = await this.didService.isMnemonicValid(this.mnemonicLanguage, this.mnemonicSentence);
         if (!mnemonicValid) {
-            this.popupProvider.ionicAlert("Mnemonic inValid", "Pls check the mnemonic... ");
+            this.popupProvider.ionicAlert('mnemonic-invalid', 'mnemonic-invalid-prompt');
             return;
         }
 
