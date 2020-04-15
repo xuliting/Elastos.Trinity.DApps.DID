@@ -1,6 +1,6 @@
-<div class="root-container">
+<div class="root-container" id='rootcontent'>
 
-    <ion-content text-center>
+    <ion-content class="ion-text-center" >
       <div *ngIf="!readonly" class="title">
         Start entering your 12 word mnemonic to restore your Identity
       </div>
@@ -20,7 +20,7 @@
         </ion-grid>
       </div>
 
-      <ion-input *ngIf="!readonly" #addMnemonicWordInput placeholder="Your mnemonic sentence" [(ngModel)]="mnemonicSentence" (ionChange)="onMnemonicSentenceChanged()"></ion-input>
+      <ion-input *ngIf="!readonly" id='sentenceInput' #addMnemonicWordInput placeholder="Your mnemonic sentence" [(ngModel)]="mnemonicSentence" (ionChange)="onMnemonicSentenceChanged()"></ion-input>
 
       <did-button class="main-button" (click)="promptStorePassword()"
         [title]="'import-my-did' | translate"

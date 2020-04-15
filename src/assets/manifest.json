@@ -34,7 +34,8 @@
         "DIDPlugin",
         "NetworkStatus",
         "File",
-        "FingerprintPlugin"
+        "FingerprintPlugin",
+        "CDVIonicKeyboard"
     ],
     "urls": [
         "https://sentry.io/*"
