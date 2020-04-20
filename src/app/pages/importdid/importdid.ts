@@ -1,6 +1,6 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavController, IonInput, ModalController } from '@ionic/angular';
+import { NavController, IonInput, ModalController, Platform } from '@ionic/angular';
 
 import { DIDService } from '../../services/did.service';
 import { Native } from '../../services/native';
@@ -46,6 +46,7 @@ export class ImportDIDPage {
     constructor(
         public router: Router,
         public zone: NgZone,
+        public platform: Platform,
         public navCtrl: NavController,
         private modalCtrl: ModalController,
         private native: Native,
@@ -70,20 +71,23 @@ export class ImportDIDPage {
         titleBarManager.setTitle(this.translate.instant('import-my-did'));
         titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
 
-        this.getElements();
+        // the rootContent clientHeight is wrong in android?
+        if (this.platform.platforms().indexOf('android') < 0) {
+            this.getElements();
 
-        window.addEventListener('native.keyboardshow', this.showHandle = (event: any)=> {
-            if (this.scrollHeight == -1) {
-                this.scrollHeight = this.calcScrollHeight(event.keyboardHeight);
-            }
-            if (this.scrollHeight != 0) {
-                console.log('scrollHeight:', this.scrollHeight)
-                this.rootContent.style.top = this.scrollHeight + 'px';
-            }
-        });
-        window.addEventListener('native.keyboardhide', this.hideHandle = () =>{
-            this.rootContent.style.top = '0px';
-        });
+            window.addEventListener('native.keyboardshow', this.showHandle = (event: any)=> {
+                if (this.scrollHeight == -1) {
+                    this.scrollHeight = this.calcScrollHeight(event.keyboardHeight);
+                }
+                if (this.scrollHeight != 0) {
+                    console.log('scrollHeight:', this.scrollHeight)
+                    this.rootContent.style.top = this.scrollHeight + 'px';
+                }
+            });
+            window.addEventListener('native.keyboardhide', this.hideHandle = () =>{
+                this.rootContent.style.top = '0px';
+            });
+        }
     }
 
     ionViewWillLeave() {
