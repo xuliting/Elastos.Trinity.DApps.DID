@@ -39,6 +39,7 @@ export class MyProfilePage {
   invisibleData: ProfileDisplayEntry[];
   public editingVisibility: boolean = false;
   public didNeedsToBePublished: boolean = false;
+  public detailsActive = true;
 
   constructor(public events: Events,
               public route:ActivatedRoute,
