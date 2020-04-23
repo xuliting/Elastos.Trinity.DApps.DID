@@ -1,10 +1,9 @@
 .container {
   height: 302px;
   background: #fafaff;
-  border: 1px solid #f55555;
   border-radius: 12px;
 
-  .delete-header {
+  .header {
     height: 112px;
     display: flex;
     flex-direction: column;
@@ -61,7 +60,7 @@
 .darkContainer {
   background: #72748e;
 
-  .delete-header {
+  .header {
     h1 {
       color: #fdfeff;
     }
@@ -84,5 +83,13 @@
       }
     }
   }
+}
+
+.deleteContainer {
+  border: 1px solid #f55555;
+}
+
+.publishContainer {
+  border: 1px solid #fdd034;
 }
 

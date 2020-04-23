@@ -7,8 +7,8 @@
       </h1>
       <ion-row class="btn-row">
         <ion-img src="/assets/buttons/scan.svg" (click)="showQRCode()"></ion-img>
-        <ion-img src="/assets/buttons/edit.svg" (click)="showProfileOptions($event, 'edit')"></ion-img>
-        <ion-img src="/assets/buttons/options.svg" (click)="showProfileOptions($event, 'profile')"></ion-img>
+        <ion-img src="/assets/buttons/edit.svg" (click)="showOptions($event, 'edit')"></ion-img>
+        <ion-img src="/assets/buttons/options.svg" (click)="showOptions($event, 'profile')"></ion-img>
       </ion-row>
     </div>
 
@@ -29,8 +29,8 @@
         </ion-col>
       </ion-row>
 
-      <div *ngIf="visibleData.length > 0">
-        <ion-row class="profile-data" *ngFor="let entry of visibleData">
+      <div *ngIf="profileService.visibleData.length > 0">
+        <ion-row class="profile-data" *ngFor="let entry of profileService.visibleData">
           <ion-col size="3">
             <h5>{{ entry.label }}</h5>
           </ion-col>
@@ -50,8 +50,8 @@
           </ion-col>
         </ion-row>
       </div>
-      <div *ngIf="invisibleData.length > 0">
-        <ion-row class="profile-data" *ngFor="let entry of invisibleData">
+      <div *ngIf="profileService.invisibleData.length > 0">
+        <ion-row class="profile-data" *ngFor="let entry of profileService.invisibleData">
           <ion-col size="3">
             <h5>{{ entry.label }}</h5>
           </ion-col>

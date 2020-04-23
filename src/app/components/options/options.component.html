@@ -1,16 +1,16 @@
 <ion-grid *ngIf="options === 'profile'" [class.darkContainer]="theme.darkMode">
-  <ion-row>
+  <ion-row (click)="profileService.shareIdentity()">
     <ion-label>Share</ion-label>
     <ion-img *ngIf="!theme.darkMode" src="/assets/lightmode/share.svg"></ion-img>
     <ion-img *ngIf="theme.darkMode" src="/assets/darkmode/share.svg"></ion-img>
   </ion-row>
 
-  <ion-row (click)="profileService.editProfile()">
+  <ion-row (click)="profileService.showWarning('publish')">
     <ion-label class="publish">Publish</ion-label>
     <ion-img src="/assets/default/publish.svg"></ion-img>
   </ion-row>
 
-  <ion-row (click)="deleteDID()">
+  <ion-row (click)="showWarning('delete')">
     <ion-label class="delete">Delete</ion-label>
     <ion-img src="/assets/default/trashcan.svg"></ion-img>
   </ion-row>

@@ -1,0 +1,46 @@
+<div *ngIf="warning === 'delete'" class="container deleteContainer" [class.darkContainer]="theme.darkMode">
+  <ion-row class="header">
+    <img src="/assets/default/deleteWarning.svg">
+    <h1 class="ion-padding-horizontal ion-text-center">Delete Identity</h1>
+  </ion-row>
+  <ion-row>
+    <ion-col class="message ion-padding">
+      <p class="ion-padding">
+        This action will cause this identity to be deleted and you will be automatically signed out.
+      </p>
+    </ion-col>
+  </ion-row>
+  <ion-row  class="btn-row">
+    <ion-col class="btn" size="5" (click)="cancel()">
+      <ion-label>{{ 'cancel' | translate }}</ion-label>
+    </ion-col>
+    <ion-col class="btn" size="5" (click)="confirmDeleteDID()">
+      <ion-label>Continue</ion-label>
+    </ion-col>
+  </ion-row>
+</div>
+
+<div *ngIf="warning === 'publish'" class="container publishContainer" [class.darkContainer]="theme.darkMode">
+  <ion-row class="header">
+    <img src="/assets/default/publishWarning.svg">
+    <h1  class="ion-padding-horizontal ion-text-center">Publish Identity?</h1>
+  </ion-row>
+  <ion-row>
+    <ion-col class="message ion-padding">
+      <p class="ion-padding">
+        You can publish your new changes so it's recorded for everyone to see. This action will cost a minor ELA transaction fee.
+      </p>
+    </ion-col>
+  </ion-row>
+  <ion-row class="btn-row">
+    <ion-col class="btn" size="5" (click)="cancel()">
+      <ion-label>Not Yet</ion-label>
+    </ion-col>
+    <ion-col class="btn" size="5" (click)="confirmPublishDID()">
+      <ion-label>Publish</ion-label>
+    </ion-col>
+  </ion-row>
+</div>
+
+
+

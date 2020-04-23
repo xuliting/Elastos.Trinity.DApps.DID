@@ -5,11 +5,11 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { ProfileService } from 'src/app/services/profile.service';
 
 @Component({
-  selector: 'app-profile-options',
-  templateUrl: './profile-options.component.html',
-  styleUrls: ['./profile-options.component.scss'],
+  selector: 'app-options',
+  templateUrl: './options.component.html',
+  styleUrls: ['./options.component.scss'],
 })
-export class ProfileOptionsComponent implements OnInit {
+export class OptionsComponent implements OnInit {
 
   @Output() cancelEvent = new EventEmitter<boolean>();
 
@@ -32,8 +32,8 @@ export class ProfileOptionsComponent implements OnInit {
     this.popover.dismiss();
   }
 
-  deleteDID() {
-    this.profileService.deleteDID();
+  showWarning(warning: string) {
+    this.profileService.showWarning(warning);
     this.popover.dismiss();
   }
 }
