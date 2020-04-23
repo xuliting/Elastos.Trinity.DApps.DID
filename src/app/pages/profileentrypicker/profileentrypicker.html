@@ -1,9 +1,14 @@
-<div class="root-container" (click)=close()>
-  <ion-content class="ion-padding">
-    <ion-list>
-      <ion-item *ngFor="let item of availableItems" (click)="selectItem(item)">
+<ion-content>
+  <ion-grid class="container">
+
+    <ion-row *ngFor="let item of availableItems" (click)="selectItem(item)">
+      <ion-col offset="0.25" size="2" class="icon-container">
+        <ion-img src="/assets/default/plus.svg"></ion-img>
+      </ion-col>
+      <ion-col size="9.75" class="label-container">
         <ion-label>{{ "credential-info-type-"+item.key | translate }}</ion-label>
-      </ion-item>
-    </ion-list>
-  </ion-content>
-</div>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+</ion-content>

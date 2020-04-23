@@ -1,5 +1,5 @@
 .container {
-  padding: 30px 0;
+  padding: 50px 0;
 
   .header {
     display: flex;
@@ -17,8 +17,9 @@
     }
 
     h1 {
+      margin: 0;
       padding-top: 15px;
-      padding-bottom: 7.5px;
+      padding-bottom: 15px;
       font-size: 22px;
       font-weight: 600;
       line-height: 1.21;
@@ -27,7 +28,6 @@
 
     p {
       margin: 0;
-      height: 52.5px;
       padding: 0px 60px;
       font-size: 12px;
       font-weight: 500;
@@ -36,7 +36,7 @@
     }
 
     .btn-row {
-      padding: 7.5px 30px 30px;
+      padding: 15px 30px 25px;
 
       ion-img {
         margin: 0 7.5px;
@@ -50,8 +50,6 @@
     padding: 0px 45px;
 
     ion-segment-button {
-      width: 90px;
-      height: 22px;
       --border-color: #161740 !important;
       --border-radius: 0;
       --border-style: none;
@@ -59,9 +57,8 @@
       ion-label {
         font-size: 16px;
         font-weight: 700;
-        line-height: 1.22;
+        margin: 5px;
         letter-spacing: 0.45px;
-        text-align: left;
         text-transform: none;
         color: #b2b7fa;
       }
@@ -70,6 +67,7 @@
     .active {
       border-bottom: 2.7px solid #161740 !important;
       border-radius: 4px;
+      background: transparent;
 
       ion-label {
         color: #161740;
@@ -78,23 +76,35 @@
   }
 
   ion-list {
-    padding-top: 20px;
+    padding-top: 9px;
     margin: 0;
 
     .profile-data {
       display: flex;
       justify-content: space-between;
-      padding: 10px 30px;
+      padding: 6px 0px 6px 30px;
 
-      h5, h4 {
-        margin: 0;
-      }
+      ion-col {
+        display: flex;
+        align-items: center;
 
-      h5 {
-        font-size: 14px;
-        font-weight: 600;
-        text-align: left;
-        color: #161740;
+        h5, h4, p {
+          margin: 0;
+        }
+
+        h5 {
+          font-size: 14px;
+          font-weight: 600;
+          text-align: left;
+          color: #161740;
+        }
+
+        p {
+          font-size: 9px;
+          font-weight: 700;
+          text-align: center;
+          color: #161740;
+        }
       }
 
       .cred {
@@ -109,6 +119,23 @@
           font-stretch: 500;
           text-align: right;
           color: #161740;
+        }
+      }
+    }
+
+    .btn-container {
+      padding: 15px 30px;
+
+      ion-button {
+        height: 41px;
+        width: 100%;
+        --border-radius: 8px;
+
+        ion-label {
+          text-transform: none;
+          font-size: 16px;
+          font-weight: 500;
+          letter-spacing: -0.43px;
         }
       }
     }
@@ -182,7 +209,7 @@
 
 .darkContainer {
   .header {
-    ion-title, p {
+    h1, p {
       color: #ffffff !important;
     }
   }
@@ -201,8 +228,10 @@
     background: #191a2f;
 
     .profile-data {
-      h5 {
-        color: #ffffff;
+      ion-col {
+        h5 {
+          color: #ffffff;
+        }
       }
 
       .cred {

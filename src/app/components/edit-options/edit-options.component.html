@@ -1,0 +1,20 @@
+<ion-grid [class.darkContainer]="theme.darkMode">
+<!--   <ion-row>
+    <ion-label>Add Data</ion-label>
+    <ion-img *ngIf="!theme.darkMode" src="/assets/lightmode/add.svg"></ion-img>
+    <ion-img *ngIf="theme.darkMode" src="/assets/darkmode/add.svg"></ion-img>
+  </ion-row>
+ -->
+
+  <ion-row (click)="profileService.editProfile()">
+    <ion-label>Edit Data</ion-label>
+    <ion-img *ngIf="!theme.darkMode" src="/assets/lightmode/edit.svg"></ion-img>
+    <ion-img *ngIf="theme.darkMode" src="/assets/darkmode/edit.svg"></ion-img>
+  </ion-row>
+
+  <ion-row (click)="profileService.editVisibility()">
+    <ion-label class="visibility">Change Visibility</ion-label>
+    <ion-img src="/assets/default/visibility.svg"></ion-img>
+  </ion-row>
+</ion-grid>
+

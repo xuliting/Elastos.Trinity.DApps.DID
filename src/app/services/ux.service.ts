@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { DIDService } from './did.service';
 import { PopupProvider } from './popup';
 import { Router } from '@angular/router';
+import { ThemeService } from './theme.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -46,6 +47,7 @@ export class UXService {
         private modalCtrl: ModalController,
         private navCtrl: NavController,
         private router: Router,
+        private theme: ThemeService
     ) {
         selfUxService = this;
         UXService.instance = this;
@@ -53,6 +55,7 @@ export class UXService {
 
     init() {
         console.log("UXService init");
+        this.theme.getTheme();
 
         if (!BrowserSimulation.runningInBrowser()) {
             this.getLanguage();

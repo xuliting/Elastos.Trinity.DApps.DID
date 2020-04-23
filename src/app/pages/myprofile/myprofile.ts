@@ -1,6 +1,6 @@
 import { Component, NgZone } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Events, ModalController } from '@ionic/angular';
+import { Events, ModalController, PopoverController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AdvancedPopupController } from 'src/app/components/advanced-popup/advancedpopup.controller';
@@ -15,6 +15,10 @@ import { Native } from '../../services/native';
 import { DIDService } from 'src/app/services/did.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DIDSyncService } from 'src/app/services/didsync.service';
+import { EditOptionsComponent } from 'src/app/components/edit-options/edit-options.component';
+import { ThemeService } from 'src/app/services/theme.service';
+import { ProfileService } from 'src/app/services/profile.service';
+import { ProfileOptionsComponent } from 'src/app/components/profile-options/profile-options.component';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -37,21 +41,25 @@ export class MyProfilePage {
   public profile: Profile;
   visibleData: ProfileDisplayEntry[];
   invisibleData: ProfileDisplayEntry[];
-  public editingVisibility: boolean = false;
   public didNeedsToBePublished: boolean = false;
   public detailsActive = true;
 
-  constructor(public events: Events,
-              public route:ActivatedRoute,
-              public zone: NgZone,
-              private advancedPopup: AdvancedPopupController,
-              private authService: AuthService,
-              private translate: TranslateService,
-              private didService: DIDService,
-              private didSyncService: DIDSyncService,
-              private appService: UXService,
-              private modalCtrl: ModalController,
-              private native: Native) {
+  constructor(
+    public events: Events,
+    public route:ActivatedRoute,
+    public zone: NgZone,
+    private advancedPopup: AdvancedPopupController,
+    private authService: AuthService,
+    private translate: TranslateService,
+    private didService: DIDService,
+    private didSyncService: DIDSyncService,
+    private appService: UXService,
+    private modalCtrl: ModalController,
+    private native: Native,
+    private popoverCtrl: PopoverController,
+    public theme: ThemeService,
+    public profileService: ProfileService
+  ) {
     this.init();
   }
 
@@ -87,11 +95,6 @@ export class MyProfilePage {
 
       this.buildDisplayEntries();
     }
-  }
-
-  ionViewDidLeave() {
-    // Restore some UI state in case we just go refreshed
-    this.editingVisibility = false;
   }
 
   ionViewWillEnter() {
@@ -183,18 +186,6 @@ export class MyProfilePage {
     });
   }
 
-  editProfile() {
-    this.editingVisibility = false;
-    this.native.go("/editprofile", {create: false});
-  }
-
-  /**
-   * Toggle profile visibility edition mode.
-   */
-  editVisibility() {
-    this.editingVisibility = !this.editingVisibility;
-  }
-
   /**
    * Change DIDStore password.
    */
@@ -202,9 +193,6 @@ export class MyProfilePage {
     let newStorePassword = '';
     AuthService.instance.checkPasswordThenExecute(async ()=>{
         let oldPassword = AuthService.instance.getCurrentUserPassword();
-
-        // Exit visibility edition
-        this.editingVisibility = false;
 
         // set new password
         if (newStorePassword === '') {
@@ -268,7 +256,6 @@ export class MyProfilePage {
    * Permanently delete the DID after user confirmation.
    */
   deleteDID() {
-    this.editingVisibility = false;
     this.advancedPopup.create({
       color:'#FF4D4D',
       info: {
@@ -324,9 +311,6 @@ export class MyProfilePage {
     AuthService.instance.checkPasswordThenExecute(async ()=>{
       let password = AuthService.instance.getCurrentUserPassword();
 
-      // Exit visibility edition
-      this.editingVisibility = false;
-
       await this.updateDIDDocumentFromSelection(password);
       await this.didSyncService.publishActiveDIDDIDDocument(password);
     }, ()=>{
@@ -374,5 +358,31 @@ export class MyProfilePage {
       // Credential exists but user wants to remove it from chain? Then delete it from the did document
       await currentDidDocument.deleteCredential(relatedCredential.pluginVerifiableCredential, password);
     }
+  }
+
+  async showEditOptions(ev: any) {
+    console.log('Opening edit options');
+
+    const popover = await this.popoverCtrl.create({
+      mode: 'ios',
+      component: EditOptionsComponent,
+      cssClass: !this.theme.darkMode ? 'options' : 'darkOptions',
+      event: ev,
+      translucent: false
+    });
+    return await popover.present();
+  }
+
+  async showProfileOptions(ev: any) {
+    console.log('Opening profile options');
+
+    const popover = await this.popoverCtrl.create({
+      mode: 'ios',
+      component: ProfileOptionsComponent,
+      cssClass: !this.theme.darkMode ? 'options' : 'darkOptions',
+      event: ev,
+      translucent: false
+    });
+    return await popover.present();
   }
 }
