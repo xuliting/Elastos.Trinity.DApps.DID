@@ -1,0 +1,23 @@
+<div class="container" [class.darkContainer]="theme.darkMode">
+  <ion-row class="delete-header">
+      <img src="/assets/images/warning.svg">
+      <h1 class="ion-padding-horizontal ion-text-center">Delete Identity</h1>
+  </ion-row>
+
+  <ion-row>
+    <ion-col class="message ion-no-padding">
+      <p class="ion-padding-horizontal">
+        This action will cause this identity to be deleted and you will be automatically signed out.
+      </p>
+    </ion-col>
+  </ion-row>
+
+  <ion-row class="btn-row">
+    <ion-col class="btn" size="5" (click)="cancel()">
+      <ion-label>{{ 'cancel' | translate }}</ion-label>
+    </ion-col>
+    <ion-col class="btn" size="5" (click)="confirmDeleteDID()">
+      <ion-label>Continue</ion-label>
+    </ion-col>
+  </ion-row>
+</div>

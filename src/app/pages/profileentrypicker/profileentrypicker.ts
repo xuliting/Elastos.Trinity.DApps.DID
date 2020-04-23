@@ -3,6 +3,7 @@ import { ModalController, NavParams } from '@ionic/angular';
 
 import { BasicCredentialInfo } from 'src/app/model/basiccredentialinfo.model';
 import { BasicCredentialsService } from 'src/app/services/basiccredentials.service';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'page-profileentrypicker',
@@ -12,7 +13,12 @@ import { BasicCredentialsService } from 'src/app/services/basiccredentials.servi
 export class ProfileEntryPickerPage {
   availableItems: BasicCredentialInfo[];
 
-  constructor(private basicCredentialService: BasicCredentialsService, private modalCtrl: ModalController, private navParams: NavParams) {
+  constructor(
+    private basicCredentialService: BasicCredentialsService,
+    private modalCtrl: ModalController,
+    private navParams: NavParams,
+    public theme: ThemeService
+  ) {
     // List of keys we don't want to show (probably already existing in the profile)
     let filterOutKeys: string[] = navParams.get("filterOut");
 

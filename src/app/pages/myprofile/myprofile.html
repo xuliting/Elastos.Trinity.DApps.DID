@@ -7,8 +7,8 @@
       </h1>
       <ion-row class="btn-row">
         <ion-img src="/assets/buttons/scan.svg" (click)="showQRCode()"></ion-img>
-        <ion-img src="/assets/buttons/edit.svg" (click)="showEditOptions($event)"></ion-img>
-        <ion-img src="/assets/buttons/options.svg" (click)="showProfileOptions($event)"></ion-img>
+        <ion-img src="/assets/buttons/edit.svg" (click)="showProfileOptions($event, 'edit')"></ion-img>
+        <ion-img src="/assets/buttons/options.svg" (click)="showProfileOptions($event, 'profile')"></ion-img>
       </ion-row>
     </div>
 
@@ -34,10 +34,13 @@
           <ion-col size="3">
             <h5>{{ entry.label }}</h5>
           </ion-col>
-          <ion-col size="6" class="cred">
+          <ion-col *ngIf="!profileService.editingVisibility" size="7.5" class="cred">
             <h4>{{ entry.value}} </h4>
           </ion-col>
-          <ion-col offset="1" size="2">
+          <ion-col *ngIf="profileService.editingVisibility" size="6" class="cred">
+            <h4>{{ entry.value}} </h4>
+          </ion-col>
+          <ion-col *ngIf="profileService.editingVisibility" offset="1" size="2" [class.showCheckbox]="profileService.editingVisibility">
             <ion-checkbox
               [(ngModel)]="entry.willingToBePubliclyVisible"
               [disabled]="!profileService.editingVisibility"
@@ -52,10 +55,13 @@
           <ion-col size="3">
             <h5>{{ entry.label }}</h5>
           </ion-col>
-          <ion-col size="6" class="cred">
+          <ion-col *ngIf="!profileService.editingVisibility" size="7.5" class="cred">
             <h4>{{ entry.value}} </h4>
           </ion-col>
-          <ion-col offset="1" size="2">
+          <ion-col *ngIf="profileService.editingVisibility" size="6" class="cred">
+            <h4>{{ entry.value}} </h4>
+          </ion-col>
+          <ion-col *ngIf="profileService.editingVisibility" offset="1" size="2">
             <ion-checkbox
               [(ngModel)]="entry.willingToBePubliclyVisible"
               [disabled]="!profileService.editingVisibility"

@@ -137,8 +137,6 @@ export class UXService {
      */
     makeAppVisible() {
         appManager.setVisible("show");
-        titleBarManager.setBackgroundColor("#FFFFFF");
-        titleBarManager.setForegroundMode(TitleBarPlugin.TitleBarForegroundMode.DARK);
     }
 
     getLanguage() {
@@ -197,10 +195,14 @@ export class UXService {
         }
         switch (ret.type) {
             case MessageType.IN_REFRESH:
-                switch (params.action) {
-                    case "currentLocaleChanged":
-                        selfUxService.setCurLang(params.data);
-                        break;
+                if (params.action === "currentLocaleChanged") {
+                  this.setCurLang(params.data);
+                }
+                if(params.action === 'preferenceChanged' && params.data.key === "ui.darkmode") {
+                  this.zone.run(() => {
+                    console.log('Dark Mode toggled');
+                    this.theme.setTheme(params.data.value);
+                  });
                 }
                 break;
             case MessageType.EX_INSTALL:

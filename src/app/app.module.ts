@@ -53,8 +53,8 @@ import { ProfileEntryPickerPage } from './pages/profileentrypicker/profileentryp
 import * as Sentry from "@sentry/browser";
 import { SignRequestPage } from './pages/signrequest/signrequest';
 import { CredentialIssueRequestPage } from './pages/credentialissuerequest/credentialissuerequest';
-import { EditOptionsComponent } from './components/edit-options/edit-options.component';
 import { ProfileOptionsComponent } from './components/profile-options/profile-options.component';
+import { DeleteComponent } from './components/delete/delete.component';
 
 Sentry.init({
   dsn: "https://f563821bdc2546c3bf7357c997a78059@sentry.io/1874652"
@@ -126,8 +126,8 @@ export function TranslateLoaderFactory() {
     DIDListPage,
     ChooseDIDPage,
     ProfileEntryPickerPage,
-    EditOptionsComponent,
-    ProfileOptionsComponent
+    ProfileOptionsComponent,
+    DeleteComponent
   ],
   imports: [
     CommonModule,
@@ -163,8 +163,8 @@ export function TranslateLoaderFactory() {
     ShowQRCodeComponent,
     ProfileEntryPickerPage,
     DisableBiometricPromptComponent,
-    EditOptionsComponent,
-    ProfileOptionsComponent
+    ProfileOptionsComponent,
+    DeleteComponent
   ],
   providers: [
     Clipboard,

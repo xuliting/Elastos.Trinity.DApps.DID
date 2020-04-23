@@ -15,7 +15,6 @@ import { Native } from '../../services/native';
 import { DIDService } from 'src/app/services/did.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DIDSyncService } from 'src/app/services/didsync.service';
-import { EditOptionsComponent } from 'src/app/components/edit-options/edit-options.component';
 import { ThemeService } from 'src/app/services/theme.service';
 import { ProfileService } from 'src/app/services/profile.service';
 import { ProfileOptionsComponent } from 'src/app/components/profile-options/profile-options.component';
@@ -253,30 +252,6 @@ export class MyProfilePage {
   }
 
   /**
-   * Permanently delete the DID after user confirmation.
-   */
-  deleteDID() {
-    this.advancedPopup.create({
-      color:'#FF4D4D',
-      info: {
-          picture: '/assets/images/Local_Data_Delete_Icon.svg',
-          title: this.translate.instant("deletion-popup-warning"),
-          content: this.translate.instant("deletion-popup-content")
-      },
-      prompt: {
-          title: this.translate.instant("deletion-popup-confirm-question"),
-          confirmAction: this.translate.instant("confirm"),
-          cancelAction: this.translate.instant("go-back"),
-          confirmCallback: async ()=>{
-            console.log("Deletion confirmed by user");
-            let activeDid = this.didService.getActiveDid();
-            await this.didService.deleteDid(activeDid);
-          }
-      }
-    }).show();
-  }
-
-  /**
    * This action can be raised at any time by the user in case his local did document is not in sync
    * with the one on the did sidechain. That will publish the document on chain with latest changes.
    */
@@ -360,26 +335,16 @@ export class MyProfilePage {
     }
   }
 
-  async showEditOptions(ev: any) {
-    console.log('Opening edit options');
-
-    const popover = await this.popoverCtrl.create({
-      mode: 'ios',
-      component: EditOptionsComponent,
-      cssClass: !this.theme.darkMode ? 'options' : 'darkOptions',
-      event: ev,
-      translucent: false
-    });
-    return await popover.present();
-  }
-
-  async showProfileOptions(ev: any) {
+  async showProfileOptions(ev: any, options: string) {
     console.log('Opening profile options');
 
     const popover = await this.popoverCtrl.create({
       mode: 'ios',
       component: ProfileOptionsComponent,
       cssClass: !this.theme.darkMode ? 'options' : 'darkOptions',
+      componentProps: {
+        options: options
+      },
       event: ev,
       translucent: false
     });

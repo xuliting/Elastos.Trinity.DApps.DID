@@ -87,6 +87,21 @@
   box-shadow: 0 3px 10px 0 rgba(22, 23, 64, 0.12);
 }
 
+.delete {
+  --min-height: 302px;
+  // --min-width: 385px;
+
+  ion-backdrop {
+    opacity: 0.1 !important;
+  }
+
+  .popover-wrapper{
+    .popover-content {
+      width: 85vw;
+    }
+  }
+}
+
 
 large-menu-item {
     width: 100%;

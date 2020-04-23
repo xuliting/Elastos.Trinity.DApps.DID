@@ -17,6 +17,7 @@ import { BasicCredentialEntry } from 'src/app/model/basiccredentialentry.model';
 import { AdvancedPopupController } from 'src/app/components/advanced-popup/advancedpopup.controller';
 import { TranslateService } from '@ngx-translate/core';
 import { DIDSyncService } from 'src/app/services/didsync.service';
+import { ThemeService } from 'src/app/services/theme.service';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -29,18 +30,21 @@ export class EditProfilePage {
   public isEdit: boolean = false;
   public profile: Profile;
 
-  constructor(public router: Router,
-              public zone: NgZone,
-              public events: Events,
-              public navCtrl: NavController,
-              private didService: DIDService,
-              private authService: AuthService,
-              private modalCtrl: ModalController,
-              private advancedPopup: AdvancedPopupController,
-              private popupProvider: PopupProvider,
-              private translate: TranslateService,
-              private didSyncService: DIDSyncService,
-              private native: Native) {
+  constructor(
+    public router: Router,
+    public zone: NgZone,
+    public events: Events,
+    public navCtrl: NavController,
+    private didService: DIDService,
+    private authService: AuthService,
+    private modalCtrl: ModalController,
+    private advancedPopup: AdvancedPopupController,
+    private popupProvider: PopupProvider,
+    private translate: TranslateService,
+    private didSyncService: DIDSyncService,
+    private native: Native,
+    public theme: ThemeService
+  ) {
     console.log("Entering EditProfile page");
     const navigation = this.router.getCurrentNavigation();
     if (!Util.isEmptyObject(navigation.extras.state) && (navigation.extras.state['create'] == false)) {

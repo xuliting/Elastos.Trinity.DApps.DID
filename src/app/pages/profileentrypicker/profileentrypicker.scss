@@ -29,3 +29,15 @@
     }
   }
 }
+
+.darkContainer {
+  background: #191a2f;
+
+  ion-row {
+    .label-container {
+      ion-label {
+        color: #ffffff;
+      }
+    }
+  }
+}
