@@ -186,7 +186,7 @@ export class ImportDIDPage {
         if (nameCredential) {
             suggestedIdentityProfileName = nameCredential.pluginVerifiableCredential.getSubject()["name"];
         }
-        
+
         response.dids.push({
           didString: did.getDIDString(),
           name: suggestedIdentityProfileName

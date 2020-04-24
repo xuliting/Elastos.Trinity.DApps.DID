@@ -87,7 +87,7 @@ export class Native {
       });
   }
 
-  public getMnemonicLang(): number {
+  public getMnemonicLang(): DIDPlugin.MnemonicLanguage  {
       return this.mnemonicLang;
   }
 
