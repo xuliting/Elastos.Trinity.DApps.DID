@@ -1,7 +1,7 @@
 {
     "id": "org.elastos.trinity.dapp.did",
-    "version": "1.0.9",
-    "version_code": 10,
+    "version": "1.1.1",
+    "version_code": 11,
     "name": "Identity",
     "short_name": "Identity",
     "short_description": "Decentralized User Identity Management",
@@ -23,9 +23,9 @@
         }
     ],
     "author": {
-        "name": "Elastos Foundation",
-        "email": "contact@elastos.org",
-        "website": "https://www.elastos.org"
+        "name": "Trinity Tech Co., Ltd.",
+        "email": "contact@trinity-tech.io",
+        "website": "https://www.trinity-tech.io"
     },
     "default_locale": "en",
     "plugins": [
