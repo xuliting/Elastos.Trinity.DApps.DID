@@ -40,7 +40,10 @@ export class MyProfilePage {
 
   public creatingIdentity: boolean = false;
   public didNeedsToBePublished: boolean = false;
+
   public detailsActive = true;
+  public credsActive = false;
+  public capsulesActive = false;
 
   constructor(
     public events: Events,
@@ -108,6 +111,24 @@ export class MyProfilePage {
       this.didNeedsToBePublished = this.didSyncService.didDocumentNeedsToBePublished(this.didService.getActiveDid());
     }
     console.log("MyProfilePage ionViewDidEnter did: " + this.profileService.didString);
+  }
+
+  changeList(list: string) {
+    if(list === 'details') {
+      this.detailsActive = true;
+      this.credsActive = false;
+      this.capsulesActive = false;
+    }
+    if(list === 'credentials') {
+      this.detailsActive = false;
+      this.credsActive = true;
+      this.capsulesActive = false;
+    }
+    if(list === 'capsules') {
+      this.detailsActive = false;
+      this.credsActive = false;
+      this.capsulesActive = true;
+    }
   }
 
   /**

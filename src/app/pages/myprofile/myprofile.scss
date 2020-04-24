@@ -49,15 +49,16 @@
   }
 
   ion-segment {
-    padding: 0px 45px;
+    padding: 0px 30px;
 
     ion-segment-button {
+      margin: 0 10px;
       --border-color: #161740 !important;
       --border-radius: 0;
       --border-style: none;
 
       ion-label {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 700;
         margin: 5px;
         letter-spacing: 0.45px;
@@ -106,6 +107,10 @@
           font-weight: 700;
           text-align: center;
           color: #161740;
+        }
+
+        ion-checkbox {
+          --border-color: #565bdb;
         }
       }
 

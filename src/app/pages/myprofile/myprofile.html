@@ -13,11 +13,14 @@
     </div>
 
     <ion-segment>
-      <ion-segment-button [class.active]="detailsActive" (click)="detailsActive = true">
-        <ion-label>My Data</ion-label>
+      <ion-segment-button [class.active]="detailsActive" (click)="changeList('details')">
+        <ion-label>Details</ion-label>
       </ion-segment-button>
-      <ion-segment-button [class.active]="!detailsActive" (click)="detailsActive = false">
-        <ion-label>My Capsules</ion-label>
+      <ion-segment-button [class.active]="credsActive" (click)="changeList('credentials')">
+        <ion-label>Credentials</ion-label>
+      </ion-segment-button>
+      <ion-segment-button [class.active]="capsulesActive" (click)="changeList('capsules')">
+        <ion-label>Capsules</ion-label>
       </ion-segment-button>
     </ion-segment>
 
@@ -44,6 +47,7 @@
             <ion-checkbox
               [(ngModel)]="entry.willingToBePubliclyVisible"
               [disabled]="!profileService.editingVisibility"
+              color="success"
               mode="ios"
               [ngClass]="{ 'checkBox-visibility-edit': profileService.editingVisibility }">
             </ion-checkbox>
@@ -65,6 +69,7 @@
             <ion-checkbox
               [(ngModel)]="entry.willingToBePubliclyVisible"
               [disabled]="!profileService.editingVisibility"
+              color="success"
               mode="ios"
               [ngClass]="{ 'checkBox-visibility-edit': profileService.editingVisibility }">
             </ion-checkbox>
