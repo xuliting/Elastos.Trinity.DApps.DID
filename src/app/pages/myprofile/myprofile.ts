@@ -18,6 +18,7 @@ import { DIDSyncService } from 'src/app/services/didsync.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { ProfileService } from 'src/app/services/profile.service';
 import { OptionsComponent } from 'src/app/components/options/options.component';
+import { SecurityCheckComponent } from 'src/app/components/securitycheck/securitycheck.component';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -191,6 +192,20 @@ export class MyProfilePage {
     });
     modal.present();
   }
+
+  /** Test for Security Check comp **/
+/*   async showQRCode() {
+    const modal = await this.modalCtrl.create({
+      component: SecurityCheckComponent,
+      componentProps: {
+        didString: this.profileService.didString
+      },
+      cssClass:"show-qr-code-modal"
+    });
+    modal.onDidDismiss().then((params) => {
+    });
+    modal.present();
+  } */
 
   /**
    * Change DIDStore password.

@@ -171,7 +171,8 @@ export const fr = {
     'changepassword-info' : 'Changer le mot de passe',
 
     // component: security check
-    'security-check': 'Veuillez saisir le mot de passe de l\'application',
+    // 'security-check': 'Veuillez saisir le mot de passe de l\'application',
+    'security-check': 'Security Check',
     'security-check-fingerprint': 'Veuillez vous authentifier',
     'security-check-fingerprint-do': 'Veuillez toucher le capteur d\'empreintes',
     'wrong-password': 'Mot de passe erroné, veuillez réessayer.',

@@ -171,7 +171,8 @@ export const zh = {
     'changepassword-info' : '修改密码',
 
     // component: security check
-    'security-check': '安全确认! 请输入您的密码',
+    // 'security-check': '安全确认! 请输入您的密码',
+    'security-check': 'Security Check',
     'security-check-fingerprint': '安全确认! 请验证',
     'security-check-fingerprint-do': '请验证指纹',
     'wrong-password': '密码错误，请重试',

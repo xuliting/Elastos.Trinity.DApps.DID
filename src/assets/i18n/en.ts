@@ -173,7 +173,8 @@ export const en = {
     'changepassword-info' : 'Change password',
 
     // component: security check
-    'security-check': 'Security check! Please type your app password',
+    // 'security-check': 'Security check! Please type your app password',
+    'security-check': 'Security Check',
     'security-check-fingerprint': 'Security check! Please authenticate',
     'security-check-fingerprint-do': 'Please touch your fingerprint sensor',
     'wrong-password': 'Wrong password, please try again.',
