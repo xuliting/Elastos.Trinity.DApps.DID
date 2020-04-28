@@ -12,6 +12,7 @@ import { Native } from './native';
 import { DisableBiometricPromptComponent, DisableBiometricPromptChoice } from '../components/disablebiometricprompt/disablebiometricprompt.component';
 
 declare let fingerprintManager: FingerprintPlugin.FingerprintManager;
+declare let passwordManager: PasswordManagerPlugin.PasswordManager;
 
 @Injectable({
     providedIn: 'root'
@@ -44,7 +45,7 @@ export class AuthService {
     /**
      * Remember password provided by user for later.
      */
-    saveCurrentUserPassword(didStore: DIDStore, password: string) {
+    async saveCurrentUserPassword(didStore: DIDStore, password: string) {
         console.log("Saving user password for DID Store id "+(didStore?didStore.getId():null));
 
         // When importing a DID, we can save a password without having a related DID store yet.
@@ -54,6 +55,22 @@ export class AuthService {
             this.savedPasswordRelatedDIDStoreId = null;
 
         this.savedPassword = password;
+
+        // Saving password to password manager
+        try {
+            let passwordKey = "didstorepassword-"+didStore.getId();
+            let passwordInfo: PasswordManagerPlugin.GenericPasswordInfo = {
+                key: passwordKey,
+                type: PasswordManagerPlugin.PasswordType.GENERIC_PASSWORD,
+                displayName: "DID Store Password",
+                password: password
+            };
+            await passwordManager.setPasswordInfo(passwordInfo);
+        }
+        catch (e) {
+            console.warn("Password manager error, could be nothing: ", e);
+            console.log(JSON.stringify(e));
+        }
     }
 
     getCurrentUserPassword() : string {
@@ -68,6 +85,29 @@ export class AuthService {
         console.log("Asking for user password ", previousPasswordWasWrong);
 
         return new Promise(async (resolve, reject)=>{
+            if (!previousPasswordWasWrong) {
+                // First check if password manager knows this password. If so, use it.
+                let passwordKey = "didstorepassword-"+forDidStore.getId();
+                try {
+                    console.log("Checking if password manager knows our password");
+                    let passwordInfo = await passwordManager.getPasswordInfo(passwordKey);
+                    if (passwordInfo) {
+                        console.log("Found a saved password in password manager");
+                        let genericPasswordInfo = passwordInfo as PasswordManagerPlugin.GenericPasswordInfo;
+                        this.saveCurrentUserPassword(forDidStore, genericPasswordInfo.password);
+                        resolve(true);
+                        return;
+                    }
+                    else {
+                        console.log("No saved password in password manager");
+                    }
+                }
+                catch (e) {
+                    // Error or cancellation - just forget this and use eh old-school way.
+                    console.log("Password manager error: ", e);
+                }
+            }
+
             let biometricAuthEnabled = await this.fingerprintAuthenticationEnabled(forDidStore.getId());
 
             if (!biometricAuthEnabled) {
