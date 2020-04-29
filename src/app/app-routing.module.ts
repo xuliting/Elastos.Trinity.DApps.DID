@@ -58,6 +58,7 @@ const routes: Routes = [
   { path: 'credissuerequest', component: CredentialIssueRequestPage },
   { path: 'regappprofilerequest', component: RegisterApplicationProfileRequestPage },
   { path: 'signrequest', component: SignRequestPage },
+  { path: 'newpassword', loadChildren: './pages/newpassword/newpassword.module#NewpasswordPageModule' },
 ];
 
 @NgModule({

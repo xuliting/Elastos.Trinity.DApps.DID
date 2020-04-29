@@ -23,7 +23,7 @@ import { DIDEvents } from './services/events';
 })
 export class MyApp {
   @ViewChild(IonRouterOutlet, {static: true}) routerOutlet: IonRouterOutlet;
-  
+
   constructor(
     public platform: Platform,
     public zone: NgZone,
@@ -42,7 +42,7 @@ export class MyApp {
   ) {
     this.initializeApp();
   }
- 
+
   initializeApp() {
     console.log("Initialize app");
 

@@ -78,8 +78,8 @@ export class AuthService {
     }
 
     /**
-     * Ask user to provide his password. If biometric auth is enabled, we don't show any popup and let the 
-     * fingerprint plugin show its UI. 
+     * Ask user to provide his password. If biometric auth is enabled, we don't show any popup and let the
+     * fingerprint plugin show its UI.
      */
     async promptPasswordInContext(forDidStore: DIDStore, previousPasswordWasWrong: boolean = false): Promise<boolean> {
         console.log("Asking for user password ", previousPasswordWasWrong);
@@ -192,7 +192,6 @@ export class AuthService {
                 componentProps: {
                     changePassword: changePassword
                 },
-                cssClass:"create-password-modal"
             });
             modal.onDidDismiss().then((params) => {
                 console.log("AuthService got new password");

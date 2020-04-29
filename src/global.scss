@@ -25,35 +25,55 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+:focus {
+  outline: none;
+}
+
 @font-face {
-    font-family: 'Raleway';
-    font-weight: 300;
-    font-style: normal;
-    src: url('assets/fonts/Raleway-Light.ttf') format('truetype');
+  font-family: 'Montserrat';
+  font-weight: 300;
+  font-style: normal;
+  src: url('assets/fonts/montserrat/Montserrat-Light.ttf');
 }
 @font-face {
-    font-family: 'Raleway';
-    font-weight: 400;
-    font-style: normal;
-    src: url('assets/fonts/Raleway-Regular.ttf') format('truetype');
+  font-family: 'Montserrat';
+  font-weight: 400;
+  font-style: normal;
+  src: url('assets/fonts/montserrat/Montserrat-Regular.ttf');
 }
 @font-face {
-    font-family: 'Raleway';
-    font-weight: 500;
-    font-style: normal;
-    src: url('assets/fonts/Raleway-Medium.ttf') format('truetype');
+  font-family: 'Montserrat';
+  font-weight: 500;
+  font-style: normal;
+  src: url('assets/fonts/montserrat/Montserrat-Medium.ttf');
 }
 @font-face {
-    font-family: 'Raleway';
-    font-weight: 600;
-    font-style: normal;
-    src: url('assets/fonts/Raleway-SemiBold.ttf') format('truetype');
+  font-family: 'Montserrat';
+  font-weight: 600;
+  font-style: normal;
+  src: url('assets/fonts/montserrat/Montserrat-SemiBold.ttf');
 }
 @font-face {
-    font-family: 'Raleway';
-    font-weight: 700;
-    font-style: normal;
-    src: url('assets/fonts/Raleway-Bold.ttf') format('truetype');
+  font-family: 'Montserrat';
+  font-weight: 700;
+  font-style: normal;
+  src: url('assets/fonts/montserrat/Montserrat-Bold.ttf');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 800;
+  font-style: normal;
+  src: url('assets/fonts/montserrat/Montserrat-ExtraBold.ttf');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 900;
+  font-style: normal;
+  src: url('assets/fonts/montserrat/Montserrat-Black.ttf');
+}
+
+* {
+  font-family: 'Montserrat' !important;
 }
 
 large-menu-item {
@@ -78,7 +98,7 @@ ion-content {
 ion-ripple-effect {
     --ripple-color: var(--ion-color-primary);
     color: var(--ripple-color);
-} 
+}
 
 ion-item {
     --background-activated:none;
@@ -96,7 +116,7 @@ ion-toolbar {
 
     .modal-wrapper {
         border-top-left-radius: 30px;
-        border-top-right-radius: 30px;    
+        border-top-right-radius: 30px;
     }
 }
 
@@ -106,7 +126,7 @@ ion-toolbar {
 
     .modal-wrapper {
         border-top-left-radius: 30px;
-        border-top-right-radius: 30px;    
+        border-top-right-radius: 30px;
     }
 }
 
@@ -116,6 +136,6 @@ ion-toolbar {
 
     .modal-wrapper {
         border-top-left-radius: 30px;
-        border-top-right-radius: 30px;    
+        border-top-right-radius: 30px;
     }
 }
