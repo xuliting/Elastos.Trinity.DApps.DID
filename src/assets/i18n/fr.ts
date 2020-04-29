@@ -62,6 +62,8 @@ export const fr = {
     'credential-info-type-nickname': 'Pseudonyme',
     'credential-info-type-birthPlace': 'Lieu de naissance',
     'credential-info-type-description': 'Description',
+    'credential-info-type-occupation': 'Occupation',
+    'credential-info-type-interests': 'Interests',
     'credential-info-type-url': 'Site internet',
     'credential-info-type-facebook': 'Facebook',
     'credential-info-type-twitter': 'Twitter',

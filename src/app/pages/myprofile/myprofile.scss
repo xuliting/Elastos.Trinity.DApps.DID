@@ -82,9 +82,32 @@
     padding-top: 9px;
     margin: 0;
 
+    .visibility-col {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      p {
+        font-size: 9px;
+        font-weight: 700;
+        text-align: center;
+        color: #161740;
+      }
+    }
+
+    .checkbox-col {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+
+      ion-checkbox {
+        --border-color: #565bdb;
+        --border-width: 2px;
+      }
+    }
+
     .profile-data {
       display: flex;
-     // justify-content: space-between;
       padding: 6px 0px 6px 30px;
 
       ion-col {
@@ -100,17 +123,6 @@
           font-weight: 600;
           text-align: left;
           color: #161740;
-        }
-
-        p {
-          font-size: 9px;
-          font-weight: 700;
-          text-align: center;
-          color: #161740;
-        }
-
-        ion-checkbox {
-          --border-color: #565bdb;
         }
       }
 
@@ -128,19 +140,48 @@
           color: #161740;
         }
       }
+    }
 
-      .showVisibility {
-        position: relative;
-        right: 0;
-        z-index: 2;
-        animation: show;
-        animation-duration: 1000ms;
-        animation-fill-mode: forwards;
+    .profile-credential {
+      ion-card {
+        margin: 0;
+        padding: 10px;
+        border-radius: 15px;
+        box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
 
-        @keyframes show {
-          0% { right: -100px }
-          100% { right: 0px }
+        ion-row {
+          ion-col {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            ion-avatar {
+              background: #565bdb;
+              width: 38px;
+              height: 38px;
+            }
+
+            ion-label {
+              font-size: 17px;
+              font-weight: 700;
+              color: #161740;
+            }
+          }
         }
+
+        .property {
+          padding-top: 15px;
+
+          .value {
+            font-size: 12px;
+            font-weight: 500;
+            color: #161740;
+          }
+        }
+      }
+
+      .checkbox-col {
+        padding-top: 20px;
       }
     }
 
@@ -159,71 +200,6 @@
           letter-spacing: -0.43px;
         }
       }
-    }
-
-    .app {
-      --padding-start: 0px;
-      --inner-padding-end: 0px;
-
-      .img-col {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        ion-avatar {
-          width: 52px;
-          height: 52px;
-          overflow: hidden;
-        }
-      }
-
-      .appInfo-col {
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        padding-left: 0;
-
-
-        h4 {
-          font-size: 13px;
-          font-weight: 600;
-          color: #161740;
-          margin: 0;
-          line-height: 1.29;
-        }
-
-        p {
-          font-size: 8px;
-          font-weight: 600;
-          color: #161740;
-          margin: 0;
-          line-height: 1.22;
-        }
-      }
-
-      .btn-col {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        ion-button {
-          --border-radius: 30px;
-          --box-shadow: none;
-          width: 100%;
-
-          ion-label {
-            font-size: 9px;
-            font-weight: 700;
-            padding: 0;
-          }
-        }
-      }
-    }
-
-    .no-apps {
-      font-weight: 600;
-      font-size: 14px;
-      color: #161740;
     }
   }
 }
@@ -263,21 +239,53 @@
         }
       }
     }
+  }
 
-    .app {
-      .appInfo-col {
-        h4 {
+  ion-list {
+    background: #191a2f;
+
+    .visibility-col {
+      p {
+        color: #ffffff;
+      }
+    }
+
+    .profile-data {
+      ion-col {
+        h5 {
           color: #ffffff;
         }
+      }
 
-        p {
+      .cred {
+        h4 {
           color: #ffffff;
         }
       }
     }
 
-    .no-apps {
-      color: #ffffff;
+    .profile-credential {
+      ion-card {
+        background: #464660;
+
+        ion-row {
+          ion-col {
+            ion-avatar {
+              background: #ffffff;
+            }
+
+            ion-label {
+              color: #ffffff;
+            }
+          }
+        }
+
+        .property {
+          .value {
+            color: #ffffff;
+          }
+        }
+      }
     }
   }
 }

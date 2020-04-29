@@ -18,6 +18,13 @@ type ProfileDisplayEntry = {
   willingToBePubliclyVisible?: boolean    // Whether it's currently set to become published or not.
 }
 
+type CredentialDisplayEntry = {
+  credential: DIDPlugin.VerifiableCredential,
+  willingToBePubliclyVisible: boolean,
+  willingToDelete: boolean,
+  canDelete: boolean
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,6 +32,9 @@ export class ProfileService {
 
   visibleData: ProfileDisplayEntry[];
   invisibleData: ProfileDisplayEntry[];
+
+  visibleCred: CredentialDisplayEntry[];
+  invisibleCred: CredentialDisplayEntry[];
 
   public didString: string = "";
   public editingVisibility: boolean = false;

@@ -62,6 +62,8 @@ export const zh = {
     'credential-info-type-nickname': '昵称',
     'credential-info-type-birthPlace': '出生地',
     'credential-info-type-description': '描述',
+    'credential-info-type-occupation': 'Occupation',
+    'credential-info-type-interests': 'Interests',
     'credential-info-type-url': '网址',
     'credential-info-type-facebook': 'Facebook',
     'credential-info-type-twitter': 'Twitter',

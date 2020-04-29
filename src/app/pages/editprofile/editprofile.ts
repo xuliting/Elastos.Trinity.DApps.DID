@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { Events, NavController, IonInput, ModalController } from '@ionic/angular';
 
 import { Profile } from '../../model/profile.model';
