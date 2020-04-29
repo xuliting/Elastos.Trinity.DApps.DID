@@ -11,6 +11,7 @@ import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
 import { TranslateService } from '@ngx-translate/core';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
+declare let didManager: DIDPlugin.DIDManager;
 
 type ClaimRequest = {
   name: string,
@@ -237,8 +238,14 @@ export class CredentialAccessRequestPage {
       presentation = await this.didService.getActiveDid().createVerifiablePresentationFromCredentials(selectedCredentials, this.authService.getCurrentUserPassword());
       console.log("Created presentation:", presentation);
 
+      let jwtToken = await this.didService.getActiveDid().getDIDDocument().createJWT({
+           did:currentDidString, 
+           presentation: presentation
+      },
+      1, this.authService.getCurrentUserPassword());
+      
       console.log("Sending credaccess intent response for intent id "+this.requestDapp.intentId)
-      this.appServices.sendIntentResponse("credaccess", {did:currentDidString, presentation: presentation}, this.requestDapp.intentId)
+      this.appServices.sendIntentResponse("credaccess", {jwt: jwtToken}, this.requestDapp.intentId)
       this.appServices.close();
     }, ()=>{
       // Error

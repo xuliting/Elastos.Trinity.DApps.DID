@@ -49,6 +49,17 @@ export class DIDDocument {
         });
     }
 
+    public createJWT(properties: any, validityDays: number, storePass: string): Promise<string> {
+        return new Promise((resolve, reject)=>{
+            this.pluginDidDocument.createJWT(properties, validityDays, storePass, async (jwtToken) => {
+                resolve(jwtToken);
+            }, (err) => {
+                console.error("Delete credential exception", err);
+                reject(DIDHelper.reworkedDIDPluginException(err));
+            });
+        });
+    }
+
     /**
      * Convenient way to add a credential if not existing, and update it if existing
      */
