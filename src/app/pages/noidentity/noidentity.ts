@@ -89,7 +89,7 @@ export class NoIdentityPage {
         });
     }
 
-    async createIdentity() {
+ /*    async createIdentity() {
         this.didService.didBeingCreated = new NewDID();
 
         // If there is an already active DID store, we don't need to create a new password to
@@ -107,7 +107,11 @@ export class NoIdentityPage {
                 this.native.go('/newpasswordset');
             }
         }
-    }
+    } */
+
+  async createIdentity() {
+     this.router.navigate(["/newpassword"]);
+  }
 
     /**
      * Ask user which way he wants to use to import his DID

@@ -16,12 +16,14 @@ export class CreatePasswordComponent implements OnInit {
   public changePassword: true;
   public title = 'createpassword-intro';
 
-  constructor(public modalCtrl: ModalController,
-              public native: Native) {
+  constructor(
+    public modalCtrl: ModalController,
+    public native: Native
+  ) {
   }
 
   ngOnInit() {
-      if (this.changePassword) this.title = 'changepassword-info';
+    if (this.changePassword) this.title = 'changepassword-info';
   }
 
   ionViewDidEnter() {
@@ -60,6 +62,6 @@ export class CreatePasswordComponent implements OnInit {
 
     this.modalCtrl.dismiss({
       password: this.password
-    });    
+    });
   }
 }

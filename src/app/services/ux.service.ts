@@ -10,6 +10,7 @@ import { AuthService } from './auth.service';
 import { DIDService } from './did.service';
 import { PopupProvider } from './popup';
 import { Router } from '@angular/router';
+import { ThemeService } from './theme.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -46,6 +47,7 @@ export class UXService {
         private modalCtrl: ModalController,
         private navCtrl: NavController,
         private router: Router,
+        private theme: ThemeService,
     ) {
         selfUxService = this;
         UXService.instance = this;
@@ -53,6 +55,7 @@ export class UXService {
 
     init() {
         console.log("UXService init");
+        // this.theme.getTheme();
 
         if (!BrowserSimulation.runningInBrowser()) {
             this.getLanguage();
@@ -194,12 +197,16 @@ export class UXService {
         }
         switch (ret.type) {
             case MessageType.IN_REFRESH:
-                switch (params.action) {
-                    case "currentLocaleChanged":
-                        selfUxService.setCurLang(params.data);
-                        break;
-                }
-                break;
+              if (params.action === "currentLocaleChanged") {
+                this.setCurLang(params.data);
+              }
+         /*      if(params.action === 'preferenceChanged' && params.data.key === "ui.darkmode") {
+                this.zone.run(() => {
+                  console.log('Dark Mode toggled');
+                  this.theme.setTheme(params.data.value);
+                });
+              } */
+              break;
             case MessageType.EX_INSTALL:
                 break;
             case MessageType.INTERNAL:
