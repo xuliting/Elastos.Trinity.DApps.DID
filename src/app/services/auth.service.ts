@@ -61,8 +61,8 @@ export class AuthService {
     }
 
     /**
-     * Ask user to provide his password. If biometric auth is enabled, we don't show any popup and let the 
-     * fingerprint plugin show its UI. 
+     * Ask user to provide his password. If biometric auth is enabled, we don't show any popup and let the
+     * fingerprint plugin show its UI.
      */
     async promptPasswordInContext(forDidStore: DIDStore, previousPasswordWasWrong: boolean = false): Promise<boolean> {
         console.log("Asking for user password ", previousPasswordWasWrong);
@@ -144,27 +144,26 @@ export class AuthService {
     }
 
     public promptNewPassword(changePassword = false): Promise<string> {
-        console.log("Asking for new user password ");
+      console.log("Asking for new user password ");
 
-        return new Promise(async (resolve, reject)=>{
-            const modal = await this.modalCtrl.create({
-                component: CreatePasswordComponent,
-                componentProps: {
-                    changePassword: changePassword
-                },
-                cssClass:"create-password-modal"
-            });
-            modal.onDidDismiss().then((params) => {
-                console.log("AuthService got new password");
+      return new Promise(async (resolve, reject)=>{
+          const modal = await this.modalCtrl.create({
+              component: CreatePasswordComponent,
+              componentProps: {
+                  changePassword: changePassword
+              },
+          });
+          modal.onDidDismiss().then((params) => {
+              console.log("AuthService got new password");
 
-                if (!params.data)
-                    resolve(null);
-                else
-                    resolve(params.data.password);
-            });
-            modal.present();
-        })
-    }
+              if (!params.data)
+                  resolve(null);
+              else
+                  resolve(params.data.password);
+          });
+          modal.present();
+      })
+  }
 
     /**
      * Asks user if he needs to use a mnemonic passphrase. If so, returns the input passphrase.

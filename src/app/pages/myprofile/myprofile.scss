@@ -201,6 +201,22 @@
         }
       }
     }
+
+    h1 {
+      margin: 45px 30px 15px;
+      font-size: 27px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      color: #161740;
+    }
+
+    p {
+      margin: 30px 45px;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.53;
+      color: #161740;
+    }
   }
 }
 
@@ -226,23 +242,9 @@
   ion-list {
     background: #191a2f;
 
-    .profile-data {
-      ion-col {
-        h5, p {
-          color: #ffffff;
-        }
-      }
-
-      .cred {
-        h4 {
-          color: #ffffff;
-        }
-      }
+    h1, p {
+      color: #ffffff;
     }
-  }
-
-  ion-list {
-    background: #191a2f;
 
     .visibility-col {
       p {

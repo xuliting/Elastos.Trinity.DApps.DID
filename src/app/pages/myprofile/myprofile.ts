@@ -107,6 +107,7 @@ export class MyProfilePage {
   }
 
   init() {
+    this.theme.getTheme();
     if (this.didService.getActiveDid()) { // Happens when importing a new mnemonic over an existing one
       this.profile = this.didService.getActiveDid().getBasicProfile();
       console.log("MyProfilePage is using this profile:", this.profile);

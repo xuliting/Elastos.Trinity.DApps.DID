@@ -1,4 +1,93 @@
-<div class="root-container">
+<!-- <ion-content>
+  <div class="ion-text-center container" [class.darkContainer]="theme.darkMode">
+    <ion-row class="mnemonic-row">
+      <ion-col size="3.6">
+        <div class="mnemonic-index">1</div>
+        <ion-label>brown</ion-label>
+      </ion-col>
+      <ion-col size="3.6">
+        <div class="mnemonic-index">1</div>
+        <ion-label>brown</ion-label>
+      </ion-col>
+      <ion-col size="3.6">
+        <div class="mnemonic-index">1</div>
+        <ion-label>brown</ion-label>
+      </ion-col>
+      <ion-col size="3.6">
+        <div class="mnemonic-index">1</div>
+        <ion-label>brown</ion-label>
+      </ion-col>
+      <ion-col size="3.6">
+        <div class="mnemonic-index">1</div>
+        <ion-label>brown</ion-label>
+      </ion-col>
+      <ion-col size="3.6">
+        <div class="mnemonic-index">1</div>
+        <ion-label>brown</ion-label>
+      </ion-col>
+      <ion-col size="3.6">
+        <div class="mnemonic-index">1</div>
+        <ion-label>brown</ion-label>
+      </ion-col>
+      <ion-col size="3.6">
+        <div class="mnemonic-index">1</div>
+        <ion-label>brown</ion-label>
+      </ion-col>
+      <ion-col size="3.6">
+        <div class="mnemonic-index">1</div>
+        <ion-label>brown</ion-label>
+      </ion-col>
+      <ion-col size="3.6">
+        <div class="mnemonic-index">1</div>
+        <ion-label>brown</ion-label>
+      </ion-col>
+      <ion-col size="3.6">
+        <div class="mnemonic-index">1</div>
+        <ion-label>brown</ion-label>
+      </ion-col>
+      <ion-col size="3.6">
+        <div class="mnemonic-index">1</div>
+        <ion-label>brown</ion-label>
+      </ion-col>
+    </ion-row>
+    <h1>Your Mnemonic</h1>
+    <p>
+      These are your 12 security words (mnemonic). Lose these and you will lose the identity,
+      so you must keep them written down <b>in order</b>, and safe! <br><br>
+    </p>
+    <ion-row class="btn-row">
+      <ion-button color="success">
+        <ion-label>Continue</ion-label>
+      </ion-button>
+    </ion-row>
+  </div>
+
+</ion-content>
+ -->
+
+<ion-content>
+  <div class="ion-text-center container" [class.darkContainer]="theme.darkMode">
+    <ion-row class="mnemonic-row">
+      <ion-col size="3.6" *ngFor="let mnemonic of mnemonicList">
+        <div class="mnemonic-index">{{ mnemonicList.indexOf(mnemonic) + 1 }}</div>
+        <ion-label>{{ mnemonic }}</ion-label>
+      </ion-col>
+    </ion-row>
+    <h1>Your Mnemonic</h1>
+    <p>
+      These are your 12 security words (mnemonic). Lose these and you will lose the identity,
+      so you must keep them written down <b>in order</b>, and safe! <br><br>
+    </p>
+    <ion-row class="btn-row" (click)="nextClicked()">
+      <ion-button color="success">
+        <ion-label>Continue</ion-label>
+      </ion-button>
+    </ion-row>
+  </div>
+</ion-content>
+
+
+<!-- <div class="root-container">
 
   <ion-content class="ion-padding ion-text-center">
     <div class="title">Write down your mnemonic</div>
@@ -31,3 +120,4 @@
                 [shadow]="false"></did-button>
   </ion-content>
 </div>
+ -->

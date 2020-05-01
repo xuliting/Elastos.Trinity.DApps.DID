@@ -29,7 +29,11 @@ const routes: Routes = [
   { path: 'newpasswordset', component: NewPasswordSetPage },
   { path: 'createidentity', component: EditProfilePage },
   { path: 'editprofile', component: EditProfilePage },
-  {
+  { path: 'myprofile', component: MyProfilePage },
+  { path: 'didlist', component: DIDListPage },
+  { path: 'credentiallist', component: CredentialListPage },
+
+  /* {
     path: 'home', // Bottom Tab Navigation
     component: HomePage,
     children: [
@@ -44,7 +48,7 @@ const routes: Routes = [
         path: 'credentiallist', component: CredentialListPage
       },
     ]
-  },
+  }, */
   // { path: 'myprofile', component: MyProfilePage },
   { path: 'importdid', component: ImportDIDPage },
   { path: 'backupdid', component: BackupDIDPage },
@@ -59,6 +63,7 @@ const routes: Routes = [
   { path: 'regappprofilerequest', component: RegisterApplicationProfileRequestPage },
   { path: 'signrequest', component: SignRequestPage },
   { path: 'createdata', loadChildren: './pages/createdata/createdata.module#CreatedataPageModule' },
+  { path: 'newpassword', loadChildren: './pages/newpassword/newpassword.module#NewpasswordPageModule' },
 ];
 
 @NgModule({
