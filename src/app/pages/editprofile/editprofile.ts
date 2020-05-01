@@ -169,7 +169,7 @@ export class EditProfilePage {
             await this.didService.finalizeDidCreation(this.authService.getCurrentUserPassword());
 
             this.native.hideLoading();
-            this.native.go("/home/myprofile");
+            this.native.go("/myprofile");
           }, ()=>{
             this.popupProvider.ionicAlert("DID creation error", "Sorry, we are unable to create your DID.");
           }, ()=>{

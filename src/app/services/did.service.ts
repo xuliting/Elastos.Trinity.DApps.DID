@@ -180,7 +180,7 @@ export class DIDService {
 
     private handleNull() {
       this.native.setRootRouter('/newpassword');
-      // this.native.setRootRouter('/verifymnemonics');
+      // this.native.setRootRouter('/noidentity');
     }
 
     public async newDidStore() {

@@ -121,7 +121,7 @@ export class VerifyMnemonicsPage {
                 this.authService.saveCurrentUserPassword(this.didService.getActiveDidStore(), this.didService.didBeingCreated.password);
 
                 console.log("Redirecting user to his profile page");
-                this.native.setRootRouter("/home/myprofile");
+                this.native.setRootRouter("/myprofile");
             })
         });
     }

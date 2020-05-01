@@ -36,7 +36,7 @@
     <ion-list *ngIf="detailsActive">
 
       <ion-row>
-        <ion-col offset="9.75" size="2.25" class="visibility-col">
+        <ion-col offset="9.5" size="2.5" class="visibility-col">
           <p *ngIf="profileService.editingVisibility">Visiblity</p>
         </ion-col>
       </ion-row>
@@ -49,10 +49,10 @@
           <ion-col *ngIf="!profileService.editingVisibility" size="7.5" class="cred">
             <h4>{{ entry.value }} </h4>
           </ion-col>
-          <ion-col *ngIf="profileService.editingVisibility" size="6.75" class="cred">
+          <ion-col *ngIf="profileService.editingVisibility" size="6.5" class="cred">
             <h4>{{ entry.value }} </h4>
           </ion-col>
-          <ion-col *ngIf="profileService.editingVisibility" size="2.25" class="checkbox-col">
+          <ion-col *ngIf="profileService.editingVisibility" size="2.5" class="checkbox-col">
             <ion-checkbox
               [(ngModel)]="entry.willingToBePubliclyVisible"
               [disabled]="!profileService.editingVisibility"
@@ -71,10 +71,10 @@
           <ion-col *ngIf="!profileService.editingVisibility" size="7.5" class="cred">
             <h4>{{ entry.value }} </h4>
           </ion-col>
-          <ion-col *ngIf="profileService.editingVisibility" size="6.75" class="cred">
+          <ion-col *ngIf="profileService.editingVisibility" size="6.5" class="cred">
             <h4>{{ entry.value }} </h4>
           </ion-col>
-          <ion-col *ngIf="profileService.editingVisibility" size="2.25" class="checkbox-col">
+          <ion-col *ngIf="profileService.editingVisibility" size="2.5" class="checkbox-col">
             <ion-checkbox
               [(ngModel)]="entry.willingToBePubliclyVisible"
               [disabled]="!profileService.editingVisibility"
@@ -98,14 +98,14 @@
     <ion-list *ngIf="credsActive && hasCredential">
 
       <ion-row>
-        <ion-col offset="9.75" size="2.25" class="visibility-col">
+        <ion-col offset="9.5" size="2.5" class="visibility-col">
           <p *ngIf="profileService.editingVisibility">Visiblity</p>
         </ion-col>
       </ion-row>
 
       <div *ngIf="profileService.visibleData.length > 0">
         <ion-row class="profile-credential" *ngFor="let entry of profileService.visibleCred">
-          <ion-col offset="0.25" size="9.5">
+          <ion-col offset="0.25" size="9.25">
             <ion-card>
               <ion-row>
                 <ion-col size="2">
@@ -124,7 +124,7 @@
               </div>
             </ion-card>
           </ion-col>
-          <ion-col *ngIf="profileService.editingVisibility" size="2.25" class="checkbox-col">
+          <ion-col *ngIf="profileService.editingVisibility" size="2.5" class="checkbox-col">
             <ion-checkbox
               [(ngModel)]="entry.willingToBePubliclyVisible"
               [disabled]="!profileService.editingVisibility"
@@ -138,7 +138,7 @@
 
       <div *ngIf="profileService.invisibleData.length > 0">
         <ion-row class="profile-credential" *ngFor="let entry of profileService.invisibleCred">
-          <ion-col offset="0.25" size="9.5">
+          <ion-col offset="0.25" size="9.25">
             <ion-card>
               <ion-row>
                 <ion-col size="2">
@@ -157,7 +157,7 @@
               </div>
             </ion-card>
           </ion-col>
-          <ion-col *ngIf="profileService.editingVisibility" size="2.25" class="checkbox-col">
+          <ion-col *ngIf="profileService.editingVisibility" size="2.5" class="checkbox-col">
             <ion-checkbox
               [(ngModel)]="entry.willingToBePubliclyVisible"
               [disabled]="!profileService.editingVisibility"
