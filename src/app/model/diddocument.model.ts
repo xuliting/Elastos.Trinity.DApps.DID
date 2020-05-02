@@ -1,6 +1,6 @@
 import { DIDURL } from './didurl.model';
 import { LocalStorage } from '../services/localstorage';
-import { WrongPasswordException } from './exceptions/wrongpasswordexception.exception';
+import { ApiNoAuthorityException } from "./exceptions/apinoauthorityexception.exception";
 import { DIDSyncService } from '../services/didsync.service';
 import { DID } from './did.model';
 import { DIDHelper } from '../helpers/did.helper';
@@ -16,7 +16,7 @@ export class DIDDocument {
 
     public addCredential(credential: DIDPlugin.VerifiableCredential, storePass: string): Promise<void> {
         console.log("Adding credential with key "+credential.getId()+" into DIDDocument", JSON.parse(JSON.stringify(credential)));
-        
+
         return new Promise((resolve, reject)=>{
             this.pluginDidDocument.addCredential(
                 credential,
@@ -100,8 +100,14 @@ export class DIDDocument {
         return new Promise((resolve, reject)=>{
             this.pluginDidDocument.publish(
                 storepass,
-                () => {resolve()}, (err) => {
+                () => {resolve()},
+                (err) => {
+                  //
+                  if (typeof (err) === "string" && err.includes("have not run authority")) {
+                    reject(new ApiNoAuthorityException(err));
+                  } else {
                     reject(DIDHelper.reworkedDIDPluginException(err))
+                  }
                 },
             );
         });

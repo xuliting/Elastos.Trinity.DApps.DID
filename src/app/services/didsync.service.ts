@@ -72,7 +72,12 @@ export class DIDSyncService {
      * sidechain.
      */
     public async publishActiveDIDDIDDocument(password: string) {
+      try {
         await this.didService.getActiveDidStore().getActiveDid().getDIDDocument().publish(password);
+      }
+      catch (err) {
+        await this.popupProvider.ionicAlert("Publish error", err.message);
+      }
     }
 
     private onDIDDocumentPublishResponse(result: DIDDocumentPublishEvent) {

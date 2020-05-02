@@ -61,11 +61,23 @@ export class DIDStore {
             didStoreId = Config.uuid(6, 16);
 
         console.log("Initializing a new DID Store with ID "+didStoreId);
-        await this.initDidStore(didStoreId);
+        try {
+          await this.initDidStore(didStoreId);
+        }
+        catch(e) {
+          console.log('initNewDidStore: e:', e)
+          throw e;
+        }
     }
 
     private async initDidStore(didStoreId: string) {
-        this.pluginDidStore = await this.initPluginDidStore(didStoreId);
+        try {
+            this.pluginDidStore = await this.initPluginDidStore(didStoreId);
+        }
+        catch (e) {
+            console.error("initDidStore:", e);
+            throw e;
+        }
     }
 
     public async loadAll(didStoreId: string, restoreDeletedDIDs: boolean) {
@@ -167,8 +179,14 @@ export class DIDStore {
             did = new DID(createdDid, this.events);
         this.dids.push(did);
 
-        // Now create credentials for each profile entry
-        await did.writeProfile(newDid.profile, newDid.password);
+        try {
+          // Now create credentials for each profile entry
+          await did.writeProfile(newDid.profile, newDid.password);
+        }
+        catch (e) {
+          // Api No Authority
+          throw e;
+        }
 
         // This new DID becomes the active one.
         await this.setActiveDid(did);
@@ -223,7 +241,10 @@ export class DIDStore {
                     console.log("Initialized DID Store is ", pluginDidStore);
                     resolve(pluginDidStore);
                 },
-                (err) => {reject(err)},
+                (err) => {
+                    console.log('initPluginDidStore error:', err);
+                    reject(DIDHelper.reworkedApiNoAuthorityException(err))
+                },
             );
         });
     }
@@ -396,7 +417,11 @@ export class DIDStore {
         return new Promise((resolve, reject)=>{
             this.pluginDidStore.synchronize(
                 storepass,
-                () => {resolve()}, (err) => {reject(err)},
+                () => {resolve()},
+                (err) => {
+                  console.log('synchronize error:', err)
+                  reject(DIDHelper.reworkedApiNoAuthorityException(err));
+                },
             );
         });
     }

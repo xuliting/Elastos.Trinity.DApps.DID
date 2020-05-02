@@ -1,6 +1,7 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController, IonInput, ModalController, Platform } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 
 import { DIDService } from '../../services/did.service';
 import { Native } from '../../services/native';
@@ -10,8 +11,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DIDStore } from 'src/app/model/didstore.model';
 import { MnemonicPassCheckComponent } from 'src/app/components/mnemonicpasscheck/mnemonicpasscheck.component';
 import { EmptyImportedDocumentComponent, EmptyImportedDocumentChoice } from 'src/app/components/emptyimporteddocument/emptyimporteddocument.component';
-import { TranslateService } from '@ngx-translate/core';
+import { ApiNoAuthorityException } from '../../model/exceptions/apinoauthorityexception.exception';
 
+declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 /**
@@ -227,12 +229,18 @@ export class ImportDIDPage {
                 this.handleEmptyDIDDocumentResolved(didStore, storePass);
             }
         })
-            .catch((e) => {
-                this.native.hideLoading();
-                console.log('synchronize error:', e);
-                this.popupProvider.ionicAlert("Store load error", "Sorry, we were unable to load your DID store... " + e);
-                // TODO: delete temporary didstore
-            });
+        .catch(async (e) => {
+            this.native.hideLoading();
+            console.log('synchronize error:', e);
+            if (e instanceof ApiNoAuthorityException) {
+              await this.popupProvider.ionicAlert("Synchronize error", 'Sorry, this application can not run without the "Synchronize identities" feature');
+              appManager.close();
+            }
+            else {
+              this.popupProvider.ionicAlert("Store load error", "Sorry, we were unable to load your DID store... " + e);
+            }
+            // TODO: delete temporary didstore
+        });
     }
 
     /**

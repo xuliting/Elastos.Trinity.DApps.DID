@@ -1,6 +1,6 @@
 import { Events } from '@ionic/angular';
 import { Profile } from './profile.model';
-import { WrongPasswordException } from './exceptions/wrongpasswordexception.exception';
+import { ApiNoAuthorityException } from "./exceptions/apinoauthorityexception.exception";
 import { BrowserSimulation, SimulatedDID, SimulatedCredential } from '../services/browsersimulation';
 import { BasicCredentialsService } from '../services/basiccredentials.service';
 import { DIDDocument } from './diddocument.model';
@@ -87,7 +87,11 @@ export class DID {
             }
             catch (e) {
                 console.error("Create credential exception", e);
-                reject(DIDHelper.reworkedDIDPluginException(e));
+                if (typeof (e) === "string" && e.includes("have not run authority")) {
+                  reject(new ApiNoAuthorityException(e));
+                } else {
+                  reject(DIDHelper.reworkedDIDPluginException(e))
+                }
                 return;
             }
 
@@ -236,8 +240,13 @@ export class DID {
                     }
 
                     console.log("Adding credential for profile key "+entry.info.key);
-                    let credential = await this.addCredential(credentialId, props, password, ["BasicProfileCredential"]);
-                    console.log("Credential added:", credential);
+                    try {
+                      let credential = await this.addCredential(credentialId, props, password, ["BasicProfileCredential"]);
+                      console.log("Credential added:", credential);
+                    }
+                    catch (e) {
+                      throw e;
+                    }
 
                     console.log("New credentials list:", JSON.parse(JSON.stringify(this.credentials)));
 
@@ -299,7 +308,8 @@ export class DID {
         return new Promise(async (resolve, reject)=>{
             this.pluginDid.issueCredential(
                 this.getDIDString(), credentialId.toString(), type, validityDays, properties, passphrase,
-                (ret) => {resolve(ret)}, (err) => {reject(err)},
+                (ret) => {resolve(ret)},
+                (err) => {reject(DIDHelper.reworkedApiNoAuthorityException(err))},
             );
         });
     }
