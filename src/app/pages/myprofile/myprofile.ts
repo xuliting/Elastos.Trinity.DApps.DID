@@ -18,6 +18,7 @@ import { DIDSyncService } from 'src/app/services/didsync.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
+declare let contactNotifier: ContactNotifierPlugin.ContactNotifier;
 
 type ProfileDisplayEntry = {
   credentialId: string, // related credential id
@@ -173,8 +174,10 @@ export class MyProfilePage {
    * Generates a share intent that shares a "addfriend" url, so that friends can easily add the current user
    * as a global trinity friend
    */
-  shareIdentity() {
+  async shareIdentity() {
+    let carrierAddress = await contactNotifier.getCarrierAddress();
     let addFriendUrl = "https://scheme.elastos.org/addfriend?did="+encodeURIComponent(this.didString);
+    addFriendUrl += "&carrier="+carrierAddress;
 
     appManager.sendIntent("share", {
       title: this.translate.instant("share-add-me-as-friend"),

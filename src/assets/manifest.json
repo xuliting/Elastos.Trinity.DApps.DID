@@ -36,7 +36,8 @@
         "File",
         "FingerprintPlugin",
         "CDVIonicKeyboard",
-        "PasswordManagerPlugin"
+        "PasswordManagerPlugin",
+        "ContactNotifierPlugin"
     ],
     "urls": [
         "https://sentry.io/*"
