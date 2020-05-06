@@ -1,5 +1,4 @@
 .container {
-  background: #fdfeff;
   min-height: 100%;
   padding: 50px 0;
 
@@ -12,10 +11,6 @@
     ion-img {
       width: 84px;
       height: 84px;
-    }
-
-    h1, p {
-      color: #161740 !important;
     }
 
     h1 {
@@ -79,71 +74,72 @@
   }
 
   ion-list {
-    padding-top: 9px;
+    padding-top: 12.5px;
     margin: 0;
+
+    .visibility-row {
+      padding-left: 30px;
+    }
 
     .visibility-col {
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-end;
+      padding-bottom: 0;
 
       p {
-        margin: 5px 5px 10px;
+        margin: 5px;
         font-size: 9px;
         font-weight: 700;
         text-align: center;
-        color: #161740;
       }
     }
 
     .checkbox-col {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-
       ion-checkbox {
         --border-color: #565bdb;
         --border-width: 2px;
       }
     }
 
-    .profile-data {
+    .detail-row {
       display: flex;
       padding: 6px 0px 6px 30px;
+      border-bottom: 1px solid #f0f1ff;
 
       ion-col {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        justify-content: center;
 
         h5, h4, p {
           margin: 0;
         }
 
         h5 {
-          font-size: 14px;
+          font-size: 10px;
           font-weight: 600;
-          text-align: left;
-          color: #161740;
+          color: #a0a2c4;
+          line-height: 1.27;
+        }
+
+        h4 {
+          font-size: 13px;
+          font-weight: 500;
+          line-height: 1.27;
         }
       }
 
-      .cred {
-        padding: 0;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
+      .detail-col {
+        padding-right: 0;
+      }
 
-        h4 {
-          font-size: 12px;
-          font-weight: 500;
-          font-stretch: 500;
-          text-align: right;
-          color: #161740;
-        }
+      .checkbox-col {
+        align-items: center;
       }
     }
 
-    .profile-credential {
+    .cred-row {
       ion-card {
         margin: 0;
         padding: 10px;
@@ -174,15 +170,18 @@
           padding-top: 15px;
 
           .value {
+            color: #161740;
             font-size: 12px;
             font-weight: 500;
-            color: #161740;
           }
         }
       }
 
       .checkbox-col {
         padding-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
       }
     }
 
@@ -208,7 +207,6 @@
       font-size: 27px;
       font-weight: 800;
       letter-spacing: 0.3px;
-      color: #161740;
     }
 
     p {
@@ -216,76 +214,51 @@
       font-size: 14px;
       font-weight: 600;
       line-height: 1.53;
-      color: #161740;
     }
   }
 }
 
 .darkContainer {
-  background: #191a2f;
-
-  .header {
-    h1, p {
-      color: #ffffff !important;
-    }
-  }
-
   ion-segment {
     .active {
-      border-bottom: 2.7px solid #ffffff !important;
+      border-bottom: 2.7px solid #fdfeff !important;
 
       ion-label {
-        color: #ffffff;
+        color: #fdfeff;
       }
     }
   }
 
   ion-list {
-    background: #191a2f;
+    .detail-row {
+      border-bottom: 1px solid #2f305a;
 
-    h1, p {
-      color: #ffffff;
-    }
-
-    .visibility-col {
-      p {
-        color: #ffffff;
-      }
-    }
-
-    .profile-data {
       ion-col {
         h5 {
-          color: #ffffff;
-        }
-      }
-
-      .cred {
-        h4 {
-          color: #ffffff;
+          color: #8485a3;
         }
       }
     }
 
-    .profile-credential {
+    .cred-row {
       ion-card {
         background: #464660;
 
         ion-row {
           ion-col {
             ion-avatar {
-              background: #ffffff;
+              background: #fdfeff;
             }
 
             ion-label {
-              color: #ffffff;
+              color: #fdfeff;
             }
           }
         }
 
         .property {
           .value {
-            color: #ffffff;
+            color: #fdfeff;
           }
         }
       }

@@ -156,8 +156,8 @@ export class DIDService {
         this.handleNull(); // TODO: go to DID list instead
       }
       else {
-          if (this.getActiveDid() != null)
-              this.native.setRootRouter('/myprofile');
+          if (this.getActiveDid() !== null)
+            this.native.setRootRouter('/myprofile');
           else {
               // Oops, no active DID...
               console.warn("No active DID in this store!");

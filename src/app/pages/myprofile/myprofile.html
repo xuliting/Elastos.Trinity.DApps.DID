@@ -35,21 +35,16 @@
     <!-- Details List -->
     <ion-list *ngIf="detailsActive">
 
-      <ion-row>
+      <ion-row class="visibility-row">
         <ion-col offset="9.5" size="2.5" class="visibility-col">
           <p *ngIf="profileService.editingVisibility">Visiblity</p>
         </ion-col>
       </ion-row>
 
       <div *ngIf="profileService.visibleData.length > 0">
-        <ion-row class="profile-data" *ngFor="let entry of profileService.visibleData">
-          <ion-col size="3">
+        <ion-row class="detail-row" *ngFor="let entry of profileService.visibleData">
+          <ion-col size="9.5" class="detail-col">
             <h5>{{ entry.label }}</h5>
-          </ion-col>
-          <ion-col *ngIf="!profileService.editingVisibility" size="7.5" class="cred">
-            <h4>{{ entry.value }} </h4>
-          </ion-col>
-          <ion-col *ngIf="profileService.editingVisibility" size="6.5" class="cred">
             <h4>{{ entry.value }} </h4>
           </ion-col>
           <ion-col *ngIf="profileService.editingVisibility" size="2.5" class="checkbox-col">
@@ -64,14 +59,9 @@
         </ion-row>
       </div>
       <div *ngIf="profileService.invisibleData.length > 0">
-        <ion-row class="profile-data" *ngFor="let entry of profileService.invisibleData">
-          <ion-col size="3">
+        <ion-row class="detail-row" *ngFor="let entry of profileService.invisibleData">
+          <ion-col size="9.5" class="detail-col">
             <h5>{{ entry.label }}</h5>
-          </ion-col>
-          <ion-col *ngIf="!profileService.editingVisibility" size="7.5" class="cred">
-            <h4>{{ entry.value }} </h4>
-          </ion-col>
-          <ion-col *ngIf="profileService.editingVisibility" size="6.5" class="cred">
             <h4>{{ entry.value }} </h4>
           </ion-col>
           <ion-col *ngIf="profileService.editingVisibility" size="2.5" class="checkbox-col">
@@ -104,7 +94,7 @@
       </ion-row>
 
       <div *ngIf="profileService.visibleData.length > 0">
-        <ion-row class="profile-credential" *ngFor="let entry of profileService.visibleCred">
+        <ion-row class="cred-row" *ngFor="let entry of profileService.visibleCred">
           <ion-col offset="0.25" size="9.25">
             <ion-card>
               <ion-row>
@@ -137,7 +127,7 @@
       </div>
 
       <div *ngIf="profileService.invisibleData.length > 0">
-        <ion-row class="profile-credential" *ngFor="let entry of profileService.invisibleCred">
+        <ion-row class="cred-row" *ngFor="let entry of profileService.invisibleCred">
           <ion-col offset="0.25" size="9.25">
             <ion-card>
               <ion-row>

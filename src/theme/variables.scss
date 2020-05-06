@@ -66,8 +66,11 @@
   --ion-color-light-shade: #fdfeff;
   --ion-color-light-tint: #fdfeff;
 
-  --ion-toolbar-background: var(--ion-color-light);
-  --ion-toolbar-color: var(--ion-color-light-contrast);
+  --ion-background-color: #fdfeff;
+  --ion-background-color-rgb: 0,0,0;
+
+  --ion-text-color: #161740;
+  --ion-text-color-rgb: 255,255,255;
 }
 
 /*
@@ -184,7 +187,7 @@
 
 .md body.dark {
   --ion-background-color: #191a2f;
-  --ion-background-color-rgb: 18,18,18;
+  --ion-background-color-rgb: 0,0,0;
 
   --ion-text-color: #fdfeff;
   --ion-text-color-rgb: 255,255,255;
