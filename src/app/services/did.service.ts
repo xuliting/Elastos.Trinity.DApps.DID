@@ -168,8 +168,8 @@ export class DIDService {
     }
 
     private handleNull() {
-      this.native.setRootRouter('/newpassword');
-      // this.native.setRootRouter('/noidentity');
+      // this.native.setRootRouter('/newpassword');
+      this.native.setRootRouter('/noidentity');
     }
 
     public async newDidStore() {

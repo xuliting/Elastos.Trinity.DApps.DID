@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { DIDService } from 'src/app/services/did.service';
+import { Util } from 'src/app/services/util';
 import { NewDID } from 'src/app/model/newdid.model';
 import { Native } from 'src/app/services/native';
 import { AuthService } from 'src/app/services/auth.service';
 import { ThemeService } from 'src/app/services/theme.service';
+import { Router } from '@angular/router';
+import { UXService } from 'src/app/services/ux.service';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -15,19 +18,32 @@ declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 export class NewpasswordPage implements OnInit {
 
   public password: string = null;
+  public isfirst = false;
 
   constructor(
+    public router: Router,
     private didService: DIDService,
     private authService: AuthService,
+    private uxService: UXService,
     private native: Native,
     public theme: ThemeService
   ) { }
 
   ngOnInit() {
+    const navigation = this.router.getCurrentNavigation();
+      if (!Util.isEmptyObject(navigation.extras.state)) {
+        this.isfirst = false;
+      }
   }
 
   ionViewWillEnter() {
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
+    this.uxService.makeAppVisible();
+    titleBarManager.setTitle('Identity');
+    if(this.isfirst) {
+      titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
+    } else {
+      titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
+    }
   }
 
   async createIdentity() {

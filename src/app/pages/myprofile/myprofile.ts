@@ -67,6 +67,7 @@ export class MyProfilePage {
     private modalCtrl: ModalController,
     private native: Native,
     private popoverCtrl: PopoverController,
+    private uxService: UXService,
     public theme: ThemeService,
     public profileService: ProfileService
   ) {
@@ -131,6 +132,7 @@ export class MyProfilePage {
   }
 
   ionViewWillEnter() {
+    this.uxService.makeAppVisible();
     titleBarManager.setTitle(this.translate.instant('my-profile'));
     titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
   }
