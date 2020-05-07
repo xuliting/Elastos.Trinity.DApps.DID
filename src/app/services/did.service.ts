@@ -157,24 +157,13 @@ export class DIDService {
       }
       else {
           if (this.getActiveDid() !== null)
-            this.native.setRootRouter('/myprofile');
+           this.native.setRootRouter('/myprofile');
+           // this.native.setRootRouter('/noidentity');
           else {
               // Oops, no active DID...
               console.warn("No active DID in this store!");
               this.native.setRootRouter('/choosedid');
           }
-        //this.native.setRootRouter('/choosedid');
-        //this.native.setRootRouter('/home/didsettings');
-        //this.native.setRootRouter('/newpasswordset');
-        //this.native.setRootRouter('/noidentity');
-        //this.native.setRootRouter('/editprofile');
-        /*this.native.setRootRouter('/verifymnemonics', {
-          mnemonicStr:"a b c d e f g h k l m o",
-        });*/
-        /*this.native.setRootRouter('/backupdid', {
-          mnemonicStr:"a b c d e f g h k l m o",
-        });*/
-        //this.native.setRootRouter('/home/credentiallist');
       }
     }
 

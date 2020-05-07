@@ -1,6 +1,6 @@
 <div class="root-container">
-  <ion-content class="ion-padding">
-    <ion-list>
+  <ion-content>
+    <ion-list class="ion-padding">
       <ion-radio-group [(ngModel)]="areaItem">
         <ion-virtual-scroll [items]="areaList"  approxItemHeight="60px">
           <ion-item *virtualItem="let item" (click)="selectItem(item)">
