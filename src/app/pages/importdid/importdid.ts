@@ -12,6 +12,7 @@ import { DIDStore } from 'src/app/model/didstore.model';
 import { MnemonicPassCheckComponent } from 'src/app/components/mnemonicpasscheck/mnemonicpasscheck.component';
 import { EmptyImportedDocumentComponent, EmptyImportedDocumentChoice } from 'src/app/components/emptyimporteddocument/emptyimporteddocument.component';
 import { ApiNoAuthorityException } from '../../model/exceptions/apinoauthorityexception.exception';
+import { ThemeService } from 'src/app/services/theme.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -30,7 +31,7 @@ declare let titleBarManager: TitleBarPlugin.TitleBarManager;
     styleUrls: ['importdid.scss']
 })
 export class ImportDIDPage {
-    public mnemonicWords = new Array<String>()
+    public mnemonicWords = new Array<any>()
     public mnemonicSentence: string = "";
     //   public mnemonicSentence: string = "income diesel latin coffee tourist kangaroo lumber great ill amazing say left"; // TMP TESTNET
     private mnemonicLanguage: DIDPlugin.MnemonicLanguage;
@@ -55,7 +56,8 @@ export class ImportDIDPage {
         private didService: DIDService,
         private authService: AuthService,
         private popupProvider: PopupProvider,
-        private translate: TranslateService
+        private translate: TranslateService,
+        public theme: ThemeService
     ) {
         const navigation = this.router.getCurrentNavigation();
         if (!Util.isEmptyObject(navigation.extras.state)) {
@@ -97,6 +99,14 @@ export class ImportDIDPage {
         window.removeEventListener('native.keyboardhide', this.hideHandle);
     }
 
+    isWord(word): boolean {
+      if(word) {
+        return true
+      } else {
+        return false;
+      }
+    }
+
     getElements() {
         this.rootContent = document.getElementById('rootcontent')
         this.sentenceInput = document.getElementById('sentenceInput')
@@ -108,12 +118,9 @@ export class ImportDIDPage {
     }
 
     onMnemonicSentenceChanged() {
-        // Remove all values
-        this.mnemonicWords.length = 0;
-
         this.mnemonicSentence = this.mnemonicSentence.toLowerCase();
-
         this.mnemonicLanguage = this.getMnemonicLang();
+
         // Rebuild words based on typed sentence
         if (this.mnemonicLanguage === DIDPlugin.MnemonicLanguage.CHINESE_SIMPLIFIED) {
             this.getMnemonicWordsFromChinese();
