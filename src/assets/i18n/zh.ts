@@ -53,6 +53,7 @@ export const zh = {
 
     // Profile fields
     'credential-info-type-did': 'DID',
+    'credential-info-type-picture': 'Profile Picture',
     'credential-info-type-name': '姓名',
     'credential-info-type-email': '邮箱',
     'credential-info-type-birthDate': '出生日期',

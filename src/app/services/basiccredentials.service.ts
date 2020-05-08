@@ -18,6 +18,7 @@ export class BasicCredentialsService {
     private createBasicCredentialInfoList() {
       this.basicCredentialInfoList = [
         new BasicCredentialInfo("name", BasicCredentialInfoType.TEXT),
+        new BasicCredentialInfo("picture", BasicCredentialInfoType.IMAGE),
         new BasicCredentialInfo("email", BasicCredentialInfoType.EMAIL),
         new BasicCredentialInfo("birthDate", BasicCredentialInfoType.DATE),
         new BasicCredentialInfo("nation", BasicCredentialInfoType.COUNTRY),

@@ -30,6 +30,11 @@ export class EditProfilePage {
   public isEdit: boolean = false;
   public profile: Profile;
 
+  option: any = {
+    header: 'Select Gender',
+    cssClass: this.theme.darkMode ? 'darkSelect' : 'select',
+  }
+
   constructor(
     public router: Router,
     public zone: NgZone,

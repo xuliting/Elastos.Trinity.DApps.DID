@@ -53,6 +53,7 @@ export const fr = {
 
     // Profile fields
     'credential-info-type-did': 'Identité',
+    'credential-info-type-picture': 'Profile Picture',
     'credential-info-type-name': 'Nom',
     'credential-info-type-email': 'Email',
     'credential-info-type-birthDate': 'Date de naissance',
