@@ -55,6 +55,7 @@ import { SignRequestPage } from './pages/signrequest/signrequest';
 import { CredentialIssueRequestPage } from './pages/credentialissuerequest/credentialissuerequest';
 import { WarningComponent } from './components/warning/warning.component';
 import { OptionsComponent } from './components/options/options.component';
+import { PictureComponent } from './components/picture/picture.component';
 
 Sentry.init({
   dsn: "https://f563821bdc2546c3bf7357c997a78059@sentry.io/1874652"
@@ -127,7 +128,8 @@ export function TranslateLoaderFactory() {
     ChooseDIDPage,
     ProfileEntryPickerPage,
     OptionsComponent,
-    WarningComponent
+    WarningComponent,
+    PictureComponent
   ],
   imports: [
     CommonModule,
@@ -164,7 +166,8 @@ export function TranslateLoaderFactory() {
     ProfileEntryPickerPage,
     DisableBiometricPromptComponent,
     OptionsComponent,
-    WarningComponent
+    WarningComponent,
+    PictureComponent
   ],
   providers: [
     Clipboard,

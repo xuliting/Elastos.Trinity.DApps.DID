@@ -31,10 +31,12 @@
         <ion-col size="4.5" class="label-container">
           <ion-label>{{ 'credential-info-type-'+entry.info.key | translate }}</ion-label>
         </ion-col>
-        <ion-col size="4.5" class="edit-container btn-container">
-          <ion-button color="tertiary">
+        <ion-col size="4.5" class="edit-container btn-container" (click)="getPhoto(entry)">
+        <!--   <ion-button color="tertiary">
             <ion-label>Upload</ion-label>
-          </ion-button>
+          </ion-button> -->
+          <ion-icon *ngIf="!theme.darkMode" src='assets/lightmode/arrow.svg'></ion-icon>
+          <ion-icon *ngIf="theme.darkMode" src='assets/darkmode/arrow.svg'></ion-icon>
         </ion-col>
       </ion-row>
 

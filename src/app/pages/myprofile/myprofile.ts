@@ -44,6 +44,7 @@ type CredentialDisplayEntry = {
 export class MyProfilePage {
 
   public profile: Profile;
+  public profileImage: string = null;
   public credentials: VerifiableCredential[];
 
   public hasCredential: boolean = false;
@@ -193,6 +194,18 @@ export class MyProfilePage {
     else {
       entry.willingToBePubliclyVisible = false;
       this.profileService.invisibleData.push(entry);
+    }
+    console.log('Invisible creds', this.profileService.invisibleData);
+    console.log('Visible creds', this.profileService.visibleData);
+    this.checkForProfileImage();
+  }
+
+  checkForProfileImage() {
+    let imageCred;
+    imageCred = this.profileService.invisibleData.find((cred) => cred.credentialId === '#picture');
+    imageCred = this.profileService.visibleData.find((cred) => cred.credentialId === '#picture');
+    if(imageCred) {
+      this.profileImage = imageCred.value;
     }
   }
 

@@ -18,6 +18,8 @@ import { AdvancedPopupController } from 'src/app/components/advanced-popup/advan
 import { TranslateService } from '@ngx-translate/core';
 import { DIDSyncService } from 'src/app/services/didsync.service';
 import { ThemeService } from 'src/app/services/theme.service';
+import { PictureComponent } from 'src/app/components/picture/picture.component';
+import { ProfileService } from 'src/app/services/profile.service';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -47,6 +49,7 @@ export class EditProfilePage {
     private popupProvider: PopupProvider,
     private translate: TranslateService,
     private didSyncService: DIDSyncService,
+    public profileService: ProfileService,
     private native: Native,
     public theme: ThemeService
   ) {
@@ -98,6 +101,58 @@ export class EditProfilePage {
     });
     this.native.go('/countrypicker');
   }
+
+  async getPhoto(entry: any) {
+    const modal = await this.modalCtrl.create({
+      component: PictureComponent,
+      componentProps: {
+      },
+    });
+    modal.onDidDismiss().then(() => {
+      entry.value = this.profileService.profileImage;
+    });
+    modal.present();
+  }
+
+/*   takePhoto(entry: any) {
+    const options = {
+      quality: 100,
+      destinationType: 0,
+      encodingType: 0,
+      mediaType:0
+    };
+
+    navigator.camera.getPicture((imageData) => {
+      this.zone.run(() => {
+        this.profileService.profileImage = 'data:image/png;base64,' + imageData;
+        return new Promise(async (resolve, reject) => {
+          const modal = await this.modalCtrl.create({
+            component: PictureComponent,
+            componentProps: {
+            },
+          });
+          modal.onDidDismiss().then((params) => {
+            console.log('Use img?', params.data.useImg);
+            resolve(params.data.useImg);
+            if(params.data.useImg) {
+              entry.value = this.profileService.profileImage;
+            } else {
+              return;
+            }
+          });
+          modal.present();
+        });
+      });
+    }, ((err) => {
+      console.error(err);
+    }), options);
+  } */
+
+/*   uploadPhoto() {
+    navigator.mediaDevices.getUserMedia((imageData) => {
+      console.log(imageData)
+    })
+  } */
 
   getDisplayableNation(countryAlpha3) {
     let countryInfo = area.find((a : CountryCodeInfo)=>{

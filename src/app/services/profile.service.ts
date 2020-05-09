@@ -37,6 +37,7 @@ export class ProfileService {
   invisibleCred: CredentialDisplayEntry[];
 
   public didString: string = "";
+  public profileImage: string = null;
   public editingVisibility: boolean = false;
 
   constructor(

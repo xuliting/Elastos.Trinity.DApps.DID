@@ -3,7 +3,10 @@
 
     <!-- Header -->
     <div class="header">
-      <ion-img src="/assets/images/default-contact.svg"></ion-img>
+      <ion-img *ngIf="!profileImage" src="/assets/images/default-contact.svg"></ion-img>
+      <ion-avatar *ngIf="profileImage">
+        <ion-img src="profileImage"></ion-img>
+      </ion-avatar>
       <h1 mode='md' *ngIf="profile">
         {{ profile.getName() }}
       </h1>

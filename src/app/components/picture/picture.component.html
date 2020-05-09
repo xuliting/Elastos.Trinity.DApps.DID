@@ -1,0 +1,24 @@
+<ion-grid *ngIf="!profileService.profileImage">
+  <ion-row class="btn-row">
+    <ion-button color="success" (click)="takePicture()">
+      <ion-label>Take Picture</ion-label>
+    </ion-button>
+    <ion-button color="success" (click)="photoLibrary()">
+      <ion-label>Photo Library</ion-label>
+    </ion-button>
+  </ion-row>
+</ion-grid>
+
+
+<ion-grid *ngIf="profileService.profileImage">
+  <img [src]="profileService.profileImage">
+  <ion-row class="btn-row submit">
+    <ion-button color="success" (click)="submit(true)">
+      <ion-label>Submit</ion-label>
+    </ion-button>
+    <ion-button color="success" (click)="cancel()">
+      <ion-label>Change</ion-label>
+    </ion-button>
+  </ion-row>
+</ion-grid>
+
