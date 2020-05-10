@@ -1,4 +1,4 @@
-<ion-grid *ngIf="!profileService.profileImage">
+<ion-grid *ngIf="!rawImage && !savingImg">
   <ion-row class="btn-row">
     <ion-button color="success" (click)="takePicture()">
       <ion-label>Take Picture</ion-label>
@@ -9,9 +9,8 @@
   </ion-row>
 </ion-grid>
 
-
-<ion-grid *ngIf="profileService.profileImage">
-  <img [src]="profileService.profileImage">
+<ion-grid *ngIf="rawImage && !savingImg">
+  <img [src]="rawImage">
   <ion-row class="btn-row submit">
     <ion-button color="success" (click)="submit(true)">
       <ion-label>Submit</ion-label>
@@ -20,5 +19,10 @@
       <ion-label>Change</ion-label>
     </ion-button>
   </ion-row>
+</ion-grid>
+
+<ion-grid *ngIf="rawImage && savingImg" class="ion-text-center" [class.darkMode]="theme.darkMode">
+  <div><ion-spinner name="bubbles"></ion-spinner></div>
+  <h1>Uploading Photo to Hive</h1>
 </ion-grid>
 

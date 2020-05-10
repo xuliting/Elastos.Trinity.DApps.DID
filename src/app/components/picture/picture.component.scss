@@ -31,7 +31,29 @@ ion-grid {
     }
   }
 
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #191a2f;
+  }
+
+  ion-spinner {
+    transform: scale(1.5);
+    color: #191a2f;
+  }
+
   .submit {
     margin-top: 60px;
+  }
+}
+
+.darkContainer {
+  div {
+    ion-spinner {
+      color: #fdfeff;
+    }
+  }
+  h1 {
+    color: #fdfeff;
   }
 }

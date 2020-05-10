@@ -20,6 +20,7 @@ import { DIDSyncService } from 'src/app/services/didsync.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { PictureComponent } from 'src/app/components/picture/picture.component';
 import { ProfileService } from 'src/app/services/profile.service';
+import { HiveService } from 'src/app/services/hive.service';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -51,7 +52,8 @@ export class EditProfilePage {
     private didSyncService: DIDSyncService,
     public profileService: ProfileService,
     private native: Native,
-    public theme: ThemeService
+    public theme: ThemeService,
+    public hiveService: HiveService
   ) {
     console.log("Entering EditProfile page");
     const navigation = this.router.getCurrentNavigation();
@@ -108,8 +110,10 @@ export class EditProfilePage {
       componentProps: {
       },
     });
-    modal.onDidDismiss().then(() => {
-      entry.value = this.profileService.profileImage;
+    modal.onDidDismiss().then((params) => {
+      if(params.data.useImg) {
+        entry.value = this.hiveService.imageCid;
+      }
     });
     modal.present();
   }

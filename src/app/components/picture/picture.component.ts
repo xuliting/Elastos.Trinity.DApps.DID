@@ -1,6 +1,8 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { NavParams, ModalController } from '@ionic/angular';
 import { ProfileService } from 'src/app/services/profile.service';
+import { ThemeService } from 'src/app/services/theme.service';
+import { HiveService } from 'src/app/services/hive.service';
 
 @Component({
   selector: 'app-picture',
@@ -9,17 +11,30 @@ import { ProfileService } from 'src/app/services/profile.service';
 })
 export class PictureComponent implements OnInit {
 
-  public image = "";
+  public rawImage: string = null;
+  public savingImg = false;
 
   constructor(
     private navParams: NavParams,
     private modalCtrl: ModalController,
     private zone: NgZone,
-    public profileService: ProfileService
+    public profileService: ProfileService,
+    public theme: ThemeService,
+    public hiveService: HiveService
   ) {
   }
 
   ngOnInit() {}
+
+  ionViewDidEnter() {
+    if(this.hiveService.ipfsObj === null){
+      this.hiveService.getIpfsObject().then((ipfs: HivePlugin.IPFS) => {
+        this.hiveService.ipfsObj = ipfs;
+      }).catch((err) => {
+        alert(err);
+      });
+    }
+  }
 
   takePicture() {
     const options = {
@@ -31,7 +46,7 @@ export class PictureComponent implements OnInit {
 
     navigator.camera.getPicture((imageData) => {
       this.zone.run(() => {
-        this.profileService.profileImage = 'data:image/png;base64,' + imageData;
+        this.rawImage = 'data:image/png;base64,' + imageData;
       });
     }, ((err) => {
       console.error(err);
@@ -39,16 +54,29 @@ export class PictureComponent implements OnInit {
   }
 
   photoLibrary() {
-
   }
 
-  submit(useImg: boolean) {
-    this.modalCtrl.dismiss({
-      useImg: useImg
+  submit(useImg: boolean):void {
+    this.savingImg = true;
+    this.hiveService.ipfsPut(this.hiveService.ipfsObj, this.rawImage).then((result) => {
+      if(result["status"] === "success") {
+        this.hiveService.imageCid = result["cid"];
+        console.log('ipfsPut', result);
+        console.log('Image cid', this.hiveService.imageCid);
+        localStorage.setItem(this.hiveService.skey, JSON.stringify(result["cid"]));
+        this.savingImg = false;
+        this.rawImage = "";
+        this.modalCtrl.dismiss({
+          useImg: useImg
+        });
+      }
+    }).catch((err) => {
+      this.savingImg = false;
+      alert(err);
     });
   }
 
   cancel() {
-    this.profileService.profileImage = null;
+    this.rawImage = null;
   }
 }

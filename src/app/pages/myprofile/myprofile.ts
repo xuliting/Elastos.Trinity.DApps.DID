@@ -18,6 +18,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { ProfileService } from 'src/app/services/profile.service';
 import { OptionsComponent } from 'src/app/components/options/options.component';
 import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
+import { HiveService } from 'src/app/services/hive.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -70,6 +71,7 @@ export class MyProfilePage {
     private popoverCtrl: PopoverController,
     private uxService: UXService,
     public theme: ThemeService,
+    public hiveService: HiveService,
     public profileService: ProfileService
   ) {
     this.init();
@@ -140,9 +142,8 @@ export class MyProfilePage {
 
   ionViewDidEnter() {
     this.profileService.didString = this.didService.getActiveDid().getDIDString();
-    if (this.profileService.didString != '') {
+    if (this.profileService.didString !== '') {
       this.appService.setIntentListener();
-
       this.didNeedsToBePublished = this.didSyncService.didDocumentNeedsToBePublished(this.didService.getActiveDid());
     }
     console.log("MyProfilePage ionViewDidEnter did: " + this.profileService.didString);
@@ -201,11 +202,18 @@ export class MyProfilePage {
   }
 
   checkForProfileImage() {
-    let imageCred;
-    imageCred = this.profileService.invisibleData.find((cred) => cred.credentialId === '#picture');
-    imageCred = this.profileService.visibleData.find((cred) => cred.credentialId === '#picture');
-    if(imageCred) {
-      this.profileImage = imageCred.value;
+    let imageCred = this.profileService.visibleData.find((cred) => cred.credentialId === "#picture");
+    if(!imageCred) {
+      imageCred = this.profileService.invisibleData.find((cred) => cred.label === "Profile Picture");
+    }
+    console.log('Profice Picture cred', imageCred);
+    if(imageCred && this.hiveService.ipfsObj) {
+      this.hiveService.loadImg(this.hiveService.ipfsObj, imageCred.value);
+    }
+    if(imageCred && !this.hiveService.ipfsObj) {
+      this.hiveService.getIpfsObject().then((ipfs) => {
+        this.hiveService.loadImg(ipfs, imageCred.value);
+      });
     }
   }
 
