@@ -10,12 +10,14 @@ import { Native } from '../../services/native';
 })
 export class ShowQRCodeComponent implements OnInit {
   public didString: string = "";
+  public qrCodeString: string = "";
 
   constructor(public modalCtrl: ModalController, 
               public native: Native,
               navParams: NavParams) { 
 
     this.didString = navParams.get("didstring");
+    this.qrCodeString = navParams.get("qrcodestring");
   }
 
   ngOnInit() {

@@ -154,6 +154,14 @@ export class MyProfilePage {
     }
   }
 
+  private async getAddFriendShareableUrl(): Promise<string> {
+    let carrierAddress = await contactNotifier.getCarrierAddress();
+    let addFriendUrl = "https://scheme.elastos.org/addfriend?did="+encodeURIComponent(this.didString);
+    addFriendUrl += "&carrier="+carrierAddress;
+
+    return addFriendUrl;
+  }
+
   /**
    * Shows a pop-under with a large qr code and DID string.
    */
@@ -161,7 +169,8 @@ export class MyProfilePage {
     const modal = await this.modalCtrl.create({
       component: ShowQRCodeComponent,
       componentProps: {
-        didString: this.didString
+        didString: this.didString,
+        qrCodeString: await this.getAddFriendShareableUrl()
       },
       cssClass:"show-qr-code-modal"
     });
@@ -175,9 +184,7 @@ export class MyProfilePage {
    * as a global trinity friend
    */
   async shareIdentity() {
-    let carrierAddress = await contactNotifier.getCarrierAddress();
-    let addFriendUrl = "https://scheme.elastos.org/addfriend?did="+encodeURIComponent(this.didString);
-    addFriendUrl += "&carrier="+carrierAddress;
+    let addFriendUrl = await this.getAddFriendShareableUrl();
 
     appManager.sendIntent("share", {
       title: this.translate.instant("share-add-me-as-friend"),
