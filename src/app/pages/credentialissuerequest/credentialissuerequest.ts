@@ -185,8 +185,7 @@ export class CredentialIssueRequestPage {
 
       this.popup.ionicAlert("Credential imported", "Great, the credential has been added to your DID profile.", "Done").then(()=>{
         console.log("Sending credissue intent response for intent id "+this.requestDapp.intentId)
-        this.appServices.sendIntentResponse("credissue", {}, this.requestDapp.intentId)
-        this.appServices.close();
+        this.appServices.sendIntentResponse("credissue", {}, this.requestDapp.intentId, true);
       })
     }, ()=>{
       // Error
@@ -196,7 +195,6 @@ export class CredentialIssueRequestPage {
   }
 
   rejectRequest() {
-    this.appServices.sendIntentResponse("credissue", {}, this.requestDapp.intentId)
-    this.appServices.close();
+    this.appServices.sendIntentResponse("credissue", {}, this.requestDapp.intentId, true)
   }
 }

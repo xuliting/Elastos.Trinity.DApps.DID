@@ -298,9 +298,16 @@ export class UXService {
         }
     }
 
-    sendIntentResponse(action, result, intentId) {
+    sendIntentResponse(action, result, intentId, exitApp:boolean) {
         if (!BrowserSimulation.runningInBrowser()) {
-            appManager.sendIntentResponse(action, result, intentId, null);
+            appManager.sendIntentResponse(action, result, intentId,
+              (response)=> {
+                if (exitApp) appManager.close();
+              },
+              (err) => {
+                console.error('sendIntentResponse failed: ', err);
+              }
+            );
         } else {
             console.warn("Not sending intent response, we are in browser");
         }
@@ -312,8 +319,7 @@ export class UXService {
 
         await this.popup.ionicAlert("Action error", errorMessage, "Close");
 
-        this.sendIntentResponse(intent.action, {}, intent.intentId);
-        this.close();
+        this.sendIntentResponse(intent.action, {}, intent.intentId, true);
     }
 
     checkCredAccessIntentParams(intent) {
