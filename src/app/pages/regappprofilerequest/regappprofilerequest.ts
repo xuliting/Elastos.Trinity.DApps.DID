@@ -162,9 +162,10 @@ export class RegisterApplicationProfileRequestPage {
     });
   }
 
-  sendIntentResponse() {
+  async sendIntentResponse() {
     // Send the intent response as everything is completed
-    this.appServices.sendIntentResponse("registerapplicationprofile", {}, this.requestDapp.intentId, true);
+    await this.appServices.sendIntentResponse("registerapplicationprofile", {}, this.requestDapp.intentId);
+    this.appServices.close();
   }
 
   async createMainApplicationProfileCredential(password: string) {

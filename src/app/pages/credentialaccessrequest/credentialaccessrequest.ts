@@ -238,7 +238,8 @@ export class CredentialAccessRequestPage {
       console.log("Created presentation:", presentation);
 
       console.log("Sending credaccess intent response for intent id "+this.requestDapp.intentId)
-      this.appServices.sendIntentResponse("credaccess", {did:currentDidString, presentation: presentation}, this.requestDapp.intentId, true);
+      await this.appServices.sendIntentResponse("credaccess", {did:currentDidString, presentation: presentation}, this.requestDapp.intentId);
+      this.appServices.close();
     }, ()=>{
       // Error
     }, ()=>{
@@ -246,7 +247,8 @@ export class CredentialAccessRequestPage {
     });
   }
 
-  rejectRequest() {
-    this.appServices.sendIntentResponse("credaccess", {did:null, presentation: null}, this.requestDapp.intentId, true);
+  async rejectRequest() {
+    await this.appServices.sendIntentResponse("credaccess", {did:null, presentation: null}, this.requestDapp.intentId);
+    this.appServices.close();
   }
 }

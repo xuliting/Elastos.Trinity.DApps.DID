@@ -94,12 +94,14 @@ export class SignRequestPage {
     });
   }
 
-  sendIntentResponse(response: SignIntentResponse) {
+  async sendIntentResponse(response: SignIntentResponse) {
     // Send the intent response as everything is completed
-    this.appServices.sendIntentResponse("sign", response, this.requestDapp.intentId, true);
+    await this.appServices.sendIntentResponse("sign", response, this.requestDapp.intentId);
+    this.appServices.close();
   }
 
-  rejectRequest() {
-    this.appServices.sendIntentResponse("sign", {}, this.requestDapp.intentId, true);
+  async rejectRequest() {
+    await this.appServices.sendIntentResponse("sign", {}, this.requestDapp.intentId);
+    this.appServices.close();
   }
 }
