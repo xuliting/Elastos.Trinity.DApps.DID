@@ -307,7 +307,7 @@ export class UXService {
             },
             (err) => {
               console.error('sendIntentResponse failed: ', err);
-              reject();
+              reject(err);
             }
           );
         } else {

@@ -258,7 +258,7 @@ export class CredentialAccessRequestPage {
         await this.appServices.sendIntentResponse("credaccess", {jwt: jwtToken}, this.requestDapp.intentId)
       }
       catch (e) {
-        this.popup.ionicAlert("Response error", "Sorry, we were unable to return the right information to the calling app.");
+        await this.popup.ionicAlert("Response error", "Sorry, we were unable to return the right information to the calling app. "+e);
       }
       this.appServices.close();
     }, ()=>{

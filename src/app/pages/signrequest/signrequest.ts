@@ -107,7 +107,7 @@ export class SignRequestPage {
         await this.appServices.sendIntentResponse("sign", {jwt: jwtToken}, this.requestDapp.intentId);
       }
       catch (e) {
-        this.popup.ionicAlert("Response error", "Sorry, we were unable to return the signed information to the calling app.");
+        await this.popup.ionicAlert("Response error", "Sorry, we were unable to return the signed information to the calling app. "+e);
       }
       
       this.appServices.close();
