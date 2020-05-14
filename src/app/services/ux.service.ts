@@ -320,7 +320,8 @@ export class UXService {
             appPackageId: intent.from,
             intentId: intent.intentId,
             action: intent.action,
-            requestProfile: intent.params.claims || [] // We are allowed to request no claim except the DID itself
+            requestProfile: intent.params.claims || [], // We are allowed to request no claim except the DID itself
+            originalJwtRequest: intent.originalJwtRequest
         }
         return true;
     }
@@ -336,7 +337,8 @@ export class UXService {
             appPackageId: intent.from,
             intentId: intent.intentId,
             action: intent.action,
-            issuedCredentials: intent.params.issuedcredentials
+            issuedCredentials: intent.params.issuedcredentials,
+            originalJwtRequest: intent.originalJwtRequest
         }
         return true;
     }
@@ -357,7 +359,8 @@ export class UXService {
             appPackageId: intent.from,
             intentId: intent.intentId,
             action: intent.action,
-            allParams: intent.params
+            allParams: intent.params,
+            originalJwtRequest: intent.originalJwtRequest
         }
 
         return true;

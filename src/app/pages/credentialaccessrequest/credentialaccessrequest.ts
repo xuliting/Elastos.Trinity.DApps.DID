@@ -238,10 +238,19 @@ export class CredentialAccessRequestPage {
       presentation = await this.didService.getActiveDid().createVerifiablePresentationFromCredentials(selectedCredentials, this.authService.getCurrentUserPassword());
       console.log("Created presentation:", presentation);
 
-      let jwtToken = await this.didService.getActiveDid().getDIDDocument().createJWT({
-           did:currentDidString, 
-           presentation: presentation
-      },
+      let payload = {
+        type: "credaccess",
+        did:currentDidString, 
+        presentation: presentation,
+      };
+
+      // Return the original JWT token in case this intent was called by an external url (elastos scheme definition)
+      // TODO: Currently adding elastos://credaccess/ in front of the JWT because of CR website requirement. But we should cleanup this and pass only the JWT itself
+      if (this.requestDapp.originalJwtRequest) {
+        payload["req"] = "elastos://credaccess/"+this.requestDapp.originalJwtRequest;
+      }
+
+      let jwtToken = await this.didService.getActiveDid().getDIDDocument().createJWT(payload,
       1, this.authService.getCurrentUserPassword());
       
       console.log("Sending credaccess intent response for intent id "+this.requestDapp.intentId)

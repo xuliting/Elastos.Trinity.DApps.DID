@@ -18,6 +18,7 @@ type SignIntentParams = {
 }
 
 type SignIntentResponse = {
+  type: string,
   signingdid: string,
   publickey: string,
   signature: string
@@ -32,7 +33,8 @@ export class SignRequestPage {
   requestDapp: {
     intentId: number,
     appPackageId: string,
-    allParams: SignIntentParams
+    allParams: SignIntentParams,
+    originalJwtRequest?: string
   } = null;
 
   constructor(
@@ -81,13 +83,20 @@ export class SignRequestPage {
       let publicKey = await this.didService.getActiveDid().getDIDDocument().getDefaultPublicKey();
 
       let payload: SignIntentResponse = {
+        type: "credaccess",
         signingdid: this.didService.getActiveDid().getDIDString(),
         publickey: publicKey,
         signature: signature
       }
 
+      // Return the original JWT token in case this intent was called by an external url (elastos scheme definition)
+      // TODO: Currently adding elastos://sign/ in front of the JWT because of CR website requirement. But we should cleanup this and pass only the JWT itself
+      if (this.requestDapp.originalJwtRequest) {
+        payload["req"] = "elastos://sign/"+this.requestDapp.originalJwtRequest;
+      }
+
       // Return the signature info as a signed JWT in case runtime needs to send this response through a URL
-      // callback. If that's inside elastOS, the JWT will be parsed and the calling app will received the
+      // callback. If that's inside elastOS, the JWT will be parsed and the calling app will receive the
       // signature payload.
       let jwtToken = await this.didService.getActiveDid().getDIDDocument().createJWT(payload,
       1, this.authService.getCurrentUserPassword());
