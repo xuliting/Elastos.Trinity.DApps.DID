@@ -11,6 +11,7 @@ import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
 import { TranslateService } from '@ngx-translate/core';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
+declare let didManager: DIDPlugin.DIDManager;
 
 type ClaimRequest = {
   name: string,
@@ -237,8 +238,28 @@ export class CredentialAccessRequestPage {
       presentation = await this.didService.getActiveDid().createVerifiablePresentationFromCredentials(selectedCredentials, this.authService.getCurrentUserPassword());
       console.log("Created presentation:", presentation);
 
+      let payload = {
+        type: "credaccess",
+        did:currentDidString, 
+        presentation: presentation,
+      };
+
+      // Return the original JWT token in case this intent was called by an external url (elastos scheme definition)
+      // TODO: Currently adding elastos://credaccess/ in front of the JWT because of CR website requirement. But we should cleanup this and pass only the JWT itself
+      if (this.requestDapp.originalJwtRequest) {
+        payload["req"] = "elastos://credaccess/"+this.requestDapp.originalJwtRequest;
+      }
+
+      let jwtToken = await this.didService.getActiveDid().getDIDDocument().createJWT(payload,
+      1, this.authService.getCurrentUserPassword());
+      
       console.log("Sending credaccess intent response for intent id "+this.requestDapp.intentId)
-      await this.appServices.sendIntentResponse("credaccess", {did:currentDidString, presentation: presentation}, this.requestDapp.intentId);
+      try {
+        await this.appServices.sendIntentResponse("credaccess", {jwt: jwtToken}, this.requestDapp.intentId)
+      }
+      catch (e) {
+        this.popup.ionicAlert("Response error", "Sorry, we were unable to return the right information to the calling app.");
+      }
       this.appServices.close();
     }, ()=>{
       // Error
