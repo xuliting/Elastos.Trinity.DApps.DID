@@ -42,7 +42,8 @@ export class SignRequestPage {
     private uxService:UXService,
     private translate: TranslateService,
     private advancedPopup: AdvancedPopupController,
-    private appServices: UXService
+    private appServices: UXService,
+    private authService: AuthService
   ) {
   }
 
@@ -79,25 +80,31 @@ export class SignRequestPage {
       let signature = await this.didService.getActiveDid().signData(this.requestDapp.allParams.data, password);
       let publicKey = await this.didService.getActiveDid().getDIDDocument().getDefaultPublicKey();
 
-      let response: SignIntentResponse = {
+      let payload: SignIntentResponse = {
         signingdid: this.didService.getActiveDid().getDIDString(),
         publickey: publicKey,
         signature: signature
       }
 
-      console.log("Data signed, sending intent response", response);
-      this.sendIntentResponse(response);
+      // Return the signature info as a signed JWT in case runtime needs to send this response through a URL
+      // callback. If that's inside elastOS, the JWT will be parsed and the calling app will received the
+      // signature payload.
+      let jwtToken = await this.didService.getActiveDid().getDIDDocument().createJWT(payload,
+      1, this.authService.getCurrentUserPassword());
+    
+      // Send the intent response as everything is completed
+      console.log("Data signed, sending intent response");
+      this.appServices.sendIntentResponse("sign", {jwt: jwtToken}, this.requestDapp.intentId, ()=>{
+        this.appServices.close();
+      }, (err)=>{
+        this.popup.ionicAlert("Response error", "Sorry, we were unable to return the signed information to the calling app.");
+        this.appServices.close();
+      });
     }, ()=>{
       // Error
     }, ()=>{
       // Wrong password
     });
-  }
-
-  sendIntentResponse(response: SignIntentResponse) {
-    // Send the intent response as everything is completed
-    this.appServices.sendIntentResponse("sign", response, this.requestDapp.intentId);
-    this.appServices.close();
   }
 
   rejectRequest() {

@@ -291,9 +291,9 @@ export class UXService {
         }
     }
 
-    sendIntentResponse(action, result, intentId) {
+    sendIntentResponse(action, result, intentId, onSuccess?: ()=>void, onError?:(err)=>void) {
         if (!BrowserSimulation.runningInBrowser()) {
-            appManager.sendIntentResponse(action, result, intentId, null);
+            appManager.sendIntentResponse(action, result, intentId, onSuccess, onerror);
         } else {
             console.warn("Not sending intent response, we are in browser");
         }
