@@ -19,6 +19,7 @@ import { DevPage } from './pages/devpage/devpage';
 import { SignRequestPage } from './pages/signrequest/signrequest';
 import { CredentialIssueRequestPage } from './pages/credentialissuerequest/credentialissuerequest';
 import { DeleteDIDPage } from './pages/deletedid/deletedid';
+import { NotSignedInPage } from './pages/notsignedin/notsignedin';
  
 const routes: Routes = [
   // { path: '', redirectTo: '', pathMatch: 'full' }, // No default route, services will decide this by themselves.
@@ -54,6 +55,7 @@ const routes: Routes = [
   { path: 'credissuerequest', component: CredentialIssueRequestPage },
   { path: 'regappprofilerequest', component: RegisterApplicationProfileRequestPage },
   { path: 'signrequest', component: SignRequestPage },
+  { path: 'notsignedin', component: NotSignedInPage }
 ];
 
 @NgModule({

@@ -349,6 +349,14 @@ export class SimulatedDIDDocument implements DIDPlugin.DIDDocument {
     publish(storepass: string, onSuccess?: () => void, onError?: (err: any) => void) {
         simulated("publish", "SimulatedDIDDocument");
     }
+
+    getExpires(): Date {
+        return new Date();
+    }
+
+    createJWT(properties: any, validityDays: Number, storepass: string, onSuccess: (token: string) => void, onError?: (err: any) => void) {
+        onSuccess("FAKEJWT");
+    }
 }
 
 export class BrowserSimulation {

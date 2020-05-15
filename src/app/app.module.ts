@@ -52,6 +52,7 @@ import * as Sentry from "@sentry/browser";
 import { SignRequestPage } from './pages/signrequest/signrequest';
 import { CredentialIssueRequestPage } from './pages/credentialissuerequest/credentialissuerequest';
 import { DeleteDIDPage } from './pages/deletedid/deletedid';
+import { NotSignedInPage } from './pages/notsignedin/notsignedin';
 
 Sentry.init({
   dsn: "https://f563821bdc2546c3bf7357c997a78059@sentry.io/1874652"
@@ -121,7 +122,8 @@ export function TranslateLoaderFactory() {
     RegisterApplicationProfileRequestPage,
     SignRequestPage,
     ProfileEntryPickerPage,
-    DeleteDIDPage
+    DeleteDIDPage,
+    NotSignedInPage
   ],
   imports: [
     CommonModule,

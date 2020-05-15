@@ -66,9 +66,13 @@ export class DIDService {
      */
     public async loadGlobalIdentity() {
       let signedInIdentity = await didSessionManager.getSignedInIdentity();
-
-      // Activate the DID store, and the DID
-      await this.activateDid(signedInIdentity.didStoreId, signedInIdentity.didString);
+      if (!signedInIdentity) {
+        this.native.setRootRouter('/notsignedin');
+      }
+      else {
+        // Activate the DID store, and the DID
+        await this.activateDid(signedInIdentity.didStoreId, signedInIdentity.didString);
+      }
     }
 
     /**
