@@ -82,7 +82,7 @@ export class EditProfilePage {
 
     // titleBarManager.setTitle(this.translate.instant('edit-profile'));
     titleBarManager.setTitle(this.translate.instant('my-profile'));
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
+    this.uxService.setTitleBarBackKeyShown(true);
   }
 
   entryIsText(entry: BasicCredentialEntry): boolean {

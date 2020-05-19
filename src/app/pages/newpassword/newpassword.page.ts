@@ -42,7 +42,7 @@ export class NewpasswordPage implements OnInit {
     if(this.isfirst) {
       titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
     } else {
-      titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
+      this.uxService.setTitleBarBackKeyShown(true);
     }
   }
 

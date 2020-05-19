@@ -75,12 +75,30 @@ export class UXService {
 
             appManager.setListener(this.onReceive);
             this.setIntentListener();
+
+            titleBarManager.setOnItemClickedListener((menuIcon)=>{
+                if (menuIcon.key == "back") {
+                    this.navCtrl.back();
+                }
+            });
         }
         else {
             // Simulated settings
             this.setCurLang("fr");
 
             this.showEntryScreen();
+        }
+    }
+
+    setTitleBarBackKeyShown(show: boolean) {
+        if (show) {
+            titleBarManager.setIcon(TitleBarPlugin.TitleBarIconSlot.INNER_LEFT, {
+                key: "back",
+                iconPath: TitleBarPlugin.BuiltInIcon.BACK
+            });    
+        }
+        else {
+            titleBarManager.setIcon(TitleBarPlugin.TitleBarIconSlot.INNER_LEFT, null); 
         }
     }
 

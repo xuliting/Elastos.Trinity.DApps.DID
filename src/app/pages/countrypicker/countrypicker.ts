@@ -3,6 +3,7 @@ import { Events, NavController } from '@ionic/angular';
 
 import { area } from '../../../assets/area/area';
 import { TranslateService } from '@ngx-translate/core';
+import { UXService } from 'src/app/services/ux.service';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -18,14 +19,15 @@ export class CountryPickerPage {
   constructor(
             public events: Events,
             private navCtrl: NavController,
-            private translate: TranslateService
+            private translate: TranslateService,
+            private uxService: UXService
   ) {
     this.areaList = area;
   }
 
   ionViewWillEnter() {
     titleBarManager.setTitle(this.translate.instant('country'));
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
+    this.uxService.setTitleBarBackKeyShown(true);
   }
 
   selectItem(item) {

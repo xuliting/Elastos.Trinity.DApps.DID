@@ -46,7 +46,7 @@ export class VerifyMnemonicsPage {
 
     ionViewWillEnter() {
       titleBarManager.setTitle(this.translate.instant('verification'));
-      titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
+      this.uxService.setTitleBarBackKeyShown(true);
     }
 
     init() {

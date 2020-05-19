@@ -4,6 +4,7 @@ import { NavController } from '@ionic/angular';
 import { Config } from '../../services/config';
 import { Native } from '../../services/native';
 import { DIDService } from 'src/app/services/did.service';
+import { UXService } from 'src/app/services/ux.service';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -13,11 +14,11 @@ declare let titleBarManager: TitleBarPlugin.TitleBarManager;
   styleUrls: ['newpasswordset.scss']
 })
 export class NewPasswordSetPage {
-  constructor(public navCtrl: NavController, private didService: DIDService, private native: Native) {}
+  constructor(public navCtrl: NavController, private didService: DIDService, private native: Native, private uxService: UXService) {}
 
   ionViewWillEnter() {
     titleBarManager.setTitle('');
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
+    this.uxService.setTitleBarBackKeyShown(true);
   }
 
   async createProfile() {

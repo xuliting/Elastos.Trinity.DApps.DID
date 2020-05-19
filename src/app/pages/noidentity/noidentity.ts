@@ -64,7 +64,7 @@ export class NoIdentityPage {
         if(this.isfirst) {
           titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
         } else {
-          titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
+            this.uxService.setTitleBarBackKeyShown(true);
         }
     }
 

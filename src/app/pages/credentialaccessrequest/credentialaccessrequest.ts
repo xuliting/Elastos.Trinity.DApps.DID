@@ -50,6 +50,7 @@ export class CredentialAccessRequestPage {
 
   ionViewWillEnter() {
     titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
+    this.uxService.setTitleBarBackKeyShown(false);
     titleBarManager.setTitle(this.translate.instant('data-access'));
     this.mandatoryItems = [];
     this.optionalItems = [];
