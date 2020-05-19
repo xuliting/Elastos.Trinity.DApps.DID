@@ -1,7 +1,7 @@
 {
     "id": "org.elastos.trinity.dapp.did",
-    "version": "1.0.9",
-    "version_code": 10,
+    "version": "1.0.11",
+    "version_code": 12,
     "name": "Identity",
     "short_name": "Identity",
     "short_description": "Decentralized User Identity Management",

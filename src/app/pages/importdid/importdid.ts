@@ -71,6 +71,7 @@ export class ImportDIDPage {
     }
 
     ionViewWillEnter() {
+        this.uxService.makeAppVisible();
         titleBarManager.setTitle(this.translate.instant('import-my-did'));
         titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
 

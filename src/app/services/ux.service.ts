@@ -138,7 +138,7 @@ export class UXService {
     close() {
         if (!BrowserSimulation.runningInBrowser())
             appManager.close();
-    }
+    }   
 
     minimize() {
         if (!BrowserSimulation.runningInBrowser())
@@ -272,6 +272,8 @@ export class UXService {
                 console.log("Received import mnemonic intent request");
 
                 if (intent.from != "org.elastos.trinity.dapp.didsession") {
+                    console.log("importmnemonic not called from the did session app. Exiting.");
+
                     // Security item: Make sure DID creation is only called by the did session app
                     this.sendIntentResponse(intent.action, {
                         error: "Only the DID session app is allowed to call this action"
@@ -435,6 +437,8 @@ export class UXService {
         errorMessage += "\n\n"+JSON.stringify(intent.params);
 
         await this.popup.ionicAlert("Action error", errorMessage, "Close");
+ 
+        console.error(errorMessage);
 
         this.sendIntentResponse(intent.action, {}, intent.intentId);
         this.close();
