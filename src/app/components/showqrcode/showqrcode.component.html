@@ -3,9 +3,11 @@
   <ion-row class="ion-text-center">
     <h1>My Identity QR Code</h1>
   </ion-row>
-
-  <ion-row class="ion-text-center">
-    <qrcode [qrdata]="didString" [size]="150"></qrcode>
+  
+  <ion-row >
+    <ion-col class="ion-text-center">
+      <qrcode [qrdata]="qrCodeString" [size]="150"></qrcode>
+    </ion-col>
   </ion-row>
 
   <ion-row class="ion-text-center">

@@ -22,6 +22,7 @@ import { HiveService } from 'src/app/services/hive.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
+declare let contactNotifier: ContactNotifierPlugin.ContactNotifier;
 
 type ProfileDisplayEntry = {
   credentialId: string, // related credential id
@@ -260,6 +261,14 @@ export class MyProfilePage {
     }
   }
 
+  private async getAddFriendShareableUrl(): Promise<string> {
+    let carrierAddress = await contactNotifier.getCarrierAddress();
+    let addFriendUrl = "https://scheme.elastos.org/addfriend?did="+encodeURIComponent(this.profileService.didString);
+    addFriendUrl += "&carrier="+carrierAddress;
+
+    return addFriendUrl;
+  }
+
   /**
    * Tells if a given credential is currently visible on chain or not (inside the DID document or not).
    */
@@ -286,7 +295,8 @@ export class MyProfilePage {
     const modal = await this.modalCtrl.create({
       component: ShowQRCodeComponent,
       componentProps: {
-        didString: this.profileService.didString
+        didString: this.profileService.didString,
+        qrCodeString: await this.getAddFriendShareableUrl()
       },
       cssClass:"show-qr-code-modal"
     });
@@ -295,7 +305,7 @@ export class MyProfilePage {
     modal.present();
   }
 
-  /** Test for Security Check comp **/
+    /** Test for Security Check comp **/
 /*   async showQRCode() {
     const modal = await this.modalCtrl.create({
       component: SecurityCheckComponent,
@@ -309,6 +319,17 @@ export class MyProfilePage {
     modal.present();
   } */
 
+  /**
+   * Generates a share intent that shares a "addfriend" url, so that friends can easily add the current user
+   * as a global trinity friend
+   */
+  async shareIdentity() {
+    let addFriendUrl = await this.getAddFriendShareableUrl();
+    appManager.sendIntent("share", {
+      title: this.translate.instant("share-add-me-as-friend"),
+      url: addFriendUrl
+    });
+  }
 
   /******************** Reveal Options from Profile Buttons  ********************/
   async showOptions(ev: any, options: string) {

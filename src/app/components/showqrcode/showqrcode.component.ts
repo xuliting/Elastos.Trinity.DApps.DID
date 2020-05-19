@@ -11,6 +11,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 })
 export class ShowQRCodeComponent implements OnInit {
   public didString: string = "";
+  public qrCodeString: string = "";
 
   constructor(
     public modalCtrl: ModalController,
@@ -19,6 +20,7 @@ export class ShowQRCodeComponent implements OnInit {
     public theme: ThemeService
   ) {
     this.didString = navParams.get("didstring");
+    this.qrCodeString = navParams.get("qrcodestring");
   }
 
   ngOnInit() {
