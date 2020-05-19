@@ -53,6 +53,7 @@ export const fr = {
 
     // Profile fields
     'credential-info-type-did': 'Identité',
+    'credential-info-type-picture': 'Profile Picture',
     'credential-info-type-name': 'Nom',
     'credential-info-type-email': 'Email',
     'credential-info-type-birthDate': 'Date de naissance',
@@ -62,6 +63,8 @@ export const fr = {
     'credential-info-type-nickname': 'Pseudonyme',
     'credential-info-type-birthPlace': 'Lieu de naissance',
     'credential-info-type-description': 'Description',
+    'credential-info-type-occupation': 'Occupation',
+    'credential-info-type-interests': 'Interests',
     'credential-info-type-url': 'Site internet',
     'credential-info-type-facebook': 'Facebook',
     'credential-info-type-twitter': 'Twitter',
@@ -171,7 +174,8 @@ export const fr = {
     'changepassword-info' : 'Changer le mot de passe',
 
     // component: security check
-    'security-check': 'Veuillez saisir le mot de passe de l\'application',
+    // 'security-check': 'Veuillez saisir le mot de passe de l\'application',
+    'security-check': 'Security Check',
     'security-check-fingerprint': 'Veuillez vous authentifier',
     'security-check-fingerprint-do': 'Veuillez toucher le capteur d\'empreintes',
     'wrong-password': 'Mot de passe erroné, veuillez réessayer.',

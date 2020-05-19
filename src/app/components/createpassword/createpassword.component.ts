@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalController, NavParams, IonInput } from '@ionic/angular';
 
 import { Native } from '../../services/native';
+import { ThemeService } from 'src/app/services/theme.service';
+
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 @Component({
   selector: 'createpassword',
@@ -16,12 +19,19 @@ export class CreatePasswordComponent implements OnInit {
   public changePassword: true;
   public title = 'createpassword-intro';
 
-  constructor(public modalCtrl: ModalController,
-              public native: Native) {
+  constructor(
+    public modalCtrl: ModalController,
+    public native: Native,
+    public theme: ThemeService
+  ) {
   }
 
   ngOnInit() {
-      if (this.changePassword) this.title = 'changepassword-info';
+    if (this.changePassword) this.title = 'changepassword-info';
+  }
+
+  ionViewWillEnter() {
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
   }
 
   ionViewDidEnter() {
@@ -60,6 +70,6 @@ export class CreatePasswordComponent implements OnInit {
 
     this.modalCtrl.dismiss({
       password: this.password
-    });    
+    });
   }
 }

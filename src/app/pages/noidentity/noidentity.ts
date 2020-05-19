@@ -89,7 +89,7 @@ export class NoIdentityPage {
         });
     }
 
-    async createIdentity() {
+ /*    async createIdentity() {
         this.didService.didBeingCreated = new NewDID();
 
         if (this.uxService.onGoingDidCreationMode == DIDCreationMode.NEW_DID_TO_NEW_STORE) {
@@ -120,8 +120,13 @@ export class NoIdentityPage {
                 await this.didService.addDidStore();
                 this.native.go('/newpasswordset');
             }
-        }*/
-    }
+        }
+    } */
+
+  async createIdentity() {
+    this.router.navigate(["/newpassword"]);
+  }
+
 
     /**
      * Ask user which way he wants to use to import his DID

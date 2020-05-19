@@ -53,6 +53,7 @@ export const zh = {
 
     // Profile fields
     'credential-info-type-did': 'DID',
+    'credential-info-type-picture': 'Profile Picture',
     'credential-info-type-name': '姓名',
     'credential-info-type-email': '邮箱',
     'credential-info-type-birthDate': '出生日期',
@@ -62,6 +63,8 @@ export const zh = {
     'credential-info-type-nickname': '昵称',
     'credential-info-type-birthPlace': '出生地',
     'credential-info-type-description': '描述',
+    'credential-info-type-occupation': 'Occupation',
+    'credential-info-type-interests': 'Interests',
     'credential-info-type-url': '网址',
     'credential-info-type-facebook': 'Facebook',
     'credential-info-type-twitter': 'Twitter',
@@ -171,7 +174,8 @@ export const zh = {
     'changepassword-info' : '修改密码',
 
     // component: security check
-    'security-check': '安全确认! 请输入您的密码',
+    // 'security-check': '安全确认! 请输入您的密码',
+    'security-check': 'Security Check',
     'security-check-fingerprint': '安全确认! 请验证',
     'security-check-fingerprint-do': '请验证指纹',
     'wrong-password': '密码错误，请重试',

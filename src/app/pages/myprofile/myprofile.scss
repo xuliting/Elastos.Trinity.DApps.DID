@@ -1,5 +1,4 @@
 .container {
-  background: #fdfeff;
   min-height: 100%;
   padding: 50px 0;
 
@@ -12,10 +11,6 @@
     ion-img {
       width: 84px;
       height: 84px;
-    }
-
-    h1, p {
-      color: #161740 !important;
     }
 
     h1 {
@@ -49,15 +44,16 @@
   }
 
   ion-segment {
-    padding: 0px 45px;
+    padding: 0px 30px;
 
     ion-segment-button {
+      margin: 0 10px;
       --border-color: #161740 !important;
       --border-radius: 0;
       --border-style: none;
 
       ion-label {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 700;
         margin: 5px;
         letter-spacing: 0.45px;
@@ -78,64 +74,114 @@
   }
 
   ion-list {
-    padding-top: 9px;
+    padding-top: 12.5px;
     margin: 0;
 
-    .profile-data {
+    .visibility-row {
+      padding-left: 30px;
+    }
+
+    .visibility-col {
       display: flex;
-     // justify-content: space-between;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 0;
+
+      p {
+        margin: 5px;
+        font-size: 9px;
+        font-weight: 700;
+        text-align: center;
+      }
+    }
+
+    .checkbox-col {
+      ion-checkbox {
+        --border-color: #565bdb;
+        --border-width: 2px;
+      }
+    }
+
+    .detail-row {
+      display: flex;
       padding: 6px 0px 6px 30px;
+      border-bottom: 1px solid #f0f1ff;
 
       ion-col {
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        justify-content: center;
 
         h5, h4, p {
           margin: 0;
         }
 
         h5 {
-          font-size: 14px;
+          font-size: 10px;
           font-weight: 600;
-          text-align: left;
-          color: #161740;
+          color: #a0a2c4;
+          line-height: 1.27;
         }
-
-        p {
-          font-size: 9px;
-          font-weight: 700;
-          text-align: center;
-          color: #161740;
-        }
-      }
-
-      .cred {
-        padding: 0;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
 
         h4 {
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 500;
-          font-stretch: 500;
-          text-align: right;
-          color: #161740;
+          line-height: 1.27;
         }
       }
 
-      .showVisibility {
-        position: relative;
-        right: 0;
-        z-index: 2;
-        animation: show;
-        animation-duration: 1000ms;
-        animation-fill-mode: forwards;
+      .detail-col {
+        padding-right: 0;
+      }
 
-        @keyframes show {
-          0% { right: -100px }
-          100% { right: 0px }
+      .checkbox-col {
+        align-items: center;
+      }
+    }
+
+    .cred-row {
+      ion-card {
+        margin: 0;
+        padding: 10px;
+        border-radius: 15px;
+        box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+
+        ion-row {
+          ion-col {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            ion-avatar {
+              background: #565bdb;
+              width: 38px;
+              height: 38px;
+            }
+
+            ion-label {
+              font-size: 17px;
+              font-weight: 700;
+              color: #161740;
+            }
+          }
         }
+
+        .property {
+          padding-top: 15px;
+
+          .value {
+            color: #161740;
+            font-size: 12px;
+            font-weight: 500;
+          }
+        }
+      }
+
+      .checkbox-col {
+        padding-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
       }
     }
 
@@ -156,123 +202,66 @@
       }
     }
 
-    .app {
-      --padding-start: 0px;
-      --inner-padding-end: 0px;
-
-      .img-col {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        ion-avatar {
-          width: 52px;
-          height: 52px;
-          overflow: hidden;
-        }
-      }
-
-      .appInfo-col {
-        display: flex;
-        flex-direction: column;
-        flex-wrap: wrap;
-        padding-left: 0;
-
-
-        h4 {
-          font-size: 13px;
-          font-weight: 600;
-          color: #161740;
-          margin: 0;
-          line-height: 1.29;
-        }
-
-        p {
-          font-size: 8px;
-          font-weight: 600;
-          color: #161740;
-          margin: 0;
-          line-height: 1.22;
-        }
-      }
-
-      .btn-col {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        ion-button {
-          --border-radius: 30px;
-          --box-shadow: none;
-          width: 100%;
-
-          ion-label {
-            font-size: 9px;
-            font-weight: 700;
-            padding: 0;
-          }
-        }
-      }
+    h1 {
+      margin: 39px 48px 16px;
+      font-size: 27px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
     }
 
-    .no-apps {
-      font-weight: 600;
+    p {
+      margin: 24px 48px;
       font-size: 14px;
-      color: #161740;
+      font-weight: 600;
+      line-height: 1.53;
     }
   }
 }
 
 .darkContainer {
-  background: #191a2f;
-
-  .header {
-    h1, p {
-      color: #ffffff !important;
-    }
-  }
-
   ion-segment {
     .active {
-      border-bottom: 2.7px solid #ffffff !important;
+      border-bottom: 2.7px solid #fdfeff !important;
 
       ion-label {
-        color: #ffffff;
+        color: #fdfeff;
       }
     }
   }
 
   ion-list {
-    background: #191a2f;
+    .detail-row {
+      border-bottom: 1px solid #2f305a;
 
-    .profile-data {
       ion-col {
-        h5, p {
-          color: #ffffff;
-        }
-      }
-
-      .cred {
-        h4 {
-          color: #ffffff;
+        h5 {
+          color: #8485a3;
         }
       }
     }
 
-    .app {
-      .appInfo-col {
-        h4 {
-          color: #ffffff;
+    .cred-row {
+      ion-card {
+        background: #464660;
+
+        ion-row {
+          ion-col {
+            ion-avatar {
+              background: #fdfeff;
+            }
+
+            ion-label {
+              color: #fdfeff;
+            }
+          }
         }
 
-        p {
-          color: #ffffff;
+        .property {
+          .value {
+            color: #fdfeff;
+          }
         }
       }
-    }
-
-    .no-apps {
-      color: #ffffff;
     }
   }
 }

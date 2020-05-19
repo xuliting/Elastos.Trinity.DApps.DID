@@ -1,4 +1,25 @@
-<div class="container">
+<div class="container" [class.darkContainer]="theme.darkMode">
+
+  <ion-row class="header-row">
+    <img src="/assets/default/securityWarning.svg">
+    <h1 class="ion-padding-horizontal ion-text-center">{{ 'security-check' | translate }}</h1>
+  </ion-row>
+
+  <ion-row class="input-row">
+    <ion-input #pwd autosize type="password" placeholder="  Enter Password" [(ngModel)]="password"></ion-input>
+    <div class="password-failed-info" *ngIf="previousPasswordWasWrong && password == ''">{{ 'wrong-password' | translate }}</div>
+  </ion-row>
+
+  <ion-row class="btn-row">
+    <ion-button color="success" (click)="submit()">
+      <ion-label>Confirm</ion-label>
+    </ion-button>
+  </ion-row>
+
+</div>
+
+
+<!-- <div class="container">
   <p class="title" *ngIf="!useFingerprintAuthentication">
     {{'security-check'|translate}}
   </p>
@@ -42,4 +63,5 @@
   <div *ngIf="fingerprintPluginAuthenticationOnGoing">
     <ion-img src="assets/images/fingerprint-24px.svg" class="fingerprint-ongoing text-align-center"></ion-img>
   </div>
-</div>
+</div> -->
+

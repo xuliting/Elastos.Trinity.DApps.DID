@@ -1,5 +1,4 @@
 .container {
-  background: #fdfeff;
   min-height: 100%;
 
   ion-row {
@@ -24,19 +23,6 @@
       ion-label {
         font-size: 14px;
         font-weight: 600;
-        color: #161740;
-      }
-    }
-  }
-}
-
-.darkContainer {
-  background: #191a2f;
-
-  ion-row {
-    .label-container {
-      ion-label {
-        color: #ffffff;
       }
     }
   }

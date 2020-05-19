@@ -5,6 +5,7 @@ import { DIDService } from '../../services/did.service';
 import { Native } from '../../services/native';
 import { Util } from '../../services/util';
 import { TranslateService } from '@ngx-translate/core';
+import { ThemeService } from 'src/app/services/theme.service';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -21,7 +22,8 @@ export class BackupDIDPage {
       private native: Native,
       private didService: DIDService,
       public router: Router,
-      private translate: TranslateService
+      private translate: TranslateService,
+      public theme: ThemeService
     ) {
         console.log("Entering BackupDID page");
         const navigation = this.router.getCurrentNavigation();
@@ -42,6 +44,7 @@ export class BackupDIDPage {
     }
 
     ionViewWillEnter() {
+      this.theme.getTheme();
       titleBarManager.setTitle('Mnemonic');
       titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
     }

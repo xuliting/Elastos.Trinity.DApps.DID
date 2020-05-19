@@ -1,7 +1,4 @@
 .container {
-  background: #fdfeff;
-  min-height: 100%;
-
   ion-row {
     padding: 2.5px 0;
 
@@ -24,7 +21,6 @@
       ion-label {
         font-size: 14px;
         font-weight: 600;
-        color: #161740;
       }
 
       .add-label {
@@ -41,7 +37,25 @@
       ion-input, ion-label, ion-select, ion-datetime {
         font-size: 12px;
         text-align: right;
-        color: #161740;
+      }
+    }
+
+    .btn-container {
+      margin: 0;
+      padding-top: 2px;
+      padding-bottom: 2px;
+
+      ion-button {
+        --border-radius: 30px;
+        --box-shadow: none;
+        width: 75%;
+        height: 100%;
+
+        ion-label {
+          font-size: 9px;
+          font-weight: 700;
+          padding: 0;
+        }
       }
     }
   }
@@ -63,24 +77,6 @@
         font-size: 16px;
         font-weight: 500;
         letter-spacing: -0.43px;
-      }
-    }
-  }
-}
-
-.darkContainer {
-  background: #191a2f;
-
-  ion-row {
-    .label-container {
-      ion-label {
-        color: #ffffff;
-      }
-    }
-
-    .edit-container {
-      ion-input, ion-label, ion-select, ion-datetime {
-        color: #ffffff;
       }
     }
   }

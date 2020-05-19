@@ -1,5 +1,5 @@
 import { Component, NgZone } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { Events, NavController, IonInput, ModalController } from '@ionic/angular';
 
 import { Profile } from '../../model/profile.model';
@@ -22,6 +22,9 @@ import { NewDID } from 'src/app/model/newdid.model';
 import { DIDURL } from 'src/app/model/didurl.model';
 import { Config } from 'src/app/services/config';
 import { ThemeService } from 'src/app/services/theme.service';
+import { PictureComponent } from 'src/app/components/picture/picture.component';
+import { ProfileService } from 'src/app/services/profile.service';
+import { HiveService } from 'src/app/services/hive.service';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -34,20 +37,29 @@ export class EditProfilePage {
   public isEdit: boolean = false;
   public profile: Profile;
 
-  constructor(public router: Router,
-              public zone: NgZone,
-              public events: Events,
-              public navCtrl: NavController,
-              private didService: DIDService,
-              private authService: AuthService,
-              private modalCtrl: ModalController,
-              private advancedPopup: AdvancedPopupController,
-              private popupProvider: PopupProvider,
-              private translate: TranslateService,
-              private didSyncService: DIDSyncService,
-              private uxService: UXService,
-              private native: Native,
-              public theme: ThemeService) {
+  option: any = {
+    header: 'Select Gender',
+    cssClass: this.theme.darkMode ? 'darkSelect' : 'select',
+  }
+
+  constructor(
+    public router: Router,
+    public zone: NgZone,
+    public events: Events,
+    public navCtrl: NavController,
+    private didService: DIDService,
+    private authService: AuthService,
+    private modalCtrl: ModalController,
+    private advancedPopup: AdvancedPopupController,
+    private popupProvider: PopupProvider,
+    private translate: TranslateService,
+    private didSyncService: DIDSyncService,
+    public profileService: ProfileService,
+    private native: Native,
+    public theme: ThemeService,
+    public hiveService: HiveService,
+    private uxService: UXService
+  ) {
     console.log("Entering EditProfile page");
     const navigation = this.router.getCurrentNavigation();
     if (!Util.isEmptyObject(navigation.extras.state) && (navigation.extras.state['create'] == false)) {
@@ -98,6 +110,60 @@ export class EditProfilePage {
     });
     this.native.go('/countrypicker');
   }
+
+  async getPhoto(entry: any) {
+    const modal = await this.modalCtrl.create({
+      component: PictureComponent,
+      componentProps: {
+      },
+    });
+    modal.onDidDismiss().then((params) => {
+      if(params.data.useImg) {
+        entry.value = this.hiveService.imageCid;
+      }
+    });
+    modal.present();
+  }
+
+/*   takePhoto(entry: any) {
+    const options = {
+      quality: 100,
+      destinationType: 0,
+      encodingType: 0,
+      mediaType:0
+    };
+
+    navigator.camera.getPicture((imageData) => {
+      this.zone.run(() => {
+        this.profileService.profileImage = 'data:image/png;base64,' + imageData;
+        return new Promise(async (resolve, reject) => {
+          const modal = await this.modalCtrl.create({
+            component: PictureComponent,
+            componentProps: {
+            },
+          });
+          modal.onDidDismiss().then((params) => {
+            console.log('Use img?', params.data.useImg);
+            resolve(params.data.useImg);
+            if(params.data.useImg) {
+              entry.value = this.profileService.profileImage;
+            } else {
+              return;
+            }
+          });
+          modal.present();
+        });
+      });
+    }, ((err) => {
+      console.error(err);
+    }), options);
+  } */
+
+/*   uploadPhoto() {
+    navigator.mediaDevices.getUserMedia((imageData) => {
+      console.log(imageData)
+    })
+  } */
 
   getDisplayableNation(countryAlpha3) {
     let countryInfo = area.find((a : CountryCodeInfo)=>{

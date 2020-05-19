@@ -9,6 +9,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { UXService } from 'src/app/services/ux.service';
 import { Config } from '../../services/config';
 import { DIDURL } from 'src/app/model/didurl.model';
+import { ThemeService } from 'src/app/services/theme.service';
+import { AlertController, NavController } from '@ionic/angular';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -24,18 +26,22 @@ type MnemonicWord = {
 })
 export class VerifyMnemonicsPage {
     mnemonicList: Array<MnemonicWord> = [];
-    selectedList: Array<string> = [];
+    selectedList = [];
     mnemonicStr: string;
 
-    constructor(public router: Router,
-                public zone: NgZone,
-                private didService: DIDService,
-                private authService: AuthService,
-                private native: Native,
-                private translate: TranslateService,
-                private uxService: UXService
-                ) {
-        this.init();
+    constructor(
+      public router: Router,
+      public zone: NgZone,
+      private didService: DIDService,
+      private authService: AuthService,
+      private native: Native,
+      private translate: TranslateService,
+      public theme: ThemeService,
+      private alertCtrl: AlertController,
+      private navCtrl: NavController,
+      private uxService: UXService
+    ) {
+      this.init();
     }
 
     ionViewWillEnter() {
@@ -44,6 +50,7 @@ export class VerifyMnemonicsPage {
     }
 
     init() {
+        this.createEmptySelectedList();
         const navigation = this.router.getCurrentNavigation();
         if (!Util.isEmptyObject(navigation.extras.state)) {
             this.mnemonicStr = this.native.clone(navigation.extras.state["mnemonicStr"]);
@@ -54,9 +61,25 @@ export class VerifyMnemonicsPage {
         }
     }
 
+    createEmptySelectedList() {
+      this.selectedList = [];
+      for(let i = 0; i < 12; i++) {
+        this.selectedList.push(i);
+      }
+    }
+
+    isWord(word): boolean {
+      if(isNaN(word)) {
+        return true
+      } else {
+        return false;
+      }
+    }
+
     public addButton(index: number, item: MnemonicWord): void {
-        this.selectedList.push(item.text);
-        this.mnemonicList[index].selected = true;
+      let nextItem = this.selectedList.find((word) => Number.isInteger(word));
+      this.selectedList[nextItem] = item.text;
+      this.mnemonicList[index].selected = true;
     }
 
     /*public removeButton(index: number, item: any): void {
@@ -67,7 +90,29 @@ export class VerifyMnemonicsPage {
     }*/
 
     nextClicked() {
+      if(this.allWordsMatch()) {
         this.createDid();
+      } else {
+        this.returnToBackup();
+      }
+    }
+
+    async returnToBackup() {
+      const alert = await this.alertCtrl.create({
+        header: 'Mnemonics are Incorrect',
+        mode: 'ios',
+        message: 'Please check your mnemonics and try again',
+        buttons: [
+          {
+            text: 'Okay',
+            handler: () => {
+              this.navCtrl.back();
+            }
+          }
+        ]
+      });
+
+      await alert.present();
     }
 
     async createDid() {

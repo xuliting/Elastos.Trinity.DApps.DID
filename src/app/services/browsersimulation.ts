@@ -8,7 +8,7 @@ import { DIDURL } from "../model/didurl.model";
  * ################################################################
  */
 export class BrowserSimulationConfig {
-    public static hasDIDStores() : boolean {
+    public static hasDIDStores(): boolean {
         return false;
     }
 }
@@ -17,10 +17,10 @@ export class BrowserSimulationConfig {
  * ################################################################
  */
 
- function simulated(funcName: string, className = null) {
-    let log = "SIMULATED - "+funcName;
+function simulated(funcName: string, className = null) {
+    let log = "SIMULATED - " + funcName;
     if (className)
-        log += " ("+className+")";
+        log += " (" + className + ")";
 
     console.warn(log);
 }
@@ -30,12 +30,12 @@ function randomString() {
 }
 
 export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
-    constructor(public fragment: string, public basicProfileValue: string){
+    constructor(public fragment: string, public basicProfileValue: string) {
     }
 
     getId() {
         simulated("getId", "SimulatedCredential");
-        return "#"+this.fragment;
+        return "#" + this.fragment;
     }
     getFragment() {
         simulated("getFragment", "SimulatedCredential");
@@ -67,19 +67,19 @@ export class SimulatedCredential implements DIDPlugin.VerifiableCredential {
         simulated("getProof", "SimulatedCredential");
         return {};
     }
-    toString() : Promise<string> {
-        return new Promise((resolve, reject)=>{
+    toString(): Promise<string> {
+        return new Promise((resolve, reject) => {
             resolve("")
         })
     }
 
     static makeForCredentialId(credentialId: DIDURL): SimulatedCredential {
         let fragment = credentialId.getFragment();
-        switch(fragment) {
+        switch (fragment) {
             case "name":
-                return new SimulatedCredential("name", "User_"+randomString());
+                return new SimulatedCredential("name", "User_" + randomString());
             case "email":
-                return new SimulatedCredential("email", "Email_"+randomString());
+                return new SimulatedCredential("email", "Email_" + randomString());
             default:
                 return new SimulatedCredential("nokey", "novalue");
         }
@@ -193,12 +193,12 @@ export class SimulatedDID implements DIDPlugin.DID {
     getMethodSpecificId(onSuccess: (data: any) => void, onError?: (err: any) => void) {
         simulated("getMethodSpecificId", "SimulatedDID");
     }
-    resolveDidDocument(onSuccess: (didDocument: DIDPlugin.DIDDocument) => void, onError?: (err: any)=>void) {
+    resolveDidDocument(onSuccess: (didDocument: DIDPlugin.DIDDocument) => void, onError?: (err: any) => void) {
         simulated("resolveDidDocument", "SimulatedDID");
         onSuccess(null);
     }
 
-    prepareIssuer(onSuccess?: ()=>void) {
+    prepareIssuer(onSuccess?: () => void) {
         simulated("prepareIssuer", "SimulatedDID");
         onSuccess();
     }
@@ -367,7 +367,7 @@ export class BrowserSimulation {
         this._runningInBrowser = true;
     }
 
-    public static runningInBrowser() : boolean {
+    public static runningInBrowser(): boolean {
         return this._runningInBrowser;
     }
 }

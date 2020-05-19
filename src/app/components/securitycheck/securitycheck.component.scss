@@ -1,4 +1,77 @@
 .container {
+  padding: 40px;
+
+  .header-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h1 {
+      margin: 15px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #161740;
+    }
+  }
+
+  .input-row {
+    padding: 30px 0 10px;
+
+    ion-input {
+      width: 100%;
+      background: #f4f4f4;
+      height: 41px;
+      border-radius: 8px;
+      font-size: 13px;
+    }
+
+    .password-failed-info {
+      text-align:center;
+      color: #FF6464;
+      font-weight:700;
+      font-size:12px;
+      margin-bottom:5px;
+    }
+  }
+
+  .btn-row {
+    padding-top: 15px;
+
+    ion-button {
+      height: 41px;
+      width: 100%;
+      --border-radius: 8px;
+
+      ion-label {
+        text-transform: none;
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: -0.43px;
+      }
+    }
+  }
+}
+
+.darkContainer {
+  background: #262641;
+
+  .header-row {
+    h1 {
+      color: #fdfeff;
+    }
+  }
+
+  .input-row {
+    ion-input {
+      background: #464660;
+      color: #ababb7;
+    }
+  }
+}
+
+
+/* .container {
     margin: 10px 30px;
 
     .input-container-outer {
@@ -63,3 +136,5 @@
         margin-bottom:20px;
     }
 }
+
+ */

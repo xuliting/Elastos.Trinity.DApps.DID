@@ -1,5 +1,6 @@
 export enum BasicCredentialInfoType {
     TEXT,
+    IMAGE,
     DATE,
     NUMERIC,
     PHONE_NUMBER,
@@ -14,6 +15,10 @@ export class BasicCredentialInfo {
     public isText(): boolean {
         return this.type == BasicCredentialInfoType.TEXT;
     }
+
+    public isImage(): boolean {
+      return this.type == BasicCredentialInfoType.IMAGE;
+  }
 
     public isNumeric(): boolean {
         return this.type == BasicCredentialInfoType.NUMERIC;

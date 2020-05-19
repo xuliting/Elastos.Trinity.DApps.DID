@@ -171,29 +171,20 @@ export class DIDService {
         this.handleNull(); // TODO: go to DID list instead
       }
       else {
-          if (this.getActiveDid() != null)
-              this.native.setRootRouter('/home/myprofile');
+          if (this.getActiveDid() !== null)
+           this.native.setRootRouter('/myprofile');
+           // this.native.setRootRouter('/noidentity');
           else {
               // Oops, no active DID...
               console.warn("No active DID in this store!");
               throw Error("No active DID in this store!");
           }
-        //this.native.setRootRouter('/home/didsettings');
-        //this.native.setRootRouter('/newpasswordset');
-        //this.native.setRootRouter('/noidentity');
-        //this.native.setRootRouter('/editprofile');
-        /*this.native.setRootRouter('/verifymnemonics', {
-          mnemonicStr:"a b c d e f g h k l m o",
-        });*/
-        /*this.native.setRootRouter('/backupdid', {
-          mnemonicStr:"a b c d e f g h k l m o",
-        });*/
-        //this.native.setRootRouter('/home/credentiallist');
       }
     }
 
     private handleNull() {
-      this.native.setRootRouter('/noidentity');
+      this.native.setRootRouter('/newpassword');
+      // this.native.setRootRouter('/noidentity');
     }
 
     public async newDidStore() {
@@ -221,7 +212,7 @@ export class DIDService {
     public async finalizeDidCreation(storePass: string) {
       console.log("Finalizing DID creation");
 
-      // First, synchronize with chain to make sure we don't mess up with DID indexes. The DID SDK has to 
+      // First, synchronize with chain to make sure we don't mess up with DID indexes. The DID SDK has to
       // create the new DID at the right location.
       console.log("Synchronizing DID store before adding the new DID");
       await this.getActiveDidStore().synchronize(storePass);

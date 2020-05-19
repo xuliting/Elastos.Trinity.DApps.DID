@@ -6,6 +6,7 @@ import { AdvancedPopupController } from '../advanced-popup/advancedpopup.control
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth.service';
 import { DIDService } from 'src/app/services/did.service';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'securitycheck',
@@ -21,12 +22,15 @@ export class SecurityCheckComponent implements OnInit {
   public fingerprintPluginAuthenticationOnGoing: boolean = false;
   public fingerprintAuthenticationIsAvailable: boolean = false;
 
-  constructor(public modalCtrl: ModalController,
-              public native: Native,
-              private advancedPopup: AdvancedPopupController,
-              private translate: TranslateService,
-              private authService: AuthService,
-              private didService: DIDService) {
+  constructor(
+    public modalCtrl: ModalController,
+    public native: Native,
+    private advancedPopup: AdvancedPopupController,
+    private translate: TranslateService,
+    private authService: AuthService,
+    private didService: DIDService,
+    public theme: ThemeService
+  ) {
   }
 
   ngOnInit() {
