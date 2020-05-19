@@ -426,7 +426,19 @@ export class UXService {
 
     private async handleImportMnemonicIntent(intent: AppManagerPlugin.ReceivedIntent) {
         this.onGoingDidCreationMode = DIDCreationMode.IMPORT_MNEMONIC;
-        this.native.go('/noidentity');
+
+        if (!intent.params.existingMnemonic) {
+            // if no mnemonic if given, then we need to create a new mnnemonic and go through the 
+            // mnemonic verification screens.
+            this.native.go('/importdid');
+        }
+        else {
+            // DID session app is asking us to import a mnemonic and it gives us the mnemonic
+            // (probably imported from the wallet app). So we use this mnemonic and we skip 
+            // the mnemonic verification steps.
+            let existingMnemonic = intent.params.existingMnemonic;
+            this.native.go('/editprofile');
+        }
     }
 
     private async handleDeleteDIDIntent(intent: AppManagerPlugin.ReceivedIntent) {

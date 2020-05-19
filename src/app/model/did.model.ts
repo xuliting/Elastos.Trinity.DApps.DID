@@ -90,7 +90,7 @@ export class DID {
                 if (typeof (e) === "string" && e.includes("have not run authority")) {
                   reject(new ApiNoAuthorityException(e));
                 } else {
-                  reject(DIDHelper.reworkedDIDPluginException(e))
+                  reject(DIDHelper.reworkedPluginException(e))
                 }
                 return;
             }
@@ -309,7 +309,7 @@ export class DID {
             this.pluginDid.issueCredential(
                 this.getDIDString(), credentialId.toString(), type, validityDays, properties, passphrase,
                 (ret) => {resolve(ret)},
-                (err) => {reject(DIDHelper.reworkedDIDPluginException(err))},
+                (err) => {reject(DIDHelper.reworkedPluginException(err))},
             );
         });
     }
@@ -346,7 +346,7 @@ export class DID {
                 didUrlString.toString(),
                 () => {resolve()}, (err) => {
                     console.error("Delete credential exception", err);
-                    reject(DIDHelper.reworkedDIDPluginException(err));
+                    reject(DIDHelper.reworkedPluginException(err));
                 },
             );
         });
@@ -362,7 +362,7 @@ export class DID {
                     resolve()
                 }, (err) => {
                     console.error("Add credential exception", err);
-                    reject(DIDHelper.reworkedDIDPluginException(err));
+                    reject(DIDHelper.reworkedPluginException(err));
                 },
             );
         });
@@ -393,7 +393,7 @@ export class DID {
                 resolve(presentation);
             }, (err)=>{
                 console.error("Create presentation exception", err);
-                reject(DIDHelper.reworkedDIDPluginException(err));
+                reject(DIDHelper.reworkedPluginException(err));
             });
         });
     }
@@ -404,7 +404,7 @@ export class DID {
                 (ret) => {
                     resolve(ret)
                 }, (err) => {
-                    reject(DIDHelper.reworkedDIDPluginException(err));
+                    reject(DIDHelper.reworkedPluginException(err));
                 },
             );
         });

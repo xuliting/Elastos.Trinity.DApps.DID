@@ -26,7 +26,7 @@ export class DIDDocument {
                     resolve()
                 }, (err) => {
                     console.error("Add credential exception", err);
-                    reject(DIDHelper.reworkedDIDPluginException(err));
+                    reject(DIDHelper.reworkedPluginException(err));
                 },
             );
         });
@@ -43,7 +43,7 @@ export class DIDDocument {
                     resolve()
                 }, (err) => {
                     console.error("Delete credential exception", err);
-                    reject(DIDHelper.reworkedDIDPluginException(err));
+                    reject(DIDHelper.reworkedPluginException(err));
                 },
             );
         });
@@ -55,7 +55,7 @@ export class DIDDocument {
                 resolve(jwtToken);
             }, (err) => {
                 console.error("Delete credential exception", err);
-                reject(DIDHelper.reworkedDIDPluginException(err));
+                reject(DIDHelper.reworkedPluginException(err));
             });
         });
     }
@@ -117,7 +117,7 @@ export class DIDDocument {
                   if (typeof (err) === "string" && err.includes("have not run authority")) {
                     reject(new ApiNoAuthorityException(err));
                   } else {
-                    reject(DIDHelper.reworkedDIDPluginException(err))
+                    reject(DIDHelper.reworkedPluginException(err))
                   }
                 },
             );

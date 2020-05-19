@@ -168,7 +168,7 @@ export class DIDStore {
         }
         catch (e) {
             console.error("Create DID exception", e);
-            throw DIDHelper.reworkedDIDPluginException(e);
+            throw DIDHelper.reworkedPluginException(e);
         }
 
         // Add DID to our memory model.
@@ -243,7 +243,7 @@ export class DIDStore {
                 },
                 (err) => {
                     console.log('initPluginDidStore error:', err);
-                    reject(DIDHelper.reworkedDIDPluginException(err))
+                    reject(DIDHelper.reworkedPluginException(err))
                 },
             );
         });
@@ -418,7 +418,7 @@ export class DIDStore {
             this.pluginDidStore.synchronize(
                 storepass,
                 () => {resolve()}, (err) => {
-                    reject(DIDHelper.reworkedDIDPluginException(err))
+                    reject(DIDHelper.reworkedPluginException(err))
                 },
             );
         });

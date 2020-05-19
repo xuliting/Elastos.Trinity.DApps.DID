@@ -77,7 +77,7 @@ export class ImportDIDPage {
     ionViewWillEnter() {
         this.uxService.makeAppVisible();
         titleBarManager.setTitle(this.translate.instant('import-my-did'));
-        titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
+        titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
 
         // the rootContent clientHeight is wrong in android?
         if (this.platform.platforms().indexOf('android') < 0) {

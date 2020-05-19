@@ -378,7 +378,7 @@ export class MyProfilePage {
             this.native.toast_trans('changepassword-success');
         })
         .catch ((error) => {
-            throw DIDHelper.reworkedDIDPluginException(error);
+            throw DIDHelper.reworkedPluginException(error);
         });
 
         let useFingerprintAuthentication = await this.authService.fingerprintAuthenticationEnabled(this.didService.getCurDidStoreId());
