@@ -138,7 +138,7 @@ export class NoIdentityPage {
             component: ImportDIDSourceComponent,
             componentProps: {
             },
-            cssClass: "create-password-modal"
+            cssClass: "security-check-modal"
         });
         modal.onDidDismiss().then((params) => {
             console.log("params", params);

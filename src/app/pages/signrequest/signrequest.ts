@@ -18,6 +18,7 @@ type SignIntentParams = {
 }
 
 type SignIntentResponse = {
+  type: string,
   signingdid: string,
   publickey: string,
   signature: string
@@ -32,7 +33,8 @@ export class SignRequestPage {
   requestDapp: {
     intentId: number,
     appPackageId: string,
-    allParams: SignIntentParams
+    allParams: SignIntentParams,
+    originalJwtRequest?: string
   } = null;
 
   constructor(
@@ -42,7 +44,8 @@ export class SignRequestPage {
     private uxService:UXService,
     private translate: TranslateService,
     private advancedPopup: AdvancedPopupController,
-    private appServices: UXService
+    private appServices: UXService,
+    private authService: AuthService
   ) {
   }
 
@@ -79,14 +82,35 @@ export class SignRequestPage {
       let signature = await this.didService.getActiveDid().signData(this.requestDapp.allParams.data, password);
       let publicKey = await this.didService.getActiveDid().getDIDDocument().getDefaultPublicKey();
 
-      let response: SignIntentResponse = {
+      let payload: SignIntentResponse = {
+        type: "credaccess",
         signingdid: this.didService.getActiveDid().getDIDString(),
         publickey: publicKey,
         signature: signature
       }
 
-      console.log("Data signed, sending intent response", response);
-      this.sendIntentResponse(response);
+      // Return the original JWT token in case this intent was called by an external url (elastos scheme definition)
+      // TODO: Currently adding elastos://sign/ in front of the JWT because of CR website requirement. But we should cleanup this and pass only the JWT itself
+      if (this.requestDapp.originalJwtRequest) {
+        payload["req"] = "elastos://sign/"+this.requestDapp.originalJwtRequest;
+      }
+
+      // Return the signature info as a signed JWT in case runtime needs to send this response through a URL
+      // callback. If that's inside elastOS, the JWT will be parsed and the calling app will receive the
+      // signature payload.
+      let jwtToken = await this.didService.getActiveDid().getDIDDocument().createJWT(payload,
+      1, this.authService.getCurrentUserPassword());
+    
+      // Send the intent response as everything is completed
+      console.log("Data signed, sending intent response");
+      try {
+        await this.appServices.sendIntentResponse("sign", {jwt: jwtToken}, this.requestDapp.intentId);
+      }
+      catch (e) {
+        await this.popup.ionicAlert("Response error", "Sorry, we were unable to return the signed information to the calling app. "+e);
+      }
+      
+      this.appServices.close();
     }, ()=>{
       // Error
     }, ()=>{
@@ -94,14 +118,8 @@ export class SignRequestPage {
     });
   }
 
-  sendIntentResponse(response: SignIntentResponse) {
-    // Send the intent response as everything is completed
-    this.appServices.sendIntentResponse("sign", response, this.requestDapp.intentId);
-    this.appServices.close();
-  }
-
-  rejectRequest() {
-    this.appServices.sendIntentResponse("sign", {}, this.requestDapp.intentId);
+  async rejectRequest() {
+    await this.appServices.sendIntentResponse("sign", {}, this.requestDapp.intentId);
     this.appServices.close();
   }
 }

@@ -30,10 +30,6 @@ export class CreatePasswordComponent implements OnInit {
     if (this.changePassword) this.title = 'changepassword-info';
   }
 
-  ionViewWillEnter() {
-    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
-  }
-
   ionViewDidEnter() {
     this.pwd.setFocus();
   }

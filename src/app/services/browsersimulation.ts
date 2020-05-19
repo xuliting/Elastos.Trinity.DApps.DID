@@ -272,6 +272,10 @@ export class SimulatedDIDDocument implements DIDPlugin.DIDDocument {
         simulated("getUpdated", "SimulatedDIDDocument");
         return new Date();
     }
+    getExpires(): Date {
+        simulated("getExpires", "SimulatedDIDDocument");
+        return new Date();
+    }
     getSubject(): DIDPlugin.DID {
         simulated("getSubject", "SimulatedDIDDocument");
         return new SimulatedDID();
@@ -350,11 +354,8 @@ export class SimulatedDIDDocument implements DIDPlugin.DIDDocument {
         simulated("publish", "SimulatedDIDDocument");
     }
 
-    getExpires(): Date {
-        return new Date();
-    }
-
-    createJWT(properties: any, validityDays: Number, storepass: string, onSuccess: (token: string) => void, onError?: (err: any) => void) {
+    createJWT(validityDays: Number, properties: any, storepass: string, onSuccess: (token) => void, onError?: (err: any) => void) {
+        simulated("createJWT", "SimulatedDIDDocument");
         onSuccess("FAKEJWT");
     }
 }

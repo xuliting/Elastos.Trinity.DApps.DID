@@ -13,6 +13,7 @@ import { DID } from '../model/did.model';
 import { NewDID } from '../model/newdid.model';
 import { WrongPasswordException } from '../model/exceptions/wrongpasswordexception.exception';
 import { DIDPluginException } from '../model/exceptions/didplugin.exception';
+import { ApiNoAuthorityException } from '../model/exceptions/apinoauthorityexception.exception';
 
 declare let didManager: DIDPlugin.DIDManager;
 declare let appManager: AppManagerPlugin.AppManager;
@@ -189,8 +190,15 @@ export class DIDService {
 
     public async newDidStore() {
       let didStore = new DIDStore(this.events);
-      await didStore.initNewDidStore();
-
+      try {
+        await didStore.initNewDidStore();
+      }
+      catch(e) {
+        if (e instanceof ApiNoAuthorityException) {
+          await this.popupProvider.ionicAlert("Init Store error", 'Sorry, this application can not run without the "Create a DID Store" feature');
+          appManager.close();
+        }
+      }
       return didStore;
     }
 
@@ -201,9 +209,10 @@ export class DIDService {
       console.log("Adding DID store");
 
       let didStore = await this.newDidStore();
-
-      // Activate the DID store, without DID
-      await this.activateDidStore(didStore.getId());
+      if (didStore) {
+        // Activate the DID store, without DID
+        await this.activateDidStore(didStore.getId());
+      }
     }
 
     /**
@@ -218,13 +227,21 @@ export class DIDService {
       await this.getActiveDidStore().synchronize(storePass);
       console.log("Synchronization completed");
 
-      let createdDidString = await this.getActiveDidStore().addNewDidWithProfile(this.didBeingCreated);
-      let name = this.didBeingCreated.profile.getEntryByKey("name").value;
-      await this.addDidEntry(new DIDEntry(createdDidString, name));
+      try {
+        let createdDidString = await this.getActiveDidStore().addNewDidWithProfile(this.didBeingCreated);
+        let name = this.didBeingCreated.profile.getEntryByKey("name").value;
+        await this.addDidEntry(new DIDEntry(createdDidString, name));
 
-      await this.activateDid(this.getCurDidStoreId(), createdDidString);
+        await this.activateDid(this.getCurDidStoreId(), createdDidString);
 
-      console.log("Finalized DID creation for did string "+createdDidString+" - with name "+name);
+        console.log("Finalized DID creation for did string "+createdDidString+" - with name "+name);
+      }
+      catch (e) {
+        if (e instanceof ApiNoAuthorityException) {
+          await this.popupProvider.ionicAlert("Issue credentials error", 'Sorry, this application can not run without the "Issue credentials" feature');
+          appManager.close();
+        }
+      }
     }
 
     /**

@@ -66,7 +66,7 @@ export class UXService {
 
     async init() {
         console.log("UXService init");
-        this.theme.getTheme();
+        // this.theme.getTheme();
 
         if (!BrowserSimulation.runningInBrowser()) {
             this.getLanguage();
@@ -209,16 +209,16 @@ export class UXService {
         }
         switch (ret.type) {
             case MessageType.IN_REFRESH:
-                if (params.action === "currentLocaleChanged") {
-                  this.setCurLang(params.data);
-                }
-                if(params.action === 'preferenceChanged' && params.data.key === "ui.darkmode") {
-                  this.zone.run(() => {
-                    console.log('Dark Mode toggled');
-                    this.theme.setTheme(params.data.value);
-                  });
-                }
-                break;
+              if (params.action === "currentLocaleChanged") {
+                this.setCurLang(params.data);
+              }
+         /*      if(params.action === 'preferenceChanged' && params.data.key === "ui.darkmode") {
+                this.zone.run(() => {
+                  console.log('Dark Mode toggled');
+                  this.theme.setTheme(params.data.value);
+                });
+              } */
+              break;
             case MessageType.EX_INSTALL:
                 break;
             case MessageType.INTERNAL:
@@ -363,12 +363,23 @@ export class UXService {
         }
     }
 
-    sendIntentResponse(action, result, intentId) {
+    public sendIntentResponse(action, result, intentId): Promise<void> {
+      return new Promise((resolve, reject)=>{
         if (!BrowserSimulation.runningInBrowser()) {
-            appManager.sendIntentResponse(action, result, intentId, null);
+          appManager.sendIntentResponse(action, result, intentId,
+            (response)=> {
+              resolve();
+            },
+            (err) => {
+              console.error('sendIntentResponse failed: ', err);
+              reject(err);
+            }
+          );
         } else {
-            console.warn("Not sending intent response, we are in browser");
+          console.warn("Not sending intent response, we are in browser");
+          resolve();
         }
+      });
     }
 
     private async handleCreateDIDIntent(intent: AppManagerPlugin.ReceivedIntent) {
@@ -440,7 +451,7 @@ export class UXService {
  
         console.error(errorMessage);
 
-        this.sendIntentResponse(intent.action, {}, intent.intentId);
+        await this.sendIntentResponse(intent.action, {}, intent.intentId);
         this.close();
     }
 
@@ -455,7 +466,8 @@ export class UXService {
             appPackageId: intent.from,
             intentId: intent.intentId,
             action: intent.action,
-            requestProfile: intent.params.claims || [] // We are allowed to request no claim except the DID itself
+            requestProfile: intent.params.claims || [], // We are allowed to request no claim except the DID itself
+            originalJwtRequest: intent.originalJwtRequest
         }
         return true;
     }
@@ -471,7 +483,8 @@ export class UXService {
             appPackageId: intent.from,
             intentId: intent.intentId,
             action: intent.action,
-            issuedCredentials: intent.params.issuedcredentials
+            issuedCredentials: intent.params.issuedcredentials,
+            originalJwtRequest: intent.originalJwtRequest
         }
         return true;
     }
@@ -492,7 +505,8 @@ export class UXService {
             appPackageId: intent.from,
             intentId: intent.intentId,
             action: intent.action,
-            allParams: intent.params
+            allParams: intent.params,
+            originalJwtRequest: intent.originalJwtRequest
         }
 
         return true;

@@ -71,7 +71,7 @@ export class RegisterApplicationProfileRequestPage {
       // Fix missing or wrong values, just in case
       if (!this.requestDapp.allParams.customcredentialtypes)
         this.requestDapp.allParams.customcredentialtypes = [];
-      
+
       if (!this.requestDapp.allParams.sharedclaims)
         this.requestDapp.allParams.sharedclaims = [];
 
@@ -162,9 +162,9 @@ export class RegisterApplicationProfileRequestPage {
     });
   }
 
-  sendIntentResponse() {
+  async sendIntentResponse() {
     // Send the intent response as everything is completed
-    this.appServices.sendIntentResponse("registerapplicationprofile", {}, this.requestDapp.intentId)
+    await this.appServices.sendIntentResponse("registerapplicationprofile", {}, this.requestDapp.intentId);
     this.appServices.close();
   }
 

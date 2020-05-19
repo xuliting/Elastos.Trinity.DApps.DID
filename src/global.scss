@@ -76,27 +76,6 @@
   font-family: 'Montserrat' !important;
 }
 
-/********** Popup Components **********/
-.select {
-    --background: #ffffff;
-    font-size: 12px;
-}
-
-.darkSelect {
-    --background: #464660;
-    font-size: 12px;
-}
-
-.options {
-  --background: #ffffff;
-  box-shadow: 0 3px 10px 0 rgba(22, 23, 64, 0.12);
-}
-
-.darkOptions {
-  --background: #464660;
-  box-shadow: 0 3px 10px 0 rgba(22, 23, 64, 0.12);
-}
-
 .warning {
   --min-height: 302px;
   // --min-width: 385px;
@@ -122,7 +101,6 @@
       border-top-right-radius: 30px;
   }
 }
-
 
 large-menu-item {
     width: 100%;
@@ -177,5 +155,3 @@ ion-toolbar {
         border-top-right-radius: 30px;
     }
 }
-
-

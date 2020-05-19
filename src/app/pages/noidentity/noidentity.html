@@ -1,4 +1,49 @@
-<div class="root-container">
+
+<ion-content>
+  <div class="ion-text-center">
+    <ion-slides
+      #slide
+      pager="true"
+      [options]="slideOpts"
+      [class.hidden]="hidden"
+    >
+      <ion-slide>
+        <ion-img src="assets/onboard/welcome.svg"></ion-img>
+        <h1>Welcome to elastOS</h1>
+        <p>
+          We need to set you up with a unique identity. We call this a DID <br> (Decentralized Identifier) <br>
+          With this, you can manage all your personal data and start exploring the new Smart Web.
+        </p>
+        <ion-row class="btn-row">
+          <ion-button color="success" (click)="nextSlide(slide)">
+            <img src="assets/buttons/fingerprint.svg"/>
+            <ion-label>Create Identity</ion-label>
+          </ion-button>
+        </ion-row>
+      </ion-slide>
+
+      <ion-slide>
+        <ion-img src="assets/onboard/newimport.svg"></ion-img>
+        <h1>New or Import?</h1>
+        <p>
+          Create a brand new identity starting fresh or you can import an existing identity you already own
+        </p>
+        <ion-row class="btn-row">
+          <ion-button color="success" class="ion-margin-bottom" (click)="createIdentity()">
+            <ion-label>New</ion-label>
+          </ion-button>
+          <ion-button color="secondary" class="import-btn ion-margin-top" (click)="promptImportLocation()">
+            <ion-label>Import</ion-label>
+          </ion-button>
+        </ion-row>
+      </ion-slide>
+    </ion-slides>
+  </div>
+</ion-content>
+
+
+
+<!-- <div class="root-container">
   <ion-content>
     <div class="ion-padding ion-text-center">
       <ion-slides
@@ -59,3 +104,4 @@
     </div>
   </ion-content>
 </div>
+ -->

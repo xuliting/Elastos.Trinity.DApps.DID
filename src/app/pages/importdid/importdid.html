@@ -1,32 +1,65 @@
+<ion-content>
+  <div class="ion-text-center container" [class.darkContainer]="theme.darkMode">
+    <ion-row class="mnemonic-row" *ngFor="let i of [1,4,7,10]">
+      <ion-col size="3.6" [class.selectedCol]="isWord(mnemonicWords[i - 1])">
+        <div class="mnemonic-index">{{ i }}</div>
+        <ion-label>{{ mnemonicWords[i - 1] }}</ion-label>
+      </ion-col>
+      <ion-col size="3.6" [class.selectedCol]="isWord(mnemonicWords[i])">
+        <div class="mnemonic-index">{{ i + 1 }}</div>
+        <ion-label >{{ mnemonicWords[i] }}</ion-label>
+      </ion-col>
+      <ion-col size="3.6" [class.selectedCol]="isWord(mnemonicWords[i + 1])">
+        <div class="mnemonic-index">{{ i + 2 }}</div>
+        <ion-label >{{ mnemonicWords[i + 1] }}</ion-label>
+      </ion-col>
+    </ion-row>
+    <p>
+      Please enter your 12 security words (mnemonic) to import your identity
+    </p>
+    <ion-row class="input-row">
+      <ion-input *ngIf="!readonly" id='sentenceInput' #addMnemonicWordInput placeholder="  Enter mnemonic here" [(ngModel)]="mnemonicSentence" (ionChange)="onMnemonicSentenceChanged()"></ion-input>
+    </ion-row>
+    <ion-row class="btn-row">
+      <ion-button color="success" (click)="promptStorePassword()">
+        <ion-label>Confirm</ion-label>
+      </ion-button>
+    </ion-row>
+  </div>
+</ion-content>
+
+<!--
 <div class="root-container" id='rootcontent'>
 
-    <ion-content class="ion-text-center" >
-      <div *ngIf="!readonly" class="title">
-        {{ 'import-mnemonic-intro'|translate}}
-      </div>
-      <div *ngIf="readonly" class="title">
-        {{'import-from-wallet-app'|translate}}
-      </div>
-      <div class="mnemonics-box">
-        <ion-grid class="ion-padding">
-          <ion-row *ngFor="let i of [1,3,5,7,9,11]">
-            <ion-col size="6">
-              <verify-mnemonic-word [index]="i" [word]="mnemonicWords[i-1]"></verify-mnemonic-word>
-            </ion-col>
-            <ion-col size="6">
-              <verify-mnemonic-word [index]="i+1" [word]="mnemonicWords[i]"></verify-mnemonic-word>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
+  <ion-content class="ion-text-center" >
+    <div *ngIf="!readonly" class="title">
+      {{ 'import-mnemonic-intro'|translate}}
+    </div>
+    <div *ngIf="readonly" class="title">
+      {{'import-from-wallet-app'|translate}}
+    </div>
+    <div class="mnemonics-box">
+      <ion-grid class="ion-padding">
+        <ion-row *ngFor="let i of [1,3,5,7,9,11]">
+          <ion-col size="6">
+            <verify-mnemonic-word [index]="i" [word]="mnemonicWords[i-1]"></verify-mnemonic-word>
+          </ion-col>
+          <ion-col size="6">
+            <verify-mnemonic-word [index]="i+1" [word]="mnemonicWords[i]"></verify-mnemonic-word>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
 
-      <ion-input *ngIf="!readonly" id='sentenceInput' #addMnemonicWordInput [placeholder]="'import-mnemonic-placeholder'|translate" [(ngModel)]="mnemonicSentence" (ionChange)="onMnemonicSentenceChanged()"></ion-input>
+    <ion-input *ngIf="!readonly" id='sentenceInput' #addMnemonicWordInput [placeholder]="'import-mnemonic-placeholder'|translate" [(ngModel)]="mnemonicSentence" (ionChange)="onMnemonicSentenceChanged()"></ion-input>
 
-      <did-button class="main-button" (click)="promptStorePassword()"
-        [title]="'import-my-did' | translate"
-        textsize="18px"
-        [bgcolor]="'var(--ion-color-primary)'"
-        [bordercolor]="'var(--ion-color-primary)'"
-        [shadow]="true" *ngIf="allWordsFilled()"></did-button>
-    </ion-content>
-  </div>
+    <did-button class="main-button" (click)="promptStorePassword()"
+      [title]="'import-my-did' | translate"
+      textsize="18px"
+      [bgcolor]="'var(--ion-color-primary)'"
+      [bordercolor]="'var(--ion-color-primary)'"
+      [shadow]="true" *ngIf="allWordsFilled()"></did-button>
+  </ion-content>
+</div>
+
+ -->

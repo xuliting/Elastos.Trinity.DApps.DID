@@ -1,7 +1,7 @@
 import { Component, NgZone, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavController, IonInput, ModalController } from '@ionic/angular';
-
+import { NavController, IonInput, ModalController, Platform } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
 import { DIDService } from '../../services/did.service';
 import { Native } from '../../services/native';
 import { PopupProvider } from '../../services/popup';
@@ -10,11 +10,13 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DIDStore } from 'src/app/model/didstore.model';
 import { MnemonicPassCheckComponent } from 'src/app/components/mnemonicpasscheck/mnemonicpasscheck.component';
 import { EmptyImportedDocumentComponent, EmptyImportedDocumentChoice } from 'src/app/components/emptyimporteddocument/emptyimporteddocument.component';
-import { TranslateService } from '@ngx-translate/core';
 import { UXService } from 'src/app/services/ux.service';
 import { Config } from 'src/app/services/config';
 import { DIDURL } from 'src/app/model/didurl.model';
+import { ApiNoAuthorityException } from '../../model/exceptions/apinoauthorityexception.exception';
+import { ThemeService } from 'src/app/services/theme.service';
 
+declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
 /**
@@ -31,7 +33,7 @@ declare let titleBarManager: TitleBarPlugin.TitleBarManager;
     styleUrls: ['importdid.scss']
 })
 export class ImportDIDPage {
-    public mnemonicWords = new Array<String>()
+    public mnemonicWords = new Array<any>()
     public mnemonicSentence: string = "";
     //   public mnemonicSentence: string = "income diesel latin coffee tourist kangaroo lumber great ill amazing say left"; // TMP TESTNET
     private mnemonicLanguage: DIDPlugin.MnemonicLanguage;
@@ -49,6 +51,7 @@ export class ImportDIDPage {
     constructor(
         public router: Router,
         public zone: NgZone,
+        public platform: Platform,
         public navCtrl: NavController,
         private modalCtrl: ModalController,
         private native: Native,
@@ -56,7 +59,8 @@ export class ImportDIDPage {
         private authService: AuthService,
         private popupProvider: PopupProvider,
         private uxService: UXService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        public theme: ThemeService
     ) {
         const navigation = this.router.getCurrentNavigation();
         if (!Util.isEmptyObject(navigation.extras.state)) {
@@ -75,25 +79,36 @@ export class ImportDIDPage {
         titleBarManager.setTitle(this.translate.instant('import-my-did'));
         titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.BACK);
 
-        this.getElements();
+        // the rootContent clientHeight is wrong in android?
+        if (this.platform.platforms().indexOf('android') < 0) {
+            this.getElements();
 
-        window.addEventListener('native.keyboardshow', this.showHandle = (event: any) => {
-            if (this.scrollHeight == -1) {
-                this.scrollHeight = this.calcScrollHeight(event.keyboardHeight);
-            }
-            if (this.scrollHeight != 0) {
-                console.log('scrollHeight:', this.scrollHeight)
-                this.rootContent.style.top = this.scrollHeight + 'px';
-            }
-        });
-        window.addEventListener('native.keyboardhide', this.hideHandle = () => {
-            this.rootContent.style.top = '0px';
-        });
+            window.addEventListener('native.keyboardshow', this.showHandle = (event: any)=> {
+                if (this.scrollHeight == -1) {
+                    this.scrollHeight = this.calcScrollHeight(event.keyboardHeight);
+                }
+                if (this.scrollHeight != 0) {
+                    console.log('scrollHeight:', this.scrollHeight)
+                    this.rootContent.style.top = this.scrollHeight + 'px';
+                }
+            });
+            window.addEventListener('native.keyboardhide', this.hideHandle = () =>{
+                this.rootContent.style.top = '0px';
+            });
+        }
     }
 
     ionViewWillLeave() {
         window.removeEventListener('native.keyboardshow', this.showHandle);
         window.removeEventListener('native.keyboardhide', this.hideHandle);
+    }
+
+    isWord(word): boolean {
+      if(word) {
+        return true
+      } else {
+        return false;
+      }
     }
 
     getElements() {
@@ -107,12 +122,9 @@ export class ImportDIDPage {
     }
 
     onMnemonicSentenceChanged() {
-        // Remove all values
-        this.mnemonicWords.length = 0;
-
         this.mnemonicSentence = this.mnemonicSentence.toLowerCase();
-
         this.mnemonicLanguage = this.getMnemonicLang();
+
         // Rebuild words based on typed sentence
         if (this.mnemonicLanguage === DIDPlugin.MnemonicLanguage.CHINESE_SIMPLIFIED) {
             this.getMnemonicWordsFromChinese();

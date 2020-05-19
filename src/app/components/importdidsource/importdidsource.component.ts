@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalController, NavParams, IonInput } from '@ionic/angular';
 
 import { Native } from '../../services/native';
+import { ThemeService } from 'src/app/services/theme.service';
 
 export enum ImportDIDSource {
     ImportFromMnemonic,
@@ -14,8 +15,11 @@ export enum ImportDIDSource {
   styleUrls: ['./importdidsource.component.scss'],
 })
 export class ImportDIDSourceComponent implements OnInit {
-  constructor(public modalCtrl: ModalController, 
-              public native: Native) { 
+  constructor(
+    public modalCtrl: ModalController,
+    public native: Native,
+    public theme: ThemeService
+  ) {
   }
 
   ngOnInit() {
