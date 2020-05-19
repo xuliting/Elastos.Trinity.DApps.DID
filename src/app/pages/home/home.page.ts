@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UXService } from 'src/app/services/ux.service';
 
+declare let titleBarManager: TitleBarPlugin.TitleBarManager;
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -15,5 +17,6 @@ export class HomePage implements OnInit {
 
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
+    titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.HOME);
   }
 }

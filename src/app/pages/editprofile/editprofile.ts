@@ -21,6 +21,7 @@ import { UXService } from 'src/app/services/ux.service';
 import { NewDID } from 'src/app/model/newdid.model';
 import { DIDURL } from 'src/app/model/didurl.model';
 import { Config } from 'src/app/services/config';
+import { ThemeService } from 'src/app/services/theme.service';
 
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 
@@ -45,7 +46,8 @@ export class EditProfilePage {
               private translate: TranslateService,
               private didSyncService: DIDSyncService,
               private uxService: UXService,
-              private native: Native) {
+              private native: Native,
+              public theme: ThemeService) {
     console.log("Entering EditProfile page");
     const navigation = this.router.getCurrentNavigation();
     if (!Util.isEmptyObject(navigation.extras.state) && (navigation.extras.state['create'] == false)) {

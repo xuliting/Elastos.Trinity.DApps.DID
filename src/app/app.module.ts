@@ -53,6 +53,8 @@ import { SignRequestPage } from './pages/signrequest/signrequest';
 import { CredentialIssueRequestPage } from './pages/credentialissuerequest/credentialissuerequest';
 import { DeleteDIDPage } from './pages/deletedid/deletedid';
 import { NotSignedInPage } from './pages/notsignedin/notsignedin';
+import { WarningComponent } from './components/warning/warning.component';
+import { OptionsComponent } from './components/options/options.component';
 
 Sentry.init({
   dsn: "https://f563821bdc2546c3bf7357c997a78059@sentry.io/1874652"
@@ -123,7 +125,9 @@ export function TranslateLoaderFactory() {
     SignRequestPage,
     ProfileEntryPickerPage,
     DeleteDIDPage,
-    NotSignedInPage
+    NotSignedInPage,
+    OptionsComponent,
+    WarningComponent
   ],
   imports: [
     CommonModule,
@@ -158,7 +162,9 @@ export function TranslateLoaderFactory() {
     CreatePasswordComponent,
     ShowQRCodeComponent,
     ProfileEntryPickerPage,
-    DisableBiometricPromptComponent
+    DisableBiometricPromptComponent,
+    OptionsComponent,
+    WarningComponent
   ],
   providers: [
     Clipboard,

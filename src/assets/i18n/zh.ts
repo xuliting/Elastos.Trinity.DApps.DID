@@ -152,6 +152,12 @@ export const zh = {
     'choose-did': '选择DID',
     'choose-did-intro': '请选择您要用于此操作的DID档案',
 
+    // import mnemonic
+    'import-mnemonic-intro': '请输入12个助记符以恢复您的身份',
+    'import-mnemonic-placeholder': '在此输入助记词',
+    'mnemonic-invalid': '助记词无效',
+    'mnemonic-invalid-prompt': '请检查助记词',
+
     ////////////////////////////////////////////////////
     //////////////// COMPONENT SPECIFIC ////////////////
     ////////////////////////////////////////////////////

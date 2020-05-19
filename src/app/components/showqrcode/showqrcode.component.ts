@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ModalController, NavParams, IonInput } from '@ionic/angular';
 
 import { Native } from '../../services/native';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'showqrcode',
@@ -11,10 +12,12 @@ import { Native } from '../../services/native';
 export class ShowQRCodeComponent implements OnInit {
   public didString: string = "";
 
-  constructor(public modalCtrl: ModalController, 
-              public native: Native,
-              navParams: NavParams) { 
-
+  constructor(
+    public modalCtrl: ModalController,
+    public native: Native,
+    private navParams: NavParams,
+    public theme: ThemeService
+  ) {
     this.didString = navParams.get("didstring");
   }
 

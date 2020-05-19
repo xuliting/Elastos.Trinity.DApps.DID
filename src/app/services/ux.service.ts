@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Platform, NavController } from '@ionic/angular';
+import { Platform, ModalController, NavController } from '@ionic/angular';
 import { Native } from './native';
 
 import { Config } from './config';
@@ -11,6 +11,7 @@ import { DIDService } from './did.service';
 import { PopupProvider } from './popup';
 import { Router } from '@angular/router';
 import { NewDID } from '../model/newdid.model';
+import { ThemeService } from './theme.service';
 
 declare let appManager: AppManagerPlugin.AppManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -54,8 +55,10 @@ export class UXService {
         private popup: PopupProvider,
         private didService: DIDService,
         private authService: AuthService,
+        private modalCtrl: ModalController,
         private navCtrl: NavController,
         private router: Router,
+        private theme: ThemeService
     ) {
         selfUxService = this;
         UXService.instance = this;
@@ -63,6 +66,7 @@ export class UXService {
 
     async init() {
         console.log("UXService init");
+        this.theme.getTheme();
 
         if (!BrowserSimulation.runningInBrowser()) {
             this.getLanguage();
@@ -147,8 +151,6 @@ export class UXService {
      */
     makeAppVisible() {
         appManager.setVisible("show");
-        titleBarManager.setBackgroundColor("#FFFFFF");
-        titleBarManager.setForegroundMode(TitleBarPlugin.TitleBarForegroundMode.DARK);
     }
 
     getLanguage() {
@@ -207,10 +209,14 @@ export class UXService {
         }
         switch (ret.type) {
             case MessageType.IN_REFRESH:
-                switch (params.action) {
-                    case "currentLocaleChanged":
-                        selfUxService.setCurLang(params.data);
-                        break;
+                if (params.action === "currentLocaleChanged") {
+                  this.setCurLang(params.data);
+                }
+                if(params.action === 'preferenceChanged' && params.data.key === "ui.darkmode") {
+                  this.zone.run(() => {
+                    console.log('Dark Mode toggled');
+                    this.theme.setTheme(params.data.value);
+                  });
                 }
                 break;
             case MessageType.EX_INSTALL:
@@ -218,10 +224,23 @@ export class UXService {
             case MessageType.INTERNAL:
                 switch (ret.message) {
                     case 'navback':
-                        this.navCtrl.back();
+                        this.titlebarBackButtonHandle();
+                        break;
                 }
-                    break;
+                break;
         }
+    }
+
+    async titlebarBackButtonHandle() {
+        // to check alert, action, popover, menu ?
+        // ...
+        const modal = await this.modalCtrl.getTop();
+        if (modal) {
+            modal.dismiss();
+            return;
+        }
+
+        this.navCtrl.back();
     }
 
     async onReceiveIntent(intent: AppManagerPlugin.ReceivedIntent) {

@@ -154,6 +154,12 @@ export const en = {
     'choose-did': 'Choose Identity',
     'choose-did-intro': 'Please select the Identity you want to use for this action',
 
+    // import mnemonic
+    'import-mnemonic-intro': 'Start entering your 12 word mnemonic to restore your Identity',
+    'import-mnemonic-placeholder': 'Your mnemonic sentence',
+    'mnemonic-invalid': 'Mnemonic invalid',
+    'mnemonic-invalid-prompt': 'Pls check the mnemonic... ',
+
     ////////////////////////////////////////////////////
     //////////////// COMPONENT SPECIFIC ////////////////
     ////////////////////////////////////////////////////

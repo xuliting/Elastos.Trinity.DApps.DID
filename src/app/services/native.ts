@@ -69,8 +69,7 @@ export class Native {
     console.log("NAV - Going to "+page);
     this.zone.run(()=>{
         this.hideLoading();
-        this.navCtrl.setDirection('forward');
-        this.router.navigate([page], { state: options });
+        this.navCtrl.navigateForward([page], { state: options });
     });
   }
 
@@ -82,12 +81,11 @@ export class Native {
     console.log("NAV - Setting root to "+page);
       this.zone.run(()=>{
         this.hideLoading();
-        this.navCtrl.setDirection('root');
-        this.router.navigate([page], { state: options });
+        this.navCtrl.navigateRoot([page], { state: options });
       });
   }
 
-  public getMnemonicLang(): DIDPlugin.MnemonicLanguage  {
+  public getMnemonicLang(): DIDPlugin.MnemonicLanguage {
       return this.mnemonicLang;
   }
 

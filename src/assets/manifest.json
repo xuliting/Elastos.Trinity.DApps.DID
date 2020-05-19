@@ -35,7 +35,8 @@
         "NetworkStatus",
         "File",
         "FingerprintPlugin",
-        "DIDSessionManagerPlugin"
+        "DIDSessionManagerPlugin",
+        "CDVIonicKeyboard"
     ],
     "urls": [
         "https://sentry.io/*"
