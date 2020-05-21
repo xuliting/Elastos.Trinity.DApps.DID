@@ -76,7 +76,7 @@ export class UXService {
             appManager.setListener(this.onReceive);
             this.setIntentListener();
 
-            titleBarManager.setOnItemClickedListener((menuIcon)=>{
+            titleBarManager.addOnItemClickedListener((menuIcon)=>{
                 if (menuIcon.key == "back") {
                     this.navCtrl.back();
                 }
@@ -95,10 +95,10 @@ export class UXService {
             titleBarManager.setIcon(TitleBarPlugin.TitleBarIconSlot.INNER_LEFT, {
                 key: "back",
                 iconPath: TitleBarPlugin.BuiltInIcon.BACK
-            });    
+            });
         }
         else {
-            titleBarManager.setIcon(TitleBarPlugin.TitleBarIconSlot.INNER_LEFT, null); 
+            titleBarManager.setIcon(TitleBarPlugin.TitleBarIconSlot.INNER_LEFT, null);
         }
     }
 
@@ -156,7 +156,7 @@ export class UXService {
     close() {
         if (!BrowserSimulation.runningInBrowser())
             appManager.close();
-    }   
+    }
 
     minimize() {
         if (!BrowserSimulation.runningInBrowser())
@@ -446,13 +446,13 @@ export class UXService {
         this.onGoingDidCreationMode = DIDCreationMode.IMPORT_MNEMONIC;
 
         if (!intent.params.existingMnemonic) {
-            // if no mnemonic if given, then we need to create a new mnnemonic and go through the 
+            // if no mnemonic if given, then we need to create a new mnnemonic and go through the
             // mnemonic verification screens.
             this.native.go('/importdid');
         }
         else {
             // DID session app is asking us to import a mnemonic and it gives us the mnemonic
-            // (probably imported from the wallet app). So we use this mnemonic and we skip 
+            // (probably imported from the wallet app). So we use this mnemonic and we skip
             // the mnemonic verification steps.
             let existingMnemonic = intent.params.existingMnemonic;
             this.native.go('/editprofile');
@@ -478,7 +478,7 @@ export class UXService {
         errorMessage += "\n\n"+JSON.stringify(intent.params);
 
         await this.popup.ionicAlert("Action error", errorMessage, "Close");
- 
+
         console.error(errorMessage);
 
         await this.sendIntentResponse(intent.action, {}, intent.intentId);
