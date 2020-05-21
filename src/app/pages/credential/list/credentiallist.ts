@@ -237,9 +237,7 @@ export class CredentialListPage {
       await this.updateDIDDocumentFromSelection(password);
       this.promptPublishVisibilityChanges(password);
     }, ()=>{
-      // Error - TODO feedback
-    }, ()=>{
-      // Password failed
+      // Cancelled
     });
   }
 
@@ -377,11 +375,8 @@ export class CredentialListPage {
 
       // Rebuild entries
       this.buildDisplayEntries();
-
     }, ()=>{
-      // Error - TODO feedback
-    }, ()=>{
-      // Password failed
+      // Cancelled
     });
   }
 

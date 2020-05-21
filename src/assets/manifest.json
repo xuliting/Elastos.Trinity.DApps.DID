@@ -57,15 +57,6 @@
         },
         {
             "action": "sign"
-        },
-        {
-            "action": "createdid"
-        },
-        {
-            "action": "importmnemonic"
-        },
-        {
-            "action": "deletedid"
         }
     ],
     "background_color": "#4e8ef7",

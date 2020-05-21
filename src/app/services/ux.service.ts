@@ -29,15 +29,6 @@ enum MessageType {
     EX_RETURN = 14,
 };
 
-export enum DIDCreationMode {
-    /** Add a new DID in an existing DID store (same mnemonic) */
-    NEW_DID_TO_EXISTING_STORE,
-    /** Add a new DID in a new DID store (new mnemonic) */
-    NEW_DID_TO_NEW_STORE,
-    /** Import all published DIDs from a saved mnemonic */
-    IMPORT_MNEMONIC
-}
-
 @Injectable({
     providedIn: 'root'
 })
@@ -45,7 +36,6 @@ export class UXService {
     public static instance: UXService = null;
     private isReceiveIntentReady = false;
     private appIsLaunchingFromIntent = false; // Is the app starting because of an intent request?
-    public onGoingDidCreationMode: DIDCreationMode = null; // After opening from a createdid or importmnemonic intent, this defines how to create the DID
 
     constructor(
         public translate: TranslateService,
@@ -119,35 +109,30 @@ export class UXService {
             else {
                 console.log("No pending intent.");
 
-                // Load user's identity
-                await this.didService.loadGlobalIdentity();
-
-                // No intent was received at boot. So we go through the regular screens.
-                this.showEntryScreen();
+                this.loadIdentityAndShow();
             }
-        }, (err: string)=>{
+        }, async (err: string)=>{
+            // Error while checking - fallback to default behaviour
             console.error(err);
 
-            // Error while checking - fallback to default behaviour
-            this.didService.displayDefaultScreen();
+            this.loadIdentityAndShow();
         });
+    }
+
+    private async loadIdentityAndShow() {
+        // Load user's identity
+        let couldLoad = await this.didService.loadGlobalIdentity();
+        if (!couldLoad) {
+            this.didService.handleNull();
+        }
+        else {
+            // No intent was received at boot. So we go through the regular screens.
+            this.showEntryScreen();
+        }
     }
 
     showEntryScreen() {
         this.didService.displayDefaultScreen();
-
-        //selfUxService.native.go("/editprofile"); // TMP
-
-        /*this.authService.chooseIdentity({
-            redirectPath: "/credaccessrequest"
-        });*/
-
-        /*this.authService.chooseIdentity({
-            redirectPath: "/regappprofilerequest"
-        });*/
-
-        //selfUxService.native.go("/importdid"); // TMP
-        //selfUxService.native.go("/noidentity"); // TMP
     }
 
     /**
@@ -156,11 +141,6 @@ export class UXService {
     close() {
         if (!BrowserSimulation.runningInBrowser())
             appManager.close();
-    }
-
-    minimize() {
-        if (!BrowserSimulation.runningInBrowser())
-            appManager.launcher();
     }
 
     /**
@@ -186,17 +166,6 @@ export class UXService {
             // Setting UI/translations language
             this.translate.use(lang);
         });
-
-        // Settings DID SDK language
-        if (lang === 'en') {
-            this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.ENGLISH);
-        } else if (lang === 'zh') {
-            this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.CHINESE_SIMPLIFIED);
-        } else if (lang === 'fr') {
-            this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.FRENCH);
-        } else {
-            this.native.setMnemonicLang(DIDPlugin.MnemonicLanguage.ENGLISH);
-        }
     }
 
     public translateInstant(key: string): string {
@@ -265,71 +234,6 @@ export class UXService {
         console.log("Intent received", intent);
 
         switch (intent.action) {
-            case "createdid":
-                console.log("Received create did intent request");
-
-                if (intent.from != "org.elastos.trinity.dapp.didsession") {
-                    // Security item: Make sure DID creation is only called by the did session app
-                    this.sendIntentResponse(intent.action, {
-                        error: "Only the DID session app is allowed to call this action"
-                    }, intent.intentId);
-                    this.close();
-                    return;
-                }
-
-                if (selfUxService.checkCreateDIDIntentParams(intent)) {
-                    this.appIsLaunchingFromIntent = true;
-                    this.handleCreateDIDIntent(intent);
-                }
-                else {
-                    // Something wrong happened while trying to handle the intent: send intent response with error
-                    this.showErrorAndExitFromIntent(intent);
-                }
-                break;
-            case "importmnemonic":
-                console.log("Received import mnemonic intent request");
-
-                if (intent.from != "org.elastos.trinity.dapp.didsession") {
-                    console.log("importmnemonic not called from the did session app. Exiting.");
-
-                    // Security item: Make sure DID creation is only called by the did session app
-                    this.sendIntentResponse(intent.action, {
-                        error: "Only the DID session app is allowed to call this action"
-                    }, intent.intentId);
-                    this.close();
-                    return;
-                }
-
-                if (selfUxService.checkImportMnemonicIntentParams(intent)) {
-                    this.appIsLaunchingFromIntent = true;
-                    this.handleImportMnemonicIntent(intent);
-                }
-                else {
-                    // Something wrong happened while trying to handle the intent: send intent response with error
-                    this.showErrorAndExitFromIntent(intent);
-                }
-                break;
-            case "deletedid":
-                console.log("Received delete did intent request");
-
-                if (intent.from != "org.elastos.trinity.dapp.didsession") {
-                    // Security item: Make sure DID deletion is only called by the did session app
-                    this.sendIntentResponse(intent.action, {
-                        error: "Only the DID session app is allowed to call this action"
-                    }, intent.intentId);
-                    this.close();
-                    return;
-                }
-
-                if (selfUxService.checkDeleteDIDIntentParams(intent)) {
-                    this.appIsLaunchingFromIntent = true;
-                    this.handleDeleteDIDIntent(intent);
-                }
-                else {
-                    // Something wrong happened while trying to handle the intent: send intent response with error
-                    this.showErrorAndExitFromIntent(intent);
-                }
-                break;
             case "credaccess":
                 console.log("Received credential access intent request");
                 if (selfUxService.checkCredAccessIntentParams(intent)) {
@@ -398,79 +302,6 @@ export class UXService {
           resolve();
         }
       });
-    }
-
-    private async handleCreateDIDIntent(intent: AppManagerPlugin.ReceivedIntent) {
-        if (intent.params.didStoreId) {
-            let didStoreId = intent.params.didStoreId;
-
-            // If a DID store ID is provided and defined, we create a new DID in that store.
-            this.onGoingDidCreationMode = DIDCreationMode.NEW_DID_TO_EXISTING_STORE;
-            this.didService.didBeingCreated = new NewDID();
-
-            // First, try to load the given DID store
-            try {
-                await this.didService.activateDidStore(didStoreId);
-
-                // Even if the DID store ID doesn't exist, a store can be "activated". What we need to ensure
-                // is that this store has a private identity set, meaning that is has actually been created earlier.
-                // If it doesn't, this means we don't have such store ID on the device.
-                let hasPrivateIdentity = await this.didService.getActiveDidStore().hasPrivateIdentity();
-                if (hasPrivateIdentity) {
-                    this.native.go('/editprofile', {create: true});
-                }
-                else {
-                    this.sendIntentResponse(intent.action, {
-                        error: "No DID store found for ID "+didStoreId
-                    }, intent.intentId);
-                    this.close();
-                }
-            }
-            catch (e) {
-                // Not able to activate the given DID store - maybe it doesn't exist.
-                // So we return an error.
-                this.sendIntentResponse(intent.action, {
-                    error: "No DID store found for ID "+didStoreId
-                }, intent.intentId);
-                this.close();
-            }
-        }
-        else {
-            // No did store provided, so we create a new mnemonic first then a DID inside.
-            this.onGoingDidCreationMode = DIDCreationMode.NEW_DID_TO_NEW_STORE;
-            this.native.go('/noidentity');
-        }
-    }
-
-    private async handleImportMnemonicIntent(intent: AppManagerPlugin.ReceivedIntent) {
-        this.onGoingDidCreationMode = DIDCreationMode.IMPORT_MNEMONIC;
-
-        if (!intent.params.existingMnemonic) {
-            // if no mnemonic if given, then we need to create a new mnnemonic and go through the
-            // mnemonic verification screens.
-            this.native.go('/importdid');
-        }
-        else {
-            // DID session app is asking us to import a mnemonic and it gives us the mnemonic
-            // (probably imported from the wallet app). So we use this mnemonic and we skip
-            // the mnemonic verification steps.
-            let existingMnemonic = intent.params.existingMnemonic;
-            this.native.go('/editprofile');
-        }
-    }
-
-    private async handleDeleteDIDIntent(intent: AppManagerPlugin.ReceivedIntent) {
-        // Activate the DID to be deleted. If this fails, directly return an error.
-        let couldActivate = await this.didService.activateDid(intent.params.didStoreId, intent.params.didString);
-        if (!couldActivate) {
-            this.sendIntentResponse(intent.action, {
-                error: "No DID store or did object found for DID "+intent.params.didString
-            }, intent.intentId);
-            this.close();
-        }
-        else {
-            this.native.go('/deletedid');
-        }
     }
 
     async showErrorAndExitFromIntent(intent: AppManagerPlugin.ReceivedIntent) {

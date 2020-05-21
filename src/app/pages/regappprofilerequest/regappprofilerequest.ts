@@ -122,9 +122,7 @@ export class RegisterApplicationProfileRequestPage {
       // If asked by user, add credentials to the did document and send intent to save the DID document on chain (if user checked the box)
       await this.publishOnChainIfNeeded(password);
     }, ()=>{
-      // Error
-    }, ()=>{
-      // Wrong password
+      // Cancelled
     });
   }
 

@@ -101,9 +101,7 @@ export class ProfileService {
       await this.updateDIDDocumentFromSelection(password);
       await this.didSyncService.publishActiveDIDDIDDocument(password);
     }, () => {
-      // Error - TODO feedback
-    }, () => {
-      // Password failed
+      // Cancelled
     });
   }
 

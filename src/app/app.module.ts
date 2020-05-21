@@ -23,25 +23,15 @@ import { fr } from './../assets/i18n/fr';
 import { MyApp } from './app.component';
 import { ComponentsModule } from './components/components.module';
 
-import { DevPage } from './pages/devpage/devpage';
 import { CountryPickerPage } from './pages/countrypicker/countrypicker';
-import { NoIdentityPage } from './pages/noidentity/noidentity';
-import { NewPasswordSetPage } from './pages/newpasswordset/newpasswordset';
 import { EditProfilePage } from './pages/editprofile/editprofile';
-import { HomePage } from './pages/home/home.page';
+import { HomePage } from './pages/__home/home.page';
 import { MyProfilePage } from './pages/myprofile/myprofile';
-import { BackupDIDPage } from './pages/backupdid/backupdid';
-import { ImportDIDPage } from './pages/importdid/importdid';
-import { VerifyMnemonicsPage } from './pages/verifymnemonics/verifymnemonics';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 import { CredentialListPage } from './pages/credential/list/credentiallist';
 import { CredentialCreatePage } from './pages/credential/create/credentialcreate';
 import { CredentialBackupPage } from './pages/credential/backup/credentialbackup';
 import { RegisterApplicationProfileRequestPage } from './pages/regappprofilerequest/regappprofilerequest';
-
-import { SecurityCheckComponent } from './components/securitycheck/securitycheck.component';
-import { CreatePasswordComponent } from './components/createpassword/createpassword.component';
-import { DisableBiometricPromptComponent } from './components/disablebiometricprompt/disablebiometricprompt.component';
 
 import { LocalStorage } from './services/localstorage';
 import { PopupProvider } from './services/popup';
@@ -71,7 +61,7 @@ export class SentryErrorHandler implements ErrorHandler {
     console.log(document.URL);
     // Only send reports to sentry if we are not debugging.
     if (document.URL.includes('localhost')) { // Prod builds or --nodebug CLI builds use "http://localhost"
-      const eventId = Sentry.captureException(error.originalError || error);
+      /*const eventId = */ Sentry.captureException(error.originalError || error);
       //Sentry.showReportDialog({ eventId });
     }
 
@@ -107,21 +97,15 @@ export function TranslateLoaderFactory() {
 @NgModule({
   declarations: [
     MyApp,
-    DevPage,
     CountryPickerPage,
-    BackupDIDPage,
     CredentialAccessRequestPage,
     CredentialIssueRequestPage,
     CredentialListPage,
     CredentialCreatePage,
     CredentialBackupPage,
     EditProfilePage,
-    ImportDIDPage,
     HomePage,
     MyProfilePage,
-    NoIdentityPage,
-    NewPasswordSetPage,
-    VerifyMnemonicsPage,
     RegisterApplicationProfileRequestPage,
     SignRequestPage,
     ProfileEntryPickerPage,
@@ -160,11 +144,8 @@ export function TranslateLoaderFactory() {
   bootstrap: [MyApp],
   entryComponents: [
     MyApp,
-    SecurityCheckComponent,
-    CreatePasswordComponent,
     ShowQRCodeComponent,
     ProfileEntryPickerPage,
-    DisableBiometricPromptComponent,
     OptionsComponent,
     WarningComponent,
     PictureComponent

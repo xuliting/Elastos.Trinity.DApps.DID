@@ -14,10 +14,6 @@ export class HeaderMenuButtonComponent implements OnInit {
 
     ngOnInit() { }
 
-    minimize() {
-        this.uxService.minimize();
-    }
-
     close() {
         this.uxService.close()
     }

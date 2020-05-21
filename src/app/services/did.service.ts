@@ -1,18 +1,13 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Platform, ToastController, Events } from '@ionic/angular';
 
-import { SimulatedDID, SimulatedDIDStore, BrowserSimulation, SimulatedCredential } from '../services/browsersimulation';
-import { resolve } from 'path';
+import { BrowserSimulation } from '../services/browsersimulation';
 import { TranslateService } from '@ngx-translate/core';
 import { LocalStorage } from './localstorage';
 import { PopupProvider } from './popup';
 import { Native } from './native';
 import { DIDStore } from '../model/didstore.model';
-import { DIDEntry } from '../model/didentry.model';
 import { DID } from '../model/did.model';
-import { NewDID } from '../model/newdid.model';
-import { WrongPasswordException } from '../model/exceptions/wrongpasswordexception.exception';
-import { DIDPluginException } from '../model/exceptions/didplugin.exception';
 import { ApiNoAuthorityException } from '../model/exceptions/apinoauthorityexception.exception';
 
 declare let didManager: DIDPlugin.DIDManager;
@@ -26,7 +21,6 @@ export class DIDService {
     public static instance: DIDService = null;
 
     public activeDidStore: DIDStore;
-    public didBeingCreated: NewDID = null;
 
     constructor(
         private platform: Platform,
@@ -39,55 +33,35 @@ export class DIDService {
         public native: Native) {
             console.log("DIDService created");
             DIDService.instance = this;
-
-            this.subscribeEvents();
     }
 
-    private subscribeEvents() {
-      this.events.subscribe("did:namechanged", ()=>{
-        // Name profile item was changed in a DID? Rebuild our DID menu entries
-        DIDService.instance.rebuildDidEntries();
-      });
+    handleNull() {
+      this.native.setRootRouter('/notsignedin');
     }
-    
+
     public async displayDefaultScreen() {
-        let didStoreId = await this.localStorage.getCurrentDidStoreId();
-        let didString = await this.localStorage.getCurrentDid();
-
-        console.log("Existing DID Store ID found:", didStoreId);
-        let couldActivate = await this.activateSavedDid();
-        if (couldActivate)
-            this.showDid(didStoreId, didString);
-        else
-            this.handleNull();
+      this.native.setRootRouter('/myprofile');
     }
 
     /**
      * Loads the global system identity.
      */
-    public async loadGlobalIdentity() {
+    public async loadGlobalIdentity() : Promise<boolean> {
       let signedInIdentity = await didSessionManager.getSignedInIdentity();
       if (!signedInIdentity) {
         this.native.setRootRouter('/notsignedin');
+        return false;
       }
       else {
         // Activate the DID store, and the DID
-        await this.activateDid(signedInIdentity.didStoreId, signedInIdentity.didString);
+        let couldActivate = await this.activateDid(signedInIdentity.didStoreId, signedInIdentity.didString);
+        if (!couldActivate) {
+          this.handleNull();
+          return false 
+        }
       }
-    }
 
-    /**
-     * Activate the DID saved from a previous session.
-     */
-    public async activateSavedDid(): Promise<boolean> {
-      let storeId = await this.localStorage.getCurrentDidStoreId();
-      let didString = await this.localStorage.getCurrentDid();
-      return this.activateDid(storeId, didString);
-    }
-
-    public async activateSavedDidStore(): Promise<boolean> {
-      let storeId = await this.localStorage.getCurrentDidStoreId();
-      return this.activateDidStore(storeId);
+      return true;
     }
 
     public activateDidStore(storeId: string): Promise<boolean> {
@@ -113,8 +87,6 @@ export class DIDService {
 
           console.log("Setting active DID store", didStore);
           this.activeDidStore = didStore;
-
-          this.localStorage.saveCurrentDidStoreId(didStore.getId());
 
           this.events.publish('did:didchanged');
 
@@ -149,7 +121,6 @@ export class DIDService {
                   resolve(false);
                   return;
               }
-              await this.localStorage.setCurrentDid(did.getDIDString());
               await this.getActiveDidStore().setActiveDid(did);
 
               this.events.publish('did:didchanged');
@@ -183,11 +154,6 @@ export class DIDService {
       }
     }
 
-    private handleNull() {
-      this.native.setRootRouter('/newpassword');
-      // this.native.setRootRouter('/noidentity');
-    }
-
     public async newDidStore() {
       let didStore = new DIDStore(this.events);
       try {
@@ -200,107 +166,6 @@ export class DIDService {
         }
       }
       return didStore;
-    }
-
-    /**
-     * Called at the beginning of a new DID creation process.
-     */
-    public async addDidStore() {
-      console.log("Adding DID store");
-
-      let didStore = await this.newDidStore();
-      if (didStore) {
-        // Activate the DID store, without DID
-        await this.activateDidStore(didStore.getId());
-      }
-    }
-
-    /**
-     * Called at the end of the DID creation process to finalize a few things.
-     */
-    public async finalizeDidCreation(storePass: string) {
-      console.log("Finalizing DID creation");
-
-      // First, synchronize with chain to make sure we don't mess up with DID indexes. The DID SDK has to
-      // create the new DID at the right location.
-      console.log("Synchronizing DID store before adding the new DID");
-      await this.getActiveDidStore().synchronize(storePass);
-      console.log("Synchronization completed");
-
-      try {
-        let createdDidString = await this.getActiveDidStore().addNewDidWithProfile(this.didBeingCreated);
-        let name = this.didBeingCreated.profile.getEntryByKey("name").value;
-        await this.addDidEntry(new DIDEntry(createdDidString, name));
-
-        await this.activateDid(this.getCurDidStoreId(), createdDidString);
-
-        console.log("Finalized DID creation for did string "+createdDidString+" - with name "+name);
-      }
-      catch (e) {
-        if (e instanceof ApiNoAuthorityException) {
-          await this.popupProvider.ionicAlert("Issue credentials error", 'Sorry, this application can not run without the "Issue credentials" feature');
-          appManager.close();
-        }
-      }
-    }
-
-    /**
-     * Create a new simple DIDStoreEntry to save it to local storage, just to maintain
-     * a list of existing stores and their names/ids
-     */
-    private async addDidEntry(didEntry: DIDEntry) {
-      console.log("Adding DID entry:", didEntry);
-
-      // Simpel check: make sure the DID entry doesn't already exist
-      let existingEntry = await this.searchDIDEntry(didEntry.didString);
-      if (existingEntry) {
-        console.log("Not adding DIDEntry because it already exists", didEntry);
-        return;
-      }
-
-      let existingDidEntries = await this.getDidEntries();
-      existingDidEntries.push(didEntry);
-
-      await this.localStorage.saveDidEntries(existingDidEntries);
-    }
-
-    public async getDidEntries(): Promise<DIDEntry[]> {
-      let entries = await this.localStorage.getDidEntries();
-      if (!entries)
-        return [];
-
-      return entries;
-    }
-
-    /**
-     * Look for the given did string in the did entries
-     */
-    public async searchDIDEntry(didString: DIDPlugin.DIDString): Promise<DIDEntry> {
-      let entries = await this.localStorage.getDidEntries();
-      if (!entries)
-        return null;
-
-      return entries.find((e)=>{
-        return (e.didString == didString);
-      });
-    }
-
-    /**
-     * Used after importing a DID store from chain in order to update our local storage list of DIDs.
-     */
-    public async rebuildDidEntries() {
-      console.log("Rebuilding DID entries from store DIDs:", this.activeDidStore.dids);
-
-      let entries: DIDEntry[] = [];
-
-      for (let did of this.activeDidStore.dids) {
-        let profile = did.getBasicProfile();
-
-        let entry = new DIDEntry(did.getDIDString(), profile.getName());
-        entries.push(entry);
-      }
-
-      await this.localStorage.saveDidEntries(entries);
     }
 
     public getCurDidStoreId() {
@@ -322,24 +187,7 @@ export class DIDService {
       let storeId = this.getActiveDidStore().getId();
       await this.getActiveDidStore().deleteDid(did);
 
-      // Remove DID from DidStoreEntry list
-      let entries = await this.localStorage.getDidEntries();
-      for (let i = 0; i < entries.length; i++) {
-          if (entries[i].didString === did.getDIDString()) {
-              entries.splice(i, 1);
-              break;
-          }
-      }
-      this.localStorage.saveDidEntries(entries);
-
-      // Switch current store to use the first did in the DID list, or go to new identity creation screen.
-      if (entries.length > 0) {
-        this.showDid(storeId, entries[0].didString);
-      } else {
-        this.localStorage.setCurrentDid(null);
-        this.activeDidStore.setActiveDid(null);
-        this.handleNull();
-      }
+      // TODO: sign out - back to did sessions app
     }
 
     generateMnemonic(language): Promise<any> {

@@ -196,22 +196,16 @@ export class EditProfilePage {
   }
 
   async next() {
-    if(this.checkParms()){
-      if (this.isEdit) { // If edition mode, go back to my profile after editing.
-        let localDidDocumentHasChanged = false;
-        await this.authService.checkPasswordThenExecute(async ()=>{
-          // We are editing an existing DID: just ask the DID to save its profile.
-          // DID being created are NOT saved here.
-          await this.native.showLoading('loading-msg');
-          localDidDocumentHasChanged = await this.didService.getActiveDid().writeProfile(this.profile, AuthService.instance.getCurrentUserPassword())
+    if(this.checkParams()){
+      // Edition mode - go back to my profile after editing.
+      let localDidDocumentHasChanged = false;
+      await this.authService.checkPasswordThenExecute(async ()=>{
+        // We are editing an existing DID: just ask the DID to save its profile.
+        // DID being created are NOT saved here.
+        await this.native.showLoading('loading-msg');
+        localDidDocumentHasChanged = await this.didService.getActiveDid().writeProfile(this.profile, AuthService.instance.getCurrentUserPassword())
 
-          this.native.hideLoading();
-        }, ()=>{
-          this.popupProvider.ionicAlert("DID error", "Sorry, we are unable to save your profile.");
-        }, ()=>{
-          // Password failed - Hide loading popup while inputting password again.
-          this.native.hideLoading();
-        });
+        this.native.hideLoading();
 
         // Tell others that DID needs to be refreshed (profile info has changed)
         this.events.publish('did:didchanged');
@@ -225,45 +219,10 @@ export class EditProfilePage {
           // Exit the screen.
           this.navCtrl.pop();
         }
-      }
-      else { // If creation mode, go to backup did flow if needed.
-        this.didService.didBeingCreated.profile = this.profile; // Save filled profile for later.
-
-        if (!await this.didService.getActiveDidStore().hasPrivateIdentity())
-          this.native.go("/backupdid", {create: true});
-        else {
-          await this.authService.checkPasswordThenExecute(async ()=>{
-            this.didService.didBeingCreated.password = this.authService.getCurrentUserPassword();
-            await this.native.showLoading('loading-msg');
-
-            // Creation mode but no need to create a did store
-            await this.didService.finalizeDidCreation(this.authService.getCurrentUserPassword());
-
-            this.native.hideLoading();
-
-            let suggestedIdentityProfileName = null;
-            let nameCredential = this.didService.getActiveDidStore().getActiveDid().getCredentialById(new DIDURL("#name"));
-            if (nameCredential) {
-                suggestedIdentityProfileName = nameCredential.pluginVerifiableCredential.getSubject()["name"];
-            }
-            
-            console.log("Identity creation completed. Sending indent response");
-              this.uxService.sendIntentResponse("createdid", {
-                  didStoreId: this.didService.getActiveDidStore().getId(),
-                  didString: this.didService.getActiveDidStore().getActiveDid().getDIDString(),
-                  name: suggestedIdentityProfileName
-              }, Config.requestDapp.intentId);
-
-              // Close the app, operation completed.
-              this.uxService.close();
-          }, ()=>{
-            this.popupProvider.ionicAlert("DID creation error", "Sorry, we are unable to create your DID.");
-          }, ()=>{
-            // Password failed - Hide loading popup while inputting password again.
-            this.native.hideLoading();
-          });
-        }
-      }
+      }, () => {
+        // Operation cancelled
+        this.native.hideLoading();
+      });
     }
   }
 
@@ -297,7 +256,7 @@ export class EditProfilePage {
     await this.didSyncService.publishActiveDIDDIDDocument(password);
   }
 
-  checkParms(){
+  checkParams(){
     let nameEntry = this.profile.getEntryByKey("name");
     if(!nameEntry || nameEntry.value == ""){
       this.native.toast_trans('name-is-missing');

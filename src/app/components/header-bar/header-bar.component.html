@@ -1,19 +1,4 @@
 <ion-toolbar [ngClass]="{'transparent-background': transparent}">
     <ion-title>{{title | translate }}</ion-title>
     <ion-icon [src]="'assets/images/right_arrow.svg'" class="back" *ngIf="showBack" [ngStyle]="{'fill':backColor}" (click)="navBack()"></ion-icon>
-    <!--<ion-buttons slot="start">
-        <ion-back-button *ngIf="showBack"></ion-back-button>
-    </ion-buttons>
-    <ion-buttons slot="start" *ngIf="showMenu">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-        <ion-button fill="clear" (click)="minimize()" *ngIf="showMinimize">
-            <ion-icon slot="icon-only" name="apps" ></ion-icon>
-        </ion-button>
-        <ion-button fill="clear" (click)="close()" *ngIf="showClose">
-            <ion-icon slot="icon-only" name="close"></ion-icon>
-        </ion-button>
-    </ion-buttons>-->
-    <!--<header-menu-button (click)="close()" *ngIf="showClose"></header-menu-button>-->
 </ion-toolbar>

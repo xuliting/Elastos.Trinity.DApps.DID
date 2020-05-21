@@ -13,7 +13,6 @@ export class HeaderBarComponent implements OnInit {
     @Input('title') title: string = "";
     @Input('showBack') showBack: boolean = false;
     @Input('backColor') backColor: string = "000000";
-    @Input('showMinimize') showMinimize: boolean = true;
     @Input('showClose') showClose: boolean = true;
     @Input('showMenu') showMenu: boolean = false;
     @Input('transparent') transparent: boolean = false;
@@ -22,10 +21,6 @@ export class HeaderBarComponent implements OnInit {
     constructor(public uxService: UXService, private native: Native) { }
 
     ngOnInit() { }
-
-    minimize() {
-        this.uxService.minimize();
-    }
 
     close() {
         // Call custom close callback if any provided, otherwise directly close the app.

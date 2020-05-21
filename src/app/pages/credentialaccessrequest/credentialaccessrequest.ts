@@ -263,9 +263,7 @@ export class CredentialAccessRequestPage {
       }
       this.appServices.close();
     }, ()=>{
-      // Error
-    }, ()=>{
-      // Wrong password
+      // Cancelled
     });
   }
 

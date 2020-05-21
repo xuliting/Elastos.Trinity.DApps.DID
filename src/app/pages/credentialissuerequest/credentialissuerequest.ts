@@ -115,15 +115,13 @@ export class CredentialIssueRequestPage {
 
     // Auto-select the targeted DID. Show an error if user doesn't have a DID targeted by this issuance.
     let targetDIDString = this.requestDapp.issuedCredentials[0].credentialSubject.id;
-    let didEntry = await this.didService.searchDIDEntry(targetDIDString);
-    if (!didEntry) {
-      console.error("No matching target DID for DID: ", targetDIDString);
-      await this.popup.ionicAlert("Error", "Sorry, you currently don't own the DID targeted by the given information", "Close");
+    let activeDIDString = this.didService.getActiveDid().getDIDString();
+    if (targetDIDString != activeDIDString) {
+      await this.popup.ionicAlert("Error", "Sorry, the credential you are trying to import does not belong to this identity.", "Close");
       return;
     }
 
-    await this.didService.activateSavedDidStore();
-    await this.didService.activateDid(this.didService.getActiveDidStore().getId(), targetDIDString);
+    await this.didService.loadGlobalIdentity();
 
     this.preliminaryChecksCompleted = true; // Checks completed and everything is all right.
   }
@@ -189,9 +187,7 @@ export class CredentialIssueRequestPage {
         this.appServices.close();
       })
     }, ()=>{
-      // Error
-    }, ()=>{
-      // Wrong password
+      // Cancelled
     });
   }
 

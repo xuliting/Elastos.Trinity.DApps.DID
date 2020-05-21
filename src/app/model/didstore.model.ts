@@ -6,7 +6,6 @@ import { BrowserSimulation, SimulatedDID, SimulatedDIDStore, SimulatedDIDDocumen
 import { Config } from '../services/config';
 import { DIDDocument } from './diddocument.model';
 import { DIDHelper } from '../helpers/did.helper';
-import { DIDService } from '../services/did.service';
 import { LocalStorage } from '../services/localstorage';
 
 declare let didManager: DIDPlugin.DIDManager;

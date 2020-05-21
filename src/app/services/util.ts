@@ -37,21 +37,6 @@ export class Util {
         return numPattern.test(text);
     };
 
-    static english = function (text) {
-        var pattern = new RegExp("[A-Za-z]+");
-        return pattern.test(text);
-    };
-
-    static chinese = function (text) {
-        var pattern = new RegExp("[\u4E00-\u9FA5]+");
-        return pattern.test(text);
-    };
-
-    static japanese = function (text) {
-        var pattern = new RegExp("[\u0800-\u4e00]+");
-        return pattern.test(text);
-    };
-
     public static isNull(data): boolean {
         return (data === '' || data === undefined || data === null) ? true : false;
     }

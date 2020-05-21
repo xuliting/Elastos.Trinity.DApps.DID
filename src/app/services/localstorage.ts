@@ -51,42 +51,6 @@ export class LocalStorage {
     public remove(key: string): any {
         return this.storage.remove(key);
     }
-
-    private clear(): any {
-        return this.storage.clear();
-    }
-
-    public async saveDidEntries(entries: DIDEntry[]) {
-        console.log("Setting DID entries", entries);
-        let key = "didentries";
-        await this.storage.set(key, JSON.stringify(entries));
-    }
-
-    public getDidEntries(): Promise<DIDEntry[]> {
-        let key = "didentries";
-        return this.getAsJson(key);
-    }
-
-    public saveCurrentDidStoreId(value: string): any {
-        let key = "cur-didstoreId";
-        return this.storage.set(key, value);
-    }
-
-    public getCurrentDidStoreId(): Promise<string> {
-        let key = "cur-didstoreId";
-        return this.get(key);
-    }
-
-    public setCurrentDid(value: string): Promise<any> {
-        let key = "cur-didstring";
-        return this.storage.set(key, value);
-    }
-
-    public getCurrentDid(): Promise<string> {
-        let key = "cur-didstring";
-        return this.get(key);
-    }
-
 }
 
 

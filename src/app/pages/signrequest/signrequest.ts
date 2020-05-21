@@ -112,9 +112,7 @@ export class SignRequestPage {
       
       this.appServices.close();
     }, ()=>{
-      // Error
-    }, ()=>{
-      // Wrong password
+      // Cancelled
     });
   }
 
