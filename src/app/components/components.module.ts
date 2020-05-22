@@ -6,7 +6,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { HeaderBarComponent } from './header-bar/header-bar.component';
 import { HeaderMenuButtonComponent } from './header-menu-button/header-menu-button.component';
 import { DIDButtonComponent } from './did-button/did-button.component';
-import { ActiveDIDComponent } from './active-did/active-did.component';
 import { LargeMenuItemComponent } from './large-menu-item/large-menu-item.component';
 import { VerifyMnemonicWordComponent } from './verify-mnemonic-word/verify-mnemonic-word.component';
 import { MainContentComponent } from './main-content/main-content.component';
@@ -17,14 +16,12 @@ import { AdvancedPopupController } from './advanced-popup/advancedpopup.controll
 import { AdvancedPopupComponent } from './advanced-popup/advancedpopup.component';
 import { ImportDIDSourceComponent } from './importdidsource/importdidsource.component';
 import { EmptyImportedDocumentComponent } from './emptyimporteddocument/emptyimporteddocument.component';
-import { DisableBiometricPromptComponent } from './disablebiometricprompt/disablebiometricprompt.component';
 
 @NgModule({
   declarations: [
     HeaderBarComponent, 
     HeaderMenuButtonComponent,
     DIDButtonComponent,
-    ActiveDIDComponent,
     LargeMenuItemComponent,
     VerifyMnemonicWordComponent,
     MainContentComponent,
@@ -32,8 +29,7 @@ import { DisableBiometricPromptComponent } from './disablebiometricprompt/disabl
     ShowQRCodeComponent,
     AdvancedPopupComponent,
     ImportDIDSourceComponent,
-    EmptyImportedDocumentComponent,
-    DisableBiometricPromptComponent
+    EmptyImportedDocumentComponent
   ],
   imports: [
     CommonModule,
@@ -46,15 +42,13 @@ import { DisableBiometricPromptComponent } from './disablebiometricprompt/disabl
     HeaderBarComponent, 
     HeaderMenuButtonComponent,
     DIDButtonComponent,
-    ActiveDIDComponent,
     LargeMenuItemComponent,
     VerifyMnemonicWordComponent,
     MainContentComponent,
     RoundedActionButtonComponent,
     ShowQRCodeComponent,
     ImportDIDSourceComponent,
-    EmptyImportedDocumentComponent,
-    DisableBiometricPromptComponent
+    EmptyImportedDocumentComponent
   ],
   providers: [
     AdvancedPopupController

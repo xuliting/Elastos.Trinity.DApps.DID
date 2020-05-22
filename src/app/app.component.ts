@@ -4,16 +4,9 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
-import { DIDService } from './services/did.service';
-import { LocalStorage } from './services/localstorage';
-import { Native } from './services/native';
 import { UXService } from './services/ux.service';
 import { BrowserSimulation } from './services/browsersimulation';
-import { PopupProvider } from './services/popup';
 import { BasicCredentialsService } from './services/basiccredentials.service';
-import { TranslationService } from './services/translation.service';
-import { DIDSyncService } from './services/didsync.service';
-import { DIDEvents } from './services/events';
 
 @Component({
   selector: 'my-app',
