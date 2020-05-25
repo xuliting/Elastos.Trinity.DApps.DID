@@ -115,12 +115,12 @@ export class MyProfilePage {
     this.theme.getTheme();
     if (this.didService.getActiveDid()) { // Happens when importing a new mnemonic over an existing one
       this.profile = this.didService.getActiveDid().getBasicProfile();
-      console.log("MyProfilePage is using this profile:", this.profile);
+      console.log("MyProfilePage is using this profile:", JSON.stringify(this.profile));
 
       this.credentials = this.didService.getActiveDid().credentials;
       this.hasCredential = this.credentials.length > 0 ? true : false;
       console.log('Has credentials?', this.hasCredential);
-      console.log('Credentials', this.credentials);
+      console.log('Credentials', JSON.stringify(this.credentials));
 
       // Sort credentials by title
       this.credentials.sort((c1, c2) => {

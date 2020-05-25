@@ -142,6 +142,7 @@ export class DID {
 
             // Only deal with BasicProfileCredential credentials
             if (cred.pluginVerifiableCredential.getTypes().indexOf("BasicProfileCredential") < 0) {
+                console.log("getBasicProfile(): skipping credential as it's not a BasicProfileCredential credential type");
                 return;
             }
 

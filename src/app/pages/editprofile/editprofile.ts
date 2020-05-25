@@ -200,6 +200,8 @@ export class EditProfilePage {
       // Edition mode - go back to my profile after editing.
       let localDidDocumentHasChanged = false;
       await this.authService.checkPasswordThenExecute(async ()=>{
+        console.log("Password provided and valid. Now saving profile");
+
         // We are editing an existing DID: just ask the DID to save its profile.
         // DID being created are NOT saved here.
         await this.native.showLoading('loading-msg');
@@ -211,16 +213,20 @@ export class EditProfilePage {
         this.events.publish('did:didchanged');
 
         if (localDidDocumentHasChanged) {
+          console.log("Asking user to publish his DID document");
+
           // DID Document was modified: ask user if he wants to publish his new did document version now or not.
           this.events.publish('diddocument:changed');
           this.promptPublishDIDDocument();
         }
         else {
           // Exit the screen.
+          console.log("Exiting profile edition");
           this.navCtrl.pop();
         }
       }, () => {
         // Operation cancelled
+        console.log("Password operation cancelled");
         this.native.hideLoading();
       });
     }
