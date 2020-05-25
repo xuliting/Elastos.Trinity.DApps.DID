@@ -119,15 +119,17 @@ export class UXService {
         });
     }
 
-    private async loadIdentityAndShow() {
+    private async loadIdentityAndShow(showEntryScreenAfterLoading = true) {
         // Load user's identity
         let couldLoad = await this.didService.loadGlobalIdentity();
         if (!couldLoad) {
             this.didService.handleNull();
         }
         else {
-            // No intent was received at boot. So we go through the regular screens.
-            this.showEntryScreen();
+            if (showEntryScreenAfterLoading) {
+                // No intent was received at boot. So we go through the regular screens.
+                this.showEntryScreen();
+            }
         }
     }
 
@@ -238,6 +240,7 @@ export class UXService {
                 console.log("Received credential access intent request");
                 if (selfUxService.checkCredAccessIntentParams(intent)) {
                     this.appIsLaunchingFromIntent = true;
+                    await this.loadIdentityAndShow(false);
                     this.native.go("/credaccessrequest");
                 }
                 else {
@@ -249,6 +252,7 @@ export class UXService {
                 console.log("Received credential issue intent request");
                 if (selfUxService.checkCredIssueIntentParams(intent)) {
                     this.appIsLaunchingFromIntent = true;
+                    await this.loadIdentityAndShow(false);
                     this.native.go("/credissuerequest");
                 }
                 else {
@@ -260,6 +264,7 @@ export class UXService {
                 console.log("Received register application profile intent request");
                 if (selfUxService.checkRegAppProfileIntentParams(intent)) {
                     this.appIsLaunchingFromIntent = true;
+                    await this.loadIdentityAndShow(false);
                     this.native.go("/regappprofilerequest");
                 }
                 else {
@@ -273,6 +278,7 @@ export class UXService {
                 console.log("Received sign intent request");
                 if (selfUxService.checkSignIntentParams(intent)) {
                     this.appIsLaunchingFromIntent = true;
+                    await this.loadIdentityAndShow(false);
                     this.native.go("/signrequest");
                 }
                 else {
