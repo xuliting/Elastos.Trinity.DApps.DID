@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { UXService } from './services/ux.service';
 import { BrowserSimulation } from './services/browsersimulation';
 import { BasicCredentialsService } from './services/basiccredentials.service';
+import { DIDEvents } from './services/events';
 
 @Component({
   selector: 'my-app',
@@ -22,6 +23,7 @@ export class MyApp {
     public splashScreen: SplashScreen,
     public translate: TranslateService,
     private uxService: UXService,
+    public didEvents: DIDEvents,
     public basicCredentialsService: BasicCredentialsService
   ) {
     this.initializeApp();

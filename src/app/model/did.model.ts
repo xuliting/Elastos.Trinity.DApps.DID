@@ -9,6 +9,8 @@ import { DIDHelper } from '../helpers/did.helper';
 import { DIDEvents } from '../services/events';
 import { VerifiableCredential } from './verifiablecredential.model';
 
+declare let didSessionManager: DIDSessionManagerPlugin.DIDSessionManager;
+
 export class DID {
     public credentials: VerifiableCredential[] = [];
     private didDocument: DIDDocument;
@@ -252,8 +254,12 @@ export class DID {
                     console.log("New credentials list:", JSON.parse(JSON.stringify(this.credentials)));
 
                     if (entry.info.key == "name") {
-                        // Rebuild DID list UI entries based in case the "special" profile field "name"
-                        // is modified.
+                        // Save this new name in the did session plugin.
+                        let signedInEntry = await didSessionManager.getSignedInIdentity();
+                        signedInEntry.name = entry.value;
+                        didSessionManager.addIdentityEntry(signedInEntry);
+
+                        // Let listeners know
                         DIDEvents.instance.events.publish("did:namechanged");
                     }
                 }
