@@ -155,6 +155,7 @@ export class RegisterApplicationProfileRequestPage {
       }
       else {
         // User doesn't want to publish this profile on the DID sidechain - so we just end the process.
+        this.sendIntentResponse();
         resolve();
       }
     });
