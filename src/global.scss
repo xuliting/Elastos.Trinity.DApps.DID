@@ -76,6 +76,18 @@
   font-family: 'Montserrat' !important;
 }
 
+/** options comp **/
+.options {
+  --background: #ffffff;
+  box-shadow: 0 3px 10px 0 rgba(22, 23, 64, 0.12);
+}
+
+.darkOptions {
+  --background: #464660;
+  box-shadow: 0 3px 10px 0 rgba(22, 23, 64, 0.12);
+}
+
+
 .warning {
   --min-height: 302px;
   // --min-width: 385px;
