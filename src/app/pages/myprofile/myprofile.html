@@ -1,9 +1,9 @@
 <ion-content>
-  <ion-grid class="container" [class.darkContainer]="theme.darkMode">
+  <ion-grid class="container" [class.blur]="profileService.popup" [class.darkContainer]="theme.darkMode">
 
     <!-- Header -->
     <div class="header">
-      <ion-img *ngIf="!hiveService.profileImage" src="/assets/images/default-contact.svg"></ion-img>
+      <ion-img *ngIf="!hiveService.profileImage" class="profile-img" src="/assets/images/default-contact.svg"></ion-img>
       <ion-avatar *ngIf="hiveService.profileImage">
         <ion-img src="hiveService.profileImage"></ion-img>
       </ion-avatar>

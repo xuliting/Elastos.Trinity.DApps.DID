@@ -102,25 +102,6 @@
   }
 }
 
-large-menu-item {
-    width: 100%;
-}
-
-ion-content {
-    --ion-background: none;
-    --ion-background-color: none;
-    --background:none;
-}
-
-.root-container {
-    background: #F0F0F0;
-    position:fixed;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
-}
-
 ion-ripple-effect {
     --ripple-color: var(--ion-color-primary);
     color: var(--ripple-color);
@@ -154,4 +135,8 @@ ion-toolbar {
         border-top-left-radius: 30px;
         border-top-right-radius: 30px;
     }
+}
+
+.blur {
+  filter: blur(2.5px);
 }

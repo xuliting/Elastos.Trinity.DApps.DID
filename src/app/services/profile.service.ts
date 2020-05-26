@@ -28,6 +28,7 @@ type CredentialDisplayEntry = {
 @Injectable({
   providedIn: 'root'
 })
+
 export class ProfileService {
 
   visibleData: ProfileDisplayEntry[];
@@ -39,6 +40,7 @@ export class ProfileService {
   public didString: string = "";
   public profileImage: string = null;
   public editingVisibility: boolean = false;
+  public popup = false;
 
   constructor(
     public events: Events,
@@ -75,7 +77,7 @@ export class ProfileService {
 
   async showWarning(warning: string) {
     console.log('Opening warning');
-
+    this.popup = true;
     const popover = await this.popoverCtrl.create({
       mode: 'ios',
       cssClass: 'warning',
@@ -84,6 +86,9 @@ export class ProfileService {
         warning: warning
       },
       translucent: false
+    });
+    popover.onWillDismiss().then(() => {
+      this.popup = false;
     });
     return await popover.present();
   }

@@ -33,7 +33,7 @@ export class OptionsComponent implements OnInit {
   }
 
   showWarning(warning: string) {
-    this.profileService.showWarning(warning);
     this.popover.dismiss();
+    this.profileService.showWarning(warning);
   }
 }

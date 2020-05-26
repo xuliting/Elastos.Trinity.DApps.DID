@@ -12,7 +12,7 @@ export class ThemeService {
 
   constructor(private platform: Platform) {
     this.platform.ready().then(() => {
-      // this.getTheme();
+      this.getTheme();
     });
   }
 

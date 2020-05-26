@@ -56,7 +56,7 @@ export class UXService {
 
     async init() {
         console.log("UXService init");
-        // this.theme.getTheme();
+        this.theme.getTheme();
 
         if (!BrowserSimulation.runningInBrowser()) {
             this.getLanguage();
@@ -203,12 +203,12 @@ export class UXService {
               if (params.action === "currentLocaleChanged") {
                 this.setCurLang(params.data);
               }
-         /*      if(params.action === 'preferenceChanged' && params.data.key === "ui.darkmode") {
+              if(params.action === 'preferenceChanged' && params.data.key === "ui.darkmode") {
                 this.zone.run(() => {
                   console.log('Dark Mode toggled');
                   this.theme.setTheme(params.data.value);
                 });
-              } */
+              }
               break;
             case MessageType.EX_INSTALL:
                 break;
