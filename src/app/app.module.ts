@@ -46,6 +46,7 @@ import { NotSignedInPage } from './pages/notsignedin/notsignedin';
 import { WarningComponent } from './components/warning/warning.component';
 import { OptionsComponent } from './components/options/options.component';
 import { PictureComponent } from './components/picture/picture.component';
+import { CredentialImportRequestPage } from './pages/credentialimportrequest/credentialimportrequest';
 
 Sentry.init({
   dsn: "https://f563821bdc2546c3bf7357c997a78059@sentry.io/1874652"
@@ -100,6 +101,7 @@ export function TranslateLoaderFactory() {
     CountryPickerPage,
     CredentialAccessRequestPage,
     CredentialIssueRequestPage,
+    CredentialImportRequestPage,
     CredentialListPage,
     CredentialCreatePage,
     CredentialBackupPage,

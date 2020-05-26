@@ -377,4 +377,12 @@ export class MyProfilePage {
       }
     });
   }
+
+  getDisplayableEntryValue(value: any) {
+    if (value instanceof Object) {
+      return JSON.stringify(value);
+    }
+
+    return value;
+  }
 }

@@ -144,7 +144,8 @@
               <div class="property">
                 <ion-row  *ngFor="let prop of displayableProperties(entry.credential)">
                   <ion-col class="value">
-                    <div>{{ prop.value }}</div>
+                    <!-- TODO here: Display prop.key in case the credential contains several keys and those keys are different from the credential key -->
+                    <div>{{ getDisplayableEntryValue(prop.value) }}</div>
                   </ion-col>
                 </ion-row>
               </div>

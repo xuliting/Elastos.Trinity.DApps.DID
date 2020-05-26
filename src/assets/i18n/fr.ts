@@ -134,9 +134,13 @@ export const fr = {
     'credaccess-information-missing': 'Au moins une information requise est manquante dans votre profil. Veuillez compléter votre profil et réessayer.',
 
     // screen: credissue
+    'credential-issue': 'Emission d\'une référence',
+    'credissue-intro': 'You are going to issue some information to a third party and sign it with your identity. Please carefully review the content.',
+
+    // screen: credimport
     'credential-import': 'Import de Référence',
     'credential-import-from': 'Délivré par',
-    'credissue-intro': "Vous allez ajouter une ou plusieurs information(s) délivrée(s) par un tiers à votre profil d'identité. Veuillez en vérifier le contenu.",
+    'credimport-intro': "Vous allez ajouter une ou plusieurs information(s) délivrée(s) par un tiers à votre profil d'identité. Veuillez en vérifier le contenu.",
 
     // screen: did credentials
     'did-credentials': "Référence d'identité",

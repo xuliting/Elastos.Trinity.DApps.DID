@@ -141,8 +141,10 @@ export class UXService {
      * Close this application.
      */
     close() {
-        if (!BrowserSimulation.runningInBrowser())
+        if (!BrowserSimulation.runningInBrowser()) {
+            console.log("Closing DID app");
             appManager.close();
+        }
     }
 
     /**
@@ -248,6 +250,18 @@ export class UXService {
                     this.showErrorAndExitFromIntent(intent);
                 }
                 break;
+            case "credimport":
+                console.log("Received credential import intent request");
+                if (selfUxService.checkCredImportIntentParams(intent)) {
+                    this.appIsLaunchingFromIntent = true;
+                    await this.loadIdentityAndShow(false);
+                    this.native.go("/credimportrequest");
+                }
+                else {
+                    // Something wrong happened while trying to handle the intent: send intent response with error
+                    this.showErrorAndExitFromIntent(intent);
+                }
+                break;
             case "credissue":
                 console.log("Received credential issue intent request");
                 if (selfUxService.checkCredIssueIntentParams(intent)) {
@@ -341,8 +355,28 @@ export class UXService {
 
     checkCredIssueIntentParams(intent) {
         console.log("Checking credissue intent parameters");
-        if (Util.isEmptyObject(intent.params) || Util.isEmptyObject(intent.params.issuedcredentials)) {
-            console.error("Invalid credissue parameters received. No params or empty credentials list.", intent.params);
+        if (Util.isEmptyObject(intent.params)) {
+            console.error("Invalid credissue parameters received. Empty parameters.", intent.params);
+            return false;
+        }
+
+        if (Util.isEmptyObject(intent.params.identifier)) {
+            console.error("Invalid credissue parameters received. Empty identifier.", intent.params);
+            return false;
+        }
+
+        if (Util.isEmptyObject(intent.params.properties)) {
+            console.error("Invalid credissue parameters received. Empty properties.", intent.properties);
+            return false;
+        }
+
+        if (Util.isEmptyObject(intent.params.subjectdid)) {
+            console.error("Invalid credissue parameters received. Empty subject DID.", intent.params);
+            return false;
+        }
+
+        if (Util.isEmptyObject(intent.params.types) || intent.params.types.length == 0) {
+            console.error("Invalid credissue parameters received. Empty types. You must provide at least one type for the credential.", intent.params);
             return false;
         }
 
@@ -350,7 +384,30 @@ export class UXService {
             appPackageId: intent.from,
             intentId: intent.intentId,
             action: intent.action,
-            issuedCredentials: intent.params.issuedcredentials,
+            identifier: intent.params.identifier,
+            types: intent.params.types,
+            subjectDID: intent.params.subjectdid,
+            properties: intent.params.properties,
+            expirationDate: intent.params.expirationdate,
+            originalJwtRequest: intent.originalJwtRequest
+        }
+        return true;
+    }
+
+    checkCredImportIntentParams(intent) {
+        console.log("Checking credimport intent parameters");
+        if (Util.isEmptyObject(intent.params) || Util.isEmptyObject(intent.params.credentials)) {
+            console.error("Invalid credimport parameters received. No params or empty credentials list.", intent.params);
+            return false;
+        }
+
+        console.log("DEBUG INTENT PARAMS: "+JSON.stringify(intent.params));
+
+        Config.requestDapp = {
+            appPackageId: intent.from,
+            intentId: intent.intentId,
+            action: intent.action,
+            credentials: intent.params.credentials,
             originalJwtRequest: intent.originalJwtRequest
         }
         return true;

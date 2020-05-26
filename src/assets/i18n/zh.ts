@@ -134,9 +134,13 @@ export const zh = {
     'credaccess-information-missing': '您的个人资料中缺少必填信息。请先完成您的个人资料，然后重试。',
 
     // screen: credissue
+    'credential-issue': 'Credential issuance',
+    'credissue-intro': 'You are going to issue some information to a third party and sign it with your identity. Please carefully review the content.',
+
+    // screen: credissue
     'credential-import': 'Import Credential',
     'credential-import-from': 'Delivered by',
-    'credissue-intro': 'You are about to add one or more credentials issued by a third party to your DID profile. Please carefully review the content.',
+    'credimport-intro': 'You are about to add one or more credentials issued by a third party to your DID profile. Please carefully review the content.',
 
     // screen: did credentials
     'did-credentials': 'DID凭证',

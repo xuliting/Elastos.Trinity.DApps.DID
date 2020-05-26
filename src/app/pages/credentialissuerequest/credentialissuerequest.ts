@@ -11,6 +11,7 @@ import { WrongPasswordException } from 'src/app/model/exceptions/wrongpasswordex
 import { BrowserSimulation } from 'src/app/services/browsersimulation';
 import { VerifiableCredential } from 'src/app/model/verifiablecredential.model';
 import { TranslateService } from '@ngx-translate/core';
+import { DIDURL } from 'src/app/model/didurl.model';
 
 declare let didManager: DIDPlugin.DIDManager;
 declare let titleBarManager: TitleBarPlugin.TitleBarManager;
@@ -24,15 +25,16 @@ declare let titleBarManager: TitleBarPlugin.TitleBarManager;
 // in its subject).
 type IssuedCredentialItem = {
   name: string,
-  value: string,
+  value: any,
 }
 
 // Displayable version of a verifiable credential. Can contain one or more IssuedCredentialItem that
 // are displayable version of verifiable credential subject entries.
 type IssuedCredential = {
-  name: string,
-  values: IssuedCredentialItem[],
-  credential: VerifiableCredential
+  identifier: string, 
+  receiver: string,
+  expirationDate: Date,
+  values: IssuedCredentialItem[]
 }
 
 @Component({
@@ -42,8 +44,7 @@ type IssuedCredential = {
 })
 export class CredentialIssueRequestPage {
   requestDapp: any = null;
-  private credentials: VerifiableCredential[] = []; // Raw material
-  displayableCredentials: IssuedCredential[] = []; // Displayable reworked matarial
+  public displayableCredential: IssuedCredential = null; // Displayable reworked material
   preliminaryChecksCompleted: boolean = false;
 
   constructor(
@@ -59,133 +60,120 @@ export class CredentialIssueRequestPage {
   }
 
   ionViewWillEnter() {
-    titleBarManager.setTitle(this.translate.instant('credential-import'));
+    titleBarManager.setTitle(this.translate.instant('credential-issue'));
     titleBarManager.setNavigationMode(TitleBarPlugin.TitleBarNavigationMode.CLOSE);
 
     this.zone.run(async () => {
       if (!BrowserSimulation.runningInBrowser()) {
         this.requestDapp = Config.requestDapp;
+        console.log("DEBUG REQUEST: "+JSON.stringify(this.requestDapp));
       }
       else {
         // Simulation - in browser
         this.requestDapp = {
           appPackageId: "org.mycompany.myapp",
-          issuedCredentials: [{
-            "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#email",
-            "type": ["BasicProfileCredential"],
-            "issuanceDate": "2020-02-04T19:20:18Z",
-            "issuer": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
-            "credentialSubject": {
-              "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
-              "email": "verifiedemail@provider.com",
-              "name": "MyName"
-            },
-            "proof": {
-                "type": "ECDSAsecp256r1",
-                "verificationMethod": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key",
-                "signatureValue": "pYw8XNi1..Cky6Ed="
-            }
-          }]
-        }
+          identifier: "customcredentialkey", // unique identifier for this credential
+          types: [], // Additional credential types (strings) such as BasicProfileCredential.
+          subjectDID: "did:elastos:abc", // DID targeted by the created credential. Only that did will be able to import the credential.
+          properties: [{
+              someCustomData: "Here is a test data that will appear in someone else's DID document after he imports it."
+          }],
+          expirationDate: new Date(2024,12,12)
+        };
       }
 
-      await this.runPreliminaryChecks();
-      await this.organizeIssuedCredentials();
+      this.runPreliminaryChecks();
+      this.organizeDisplayableInformation();
 
-      console.log("Displayable credentials:", this.displayableCredentials)
+      console.log("Displayable credential:", this.displayableCredential)
+
+      this.uxService.makeAppVisible();
     });
   }
 
   ionViewDidEnter() {
-    this.uxService.makeAppVisible();
+    console.log("Cred Issue screen did enter");
   }
 
   /**
-   * Check a few things after entering the screen. Mostly, issued credentials content quality.
+   * Check a few things after entering the screen. Mostly, issued credential content quality.
    */
-  async runPreliminaryChecks() {
-    // Make sure that we received at least one credential in the list
-    if (!this.requestDapp.issuedCredentials || this.requestDapp.issuedCredentials.length == 0) {
-      await this.popup.ionicAlert("Error", "Sorry, there is actually no credential provided in the given information", "Close");
-      return;
-    }
-
-    // Check credentials content
-    // TODO
-
-    // Auto-select the targeted DID. Show an error if user doesn't have a DID targeted by this issuance.
-    let targetDIDString = this.requestDapp.issuedCredentials[0].credentialSubject.id;
-    let activeDIDString = this.didService.getActiveDid().getDIDString();
-    if (targetDIDString != activeDIDString) {
-      await this.popup.ionicAlert("Error", "Sorry, the credential you are trying to import does not belong to this identity.", "Close");
-      return;
-    }
-
-    await this.didService.loadGlobalIdentity();
+  runPreliminaryChecks() {
+    // Nothing yet 
 
     this.preliminaryChecksCompleted = true; // Checks completed and everything is all right.
   }
 
   /**
-   * From the raw list of credentials provided by the caller, we create our internal model
-   * ready for UI.
-   * NOTE: We can have several credentials passed at the same time. Each credential can have several entries in its subject.
+   * From the raw data provided by the caller, we create our internal model ready for UI.
    */
-  async organizeIssuedCredentials() {
-    this.displayableCredentials = [];
-    for (let key of Object.keys(this.requestDapp.issuedCredentials)) {
-      let issuedCredential: DIDPlugin.VerifiableCredential = didManager.VerifiableCredentialBuilder.fromJson(JSON.stringify(this.requestDapp.issuedCredentials[key]));
-      console.log("Received issued credential:", issuedCredential);
+  organizeDisplayableInformation() {
+    // Generate a displayable version of each entry found in the credential subject
+    let displayableEntries: IssuedCredentialItem[] = [];
+    for (let propertyEntryKey of Object.keys(this.requestDapp.properties)) {
+      let propertyEntryValue = this.requestDapp.properties[propertyEntryKey];
 
-      let credentialSubject = issuedCredential.getSubject();
-
-      // Generate a displayable version of each entry found in the credential subject
-      let displayableEntries: IssuedCredentialItem[] = [];
-      for (let subjectEntryKey of Object.keys(credentialSubject)) {
-        let subjectEntryValue = credentialSubject[subjectEntryKey];
-
-        if (subjectEntryKey == "id") // Don't display the special subject id entry
-          continue;
-
-        let displayableEntry: IssuedCredentialItem = {
-          name: subjectEntryKey,
-          value: subjectEntryValue
-        }
-
-        displayableEntries.push(displayableEntry);
+      let displayableEntry: IssuedCredentialItem = {
+        name: propertyEntryKey,
+        value: propertyEntryValue
       }
 
-      let displayableCredential: IssuedCredential = {
-        name: this.didService.getUserFriendlyBasicProfileKeyName(issuedCredential.getFragment()),
-        values: displayableEntries,
-        credential: new VerifiableCredential(issuedCredential)
-      };
+      displayableEntries.push(displayableEntry);
+    }
 
-      this.displayableCredentials.push(displayableCredential);
+    this.displayableCredential = {
+      // The received identitier should NOT start with #, but DID SDK credentials start with #.
+      identifier: new DIDURL("#"+this.requestDapp.identifier).getFragment(),
+      receiver: this.requestDapp.subjectDID,
+      expirationDate: null,
+      values: displayableEntries
+    };
+
+    if (this.requestDapp.expirationDate) // Should be a ISO date string
+      this.displayableCredential.expirationDate = new Date(this.requestDapp.expirationDate);
+    else {
+      let now = new Date().getTime();
+      let fiveDaysAsMs = 5*24*60*60*1000;
+      this.displayableCredential.expirationDate = new Date(now+fiveDaysAsMs);
     }
   }
 
-  getDisplayableIssuer() {
-    // Assume we have checked that there is at least one credential earlier, and assume the issuer
-    // is the same for all credentials.
-    return this.requestDapp.issuedCredentials[0].issuer;
+  getDisplayableEntryValue(value: any) {
+    if (value instanceof Object) {
+      return JSON.stringify(value);
+    }
+
+    return value;
   }
 
   async acceptRequest() {
     // Save the credentials to user's DID.
     // NOTE: For now we save all credentials, we can't select them individually.
     AuthService.instance.checkPasswordThenExecute(async ()=>{
-      for (let displayableCredential of this.displayableCredentials) {
-        console.log("CredIssueRequest - storing credential: ", displayableCredential.credential);
-        await this.didService.getActiveDid().addRawCredential(displayableCredential.credential);
-        // NOTE: Currently, DID SDK's storeCredential() on a DID doesn't require a storepass, which is strange... // this.authService.getCurrentUserPassword());
-      }
+      console.log("CredIssueRequest - issuing credential");
 
-      this.popup.ionicAlert("Credential imported", "Great, the credential has been added to your DID profile.", "Done").then(async ()=>{
-        console.log("Sending credissue intent response for intent id "+this.requestDapp.intentId)
-        await this.appServices.sendIntentResponse("credissue", {}, this.requestDapp.intentId);
-        this.appServices.close();
-      })
+      let validityDays = (this.displayableCredential.expirationDate.getTime() - Date.now()) / 1000 / 60 / 60 / 24;
+
+      this.didService.getActiveDid().pluginDid.issueCredential(
+        this.displayableCredential.receiver,
+        "#"+this.displayableCredential.identifier, 
+        this.requestDapp.types,
+        validityDays,
+        this.requestDapp.properties,
+        this.authService.getCurrentUserPassword(),
+        (issuedCredential)=>{
+          this.popup.ionicAlert("Credential issued", "Great, the credential has been created!", "Done").then(async ()=>{
+            console.log("Sending credissue intent response for intent id "+this.requestDapp.intentId)
+            let credentialAsString = await issuedCredential.toString();
+            await this.appServices.sendIntentResponse("credissue", {
+              credential: credentialAsString
+            }, this.requestDapp.intentId);
+            this.appServices.close();
+          })
+        }, async (err)=>{
+          await this.popup.ionicAlert("Error", "Sorry, the credential could not be issued. "+JSON.stringify(err), "Close");
+          this.rejectRequest();
+        });
     }, ()=>{
       // Cancelled
     });

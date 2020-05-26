@@ -134,9 +134,13 @@ export const en = {
     'credaccess-information-missing': 'At least one mandatory information is missing from your profile. Please complete your profile first and try again.',
 
     // screen: credissue
+    'credential-issue': 'Credential issuance',
+    'credissue-intro': 'You are going to issue some information to a third party and sign it with your identity. Please carefully review the content.',
+
+    // screen: credimport
     'credential-import': 'Import Credential',
     'credential-import-from': 'Delivered by',
-    'credissue-intro': 'You are about to add one or more credentials issued by a third party to your Identity profile. Please carefully review the content.',
+    'credimport-intro': 'You are about to add one or more credentials issued by a third party to your Identity profile. Please carefully review the content.',
 
     // screen: did credentials
     'did-credentials': 'Identity Credentials',

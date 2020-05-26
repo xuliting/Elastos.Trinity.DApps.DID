@@ -1,5 +1,5 @@
 /**
- * Because DID SDK implementation is tricky using long and short DIDURL forms, and as we cnanot rely
+ * Because DID SDK implementation is tricky using long and short DIDURL forms, and as we cannot rely
  * on typescript to check various "string" content, we create a cocooning class to take care of a few
  * DIDURL operations while verifying formats and providing shortcut methods.
  */
@@ -8,6 +8,9 @@ export class DIDURL {
      * @param didUrlString did:elastos:abdef#key or #Key
      */
     constructor(private didUrlString: string) {
+        if (!didUrlString) 
+            throw new Error("DID URL cannot be undefined!");
+
         if (!this.hasRightFormat())
             throw new Error("Invalid DIDURL format: "+didUrlString);
     }
