@@ -85,6 +85,10 @@ export class EditProfilePage {
     this.uxService.setTitleBarBackKeyShown(true);
   }
 
+  ionViewWillLeave() {
+    this.uxService.setTitleBarBackKeyShown(false);
+  }
+
   entryIsText(entry: BasicCredentialEntry): boolean {
     return entry.info.type == BasicCredentialInfoType.TEXT;
   }

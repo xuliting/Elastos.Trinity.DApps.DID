@@ -90,6 +90,10 @@ export class CredentialAccessRequestPage {
     });
   }
 
+  ionViewWillLeave() {
+    this.uxService.setTitleBarBackKeyShown(false);
+  }
+
   ionViewDidEnter() {
     this.uxService.makeAppVisible();
   }
@@ -241,7 +245,7 @@ export class CredentialAccessRequestPage {
 
       let payload = {
         type: "credaccess",
-        did:currentDidString, 
+        did:currentDidString,
         presentation: presentation,
       };
 
@@ -253,7 +257,7 @@ export class CredentialAccessRequestPage {
 
       let jwtToken = await this.didService.getActiveDid().getDIDDocument().createJWT(payload,
       1, this.authService.getCurrentUserPassword());
-      
+
       console.log("Sending credaccess intent response for intent id "+this.requestDapp.intentId)
       try {
         await this.appServices.sendIntentResponse("credaccess", {jwt: jwtToken}, this.requestDapp.intentId)

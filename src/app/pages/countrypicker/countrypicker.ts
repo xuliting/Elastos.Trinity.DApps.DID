@@ -30,6 +30,10 @@ export class CountryPickerPage {
     this.uxService.setTitleBarBackKeyShown(true);
   }
 
+  ionViewWillLeave() {
+    this.uxService.setTitleBarBackKeyShown(false);
+  }
+
   selectItem(item) {
     this.events.publish('selectarea', item);
     this.navCtrl.back();
