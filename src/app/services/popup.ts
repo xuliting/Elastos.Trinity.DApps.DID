@@ -13,7 +13,6 @@ export class PopupProvider {
                 header : this.translate.instant(title),
                 subHeader: subTitle ? this.translate.instant(subTitle) : '',
                 backdropDismiss: false,
-                cssClass: 'my-custom-alert',
                 buttons: [{
                     text: okText ? okText : this.translate.instant('confirm'),
                     handler: () => {
@@ -31,7 +30,6 @@ export class PopupProvider {
             this.alertCtrl.create({
                 header: this.translate.instant(title),
                 message  : this.translate.instant(message),
-                cssClass: 'my-custom-alert',
                 buttons: [{
                     text: cancelText ? cancelText : this.translate.instant('cancel'),
                     handler: () => {
