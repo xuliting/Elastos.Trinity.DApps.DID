@@ -12,11 +12,12 @@ export const en = {
     'enter-here': 'Enter here',
     'backup': 'Backup',
     'delete': 'Delete',
-    'edit-visibility': 'Edit visibility',
+    'edit-visibility': 'Change Visibility',
     'delete-credentials': 'Delete credentials',
     'publish': 'Publish',
     'cancel': 'Cancel',
     'share': 'Share',
+    'edit-data': 'Edit data',
 
     // DID operations
     'create-my-did': 'Create my Identity',
@@ -114,6 +115,9 @@ export const en = {
     'publish-popup-confirm-question': 'Are you sure?',
     'changepassword-success': 'Password changed successfully',
     'share-add-me-as-friend': 'Add me as a friend in elastOS',
+    'profile-details': 'Detail',
+    'profile-credentials': 'Credentials',
+    'profile-capsules': 'Capsules',
 
     // screen: edit profile
     'edit-profile': 'Edit Profile',
@@ -121,6 +125,7 @@ export const en = {
     'name-is-required': 'Name is required.',
     'name-is-missing': 'Please at least provide your name',
     'add-info': 'Add info',
+    'save-changes': 'Save Changes',
 
     // screen: did list
     'did-portfolio': 'Identities',

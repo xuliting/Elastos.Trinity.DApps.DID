@@ -16,7 +16,8 @@ export const zh = {
     'delete-credentials': '删除凭证',
     'publish': '发布',
     'cancel': '取消',
-    'share': 'Share',
+    'share': '分享',
+    'edit-data': '编辑',
 
     // DID operations
     'create-my-did': '创建新的DID',
@@ -53,7 +54,7 @@ export const zh = {
 
     // Profile fields
     'credential-info-type-did': 'DID',
-    'credential-info-type-picture': 'Profile Picture',
+    'credential-info-type-picture': '档案头像',
     'credential-info-type-name': '姓名',
     'credential-info-type-email': '邮箱',
     'credential-info-type-birthDate': '出生日期',
@@ -64,7 +65,7 @@ export const zh = {
     'credential-info-type-birthPlace': '出生地',
     'credential-info-type-description': '描述',
     'credential-info-type-occupation': 'Occupation',
-    'credential-info-type-interests': 'Interests',
+    'credential-info-type-interests': '兴趣爱好',
     'credential-info-type-url': '网址',
     'credential-info-type-facebook': 'Facebook',
     'credential-info-type-twitter': 'Twitter',
@@ -112,8 +113,11 @@ export const zh = {
     'publish-popup-title': '发布您选择的公开档案',
     'publish-popup-content': '确认后信息将存储并保存在区块链上!',
     'publish-popup-confirm-question': '确定?',
-    'changepassword-success': '密码已成功修改',
-    'share-add-me-as-friend': 'Add me as a friend in elastOS',
+    'changepassword-success': '已成功修改密码',
+    'share-add-me-as-friend': '在elastOS里添加我为好友',
+    'profile-details': '详情',
+    'profile-credentials': '凭证',
+    'profile-capsules': '胶囊',
 
     // screen: edit profile
     'edit-profile': '编辑信息',
@@ -121,6 +125,7 @@ export const zh = {
     'name-is-required': '必须输入姓名',
     'name-is-missing': '至少需要提供姓名',
     'add-info': '添加信息',
+    'save-changes': '保存',
 
     // screen: did list
     'did-portfolio': 'DID档案中心',
@@ -134,13 +139,13 @@ export const zh = {
     'credaccess-information-missing': '您的个人资料中缺少必填信息。请先完成您的个人资料，然后重试。',
 
     // screen: credissue
-    'credential-issue': 'Credential issuance',
-    'credissue-intro': 'You are going to issue some information to a third party and sign it with your identity. Please carefully review the content.',
+    'credential-issue': '凭证签发',
+    'credissue-intro': '您将向第三方发布一些信息，并使用您的身份进行签名。请仔细检查内容。',
 
     // screen: credissue
-    'credential-import': 'Import Credential',
+    'credential-import': '导入凭证',
     'credential-import-from': 'Delivered by',
-    'credimport-intro': 'You are about to add one or more credentials issued by a third party to your DID profile. Please carefully review the content.',
+    'credimport-intro': '您将要添加一个或多个第三方颁发的凭证到您的DID配置文件。请仔细检查内容。',
 
     // screen: did credentials
     'did-credentials': 'DID凭证',
@@ -179,7 +184,7 @@ export const zh = {
 
     // component: security check
     // 'security-check': '安全确认! 请输入您的密码',
-    'security-check': 'Security Check',
+    'security-check': '安全确认',
     'security-check-fingerprint': '安全确认! 请验证',
     'security-check-fingerprint-do': '请验证指纹',
     'wrong-password': '密码错误，请重试',

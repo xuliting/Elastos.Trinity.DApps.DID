@@ -25,13 +25,13 @@
     <!-- List Tabs -->
     <ion-segment>
       <ion-segment-button [class.active]="detailsActive" (click)="changeList('details')">
-        <ion-label>Details</ion-label>
+        <ion-label>{{ 'profile-details' | translate }}</ion-label>
       </ion-segment-button>
       <ion-segment-button [class.active]="credsActive" (click)="changeList('credentials')">
-        <ion-label>Credentials</ion-label>
+        <ion-label>{{ 'profile-credentials' | translate }}</ion-label>
       </ion-segment-button>
       <ion-segment-button [class.active]="capsulesActive" (click)="changeList('capsules')">
-        <ion-label>Capsules</ion-label>
+        <ion-label>{{ 'profile-capsules' | translate }}</ion-label>
       </ion-segment-button>
     </ion-segment>
 
@@ -129,7 +129,7 @@
         </ion-row>
       </div>
 
-      <div *ngIf="profileService.invisibleData.length > 0">
+      <div *ngIf="profileService.invisibleData.length > 0" class="ion-text-center">
         <ion-row class="cred-row" *ngFor="let entry of profileService.invisibleCred">
           <ion-col offset="0.25" size="9.25">
             <ion-card>

@@ -17,6 +17,7 @@ export const fr = {
     'publish': 'Publier',
     'cancel': 'Annuler',
     'share': 'Partager',
+    'edit-data': 'Edit data',
 
     // DID operations
     'create-my-did': 'Créer mon Identité',
@@ -114,6 +115,9 @@ export const fr = {
     'publish-popup-confirm-question': 'Etes-vous sûr(e)?',
     'changepassword-success': 'Le mot de passe a été modifié avec succès',
     'share-add-me-as-friend': 'Ajoutez-moi comme ami dans elastOS',
+    'profile-details': 'Detail',
+    'profile-credentials': 'Credentials',
+    'profile-capsules': 'Capsules',
 
     // screen: edit profile
     'edit-profile': 'Editer le profil',
@@ -121,6 +125,7 @@ export const fr = {
     'name-is-required': 'Un nom est tout de même requis.',
     'name-is-missing': 'Saisissez au moins votre nom SVP',
     'add-info': 'Ajouter une info',
+    'save-changes': 'Save Changes',
 
     // screen: did list
     'did-portfolio': 'Identités',

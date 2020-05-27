@@ -2,7 +2,7 @@
 
   <div class="row ion-activatable">
     <ion-row (click)="profileService.shareIdentity()">
-      <ion-label>Share</ion-label>
+      <ion-label>{{ 'share' | translate }}</ion-label>
       <ion-img *ngIf="!theme.darkMode" src="/assets/lightmode/share.svg"></ion-img>
       <ion-img *ngIf="theme.darkMode" src="/assets/darkmode/share.svg"></ion-img>
     </ion-row>
@@ -11,7 +11,7 @@
 
   <div class="row ion-activatable">
     <ion-row (click)="profileService.showWarning('publish')">
-      <ion-label class="publish">Publish</ion-label>
+      <ion-label class="publish">{{ 'publish' | translate }}</ion-label>
       <ion-img src="/assets/default/publish.svg"></ion-img>
     </ion-row>
     <ion-ripple-effect></ion-ripple-effect>
@@ -20,7 +20,7 @@
 
   <div class="row ion-activatable">
     <ion-row (click)="showWarning('delete')">
-      <ion-label class="delete">Delete</ion-label>
+      <ion-label class="delete">{{ 'delete' | translate }}</ion-label>
       <ion-img src="/assets/default/trashcan.svg"></ion-img>
     </ion-row>
     <ion-ripple-effect></ion-ripple-effect>
@@ -38,7 +38,7 @@
 
   <div class="row ion-activatable">
     <ion-row (click)="profileService.editProfile()">
-      <ion-label>Edit Data</ion-label>
+      <ion-label>{{ 'edit-data' | translate }}</ion-label>
       <ion-img *ngIf="!theme.darkMode" class="edit-img" src="/assets/lightmode/edit.svg"></ion-img>
       <ion-img *ngIf="theme.darkMode"  class="edit-img" src="/assets/darkmode/edit.svg"></ion-img>
     </ion-row>
@@ -47,7 +47,7 @@
 
   <div class="row ion-activatable">
     <ion-row (click)="profileService.editVisibility()">
-      <ion-label class="visibility">Change Visibility</ion-label>
+      <ion-label class="visibility">{{ 'edit-visibility' | translate }}</ion-label>
       <ion-img class="edit-img" src="/assets/default/visibility.svg"></ion-img>
     </ion-row>
     <ion-ripple-effect></ion-ripple-effect>
