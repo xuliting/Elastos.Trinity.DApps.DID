@@ -1,43 +1,35 @@
-<div class="root-container">
-  <header-bar title="" [showBack]="false" [showClose]="true" (onClose)="rejectRequest()"></header-bar>
-
-  <ion-content>
-    <div *ngIf="requestDapp">
-      <div class="access-from-warning">
-        <ion-grid>
-          <ion-row>
-            <ion-col size="3" class="ion-align-self-center">
-                <ion-img [src]="'assets/images/Data_Access_From_Icon.svg'" class="mainicon"></ion-img>
-            </ion-col>
-            <ion-col size="9" class="ion-align-self-center">
-              <div class="heading-1">Register app profile</div>
-              <div class="appname" *ngIf="requestDapp">{{requestDapp.appPackageId}}</div>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </div>
-      <div class="intro">
-        <p>This application wants to create user profile. This information can be kept private only
+<ion-content>
+  <div *ngIf="requestDapp">
+    <div class="access-from-warning">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="3" class="ion-align-self-center">
+            <ion-img [src]="'assets/images/Data_Access_From_Icon.svg'" class="mainicon"></ion-img>
+          </ion-col>
+          <ion-col size="9" class="ion-align-self-center">
+            <div class="heading-1">Register app profile</div>
+            <div class="appname" *ngIf="requestDapp">{{requestDapp.appPackageId}}</div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div class="intro">
+      <p>This application wants to create user profile. This information can be kept private only
         for your friends, or be visible to everyone.</p>
 
-        <p>If you save the profile only on your device, only the friends you choose will be able to see it.
+      <p>If you save the profile only on your device, only the friends you choose will be able to see it.
         If you choose to save it on the blockchain, everyone will be able to discover you (a very low fee applies).</p>
-      </div>
-
-      <ion-item>
-        <ion-label>
-          Publish on chain
-        </ion-label>
-        <ion-toggle [(ngModel)]="shouldPublishOnSidechain"></ion-toggle>
-      </ion-item>
     </div>
 
-    <did-button class="main-button" (click)="acceptRequest()"
-        [title]="'accept' | translate"
-        [bgcolor]="'var(--ion-color-primary)'"
-        [bordercolor]="'var(--ion-color-primary)'"
-        [shadow]="true"></did-button>
+    <ion-item>
+      <ion-label>
+        Publish on chain
+      </ion-label>
+      <ion-toggle [(ngModel)]="shouldPublishOnSidechain"></ion-toggle>
+    </ion-item>
+  </div>
 
-  </ion-content>
-</div>
+  <did-button class="main-button" (click)="acceptRequest()" [title]="'accept' | translate"
+    [bgcolor]="'var(--ion-color-primary)'" [bordercolor]="'var(--ion-color-primary)'" [shadow]="true"></did-button>
 
+</ion-content>
