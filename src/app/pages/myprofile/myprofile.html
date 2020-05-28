@@ -40,7 +40,7 @@
 
       <ion-row class="visibility-row">
         <ion-col offset="9.5" size="2.5" class="visibility-col">
-          <p *ngIf="profileService.editingVisibility">Visiblity</p>
+          <p *ngIf="profileService.editingVisibility">{{ 'visibility' | translate }}</p>
         </ion-col>
       </ion-row>
 
@@ -92,7 +92,7 @@
 
       <ion-row>
         <ion-col offset="9.5" size="2.5" class="visibility-col">
-          <p *ngIf="profileService.editingVisibility">Visiblity</p>
+          <p *ngIf="profileService.editingVisibility">{{ 'visibility' | translate }}</p>
         </ion-col>
       </ion-row>
 
@@ -172,11 +172,9 @@
     </ion-list>
 
     <ion-list *ngIf="capsulesActive" class="ion-text-center">
-      <h1>No Capsules</h1>
+      <h1>{{ 'no-capsules-title' | translate }}</h1>
       <p>
-        You can find capsules by exploring the ecosystem - contacts, social networks,
-        websites and start building up your favorites. You will then be able to decide
-        what Capsules you share with others here.
+        {{ 'no-capsules-text' | translate }}
       </p>
     </ion-list>
 

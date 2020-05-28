@@ -118,6 +118,9 @@ export const fr = {
     'profile-details': 'Detail',
     'profile-credentials': 'Credentials',
     'profile-capsules': 'Capsules',
+    'visibility': 'Visibilité',
+    'no-capsules-title': 'Aucune Capsule',
+    'no-capsules-text': 'Vous pouvez trouver de nouvelles capsules en explorant l\'écosystème via vos contacts, reseaux sociaux, sites internet. Vous pourrez ensuite partager vos capsules avec vos contacts.',
 
     // screen: edit profile
     'edit-profile': 'Editer le profil',
