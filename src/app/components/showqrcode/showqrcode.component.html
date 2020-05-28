@@ -3,7 +3,7 @@
   <ion-row class="ion-text-center">
     <h1>My Identity QR Code</h1>
   </ion-row>
-  
+
   <ion-row >
     <ion-col class="ion-text-center">
       <qrcode [qrdata]="qrCodeString" [size]="150"></qrcode>
@@ -16,11 +16,11 @@
 
   <ion-row class="btn-container">
     <ion-button color="success" (click)="shareInvitationLink()">
-      <ion-label>Share</ion-label>
+      <ion-label>{{ 'share' | translate }}</ion-label>
     </ion-button>
     <ion-button color="success" (click)="copyDIDToClipboard()">
-      <ion-label>Copy</ion-label>
+      <ion-label>{{ 'copy-to-clipboard' | translate }}</ion-label>
     </ion-button>
   </ion-row>
-  
+
 </ion-grid>

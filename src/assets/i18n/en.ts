@@ -2,7 +2,7 @@ export const en = {
     // Generic actions / buttons
     'submit': 'Submit',
     'next': 'Next',
-    'copy-to-clipboard': 'Copy to clipboard',
+    'copy-to-clipboard': 'Copy',
     'copied-to-clipboard': 'Copied to clipboard!',
     'confirm': 'Confirm',
     'go-back': 'Go back',

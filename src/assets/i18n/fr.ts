@@ -2,7 +2,7 @@ export const fr = {
     // Generic actions / buttons
     'submit': 'Envoyer',
     'next': 'Suivant',
-    'copy-to-clipboard': 'Copier dans le presse-papier',
+    'copy-to-clipboard': 'Copier',
     'copied-to-clipboard': 'Copié dans le presse-papier!',
     'confirm': 'Confirmer',
     'go-back': 'Retour',
