@@ -98,7 +98,7 @@
 
       <div *ngIf="profileService.visibleData.length > 0">
         <ion-row class="cred-row" *ngFor="let entry of profileService.visibleCred">
-          <ion-col offset="0.25" size="9.25">
+          <ion-col offset="0.25" [size]="profileService.editingVisibility ? 9.25 : 11.5">
             <ion-card>
               <ion-row>
                 <ion-col size="2">
@@ -131,7 +131,7 @@
 
       <div *ngIf="profileService.invisibleData.length > 0" class="ion-text-center">
         <ion-row class="cred-row" *ngFor="let entry of profileService.invisibleCred">
-          <ion-col offset="0.25" size="9.25">
+          <ion-col offset="0.25" [size]="profileService.editingVisibility ? 9.25 : 11.5">
             <ion-card>
               <ion-row>
                 <ion-col size="2">
