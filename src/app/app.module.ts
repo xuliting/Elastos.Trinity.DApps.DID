@@ -25,7 +25,6 @@ import { ComponentsModule } from './components/components.module';
 
 import { CountryPickerPage } from './pages/countrypicker/countrypicker';
 import { EditProfilePage } from './pages/editprofile/editprofile';
-import { HomePage } from './pages/__home/home.page';
 import { MyProfilePage } from './pages/myprofile/myprofile';
 import { CredentialAccessRequestPage } from './pages/credentialaccessrequest/credentialaccessrequest';
 import { CredentialListPage } from './pages/credential/list/credentiallist';
@@ -106,7 +105,6 @@ export function TranslateLoaderFactory() {
     CredentialCreatePage,
     CredentialBackupPage,
     EditProfilePage,
-    HomePage,
     MyProfilePage,
     RegisterApplicationProfileRequestPage,
     SignRequestPage,

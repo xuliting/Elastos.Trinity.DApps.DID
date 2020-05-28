@@ -64,7 +64,7 @@ export const zh = {
     'credential-info-type-nickname': '昵称',
     'credential-info-type-birthPlace': '出生地',
     'credential-info-type-description': '描述',
-    'credential-info-type-occupation': 'Occupation',
+    'credential-info-type-occupation': '职业',
     'credential-info-type-interests': '兴趣爱好',
     'credential-info-type-url': '网址',
     'credential-info-type-facebook': 'Facebook',
@@ -118,9 +118,9 @@ export const zh = {
     'profile-details': '详情',
     'profile-credentials': '凭证',
     'profile-capsules': '胶囊',
-    'visibility': 'Visibility',
-    'no-capsules-title': 'No Capsules',
-    'no-capsules-text': 'You can find capsules by exploring the ecosystem - contacts, social networks, websites and start building up your favorites. You will then be able to decide what Capsules you share with others here.',
+    'visibility': '公开',
+    'no-capsules-title': '没有胶囊',
+    'no-capsules-text': '您可以通过探索生态系统找到胶囊--联系人、社交网络、网站，并创建您的收藏。您也可以将这些胶囊分享给其他人。',
 
     // screen: edit profile
     'edit-profile': '编辑信息',
@@ -147,7 +147,7 @@ export const zh = {
 
     // screen: credissue
     'credential-import': '导入凭证',
-    'credential-import-from': 'Delivered by',
+    'credential-import-from': '来自 ',
     'credimport-intro': '您将要添加一个或多个第三方颁发的凭证到您的DID配置文件。请仔细检查内容。',
 
     // screen: did credentials
