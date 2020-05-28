@@ -266,12 +266,15 @@ export class DIDStore {
 
             // If txid is set in the response this means a transaction has been sent on chain.
             // If null, this means user has cancelled the operation (no ELA, etc).
-            if (response.result.txid) {
+            if (response.result && response.result.txid) {
                 console.log('didtransaction response.result.txid ', response.result.txid);
                 this.events.publish("diddocument:publishresult", {
                     didStore: this,
                     published: true
                 });
+
+                // Inform the DID plugin of the created chain transaction ID
+                this.pluginDidStore.setTransactionResult(response.result.txid);
             }
             else {
                 console.log('didtransaction response.result.txid is null');
@@ -279,6 +282,9 @@ export class DIDStore {
                     didStore: this,
                     cancelled: true
                 });
+
+                // Inform the DID plugin of the created chain transaction ID
+                this.pluginDidStore.setTransactionResult(null);
             }
         }, (err)=>{
             console.error("Failed to send app manager didtransaction intent!", err);
@@ -286,6 +292,9 @@ export class DIDStore {
                 didStore: this,
                 error: true
             });
+
+            // Inform the DID plugin of the created chain transaction ID
+            this.pluginDidStore.setTransactionResult(null);
         });
     }
 

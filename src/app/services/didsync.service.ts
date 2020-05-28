@@ -73,9 +73,12 @@ export class DIDSyncService {
      */
     public async publishActiveDIDDIDDocument(password: string) {
       try {
+        this.native.showLoading("Please wait");
         await this.didService.getActiveDidStore().getActiveDid().getDIDDocument().publish(password);
+        this.native.hideLoading();
       }
       catch (err) {
+        this.native.hideLoading();
         await this.popupProvider.ionicAlert("Publish error", err.message);
       }
     }

@@ -8,6 +8,7 @@ import { UXService } from './services/ux.service';
 import { BrowserSimulation } from './services/browsersimulation';
 import { BasicCredentialsService } from './services/basiccredentials.service';
 import { DIDEvents } from './services/events';
+import { TranslationService } from './services/translation.service';
 
 @Component({
   selector: 'my-app',
@@ -24,6 +25,7 @@ export class MyApp {
     public translate: TranslateService,
     private uxService: UXService,
     public didEvents: DIDEvents,
+    public translation: TranslationService,
     public basicCredentialsService: BasicCredentialsService
   ) {
     this.initializeApp();
