@@ -17,7 +17,7 @@ export const fr = {
     'publish': 'Publier',
     'cancel': 'Annuler',
     'share': 'Partager',
-    'edit-data': 'Edit data',
+    'edit-data': 'Modifier les infos',
 
     // DID operations
     'create-my-did': 'Créer mon Identité',
@@ -25,7 +25,7 @@ export const fr = {
     'create-profile': 'Créer un Profil',
     'create-new-did-profile': "Créer un nouveau profil",
     'import-did-profile': "Importer un profil",
-    'import-did-popup-content': 'Importer une identité écrasera tout identité existant actuellement.',
+    'import-did-popup-content': 'Importer une identité écrasera toute identité existante actuellement.',
     'import-did-popup-confirm-question': 'Etes-vous sûr(e)?',
     'add-new-did-profile': "Ajouter un nouveau profil",
     'save-profile': 'Enregistrer le profil',
@@ -38,8 +38,8 @@ export const fr = {
     'import-password1-placeholder': 'Définir le mot de passe',
     'import-password2-placeholder': 'Répéter le mot de passe',
     'text-pwd-validator': '8 symboles ou plus',
-    'password-set': 'Mot de passe Défini!',
-    'password': 'Password',
+    'password-set': 'Mot de passe défini!',
+    'password': 'Mot de passe',
     'activate-fingerprint-popup-title': 'Authentification par empreinte',
     'activate-fingerprint-popup-content': 'Souhaitez-vous activer l\'authentificaiton par empreinte? Le mot de passe que vous venez de saisir sera utilisé.',
     'activate-fingerprint-popup-confirm-question': 'Activer?',
@@ -54,7 +54,7 @@ export const fr = {
 
     // Profile fields
     'credential-info-type-did': 'Identité',
-    'credential-info-type-picture': 'Profile Picture',
+    'credential-info-type-picture': 'Image de profil',
     'credential-info-type-name': 'Nom',
     'credential-info-type-email': 'Email',
     'credential-info-type-birthDate': 'Date de naissance',
@@ -64,8 +64,8 @@ export const fr = {
     'credential-info-type-nickname': 'Pseudonyme',
     'credential-info-type-birthPlace': 'Lieu de naissance',
     'credential-info-type-description': 'Description',
-    'credential-info-type-occupation': 'Occupation',
-    'credential-info-type-interests': 'Interests',
+    'credential-info-type-occupation': 'Profession',
+    'credential-info-type-interests': 'Intérêts',
     'credential-info-type-url': 'Site internet',
     'credential-info-type-facebook': 'Facebook',
     'credential-info-type-twitter': 'Twitter',
@@ -77,8 +77,8 @@ export const fr = {
     'your-did': 'Votre Identité',
 
     // Error messages
-    'text-request-fail': 'request fail',
-    'text-request-no-credential': 'no credential',
+    'text-request-fail': 'Erreur lors de la requête',
+    'text-request-no-credential': 'Aucune référence',
     'not-set': 'Non défini',
 
     /////////////////////////////////////////////////
@@ -115,8 +115,8 @@ export const fr = {
     'publish-popup-confirm-question': 'Etes-vous sûr(e)?',
     'changepassword-success': 'Le mot de passe a été modifié avec succès',
     'share-add-me-as-friend': 'Ajoutez-moi comme ami dans elastOS',
-    'profile-details': 'Detail',
-    'profile-credentials': 'Credentials',
+    'profile-details': 'Détail',
+    'profile-credentials': 'Références',
     'profile-capsules': 'Capsules',
     'visibility': 'Visibilité',
     'no-capsules-title': 'Aucune Capsule',
@@ -128,14 +128,14 @@ export const fr = {
     'name-is-required': 'Un nom est tout de même requis.',
     'name-is-missing': 'Saisissez au moins votre nom SVP',
     'add-info': 'Ajouter une info',
-    'save-changes': 'Save Changes',
+    'save-changes': 'Enregistrer',
 
     // screen: did list
     'did-portfolio': 'Identités',
 
     // screen: credaccess
     'data-access': 'Accès aux données',
-    'data-access-from': 'Accès Demandé Par:',
+    'data-access-from': 'Accès demandé Par:',
     'credaccess-intro': 'Voici une demande d\informations.<br/>Veuillez vérifier les informations à partager.',
     'mandatory-data-access': 'Informations obligatoires',
     'optional-data-access': 'Informations optionnelles',
@@ -143,7 +143,7 @@ export const fr = {
 
     // screen: credissue
     'credential-issue': 'Emission d\'une référence',
-    'credissue-intro': 'You are going to issue some information to a third party and sign it with your identity. Please carefully review the content.',
+    'credissue-intro': 'Vous allez délivrer des informations à un tiers, et signed ces informations avec votre identité. Veuillez vérifier le contenu avec attention.',
 
     // screen: credimport
     'credential-import': 'Import de Référence',
@@ -168,10 +168,10 @@ export const fr = {
     'choose-did-intro': 'Veuillez choisir le profil à utiliser pour cette action',
 
     // import mnemonic
-    'import-mnemonic-intro': 'Start entering your 12 word mnemonic to restore your Identity',
-    'import-mnemonic-placeholder': 'Your mnemonic sentence',
-    'mnemonic-invalid': 'Mnemonic invalid',
-    'mnemonic-invalid-prompt': 'Pls check the mnemonic... ',
+    'import-mnemonic-intro': 'Veuillez saisir vos 12 mots mnémoniques pour restorer votre identité',
+    'import-mnemonic-placeholder': 'Votre phrase mnémonique',
+    'mnemonic-invalid': 'Mnémonique invalide',
+    'mnemonic-invalid-prompt': 'Vérifiez le mnémonique... ',
 
     ////////////////////////////////////////////////////
     //////////////// COMPONENT SPECIFIC ////////////////
@@ -187,7 +187,7 @@ export const fr = {
 
     // component: security check
     // 'security-check': 'Veuillez saisir le mot de passe de l\'application',
-    'security-check': 'Security Check',
+    'security-check': 'Authentification',
     'security-check-fingerprint': 'Veuillez vous authentifier',
     'security-check-fingerprint-do': 'Veuillez toucher le capteur d\'empreintes',
     'wrong-password': 'Mot de passe erroné, veuillez réessayer.',
